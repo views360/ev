@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>EV Charging Cost Comparison</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Chart.js for graphing -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- html2pdf for client-side PDF export -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+<style>
+    body {
+        font-family: "Segoe UI", Roboto, sans-serif;
+        background: linear-gradient(135deg, #0f172a, #1e293b);
+        color: #e2e8f0;
+        margin: 0;
+        padding: 0;
+    }
+
+    h1 {
+        text-align: center;
+        margin-top: 30px;
+        font-weight: 600;
+        color: #38bdf8;
+    }
+
+    .container {
+        max-width: 1100px;
+        margin: 30px auto 40px;
+        background: #1e293b;
+        padding: 24px 24px 32px;
+        border-radius: 16px;
+        box-shadow: 0 0 25px rgba(0,0,0,0.4);
+    }
+
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 18px;
+    }
+
+    .input-group {
+        margin-bottom: 16px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 6px;
+        font-size: 14px;
+        color: #93c5fd;
+    }
+
+    input, select {
+        width: 100%;
+        padding: 10px 11px;
+        border-radius: 10px;
+        border: none;
+        background: #334155;
+        color: #e2e8f0;
+        font-size: 15px;
+        box-sizing: border-box;
+    }
+
+    input:focus, select:focus {
+        outline: 2px solid #38bdf8;
+    }
+
+    .section-title {
+        margin: 18px 0 8px;
+        font-size: 18px;
+        color: #38bdf8;
+        font-weight: 600;
+    }
+
+    .provider-box {
+        background: #0f172a;
+        padding: 14px 14px 16px;
+        border-radius: 12px;
+        margin-bottom: 14px;
+        border: 1px solid #334155;
+    }
+
+    .provider-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+        font-size: 14px;
+        color: #e5e7eb;
+    }
+
+    .provider-header span {
+        font-weight: 600;
+    }
+
+    .provider-header button {
+        background: transparent;
+        border: none;
+        color: #f97373;
+        cursor: pointer;
+        font-size: 13px;
+    }
+
+    .btn-row {
+        margin-top: 10px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .btn {
+        padding: 9px 16px;
+        border-radius: 10px;
+        border: none;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 14px;
+    }
+
+    .btn-primary {
+        background: #38bdf8;
+        color: #0f172a;
+    }
+
+    .btn-secondary {
+        background: #0f172a;
+        color: #e5e7eb;
+        border: 1px solid #334155;
+    }
+
+    .results {
+        margin-top: 24px;
+        padding: 18px 18px 22px;
+        background: #0f172a;
+        border-radius: 14px;
+        border: 1px solid #334155;
+    }
+
+    .result-line {
+        margin: 6px 0;
+        font-size: 15px;
+    }
+
+    .highlight {
+        font-weight: bold;
+        color: #38bdf8;
+    }
+
+    .summary {
+        margin-top: 16px;
+        padding: 14px;
+        border-radius: 12px;
+        font-size: 16px;
+        text-align: center;
+        font-weight: 600;
+    }
+
+    .good {
+        background: rgba(34,197,94,0.18);
+        color: #4ade80;
+        border: 1px solid #4ade80;
+    }
+
+    .bad {
+        background: rgba(239,68,68,0.18);
+        color: #f87171;
+        border: 1px solid #f87171;
+    }
+
+    #costChart {
+        margin-top: 24px;
+        max-height: 360px;
+    }
+
+    .small-note {
+        font-size: 12px;
+        color: #9ca3af;
+        margin-top: 4px;
+    }
+
+    @media (max-width: 600px) {
+        .btn-row {
+            flex-direction: column;
+        }
+    }
+</style>
+</head>
+<body>
+
+<h1>EV Charging Cost Comparison</h1>
+
+<div class="container" id="calculatorRoot">
+
+    <div class="grid">
+        <div>
+            <div class="section-title">Trip & Vehicle</div>
+
+            <div class="input-group">
+                <label>Total journey distance (miles)</label>
+                <input type="number" id="journeyMiles" placeholder="e.g., 450">
+            </div>
+
+            <div class="input-group">
+                <label>Battery usable capacity (kWh)</label>
+                <input type="number" id="batteryKwh" placeholder="e.g., 60">
+            </div>
+
+            <div class="input-group">
+                <label>State of charge at departure (%)</label>
+                <input type="number" id="soc" placeholder="e.g., 90">
+            </div>
+
+            <div class="input-group">
+                <label>Vehicle efficiency (miles per kWh)</label>
+                <input type="number" id="efficiency" placeholder="e.g., 3.5">
+                <div class="small-note">Use seasonal average (e.g., 2.5 winter, 5.0 summer).</div>
+            </div>
+        </div>
+
+        <div>
+            <div class="section-title">Ad‑hoc Charging</div>
+
+            <div class="input-group">
+                <label>Ad‑hoc charging price (pence per kWh)</label>
+                <input type="number" id="adhoc" placeholder="e.g., 75">
+                <div class="small-note">Typical range: 56p (Tesla) to 95p (motorway).</div>
+            </div>
+
+            <div class="results" id="homeCalc" style="margin-top:18px;">
+                <div class="result-line" id="homeRangeLine"></div>
+                <div class="result-line" id="publicMilesLine"></div>
+                <div class="result-line" id="publicKwhLine"></div>
+                <div class="result-line" id="adhocCostLine"></div>
+            </div>
+        </div>
+    </div>
+    <div class="section-title">Subscription Providers</div>
+    <div id="providers"></div>
+
+    <div class="btn-row">
+        <button class="btn btn-primary" onclick="addProvider()">+ Add Provider</button>
+    </div>
+
+    <div class="btn-row" style="margin-top:14px;">
+        <button class="btn btn-secondary" onclick="exportPdf()">Export results to PDF</button>
+        <button class="btn btn-secondary" onclick="shareLink()">Share this calculation</button>
+    </div>
+
+    <div class="results" id="results" style="display:none;">
+        <div class="result-line">
+            <span class="highlight">Comparison at current trip distance and inputs</span>
+        </div>
+
+        <div id="providerResults"></div>
+
+        <div class="summary" id="summaryBox"></div>
+
+        <canvas id="costChart"></canvas>
+    </div>
+
+</div> <!-- end .container -->
+<script>
+// ----------------------
+// PRESETS (including Be.EV)
+// ----------------------
+const PRESETS = [
+    { name: "Tesla", subCost: 10.99, rate: 45 },
+    { name: "BP Pulse", subCost: 7.99, rate: 49 },
+    { name: "Osprey", subCost: 0, rate: 79 },
+    { name: "Instavolt", subCost: 0, rate: 85 },
+    { name: "Gridserve", subCost: 0, rate: 79 },
+    { name: "Shell Recharge", subCost: 7.99, rate: 55 },
+    { name: "Be.EV", subCost: 9.99, rate: 39 }
+];
+
+let providerCount = 0;
+let chart = null;
+
+// ----------------------
+// CREATE PROVIDER BOX
+// ----------------------
+function createProviderBox(preset) {
+    providerCount++;
+    const id = providerCount;
+
+    const box = document.createElement("div");
+    box.className = "provider-box";
+    box.dataset.id = id;
+
+    const presetOptions = ['Custom', ...PRESETS.map(p => p.name)]
+        .map(name => `<option value="${name}">${name}</option>`)
+        .join("");
+
+    box.innerHTML = `
+        <div class="provider-header">
+            <span>Provider #${id}</span>
+            <button type="button" onclick="removeProvider(${id})">Remove</button>
+        </div>
+
+        <div class="input-group">
+            <label>Preset</label>
+            <select id="preset${id}">
+                ${presetOptions}
+            </select>
+        </div>
+
+        <div class="input-group">
+            <label>Provider name</label>
+            <input type="text" id="name${id}" placeholder="e.g., BP Pulse">
+        </div>
+
+        <div class="input-group">
+            <label>Subscription cost (£ / month)</label>
+            <input type="number" id="subCost${id}" placeholder="e.g., 7.99">
+        </div>
+
+        <div class="input-group">
+            <label>Discounted rate (pence per kWh)</label>
+            <input type="number" id="discount${id}" placeholder="e.g., 49">
+        </div>
+    `;
+
+    document.getElementById("providers").appendChild(box);
+
+    // Hook up preset dropdown
+    const presetSelect = document.getElementById(`preset${id}`);
+    presetSelect.addEventListener("change", () => applyPreset(id));
+
+    // Hook up input listeners
+    box.querySelectorAll("input").forEach(i => i.addEventListener("input", calculate));
+
+    // If preset provided, apply it
+    if (preset) {
+        presetSelect.value = preset.name;
+        document.getElementById(`name${id}`).value = preset.name;
+        document.getElementById(`subCost${id}`).value = preset.subCost;
+        document.getElementById(`discount${id}`).value = preset.rate;
+    }
+}
+
+// ----------------------
+// ADD / REMOVE PROVIDERS
+// ----------------------
+function addProvider() {
+    createProviderBox();
+    calculate();
+}
+
+function removeProvider(id) {
+    const box = document.querySelector(`.provider-box[data-id="${id}"]`);
+    if (box) box.remove();
+    calculate();
+}
+
+// ----------------------
+// APPLY PRESET
+// ----------------------
+function applyPreset(id) {
+    const presetName = document.getElementById(`preset${id}`).value;
+    const preset = PRESETS.find(p => p.name === presetName);
+    if (!preset) return;
+
+    document.getElementById(`name${id}`).value = preset.name;
+    document.getElementById(`subCost${id}`).value = preset.subCost;
+    document.getElementById(`discount${id}`).value = preset.rate;
+
+    calculate();
+}
+
+// ----------------------
+// CORE INPUT EXTRACTION
+// ----------------------
+function getCoreInputs() {
+    const journeyMiles = parseFloat(document.getElementById("journeyMiles").value);
+    const batteryKwh = parseFloat(document.getElementById("batteryKwh").value);
+    const soc = parseFloat(document.getElementById("soc").value);
+    const efficiency = parseFloat(document.getElementById("efficiency").value);
+    const adhocPence = parseFloat(document.getElementById("adhoc").value);
+
+    if (!journeyMiles || !batteryKwh || !soc || !efficiency || !adhocPence) return null;
+
+    const usableKwhAtStart = batteryKwh * (soc / 100);
+    const homeMiles = usableKwhAtStart * efficiency;
+    const publicMiles = Math.max(0, journeyMiles - homeMiles);
+    const publicKwh = publicMiles / efficiency;
+    const adhocRate = adhocPence / 100;
+    const adhocCost = publicKwh * adhocRate;
+
+    return {
+        journeyMiles,
+        batteryKwh,
+        soc,
+        efficiency,
+        adhocPence,
+        usableKwhAtStart,
+        homeMiles,
+        publicMiles,
+        publicKwh,
+        adhocRate,
+        adhocCost
+    };
+}
+
+// ----------------------
+// MAIN CALCULATION ENGINE
+// ----------------------
+function calculate() {
+    const core = getCoreInputs();
+
+    const homeRangeLine = document.getElementById("homeRangeLine");
+    const publicMilesLine = document.getElementById("publicMilesLine");
+    const publicKwhLine = document.getElementById("publicKwhLine");
+    const adhocCostLine = document.getElementById("adhocCostLine");
+
+    if (!core) {
+        homeRangeLine.textContent = "Enter all trip, battery, efficiency and ad‑hoc fields to see calculations.";
+        publicMilesLine.textContent = "";
+        publicKwhLine.textContent = "";
+        adhocCostLine.textContent = "";
+        document.getElementById("results").style.display = "none";
+        if (chart) chart.destroy();
+        return;
+    }
+
+    // Update home/public calculations
+    homeRangeLine.innerHTML =
+        `Estimated range from home charge: <span class="highlight">${core.homeMiles.toFixed(0)} miles</span>`;
+    publicMilesLine.innerHTML =
+        `Miles requiring public charging: <span class="highlight">${core.publicMiles.toFixed(0)} miles</span>`;
+    publicKwhLine.innerHTML =
+        `Energy from public charging: <span class="highlight">${core.publicKwh.toFixed(1)} kWh</span>`;
+    adhocCostLine.innerHTML =
+        `Cost using ad‑hoc only: <span class="highlight">£${core.adhocCost.toFixed(2)}</span>`;
+
+    // Provider comparisons
+    const providerResults = document.getElementById("providerResults");
+    providerResults.innerHTML = "";
+
+    const providers = [];
+    const boxes = document.querySelectorAll(".provider-box");
+
+    boxes.forEach(box => {
+        const id = box.dataset.id;
+        const name = document.getElementById(`name${id}`).value.trim();
+        const subCost = parseFloat(document.getElementById(`subCost${id}`).value);
+        const discountPence = parseFloat(document.getElementById(`discount${id}`).value);
+
+        if (!name || isNaN(subCost) || isNaN(discountPence)) return;
+
+        const discountRate = discountPence / 100;
+
+        const costWithSub = subCost + (core.publicKwh * discountRate);
+        const breakEvenKwh = (core.adhocRate > discountRate)
+            ? subCost / (core.adhocRate - discountRate)
+            : Infinity;
+        const breakEvenMiles = (breakEvenKwh === Infinity)
+            ? Infinity
+            : breakEvenKwh * core.efficiency;
+        const savings = core.adhocCost - costWithSub;
+
+        providers.push({
+            name,
+            costWithSub,
+            breakEvenMiles,
+            savings,
+            subCost,
+            discountPence
+        });
+
+        const beText = (breakEvenMiles === Infinity)
+            ? "No break‑even (discounted rate ≥ ad‑hoc rate)"
+            : `${breakEvenMiles.toFixed(0)} miles`;
+
+        providerResults.innerHTML += `
+            <div class="result-line">
+                <span class="highlight">${name}</span> —
+                Cost: £${costWithSub.toFixed(2)},
+                Break‑even: ${beText},
+                Savings vs ad‑hoc: £${savings.toFixed(2)}
+            </div>
+        `;
+    });
+
+    if (providers.length === 0) {
+        document.getElementById("results").style.display = "none";
+        if (chart) chart.destroy();
+        return;
+    }
+
+    document.getElementById("results").style.display = "block";
+
+    // Summary: pick best provider
+    const best = providers.reduce((a, b) => (a.costWithSub < b.costWithSub ? a : b));
+    const summaryBox = document.getElementById("summaryBox");
+
+    if (best.costWithSub < core.adhocCost) {
+        summaryBox.className = "summary good";
+        summaryBox.textContent =
+            `${best.name} is currently the cheapest option for this trip (saving £${(core.adhocCost - best.costWithSub).toFixed(2)} vs ad‑hoc).`;
+    } else {
+        summaryBox.className = "summary bad";
+        summaryBox.textContent =
+            `Ad‑hoc charging is cheaper than any subscription for this trip distance.`;
+    }
+
+    drawGraph(core, providers);
+}
+// ----------------------
+// GRAPH FUNCTION (complete)
+// ----------------------
+function drawGraph(core, providers) {
+    const ctx = document.getElementById("costChart");
+
+    if (chart) chart.destroy();
+
+    const maxMiles = Math.max(core.journeyMiles, core.homeMiles + core.publicMiles);
+    const steps = 20;
+
+    const labels = [];
+    const adhocData = [];
+
+    for (let i = 0; i <= steps; i++) {
+        const m = (maxMiles * i) / steps;
+        labels.push(m.toFixed(0));
+
+        const publicMilesAtM = Math.max(0, m - core.homeMiles);
+        const publicKwhAtM = publicMilesAtM / core.efficiency;
+        const costAdhocAtM = publicKwhAtM * core.adhocRate;
+
+        adhocData.push(costAdhocAtM);
+    }
+
+    const datasets = [{
+        label: "Ad‑hoc only (£)",
+        data: adhocData,
+        borderColor: "#f97316",
+        backgroundColor: "rgba(249,115,22,0.15)",
+        tension: 0.2
+    }];
+
+    providers.forEach((p, idx) => {
+        const colors = ["#38bdf8", "#4ade80", "#a855f7", "#facc15", "#f472b6", "#22c55e"];
+        const color = colors[idx % colors.length];
+
+        const data = [];
+
+        for (let i = 0; i <= steps; i++) {
+            const m = (maxMiles * i) / steps;
+            const publicMilesAtM = Math.max(0, m - core.homeMiles);
+            const publicKwhAtM = publicMilesAtM / core.efficiency;
+            const costSubAtM = p.subCost + (publicKwhAtM * (p.discountPence / 100));
+
+            data.push(costSubAtM);
+        }
+
+        datasets.push({
+            label: `${p.name} (£)`,
+            data,
+            borderColor: color,
+            backgroundColor: "transparent",
+            tension: 0.2
+        });
+    });
+
+    chart = new Chart(ctx, {
+        type: "line",
+        data: { labels, datasets },
+        options: {
+            responsive: true,
+            interaction: { mode: "index", intersect: false },
+            scales: {
+                x: { title: { display: true, text: "Trip distance (miles)" } },
+                y: { title: { display: true, text: "Total charging cost (£)" }, beginAtZero: true }
+            }
+        }
+    });
+}
+
+// ----------------------
+// PDF EXPORT (fixed)
+// ----------------------
+function exportPdf() {
+    const element = document.getElementById("results");
+
+    if (!element || element.style.display === "none") {
+        alert("Please enter inputs and providers so results are visible before exporting.");
+        return;
+    }
+
+    // Ensure chart is visible and rendered
+    element.scrollIntoView();
+
+    setTimeout(() => {
+        const opt = {
+            margin: 10,
+            filename: 'ev-charging-comparison.pdf',
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        };
+
+        html2pdf().from(element).set(opt).save();
+    }, 350); // delay ensures Chart.js is fully drawn
+}
+
+// ----------------------
+// SHAREABLE LINK
+// ----------------------
+function shareLink() {
+    const core = getCoreInputs();
+    if (!core) {
+        alert("Please fill in all main inputs first.");
+        return;
+    }
+
+    const params = new URLSearchParams();
+
+    params.set("jm", core.journeyMiles);
+    params.set("bk", core.batteryKwh);
+    params.set("soc", core.soc);
+    params.set("eff", core.efficiency);
+    params.set("adhoc", core.adhocPence);
+
+    let idx = 0;
+    document.querySelectorAll(".provider-box").forEach(box => {
+        const id = box.dataset.id;
+
+        const name = document.getElementById(`name${id}`).value.trim();
+        const subCost = document.getElementById(`subCost${id}`).value;
+        const discount = document.getElementById(`discount${id}`).value;
+
+        if (!name || !subCost || !discount) return;
+
+        params.set(`p${idx}n`, name);
+        params.set(`p${idx}s`, subCost);
+        params.set(`p${idx}r`, discount);
+
+        idx++;
+    });
+
+    const base = window.location.href.split("?")[0];
+    const url = `${base}?${params.toString()}`;
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(url).then(
+            () => alert("Link copied to clipboard."),
+            () => prompt("Copy this link:", url)
+        );
+    } else {
+        prompt("Copy this link:", url);
+    }
+}
+
+// ----------------------
+// LOAD FROM URL PARAMETERS
+// ----------------------
+function loadFromParams() {
+    const params = new URLSearchParams(window.location.search);
+
+    if (!params.has("jm")) return;
+
+    const setVal = (id, key) => {
+        const v = params.get(key);
+        if (v !== null) document.getElementById(id).value = v;
+    };
+
+    setVal("journeyMiles", "jm");
+    setVal("batteryKwh", "bk");
+    setVal("soc", "soc");
+    setVal("efficiency", "eff");
+    setVal("adhoc", "adhoc");
+
+    let idx = 0;
+    while (true) {
+        const name = params.get(`p${idx}n`);
+        const sub = params.get(`p${idx}s`);
+        const rate = params.get(`p${idx}r`);
+
+        if (!name || !sub || !rate) break;
+
+        createProviderBox();
+        const id = providerCount;
+
+        document.getElementById(`name${id}`).value = name;
+        document.getElementById(`subCost${id}`).value = sub;
+        document.getElementById(`discount${id}`).value = rate;
+
+        idx++;
+    }
+
+    calculate();
+}
+
+// ----------------------
+// INITIALISE
+// ----------------------
+["journeyMiles","batteryKwh","soc","efficiency","adhoc"].forEach(id => {
+    document.getElementById(id).addEventListener("input", calculate);
+});
+
+addProvider();
+loadFromParams();
+</script>
+
+</body>
+</html>
