@@ -1,3 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>EV Public Charging Comparison</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- html2canvas -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- jsPDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <style>
+        :root {
+            --bg: #020617;
+            --panel: #020617;
+            --panel-alt: #020617;
+            --accent: #38bdf8;
+            --accent-soft: rgba(56,189,248,0.15);
+            --text: #e5e7eb;
+            --muted: #9ca3af;
+            --border: #1f2937;
+            --danger: #f97373;
+            --good: #22c55e;
+        }
+
+        body.light {
+            --bg: #f3f4f6;
+            --panel: #ffffff;
+            --panel-alt: #f9fafb;
+            --accent: #0ea5e9;
+            --accent-soft: rgba(14,165,233,0.12);
+            --text: #111827;
+            --muted: #6b7280;
+            --border: #d1d5db;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: radial-gradient(circle at top, #0f172a 0, #020617 45%, #000 100%);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 24px;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        body.light {
+            background: radial-gradient(circle at top, #e5e7eb 0, #f3f4f6 45%, #e5e7eb 100%);
+        }
+
+        .app {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: radial-gradient(circle at top left, #0b1120 0, #020617 55%, #000 100%);
+            border-radius: 18px;
+            border: 1px solid #1f2937;
+            box-shadow: 0 24px 80px rgba(0,0,0,0.7);
+            padding: 24px 24px 32px;
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        body.light .app {
+            background: radial-gradient(circle at top left, #ffffff 0, #f9fafb 55%, #e5e7eb 100%);
+            border-color: var(--border);
+            box-shadow: 0 18px 50px rgba(15,23,42,0.15);
+        }
+
+        h1 { margin: 0 0 4px; font-size: 1.6rem; letter-spacing: 0.03em; }
+        .subtitle { margin-bottom: 20px; color: var(--muted); font-size: 0.9rem; }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .theme-toggle {
+            font-size: 0.8rem;
+            color: var(--muted);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .theme-toggle input {
+            cursor: pointer;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.1fr);
+            gap: 20px;
+        }
+
+        .card {
+            background: linear-gradient(145deg, rgba(15,23,42,0.96), rgba(15,23,42,0.9));
+            border-radius: 14px;
+            border: 1px solid var(--border);
+            padding: 12px 14px 14px;
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        body.light .card {
+            background: linear-gradient(145deg, #ffffff, #f9fafb);
+            border-color: var(--border);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        .card-header h2 {
+            margin: 0;
+            font-size: 0.95rem;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        .collapse-btn {
+            border-radius: 999px;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--muted);
+            font-size: 0.75rem;
+            padding: 3px 8px;
+            cursor: pointer;
+        }
+
+        .collapse-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .card-body {
+            margin-top: 6px;
+        }
+
+        .input-row {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-bottom: 10px;
+        }
+
+        .input-group label { font-size: 0.8rem; color: var(--muted); }
+
+        .input-group input,
+        .input-group select {
+            background: var(--panel);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            padding: 7px 9px;
+            color: var(--text);
+            font-size: 0.85rem;
+        }
+
+        .input-group input:focus,
+        .input-group select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 1px rgba(56,189,248,0.35);
+        }
+
+        .provider-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        .provider-header span { font-size: 0.85rem; color: var(--muted); }
+
+        .provider-header button {
+            background: transparent;
+            border-radius: 999px;
+            border: 1px solid var(--border);
+            color: var(--muted);
+            font-size: 0.75rem;
+            padding: 3px 8px;
+            cursor: pointer;
+        }
+
+        .provider-header button:hover {
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+
+        .provider-box {
+            background: var(--panel);
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            padding: 10px 10px 8px;
+            margin-bottom: 10px;
+        }
+
+        .providers-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .btn {
+            border-radius: 999px;
+            border: 1px solid var(--border);
+            background: radial-gradient(circle at top left, #0ea5e9, #0369a1);
+            color: white;
+            font-size: 0.8rem;
+            padding: 6px 12px;
+            cursor: pointer;
+        }
+
+        .btn.secondary {
+            background: transparent;
+            border-color: var(--border);
+            color: var(--text);
+        }
+
+        .btn.danger {
+            background: transparent;
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+
+        .btn-row {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .results { margin-top: 16px; display: none; }
+
+        .summary {
+            border-radius: 10px;
+            padding: 10px 12px;
+            font-size: 0.85rem;
+            margin-bottom: 10px;
+        }
+
+        .summary.good {
+            background: rgba(22,163,74,0.12);
+            border: 1px solid rgba(34,197,94,0.5);
+            color: #bbf7d0;
+        }
+
+        .summary.bad {
+            background: rgba(220,38,38,0.12);
+            border: 1px solid rgba(248,113,113,0.6);
+            color: #fecaca;
+        }
+
+        body.light .summary.good {
+            background: rgba(22,163,74,0.08);
+            color: #166534;
+        }
+
+        body.light .summary.bad {
+            background: rgba(220,38,38,0.08);
+            color: #b91c1c;
+        }
+
+        .highlight { color: var(--accent); font-weight: 500; }
+
+        .calc-lines { font-size: 0.82rem; color: var(--text); margin-bottom: 10px; }
+        .calc-lines div { margin-bottom: 3px; }
+
+        .providers-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            margin: 10px 0;
+        }
+
+        .input-group-inline {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            font-size: 0.8rem;
+            color: var(--muted);
+        }
+
+        .provider-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 6px;
+            font-size: 0.82rem;
+        }
+
+        .provider-table th,
+        .provider-table td {
+            border: 1px solid var(--border);
+            padding: 6px 8px;
+            text-align: left;
+        }
+
+        .provider-table th {
+            background: var(--panel-alt);
+            color: var(--muted);
+            font-weight: 500;
+        }
+
+        .info {
+            font-size: 0.75rem;
+            margin-left: 4px;
+            cursor: help;
+            color: var(--muted);
+        }
+
+        .chart-wrapper {
+            margin-top: 10px;
+            background: var(--panel);
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            padding: 10px;
+        }
+
+        canvas { max-width: 100%; }
+
+        @media (max-width: 800px) {
+            .grid { grid-template-columns: minmax(0, 1fr); }
+        }
+    </style>
+</head>
+<body>
+<div class="app">
+    <div class="top-bar">
+        <div>
+            <h1>EV Public Charging Comparison</h1>
+            <div class="subtitle">
+                Compare ad‑hoc vs subscription charging for a specific trip distance, including Be.EV and other major networks.
+            </div>
+        </div>
+        <label class="theme-toggle">
+            <input type="checkbox" id="themeToggle">
+            <span>Light mode</span>
+        </label>
+    </div>
+
+    <div class="grid">
+        <!-- Trip & vehicle -->
+        <div class="card">
+            <div class="card-header">
+                <h2>Trip & Vehicle</h2>
+                <button type="button" class="collapse-btn" onclick="toggleSection('tripSection')">Toggle</button>
+            </div>
+            <div class="card-body" id="tripSection">
+                <div class="input-row">
+                    <div class="input-group">
+                        <label>Trip distance (miles)</label>
+                        <input type="number" id="journeyMiles" placeholder="e.g., 250">
+                    </div>
+                    <div class="input-group">
+                        <label>Battery size (kWh)</label>
+                        <input type="number" id="batteryKwh" placeholder="e.g., 77">
+                    </div>
+                </div>
+
+                <div class="input-row">
+                    <div class="input-group">
+                        <label>Starting state of charge (%)</label>
+                        <input type="number" id="soc" placeholder="e.g., 90">
+                    </div>
+                    <div class="input-group">
+                        <label>Efficiency (miles per kWh)</label>
+                        <input type="number" id="efficiency" placeholder="e.g., 3.5">
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>Ad‑hoc public rate (pence per kWh)</label>
+                    <input type="number" id="adhoc" placeholder="e.g., 79">
+                </div>
+
+                <div class="input-group">
+                    <label>Home charging rate (pence per kWh)</label>
+                    <input type="number" id="homeRate" placeholder="e.g., 30">
+                </div>
+
+                <div class="input-group">
+                    <label>
+                        <input type="checkbox" id="cheapHome" checked>
+                        I have cheap home charging
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Providers -->
+        <div class="card">
+            <div class="card-header">
+                <h2>Subscriptions & Discounts</h2>
+                <button type="button" class="collapse-btn" onclick="toggleSection('providersSection')">Toggle</button>
+            </div>
+            <div class="card-body" id="providersSection">
+                <div class="providers-header-row">
+                    <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                        <button type="button" class="btn" onclick="addProvider()">Add provider</button>
+                        <button type="button" class="btn secondary" onclick="addAllProviders()">Add all providers</button>
+                        <button type="button" class="btn secondary" onclick="duplicateLastProvider()">Duplicate last</button>
+                    </div>
+                    <button type="button" class="btn danger" onclick="resetAll()">Reset all</button>
+                </div>
+                <div id="providers"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="btn-row">
+        <button type="button" class="btn secondary" onclick="shareLink()">Copy shareable link</button>
+        <button type="button" class="btn secondary" onclick="exportPdf()">Export as PDF</button>
+    </div>
+
+    <!-- Results -->
+    <div class="card results" id="results">
+        <div class="card-header">
+            <h2>Results</h2>
+            <button type="button" class="collapse-btn" onclick="toggleSection('resultsSection')">Toggle</button>
+        </div>
+        <div class="card-body" id="resultsSection">
+            <div id="summaryBox" class="summary"></div>
+
+            <div class="calc-lines">
+                <div id="homeRangeLine"></div>
+                <div id="homeCostLine"></div>
+                <div id="publicMilesLine"></div>
+                <div id="publicKwhLine"></div>
+                <div id="adhocCostLine"></div>
+                <div id="blendedCostLine"></div>
+                <div id="blendedCostPerMileLine"></div>
+            </div>
+
+            <div class="providers-controls">
+                <div class="input-group-inline">
+                    <label for="sortBy">Sort providers</label>
+                    <select id="sortBy">
+                        <option value="cost">Cheapest first</option>
+                        <option value="breakeven">Break‑even miles</option>
+                        <option value="savings">Savings (highest first)</option>
+                    </select>
+                </div>
+
+                <div class="input-group-inline">
+                    <label>
+                        <input type="checkbox" id="showTotalBreakEven">
+                        Show total break‑even miles only
+                    </label>
+                </div>
+            </div>
+
+            <table id="providerTable" class="provider-table">
+                <thead>
+                <tr>
+                    <th>Provider</th>
+                    <th>Trip cost (£)</th>
+                    <th>Cost per mile (p)</th>
+                    <th>
+                        Break‑even
+                        <span class="info"
+                              title="Break‑even is the amount of public charging required before a subscription becomes cheaper than paying ad‑hoc. It is independent of the specific trip distance you enter.">
+                            ⓘ
+                        </span>
+                    </th>
+                    <th>Savings vs ad‑hoc (£)</th>
+                </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+
+            <div class="chart-wrapper">
+                <canvas id="costChart" height="220"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+/* =========================================================
+   PRESETS (fallback) + JSON LOADING
+========================================================= */
+const PRESETS_FALLBACK = [
+    { name: "Tesla", subCost: 10.99, rate: 45 },
+    { name: "BP Pulse", subCost: 7.99, rate: 49 },
+    { name: "Osprey", subCost: 0, rate: 79 },
+    { name: "Instavolt", subCost: 0, rate: 85 },
+    { name: "Gridserve", subCost: 0, rate: 79 },
+    { name: "Shell Recharge", subCost: 7.99, rate: 55 },
+    { name: "Be.EV", subCost: 9.99, rate: 39 }
+];
+
+let PRESETS = [...PRESETS_FALLBACK];
+
+function buildPresetOptions() {
+    const names = ["Custom", ...PRESETS.map(p => p.name)];
+    return names.map(name => `<option value="${name}">${name}</option>`).join("");
+}
+
+function refreshPresetDropdowns() {
+    document.querySelectorAll(".provider-box").forEach(box => {
+        const id = box.dataset.id;
+        const select = document.getElementById(`preset${id}`);
+        if (!select) return;
+        const current = select.value;
+        select.innerHTML = buildPresetOptions();
+        select.value = current;
+    });
+}
+
+// Load JSON from correct path with cache-busting
+fetch("data/providers.json?cache=" + Date.now())
+    .then(r => r.json())
+    .then(data => {
+        if (Array.isArray(data.providers)) {
+            PRESETS = data.providers.map(p => ({
+                name: p.name,
+                subCost: p.subCost ?? 0,
+                rate: p.rate ?? 0
+            }));
+            refreshPresetDropdowns();
+        }
+    })
+    .catch(() => console.warn("Using built‑in presets; providers.json not found."));
+
+let providerCount = 0;
+let chart = null;
+
+// THEME TOGGLE
+function initTheme() {
+    const toggle = document.getElementById("themeToggle");
+    const stored = localStorage.getItem("evCalcTheme");
+    if (stored === "light") {
+        document.body.classList.add("light");
+        if (toggle) toggle.checked = true;
+    }
+    if (toggle) {
+        toggle.addEventListener("change", () => {
+            if (toggle.checked) {
+                document.body.classList.add("light");
+                localStorage.setItem("evCalcTheme", "light");
+            } else {
+                document.body.classList.remove("light");
+                localStorage.setItem("evCalcTheme", "dark");
+            }
+        });
+    }
+}
+
+// COLLAPSIBLE SECTIONS
+function toggleSection(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.style.display = (el.style.display === "none") ? "block" : "none";
+}
+
+// CREATE PROVIDER BOX
+function createProviderBox(preset) {
+    providerCount++;
+    const id = providerCount;
+
+    const box = document.createElement("div");
+    box.className = "provider-box";
+    box.dataset.id = id;
+
+    const presetOptions = buildPresetOptions();
+
+    box.innerHTML = `
+        <div class="provider-header">
+            <span>Provider #${id}</span>
+            <div style="display:flex; gap:6px;">
+                <button type="button" onclick="duplicateProvider(${id})">Duplicate</button>
+                <button type="button" onclick="removeProvider(${id})">Remove</button>
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label>Preset</label>
+            <select id="preset${id}">
+                ${presetOptions}
+            </select>
+        </div>
+
+        <div class="input-group">
+            <label>Provider name</label>
+            <input type="text" id="name${id}" placeholder="e.g., BP Pulse">
+        </div>
+
+        <div class="input-group">
+            <label>Subscription cost (£ / month)</label>
+            <input type="number" id="subCost${id}" placeholder="e.g., 7.99">
+        </div>
+
+        <div class="input-group">
+            <label>Discounted rate (pence per kWh)</label>
+            <input type="number" id="discount${id}" placeholder="e.g., 49">
+        </div>
+    `;
+
+    document.getElementById("providers").appendChild(box);
+
+    const presetSelect = document.getElementById(`preset${id}`);
+    presetSelect.addEventListener("change", () => applyPreset(id));
+
+    box.querySelectorAll("input").forEach(i => i.addEventListener("input", calculate));
+
+    if (preset) {
+        presetSelect.value = preset.name;
+        document.getElementById(`name${id}`).value = preset.name;
+        document.getElementById(`subCost${id}`).value = preset.subCost;
+        document.getElementById(`discount${id}`).value = preset.rate;
+    }
+}
+
+function addProvider() {
+    createProviderBox();
+    calculate();
+}
+
+function addAllProviders() {
+    const existing = Array.from(document.querySelectorAll(".provider-box"))
+        .map(b => document.getElementById(`name${b.dataset.id}`).value.trim().toLowerCase());
+
+    PRESETS.forEach(p => {
+        if (!existing.includes(p.name.toLowerCase())) {
+            createProviderBox(p);
+        }
+    });
+
+    calculate();
+}
+
+function removeProvider(id) {
+    const box = document.querySelector(`.provider-box[data-id="${id}"]`);
+    if (box) box.remove();
+    calculate();
+}
+
+function applyPreset(id) {
+    const presetName = document.getElementById(`preset${id}`).value;
+    const preset = PRESETS.find(p => p.name === presetName);
+    if (!preset) return;
+
+    document.getElementById(`name${id}`).value = preset.name;
+    document.getElementById(`subCost${id}`).value = preset.subCost;
+    document.getElementById(`discount${id}`).value = preset.rate;
+
+    calculate();
+}
+
+function duplicateProvider(id) {
+    const name = document.getElementById(`name${id}`).value;
+    const subCost = document.getElementById(`subCost${id}`).value;
+    const discount = document.getElementById(`discount${id}`).value;
+
+    createProviderBox();
+    const newId = providerCount;
+
+    document.getElementById(`name${newId}`).value = name;
+    document.getElementById(`subCost${newId}`).value = subCost;
+    document.getElementById(`discount${newId}`).value = discount;
+
+    calculate();
+}
+
+function duplicateLastProvider() {
+    const boxes = document.querySelectorAll(".provider-box");
+    if (!boxes.length) return;
+    const last = boxes[boxes.length - 1];
+    duplicateProvider(last.dataset.id);
+}
+
+function resetAll() {
+    document.getElementById("journeyMiles").value = "";
+    document.getElementById("batteryKwh").value = "";
+    document.getElementById("soc").value = "";
+    document.getElementById("efficiency").value = "";
+    document.getElementById("adhoc").value = "";
+    document.getElementById("homeRate").value = "";
+    document.getElementById("cheapHome").checked = true;
+
+    document.getElementById("providers").innerHTML = "";
+    providerCount = 0;
+    addProvider();
+
+    document.getElementById("sortBy").value = "cost";
+    document.getElementById("showTotalBreakEven").checked = false;
+
+    calculate();
+}
 // CORE INPUTS
 function getCoreInputs() {
     const journeyMiles = parseFloat(document.getElementById("journeyMiles").value);
