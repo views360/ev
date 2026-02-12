@@ -1,79 +1,78 @@
 {
   "providers": [
     {
-      "name": "Be.EV [Subscription]",
-      "subCost": 9.99,
-      "rate": 39
-    },
-    {
-      "name": "Tesla Membership [Subscription]",
+      "name": "Tesla",
       "subCost": 10.99,
-      "rate": 45
+      "rates": {
+        "default": 45
+      }
     },
     {
-      "name": "BP Pulse Subscription [Subscription]",
+      "name": "BP Pulse",
       "subCost": 7.99,
-      "rate": 49
+      "rates": {
+        "7": 45,
+        "22": 49,
+        "50": 59,
+        "150": 69
+      }
     },
     {
-      "name": "Shell Recharge Membership [Subscription]",
+      "name": "Osprey",
+      "subCost": 0,
+      "rates": {
+        "default": 79
+      }
+    },
+    {
+      "name": "Instavolt",
+      "subCost": 0,
+      "rates": {
+        "default": 85
+      }
+    },
+    {
+      "name": "Gridserve",
+      "subCost": 0,
+      "rates": {
+        "default": 79
+      }
+    },
+    {
+      "name": "Shell Recharge",
       "subCost": 7.99,
-      "rate": 55
+      "rates": {
+        "7": 45,
+        "22": 49,
+        "50": 59,
+        "150": 69
+      }
     },
     {
-      "name": "Fastned Membership [Subscription]",
+      "name": "Be.EV",
       "subCost": 9.99,
-      "rate": 49
+      "rates": {
+        "default": 39
+      }
     },
     {
-      "name": "IONITY Passport [Subscription]",
-      "subCost": 16.99,
-      "rate": 59
-    },
-    {
-      "name": "ESB Energy Membership [Subscription]",
-      "subCost": 4.00,
-      "rate": 46
-    },
-    {
-      "name": "Osprey [No Subscription]",
+      "name": "Pod Point",
       "subCost": 0,
-      "rate": 79
+      "rates": {
+        "7": 44,
+        "22": 49,
+        "50": 62
+      }
     },
     {
-      "name": "Instavolt [No Subscription]",
+      "name": "Tesco Pod Point",
       "subCost": 0,
-      "rate": 85
-    },
-    {
-      "name": "Gridserve [No Subscription]",
-      "subCost": 0,
-      "rate": 79
-    },
-    {
-      "name": "RAW Charging [No Subscription]",
-      "subCost": 0,
-      "rate": 79
-    },
-    {
-      "name": "Mer UK [No Subscription]",
-      "subCost": 0,
-      "rate": 79
-    },
-    {
-      "name": "ChargePlace Scotland (rapid) [No Subscription]",
-      "subCost": 0,
-      "rate": 30
-    },
-    {
-      "name": "ChargePlace Scotland (AC) [No Subscription]",
-      "subCost": 0,
-      "rate": 25
-    },
-    {
-      "name": "Swarco E.Connect [No Subscription]",
-      "subCost": 0,
-      "rate": 75
+      "rates": {
+        "7": 44,
+        "22": 49,
+        "50": 62,
+        "75": 69
+      }
     }
   ]
 }
