@@ -358,7 +358,7 @@ function refreshPresetDropdowns() {
 }
 
 // Try to load providers.json and override PRESETS
-fetch("data/providers.json")
+fetch("providers.json")
     .then(r => r.json())
     .then(data => {
         if (Array.isArray(data.providers)) {
@@ -794,4 +794,5 @@ addProvider();
 loadFromParams();
 </script>
 </body>
+
 </html>
