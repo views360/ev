@@ -100,6 +100,12 @@
             color: var(--danger);
         }
 
+        .btn.secondary {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text);
+        }
+
         .grid {
             display: grid;
             grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.1fr);
@@ -151,6 +157,12 @@
 
         .card-body {
             margin-top: 6px;
+        }
+
+        .section-note {
+            margin-bottom: 10px;
+            font-size: 0.8rem;
+            color: var(--muted);
         }
 
         .input-row {
@@ -232,12 +244,6 @@
             font-size: 0.8rem;
             padding: 6px 12px;
             cursor: pointer;
-        }
-
-        .btn.secondary {
-            background: transparent;
-            border-color: var(--border);
-            color: var(--text);
         }
 
         .btn.danger {
@@ -354,28 +360,42 @@
         <div>
             <h1>EV Public Charging Comparison</h1>
             <div class="subtitle">
-                Use this tool to compare ad‑hoc vs subscription charging for specific trip distances (e.g., a weekend away or a seven-day break in another area).<br /><br />
-Select pre-set providers, edit default values, and/or add your own custom provider(s).<br /><br /><strong>Note:</strong> default provider values are hard-coded (not live or dynamically generated). Message the page author to suggest corrections.
+                Use this tool to compare ad‑hoc vs subscription charging for specific trip distances 
+                (e.g., a weekend away or a seven-day break in another area).<br /><br />
+                Select pre-set providers, edit default values, and/or add your own custom provider(s).<br /><br />
+                <strong>Note:</strong> default provider values are hard-coded (not live or dynamically generated). 
+                Message the page author to suggest corrections.
             </div>
         </div>
 
         <div style="display:flex; align-items:center; gap:12px;">
+
             <label class="theme-toggle">
                 <input type="checkbox" id="themeToggle">
                 <span>Light mode</span>
             </label>
 
             <button type="button" class="btn danger top-reset" onclick="resetAll()">Reset all</button>
+
+            <a href="https://www.facebook.com/kelvin.a.hill"
+               target="_blank"
+               class="btn secondary"
+               style="text-decoration:none;">
+                Message Author
+            </a>
+
         </div>
     </div>
 
     <div class="grid">
+
         <!-- Trip & vehicle -->
         <div class="card">
             <div class="card-header">
                 <h2>Trip & Vehicle</h2>
                 <button type="button" class="collapse-btn" onclick="toggleSection('tripSection')">Toggle</button>
             </div>
+
             <div class="card-body" id="tripSection">
                 <div class="input-row">
                     <div class="input-group">
@@ -422,10 +442,16 @@ Select pre-set providers, edit default values, and/or add your own custom provid
         <div class="card">
             <div class="card-header">
                 <h2>Subscriptions & Discounts</h2>
-		<label><strong>Note:</strong> choose providers available in your area of travel.</label>
                 <button type="button" class="collapse-btn" onclick="toggleSection('providersSection')">Toggle</button>
             </div>
+
             <div class="card-body" id="providersSection">
+
+                <!-- ⭐ Explanatory note now BELOW the title -->
+                <div class="section-note">
+                    <strong>Note:</strong> choose providers available in your area of travel.
+                </div>
+
                 <div class="providers-header-row">
                     <div style="display:flex; gap:8px; flex-wrap:wrap;">
                         <button type="button" class="btn" onclick="addProvider()">Add provider</button>
@@ -433,9 +459,11 @@ Select pre-set providers, edit default values, and/or add your own custom provid
                         <button type="button" class="btn secondary" onclick="duplicateLastProvider()">Duplicate last</button>
                     </div>
                 </div>
+
                 <div id="providers"></div>
             </div>
         </div>
+
     </div>
 
     <div class="btn-row">
@@ -449,6 +477,7 @@ Select pre-set providers, edit default values, and/or add your own custom provid
             <h2>Results</h2>
             <button type="button" class="collapse-btn" onclick="toggleSection('resultsSection')">Toggle</button>
         </div>
+
         <div class="card-body" id="resultsSection">
             <div id="summaryBox" class="summary"></div>
 
@@ -723,9 +752,10 @@ function resetAll() {
 
     calculate();
 }
-/* =========================================================
-   CORE INPUTS
-========================================================= */
+</script>
+<!-- =========================================================
+     CORE INPUTS
+========================================================= -->
 function getCoreInputs() {
     const journeyMiles = parseFloat(document.getElementById("journeyMiles").value);
     const batteryKwh = parseFloat(document.getElementById("batteryKwh").value);
@@ -782,9 +812,9 @@ function getCoreInputs() {
     };
 }
 
-/* =========================================================
-   MAIN CALCULATION
-========================================================= */
+<!-- =========================================================
+     MAIN CALCULATION
+========================================================= -->
 function calculate() {
     const core = getCoreInputs();
 
@@ -903,9 +933,9 @@ function calculate() {
     drawGraph(core, providers);
 }
 
-/* =========================================================
-   TABLE RENDERING
-========================================================= */
+<!-- =========================================================
+     TABLE RENDERING (first half)
+========================================================= -->
 function renderProviderTable(core, providers) {
     const tbody = document.querySelector("#providerTable tbody");
     if (!tbody) return;
@@ -928,30 +958,6 @@ function renderProviderTable(core, providers) {
     });
 
     tbody.innerHTML = "";
-
-    sorted.forEach(p => {
-        let beText;
-
-        if (p.breakEvenMiles === Infinity) {
-            beText = "No break‑even (discounted rate ≥ ad‑hoc rate)";
-        } else {
-            const be = p.breakEvenMiles;
-            beText = showTotal
-                ? `${be.toFixed(0)} miles (public charging required for break‑even)`
-                : `${be.toFixed(0)} miles of public charging (independent of this trip)`;
-        }
-
-        const row = document.createElement("tr");
-        row.innerHTML = `
-            <td>${p.name}</td>
-            <td>£${p.blendedTripCost.toFixed(2)}</td>
-            <td>${(p.blendedCostPerMile * 100).toFixed(1)} p/mile</td>
-            <td>${beText}</td>
-            <td>£${p.blendedSavingsVsAdhoc.toFixed(2)}</td>
-        `;
-        tbody.appendChild(row);
-    });
-}
 /* =========================================================
    GRAPH (blended cost vs distance)
 ========================================================= */
@@ -1107,8 +1113,7 @@ function loadFromParams() {
     setVal("homeRate", "hr");
 
     const ch = params.get("ch");
-    if (ch === "0") document.getElementById("cheapHome").checked = false;
-    if (ch === "1") document.getElementById("cheapHome").checked = true;
+    document.getElementById("cheapHome").checked = (ch === "1");
 
     let idx = 0;
     while (true) {
