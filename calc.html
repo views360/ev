@@ -291,7 +291,10 @@
         <div class="card">
             <div class="providers-header-row">
                 <h2>Subscriptions & Discounts</h2>
-                <button type="button" class="btn" onclick="addProvider()">Add provider</button>
+                <div style="display:flex; gap:8px;">
+                    <button type="button" class="btn" onclick="addProvider()">Add provider</button>
+                    <button type="button" class="btn secondary" onclick="addAllProviders()">Add all providers</button>
+                </div>
             </div>
             <div id="providers"></div>
         </div>
@@ -320,7 +323,6 @@
         </div>
     </div>
 </div>
-
 <script>
 /* =========================================================
    PRESETS (fallback) + JSON LOADING
@@ -357,22 +359,21 @@ function refreshPresetDropdowns() {
     });
 }
 
-// Try to load providers.json and override PRESETS
-fetch("providers.json?cache=" + Date.now())
+// Load JSON from correct path with cache-busting
+fetch("data/providers.json?cache=" + Date.now())
     .then(r => r.json())
     .then(data => {
         if (Array.isArray(data.providers)) {
             PRESETS = data.providers.map(p => ({
                 name: p.name,
-                subCost: typeof p.subCost === "number" ? p.subCost :
-                         typeof p.subscription === "number" ? p.subscription : 0,
-                rate: typeof p.rate === "number" ? p.rate : 0
+                subCost: p.subCost ?? 0,
+                rate: p.rate ?? 0
             }));
             refreshPresetDropdowns();
         }
     })
     .catch(() => {
-        console.warn("Using built-in presets; could not load providers.json");
+        console.warn("Using built‑in presets; providers.json not found.");
     });
 
 let providerCount = 0;
@@ -438,6 +439,24 @@ function addProvider() {
     calculate();
 }
 
+function addAllProviders() {
+    if (!Array.isArray(PRESETS) || PRESETS.length === 0) {
+        alert("Provider list not loaded yet.");
+        return;
+    }
+
+    const existingNames = Array.from(document.querySelectorAll(".provider-box"))
+        .map(box => document.getElementById(`name${box.dataset.id}`).value.trim().toLowerCase());
+
+    PRESETS.forEach(p => {
+        if (!existingNames.includes(p.name.toLowerCase())) {
+            createProviderBox(p);
+        }
+    });
+
+    calculate();
+}
+
 function removeProvider(id) {
     const box = document.querySelector(`.provider-box[data-id="${id}"]`);
     if (box) box.remove();
@@ -455,7 +474,6 @@ function applyPreset(id) {
 
     calculate();
 }
-
 // CORE INPUTS
 function getCoreInputs() {
     const journeyMiles = parseFloat(document.getElementById("journeyMiles").value);
@@ -794,7 +812,4 @@ addProvider();
 loadFromParams();
 </script>
 </body>
-
 </html>
-
-
