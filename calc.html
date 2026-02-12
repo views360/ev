@@ -26,9 +26,7 @@
             --good: #22c55e;
         }
 
-        * {
-            box-sizing: border-box;
-        }
+        * { box-sizing: border-box; }
 
         body {
             margin: 0;
@@ -49,17 +47,8 @@
             padding: 24px 24px 32px;
         }
 
-        h1 {
-            margin: 0 0 4px;
-            font-size: 1.6rem;
-            letter-spacing: 0.03em;
-        }
-
-        .subtitle {
-            margin-bottom: 20px;
-            color: var(--muted);
-            font-size: 0.9rem;
-        }
+        h1 { margin: 0 0 4px; font-size: 1.6rem; letter-spacing: 0.03em; }
+        .subtitle { margin-bottom: 20px; color: var(--muted); font-size: 0.9rem; }
 
         .grid {
             display: grid;
@@ -95,10 +84,7 @@
             margin-bottom: 10px;
         }
 
-        .input-group label {
-            font-size: 0.8rem;
-            color: var(--muted);
-        }
+        .input-group label { font-size: 0.8rem; color: var(--muted); }
 
         .input-group input,
         .input-group select {
@@ -124,10 +110,7 @@
             margin-bottom: 6px;
         }
 
-        .provider-header span {
-            font-size: 0.85rem;
-            color: var(--muted);
-        }
+        .provider-header span { font-size: 0.85rem; color: var(--muted); }
 
         .provider-header button {
             background: transparent;
@@ -159,10 +142,6 @@
             margin-bottom: 8px;
         }
 
-        .providers-header-row h2 {
-            margin: 0;
-        }
-
         .btn {
             border-radius: 999px;
             border: 1px solid #1f2937;
@@ -186,10 +165,7 @@
             flex-wrap: wrap;
         }
 
-        .results {
-            margin-top: 16px;
-            display: none;
-        }
+        .results { margin-top: 16px; display: none; }
 
         .summary {
             border-radius: 10px;
@@ -210,38 +186,10 @@
             color: #fecaca;
         }
 
-        .result-line {
-            font-size: 0.82rem;
-            margin-bottom: 4px;
-            color: #e5e7eb;
-        }
+        .highlight { color: var(--accent); font-weight: 500; }
 
-        .highlight {
-            color: var(--accent);
-            font-weight: 500;
-        }
-
-        .calc-lines {
-            font-size: 0.82rem;
-            color: #e5e7eb;
-            margin-bottom: 10px;
-        }
-
-        .calc-lines div {
-            margin-bottom: 3px;
-        }
-
-        .chart-wrapper {
-            margin-top: 10px;
-            background: #020617;
-            border-radius: 10px;
-            border: 1px solid #111827;
-            padding: 10px;
-        }
-
-        canvas {
-            max-width: 100%;
-        }
+        .calc-lines { font-size: 0.82rem; color: #e5e7eb; margin-bottom: 10px; }
+        .calc-lines div { margin-bottom: 3px; }
 
         .providers-controls {
             display: flex;
@@ -255,20 +203,6 @@
             display: flex;
             flex-direction: column;
             gap: 4px;
-            font-size: 0.8rem;
-            color: var(--muted);
-        }
-
-        .input-group-inline select {
-            background: #020617;
-            border-radius: 8px;
-            border: 1px solid #1f2937;
-            padding: 4px 8px;
-            color: var(--text);
-            font-size: 0.8rem;
-        }
-
-        .input-group-inline label {
             font-size: 0.8rem;
             color: var(--muted);
         }
@@ -293,14 +227,6 @@
             font-weight: 500;
         }
 
-        .provider-table tbody tr:nth-child(even) {
-            background: #020617;
-        }
-
-        .provider-table tbody tr:nth-child(odd) {
-            background: #020617;
-        }
-
         .info {
             font-size: 0.75rem;
             margin-left: 4px;
@@ -308,10 +234,18 @@
             color: #9ca3af;
         }
 
+        .chart-wrapper {
+            margin-top: 10px;
+            background: #020617;
+            border-radius: 10px;
+            border: 1px solid #111827;
+            padding: 10px;
+        }
+
+        canvas { max-width: 100%; }
+
         @media (max-width: 800px) {
-            .grid {
-                grid-template-columns: minmax(0, 1fr);
-            }
+            .grid { grid-template-columns: minmax(0, 1fr); }
         }
     </style>
 </head>
@@ -326,6 +260,7 @@
         <!-- Trip & vehicle -->
         <div class="card">
             <h2>Trip & Vehicle</h2>
+
             <div class="input-row">
                 <div class="input-group">
                     <label>Trip distance (miles)</label>
@@ -336,6 +271,7 @@
                     <input type="number" id="batteryKwh" placeholder="e.g., 77">
                 </div>
             </div>
+
             <div class="input-row">
                 <div class="input-group">
                     <label>Starting state of charge (%)</label>
@@ -346,14 +282,17 @@
                     <input type="number" id="efficiency" placeholder="e.g., 3.5">
                 </div>
             </div>
+
             <div class="input-group">
                 <label>Ad‑hoc public rate (pence per kWh)</label>
                 <input type="number" id="adhoc" placeholder="e.g., 79">
             </div>
+
             <div class="input-group">
                 <label>Home charging rate (pence per kWh)</label>
                 <input type="number" id="homeRate" placeholder="e.g., 30">
             </div>
+
             <div class="input-group">
                 <label>
                     <input type="checkbox" id="cheapHome" checked>
@@ -401,6 +340,7 @@
                     <option value="savings">Savings (highest first)</option>
                 </select>
             </div>
+
             <div class="input-group-inline">
                 <label>
                     <input type="checkbox" id="showTotalBreakEven">
@@ -417,7 +357,7 @@
                 <th>
                     Break‑even
                     <span class="info"
-                          title="Break‑even is the point where the subscription becomes cheaper than paying ad‑hoc. By default this is shown as miles of public charging; when home charging is used, we also show the approximate total journey miles.">
+                          title="Break‑even is the amount of public charging required before a subscription becomes cheaper than paying ad‑hoc. It is independent of the specific trip distance you enter.">
                         ⓘ
                     </span>
                 </th>
@@ -460,11 +400,7 @@ function refreshPresetDropdowns() {
         if (!select) return;
         const current = select.value;
         select.innerHTML = buildPresetOptions();
-        if (Array.from(select.options).some(o => o.value === current)) {
-            select.value = current;
-        } else {
-            select.value = "Custom";
-        }
+        select.value = current;
     });
 }
 
@@ -481,9 +417,7 @@ fetch("data/providers.json?cache=" + Date.now())
             refreshPresetDropdowns();
         }
     })
-    .catch(() => {
-        console.warn("Using built‑in presets; providers.json not found.");
-    });
+    .catch(() => console.warn("Using built‑in presets; providers.json not found."));
 
 let providerCount = 0;
 let chart = null;
@@ -549,16 +483,11 @@ function addProvider() {
 }
 
 function addAllProviders() {
-    if (!Array.isArray(PRESETS) || PRESETS.length === 0) {
-        alert("Provider list not loaded yet.");
-        return;
-    }
-
-    const existingNames = Array.from(document.querySelectorAll(".provider-box"))
-        .map(box => document.getElementById(`name${box.dataset.id}`).value.trim().toLowerCase());
+    const existing = Array.from(document.querySelectorAll(".provider-box"))
+        .map(b => document.getElementById(`name${b.dataset.id}`).value.trim().toLowerCase());
 
     PRESETS.forEach(p => {
-        if (!existingNames.includes(p.name.toLowerCase())) {
+        if (!existing.includes(p.name.toLowerCase())) {
             createProviderBox(p);
         }
     });
@@ -665,14 +594,12 @@ function calculate() {
                 `cost: <span class="highlight">£${core.homeCost.toFixed(2)}</span>`;
         } else if (core.homeKwh > 0) {
             homeCostLine.innerHTML =
-                `Home charging energy: <span class="highlight">${core.homeKwh.toFixed(1)} kWh</span> ` +
-                `(no home rate entered, cost not calculated).`;
+                `Home charging energy: <span class="highlight">${core.homeKwh.toFixed(1)} kWh</span> (no home rate entered).`;
         } else {
             homeCostLine.textContent = "";
         }
     } else {
-        homeRangeLine.innerHTML =
-            `Home charging disabled — full journey requires public charging.`;
+        homeRangeLine.innerHTML = `Home charging disabled — full journey requires public charging.`;
         homeCostLine.textContent = "";
     }
 
@@ -703,6 +630,7 @@ function calculate() {
         const breakEvenMiles = (breakEvenKwh === Infinity)
             ? Infinity
             : breakEvenKwh * core.efficiency;
+
         const savings = core.adhocCost - costWithSub;
 
         providers.push({
@@ -730,7 +658,7 @@ function calculate() {
     if (best.costWithSub < core.adhocCost) {
         summaryBox.className = "summary good";
         summaryBox.textContent =
-            `${best.name} is currently the cheapest option for this trip (saving £${(core.adhocCost - best.costWithSub).toFixed(2)} vs ad‑hoc).`;
+            `${best.name} is the cheapest option for this trip (saving £${(core.adhocCost - best.costWithSub).toFixed(2)} vs ad‑hoc).`;
     } else {
         summaryBox.className = "summary bad";
         summaryBox.textContent =
@@ -741,7 +669,7 @@ function calculate() {
     drawGraph(core, providers);
 }
 
-// TABLE RENDERING WITH SORTING + BREAK-EVEN DISPLAY TOGGLE
+// TABLE RENDERING WITH CORRECT BREAK‑EVEN LOGIC
 function renderProviderTable(core, providers) {
     const tbody = document.querySelector("#providerTable tbody");
     if (!tbody) return;
@@ -752,18 +680,14 @@ function renderProviderTable(core, providers) {
     const sorted = [...providers];
 
     sorted.sort((a, b) => {
-        if (sortBy === "cost") {
-            return a.costWithSub - b.costWithSub;
-        } else if (sortBy === "breakeven") {
-            const aBE = a.breakEvenMiles;
-            const bBE = b.breakEvenMiles;
-            if (aBE === bBE) return 0;
-            if (aBE === Infinity) return 1;
-            if (bBE === Infinity) return -1;
-            return aBE - bBE;
-        } else if (sortBy === "savings") {
-            return b.savings - a.savings;
+        if (sortBy === "cost") return a.costWithSub - b.costWithSub;
+        if (sortBy === "breakeven") {
+            if (a.breakEvenMiles === b.breakEvenMiles) return 0;
+            if (a.breakEvenMiles === Infinity) return 1;
+            if (b.breakEvenMiles === Infinity) return -1;
+            return a.breakEvenMiles - b.breakEvenMiles;
         }
+        if (sortBy === "savings") return b.savings - a.savings;
         return 0;
     });
 
@@ -775,20 +699,14 @@ function renderProviderTable(core, providers) {
         if (p.breakEvenMiles === Infinity) {
             beText = "No break‑even (discounted rate ≥ ad‑hoc rate)";
         } else {
-            const totalBreakEven = core.cheapHome
-                ? core.homeMiles + p.breakEvenMiles
-                : p.breakEvenMiles;
+            const be = p.breakEvenMiles;
 
             if (showTotal) {
-                beText = `${totalBreakEven.toFixed(0)} miles (total journey miles)`;
+                beText = `${be.toFixed(0)} miles (public charging required for break‑even)`;
             } else {
-                if (core.cheapHome) {
-                    beText =
-                        `${p.breakEvenMiles.toFixed(0)} miles of public charging ` +
-                        `(≈ ${totalBreakEven.toFixed(0)} total journey miles)`;
-                } else {
-                    beText = `${p.breakEvenMiles.toFixed(0)} miles (total journey miles)`;
-                }
+                beText =
+                    `${be.toFixed(0)} miles of public charging ` +
+                    `(independent of this specific trip)`;
             }
         }
 
@@ -887,9 +805,7 @@ function shareLink() {
     params.set("soc", core.soc);
     params.set("eff", core.efficiency);
     params.set("adhoc", core.adhocPence);
-    if (core.homeRatePence !== null) {
-        params.set("hr", core.homeRatePence);
-    }
+    if (core.homeRatePence !== null) params.set("hr", core.homeRatePence);
     params.set("ch", core.cheapHome ? "1" : "0");
 
     let idx = 0;
@@ -941,11 +857,8 @@ function loadFromParams() {
     setVal("homeRate", "hr");
 
     const ch = params.get("ch");
-    if (ch === "0") {
-        document.getElementById("cheapHome").checked = false;
-    } else if (ch === "1") {
-        document.getElementById("cheapHome").checked = true;
-    }
+    if (ch === "0") document.getElementById("cheapHome").checked = false;
+    if (ch === "1") document.getElementById("cheapHome").checked = true;
 
     let idx = 0;
     while (true) {
@@ -968,7 +881,7 @@ function loadFromParams() {
     calculate();
 }
 
-// PDF EXPORT (html2canvas + jsPDF, multi-page A4)
+// PDF EXPORT
 async function exportPdf() {
     const resultsEl = document.getElementById("results");
     if (!resultsEl || resultsEl.style.display === "none") {
