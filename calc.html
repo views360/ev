@@ -1,3 +1,885 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>EV Public Charging Comparison</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- External stylesheet -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- html2canvas -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <!-- jsPDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+<div class="app">
+
+    <div class="top-bar">
+        <div>
+            <h1>EV Public Charging Comparison</h1>
+            <div class="subtitle">
+                Use this tool to compare ad‑hoc vs subscription charging for specific trip distances 
+                (e.g., a weekend away or a seven-day break in another area).<br /><br />
+                Select pre-set providers, edit default values, and/or add your own custom provider(s).<br /><br />
+                <strong>Important:</strong> default provider values are hard-coded (not live or dynamically generated) 
+                and cannot take into account regional pricing differences. 
+                Message the page author to suggest corrections.
+            </div>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:12px;">
+
+            <label class="theme-toggle">
+                <input type="checkbox" id="themeToggle">
+                <span>Light mode</span>
+            </label>
+
+            <button type="button" class="btn danger top-reset" onclick="resetAll()">Reset all</button>
+
+            <a href="https://www.facebook.com/kelvin.a.hill"
+               target="_blank"
+               class="btn secondary"
+               style="text-decoration:none;">
+                Message Author
+            </a>
+
+        </div>
+    </div>
+
+    <div class="grid">
+
+        <!-- Trip & vehicle -->
+        <div class="card">
+            <div class="card-header">
+                <h2>Trip & Vehicle</h2>
+                <button type="button" class="collapse-btn" onclick="toggleSection('tripSection')">Toggle</button>
+            </div>
+
+            <div class="card-body" id="tripSection">
+                <div class="input-row">
+                    <div class="input-group">
+                        <label>Trip distance (miles)</label>
+                        <input type="number" id="journeyMiles" placeholder="e.g., 250">
+                    </div>
+                    <div class="input-group">
+                        <label>Battery size (kWh)</label>
+                        <input type="number" id="batteryKwh" placeholder="e.g., 61">
+                    </div>
+                </div>
+
+                <div class="input-row">
+                    <div class="input-group">
+                        <label>Starting state of charge (%)</label>
+                        <input type="number" id="soc" placeholder="e.g., 90">
+                    </div>
+                    <div class="input-group">
+                        <label>Efficiency (miles per kWh)</label>
+                        <input type="number" id="efficiency" placeholder="e.g., 3.5">
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>Ad‑hoc public rate (pence per kWh)</label>
+                    <input type="number" id="adhoc" placeholder="e.g., 62 [from Lidl using the Lidl+ app]">
+                </div>
+
+                <div class="input-group">
+                    <label>Home charging rate (pence per kWh)</label>
+                    <input type="number" id="homeRate" placeholder="e.g., 30">
+                </div>
+
+                <div class="input-group">
+                    <label>
+                        <input type="checkbox" id="cheapHome" checked>
+                        I have cheap home charging
+                    </label>
+                </div>
+            </div>
+        </div>
+        <!-- Providers -->
+        <div class="card">
+            <div class="card-header">
+                <h2>Subscriptions & Discounts</h2>
+                <button type="button" class="collapse-btn" onclick="toggleSection('providersSection')">Toggle</button>
+            </div>
+
+            <div class="card-body" id="providersSection">
+
+                <div class="section-note">
+                    <strong>Note:</strong> choose providers available in your area of travel.
+                </div>
+
+                <div class="providers-header-row">
+                    <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                        <button type="button" class="btn" onclick="addProvider()">Add provider</button>
+                        <button type="button" class="btn secondary" onclick="addAllProviders()">Add all providers</button>
+                        <button type="button" class="btn secondary" onclick="duplicateLastProvider()">Duplicate last</button>
+                    </div>
+                </div>
+
+                <!-- Provider boxes will be injected here -->
+                <div id="providers"></div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Results -->
+    <div class="card results" id="results">
+        <div class="card-header">
+            <h2>Results</h2>
+            <button type="button" class="collapse-btn" onclick="toggleSection('resultsSection')">Toggle</button>
+        </div>
+
+        <div class="card-body" id="resultsSection">
+            <div id="summaryBox" class="summary"></div>
+
+            <div class="calc-lines">
+                <div id="homeRangeLine"></div>
+                <div id="homeCostLine"></div>
+                <div id="publicMilesLine"></div>
+                <div id="publicKwhLine"></div>
+                <div id="adhocCostLine"></div>
+                <div id="blendedCostLine"></div>
+                <div id="blendedCostPerMileLine"></div>
+            </div>
+
+            <div class="providers-controls">
+                <div class="input-group-inline">
+                    <label for="sortBy">Sort providers</label>
+                    <select id="sortBy">
+                        <option value="cost">Cheapest first</option>
+                        <option value="breakeven">Break‑even miles</option>
+                        <option value="savings">Savings (highest first)</option>
+                    </select>
+                </div>
+
+                <div class="input-group-inline">
+                    <label>
+                        <input type="checkbox" id="showTotalBreakEven">
+                        Show total break‑even miles only
+                    </label>
+                </div>
+            </div>
+
+            <table id="providerTable" class="provider-table">
+                <thead>
+                <tr>
+                    <th>Provider</th>
+                    <th>Trip cost (£)</th>
+                    <th>Cost per mile (p)</th>
+                    <th>
+                        Break‑even
+                        <span class="info"
+                              title="Break‑even is the amount of public charging required before a subscription becomes cheaper than paying ad‑hoc. It is independent of the specific trip distance you enter.">
+                            ⓘ
+                        </span>
+                    </th>
+                    <th>Savings vs ad‑hoc (£)</th>
+                </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+
+            <div class="chart-wrapper">
+                <canvas id="costChart" height="220"></canvas>
+            </div>
+        </div>
+    </div>
+
+</div> <!-- end .app -->
+<script>
+/* =========================================================
+   PRESETS (fallback) — updated to match providers.json
+========================================================= */
+const PRESETS_FALLBACK = [
+    {
+        name: "Tesla",
+        subCost: 10.99,
+        rates: { default: 45 }
+    },
+    {
+        name: "BP Pulse",
+        subCost: 7.99,
+        rates: {
+            "7": 45,
+            "22": 49,
+            "50": 59,
+            "150": 69
+        }
+    },
+    {
+        name: "Osprey",
+        subCost: 0,
+        rates: { default: 79 }
+    },
+    {
+        name: "Instavolt",
+        subCost: 0,
+        rates: { default: 85 }
+    },
+    {
+        name: "Gridserve",
+        subCost: 0,
+        rates: { default: 79 }
+    },
+    {
+        name: "Shell Recharge",
+        subCost: 7.99,
+        rates: {
+            "7": 45,
+            "22": 49,
+            "50": 59,
+            "150": 69
+        }
+    },
+    {
+        name: "Be.EV",
+        subCost: 9.99,
+        rates: { default: 39 }
+    },
+    {
+        name: "Pod Point",
+        subCost: 0,
+        rates: {
+            "7": 44,
+            "22": 49,
+            "50": 62
+        }
+    },
+    {
+        name: "Tesco Pod Point",
+        subCost: 0,
+        rates: {
+            "7": 44,
+            "22": 49,
+            "50": 62,
+            "75": 69
+        }
+    }
+];
+
+let PRESETS = [...PRESETS_FALLBACK];
+
+/* =========================================================
+   Build preset dropdown options
+========================================================= */
+function buildPresetOptions() {
+    const names = ["Custom", ...PRESETS.map(p => p.name)];
+    return names.map(name => `<option value="${name}">${name}</option>`).join("");
+}
+
+/* =========================================================
+   Refresh preset dropdowns after JSON load
+========================================================= */
+function refreshPresetDropdowns() {
+    document.querySelectorAll(".provider-box").forEach(box => {
+        const id = box.dataset.id;
+        const select = document.getElementById(`preset${id}`);
+        if (!select) return;
+        const current = select.value;
+        select.innerHTML = buildPresetOptions();
+        select.value = current;
+    });
+}
+
+/* =========================================================
+   Load providers.json (same folder)
+========================================================= */
+fetch("providers.json?cache=" + Date.now())
+    .then(r => r.json())
+    .then(data => {
+        if (Array.isArray(data.providers)) {
+            PRESETS = data.providers.map(p => ({
+                name: p.name,
+                subCost: p.subCost ?? 0,
+                rates: p.rates ?? { default: 0 }
+            }));
+            refreshPresetDropdowns();
+        }
+    })
+    .catch(() => console.warn("Using fallback presets; providers.json not found."));
+
+let providerCount = 0;
+let chart = null;
+
+/* =========================================================
+   THEME TOGGLE
+========================================================= */
+function initTheme() {
+    const toggle = document.getElementById("themeToggle");
+    const stored = localStorage.getItem("evCalcTheme");
+    if (stored === "light") {
+        document.body.classList.add("light");
+        if (toggle) toggle.checked = true;
+    }
+    if (toggle) {
+        toggle.addEventListener("change", () => {
+            if (toggle.checked) {
+                document.body.classList.add("light");
+                localStorage.setItem("evCalcTheme", "light");
+            } else {
+                document.body.classList.remove("light");
+                localStorage.setItem("evCalcTheme", "dark");
+            }
+        });
+    }
+}
+
+/* =========================================================
+   COLLAPSIBLE SECTIONS
+========================================================= */
+function toggleSection(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.style.display = (el.style.display === "none") ? "block" : "none";
+}
+
+/* =========================================================
+   PROVIDER UI (with speed selector)
+========================================================= */
+function createProviderBox(preset) {
+    providerCount++;
+    const id = providerCount;
+
+    const box = document.createElement("div");
+    box.className = "provider-box";
+    box.dataset.id = id;
+
+    const presetOptions = buildPresetOptions();
+
+    box.innerHTML = `
+        <div class="provider-header">
+            <span>Provider #${id}</span>
+            <div style="display:flex; gap:6px;">
+                <button type="button" onclick="duplicateProvider(${id})">Duplicate</button>
+                <button type="button" onclick="removeProvider(${id})">Remove</button>
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label>Preset</label>
+            <select id="preset${id}">
+                ${presetOptions}
+            </select>
+        </div>
+
+        <div class="input-group speed-select" id="speedGroup${id}" style="display:none;">
+            <label>Charger speed (kW)</label>
+            <select id="speed${id}"></select>
+        </div>
+
+        <div class="input-group">
+            <label>Provider name</label>
+            <input type="text" id="name${id}" placeholder="e.g., BP Pulse">
+        </div>
+
+        <div class="input-group">
+            <label>Subscription cost (£ / month)</label>
+            <input type="number" id="subCost${id}" placeholder="e.g., 7.99">
+        </div>
+
+        <div class="input-group">
+            <label>Subscription discounted rate (pence per kWh)</label>
+            <input type="number" id="discount${id}" placeholder="e.g., 49">
+        </div>
+    `;
+
+    document.getElementById("providers").appendChild(box);
+
+    const presetSelect = document.getElementById(`preset${id}`);
+    presetSelect.addEventListener("change", () => applyPreset(id));
+
+    const speedSelect = document.getElementById(`speed${id}`);
+    speedSelect?.addEventListener("change", () => applySpeedRate(id));
+
+    box.querySelectorAll("input").forEach(i => i.addEventListener("input", calculate));
+
+    if (preset) {
+        presetSelect.value = preset.name;
+        applyPreset(id);
+    }
+}
+
+/* =========================================================
+   Add provider
+========================================================= */
+function addProvider() {
+    createProviderBox();
+    calculate();
+}
+
+/* =========================================================
+   Add all providers
+========================================================= */
+function addAllProviders() {
+    const existing = Array.from(document.querySelectorAll(".provider-box"))
+        .map(b => document.getElementById(`name${b.dataset.id}`).value.trim().toLowerCase());
+
+    PRESETS.forEach(p => {
+        if (!existing.includes(p.name.toLowerCase())) {
+            createProviderBox(p);
+        }
+    });
+
+    calculate();
+}
+
+/* =========================================================
+   Remove provider
+========================================================= */
+function removeProvider(id) {
+    const box = document.querySelector(`.provider-box[data-id="${id}"]`);
+    if (box) box.remove();
+    calculate();
+}
+
+/* =========================================================
+   Apply preset (including speed selector)
+========================================================= */
+function applyPreset(id) {
+    const presetName = document.getElementById(`preset${id}`).value;
+    const preset = PRESETS.find(p => p.name === presetName);
+
+    const nameField = document.getElementById(`name${id}`);
+    const subField = document.getElementById(`subCost${id}`);
+    const rateField = document.getElementById(`discount${id}`);
+    const speedGroup = document.getElementById(`speedGroup${id}`);
+    const speedSelect = document.getElementById(`speed${id}`);
+
+    if (!preset) {
+        speedGroup.style.display = "none";
+        return;
+    }
+
+    nameField.value = preset.name;
+    subField.value = preset.subCost;
+
+    const rates = preset.rates;
+
+    if (rates && Object.keys(rates).length > 1) {
+        speedGroup.style.display = "flex";
+
+        speedSelect.innerHTML = Object.keys(rates)
+            .map(k => `<option value="${k}">${k} kW</option>`)
+            .join("");
+
+        speedSelect.value = Object.keys(rates)[0];
+        rateField.value = rates[speedSelect.value];
+    } else {
+        speedGroup.style.display = "none";
+        rateField.value = rates.default ?? 0;
+    }
+
+    calculate();
+}
+
+/* =========================================================
+   Apply speed-based rate
+========================================================= */
+function applySpeedRate(id) {
+    const presetName = document.getElementById(`preset${id}`).value;
+    const preset = PRESETS.find(p => p.name === presetName);
+    if (!preset) return;
+
+    const speedSelect = document.getElementById(`speed${id}`);
+    const rateField = document.getElementById(`discount${id}`);
+
+    const speed = speedSelect.value;
+    const rate = preset.rates[speed];
+
+    if (rate !== undefined) {
+        rateField.value = rate;
+        calculate();
+    }
+}
+
+/* =========================================================
+   Duplicate provider
+========================================================= */
+function duplicateProvider(id) {
+    const name = document.getElementById(`name${id}`).value;
+    const subCost = document.getElementById(`subCost${id}`).value;
+    const discount = document.getElementById(`discount${id}`).value;
+
+    createProviderBox();
+    const newId = providerCount;
+
+    document.getElementById(`name${newId}`).value = name;
+    document.getElementById(`subCost${newId}`).value = subCost;
+    document.getElementById(`discount${newId}`).value = discount;
+
+    calculate();
+}
+
+/* =========================================================
+   Duplicate last provider
+========================================================= */
+function duplicateLastProvider() {
+    const boxes = document.querySelectorAll(".provider-box");
+    if (!boxes.length) return;
+    const last = boxes[boxes.length - 1];
+    duplicateProvider(last.dataset.id);
+}
+
+/* =========================================================
+   Reset all inputs
+========================================================= */
+function resetAll() {
+    document.getElementById("journeyMiles").value = "";
+    document.getElementById("batteryKwh").value = "";
+    document.getElementById("soc").value = "";
+    document.getElementById("efficiency").value = "";
+    document.getElementById("adhoc").value = "";
+    document.getElementById("homeRate").value = "";
+    document.getElementById("cheapHome").checked = true;
+
+    document.getElementById("providers").innerHTML = "";
+    providerCount = 0;
+
+    document.getElementById("sortBy").value = "cost";
+    document.getElementById("showTotalBreakEven").checked = false;
+
+    calculate();
+}
+</script>
+<script>
+/* =========================================================
+   CORE INPUT EXTRACTION
+========================================================= */
+function getCoreInputs() {
+    const journeyMiles = parseFloat(document.getElementById("journeyMiles").value);
+    const batteryKwh = parseFloat(document.getElementById("batteryKwh").value);
+    const soc = parseFloat(document.getElementById("soc").value);
+    const efficiency = parseFloat(document.getElementById("efficiency").value);
+    const adhocRate = parseFloat(document.getElementById("adhoc").value);
+    const homeRate = parseFloat(document.getElementById("homeRate").value);
+    const cheapHome = document.getElementById("cheapHome").checked;
+
+    if (
+        isNaN(journeyMiles) ||
+        isNaN(batteryKwh) ||
+        isNaN(soc) ||
+        isNaN(efficiency) ||
+        isNaN(adhocRate) ||
+        isNaN(homeRate)
+    ) {
+        return null;
+    }
+
+    const usableKwh = batteryKwh * (soc / 100);
+    const homeMiles = usableKwh * efficiency;
+
+    return {
+        journeyMiles,
+        batteryKwh,
+        soc,
+        efficiency,
+        adhocRate,
+        homeRate,
+        cheapHome,
+        usableKwh,
+        homeMiles
+    };
+}
+
+/* =========================================================
+   COLLECT PROVIDERS FROM UI
+========================================================= */
+function getProviders() {
+    const boxes = document.querySelectorAll(".provider-box");
+    const providers = [];
+
+    boxes.forEach(box => {
+        const id = box.dataset.id;
+
+        const name = document.getElementById(`name${id}`).value.trim();
+        const subCost = parseFloat(document.getElementById(`subCost${id}`).value) || 0;
+        const discountPence = parseFloat(document.getElementById(`discount${id}`).value) || 0;
+
+        if (!name) return;
+
+        providers.push({
+            name,
+            subCost,
+            discountPence
+        });
+    });
+
+    return providers;
+}
+
+/* =========================================================
+   MAIN CALCULATION
+========================================================= */
+function calculate() {
+    const core = getCoreInputs();
+    if (!core) return;
+
+    const providers = getProviders();
+
+    const homeMiles = core.cheapHome ? Math.min(core.homeMiles, core.journeyMiles) : 0;
+    const publicMiles = Math.max(0, core.journeyMiles - homeMiles);
+
+    const homeKwh = homeMiles / core.efficiency;
+    const publicKwh = publicMiles / core.efficiency;
+
+    const homeCost = homeKwh * core.homeRate;
+    const adhocCost = publicKwh * core.adhocRate;
+
+    const blendedCost = homeCost + adhocCost;
+    const blendedCostPerMile = blendedCost / core.journeyMiles;
+
+    /* Update summary lines */
+    document.getElementById("homeRangeLine").textContent =
+        `Home range available: ${homeMiles.toFixed(1)} miles`;
+
+    document.getElementById("homeCostLine").textContent =
+        `Home charging cost: £${(homeCost / 100).toFixed(2)}`;
+
+    document.getElementById("publicMilesLine").textContent =
+        `Public miles needed: ${publicMiles.toFixed(1)} miles`;
+
+    document.getElementById("publicKwhLine").textContent =
+        `Public kWh needed: ${publicKwh.toFixed(2)} kWh`;
+
+    document.getElementById("adhocCostLine").textContent =
+        `Ad‑hoc public cost: £${(adhocCost / 100).toFixed(2)}`;
+
+    document.getElementById("blendedCostLine").textContent =
+        `Total blended trip cost: £${(blendedCost / 100).toFixed(2)}`;
+
+    document.getElementById("blendedCostPerMileLine").textContent =
+        `Blended cost per mile: ${(blendedCostPerMile).toFixed(2)} p`;
+
+    /* Show results panel */
+    document.getElementById("results").style.display = "block";
+
+    /* Render provider table */
+    renderProviderTable(core, providers, publicKwh, blendedCost);
+
+    /* Draw graph */
+    drawGraph(core, providers);
+}
+
+/* =========================================================
+   BREAK-EVEN CALCULATION
+========================================================= */
+function computeBreakEven(subCost, discountPence, adhocRate) {
+    const diff = adhocRate - discountPence;
+    if (diff <= 0) return Infinity;
+    return subCost / (diff / 100);
+}
+
+/* =========================================================
+   PROVIDER TABLE RENDERING
+========================================================= */
+function renderProviderTable(core, providers, publicKwh, adhocTripCost) {
+    const tbody = document.querySelector("#providerTable tbody");
+    tbody.innerHTML = "";
+
+    const rows = providers.map(p => {
+        const tripCost = p.subCost + (publicKwh * (p.discountPence / 100));
+        const costPerMile = (tripCost * 100) / core.journeyMiles;
+
+        const breakEvenKwh = computeBreakEven(p.subCost, p.discountPence, core.adhocRate);
+        const breakEvenMiles = breakEvenKwh * core.efficiency;
+
+        const savings = (adhocTripCost / 100) - tripCost;
+
+        return {
+            name: p.name,
+            tripCost,
+            costPerMile,
+            breakEvenMiles,
+            savings
+        };
+    });
+
+    /* Sorting */
+    const sortBy = document.getElementById("sortBy").value;
+    if (sortBy === "cost") {
+        rows.sort((a, b) => a.tripCost - b.tripCost);
+    } else if (sortBy === "breakeven") {
+        rows.sort((a, b) => a.breakEvenMiles - b.breakEvenMiles);
+    } else if (sortBy === "savings") {
+        rows.sort((a, b) => b.savings - a.savings);
+    }
+
+    const showTotalBreakEven = document.getElementById("showTotalBreakEven").checked;
+
+    rows.forEach(r => {
+        const tr = document.createElement("tr");
+
+        tr.innerHTML = `
+            <td>${r.name}</td>
+            <td>£${r.tripCost.toFixed(2)}</td>
+            <td>${r.costPerMile.toFixed(2)}p</td>
+            <td>${showTotalBreakEven ? r.breakEvenMiles.toFixed(0) + " miles" : r.breakEvenMiles.toFixed(1)}</td>
+            <td>${r.savings.toFixed(2)}</td>
+        `;
+
+        tbody.appendChild(tr);
+    });
+}
+
+/* =========================================================
+   GRAPH (blended cost vs distance)
+========================================================= */
+function drawGraph(core, providers) {
+    const ctx = document.getElementById("costChart");
+
+    if (chart) chart.destroy();
+
+    const maxMiles = core.journeyMiles;
+    const steps = 20;
+
+    const labels = [];
+    const adhocData = [];
+
+    for (let i = 0; i <= steps; i++) {
+        const m = (maxMiles * i) / steps;
+        labels.push(m.toFixed(0));
+
+        const homeMilesAtM = core.cheapHome ? Math.min(core.homeMiles, m) : 0;
+        const publicMilesAtM = Math.max(0, m - homeMilesAtM);
+        const homeKwhAtM = homeMilesAtM / core.efficiency;
+        const publicKwhAtM = publicMilesAtM / core.efficiency;
+
+        const homeCostAtM = homeKwhAtM * core.homeRate;
+        const adhocCostAtM = publicKwhAtM * core.adhocRate;
+
+        adhocData.push((homeCostAtM + adhocCostAtM) / 100);
+    }
+
+    const datasets = [{
+        label: "Ad‑hoc (home + public) (£)",
+        data: adhocData,
+        borderColor: "#f97316",
+        backgroundColor: "rgba(249,115,22,0.15)",
+        tension: 0.2
+    }];
+
+    providers.forEach((p, idx) => {
+        const colors = ["#38bdf8", "#4ade80", "#a855f7", "#facc15", "#f472b6", "#22c55e"];
+        const color = colors[idx % colors.length];
+
+        const data = [];
+
+        for (let i = 0; i <= steps; i++) {
+            const m = (maxMiles * i) / steps;
+
+            const homeMilesAtM = core.cheapHome ? Math.min(core.homeMiles, m) : 0;
+            const publicMilesAtM = Math.max(0, m - homeMilesAtM);
+            const homeKwhAtM = homeMilesAtM / core.efficiency;
+            const publicKwhAtM = publicMilesAtM / core.efficiency;
+
+            const homeCostAtM = homeKwhAtM * core.homeRate;
+            const subCostAtM = p.subCost + (publicKwhAtM * (p.discountPence / 100));
+
+            data.push((homeCostAtM + subCostAtM) / 100);
+        }
+
+        datasets.push({
+            label: `${p.name} (£)`,
+            data,
+            borderColor: color,
+            backgroundColor: "transparent",
+            tension: 0.2
+        });
+    });
+
+    chart = new Chart(ctx, {
+        type: "line",
+        data: { labels, datasets },
+        options: {
+            responsive: true,
+            interaction: { mode: "index", intersect: false },
+            scales: {
+                x: { title: { display: true, text: "Trip distance (miles)" } },
+                y: { title: { display: true, text: "Total blended trip cost (£)" }, beginAtZero: true }
+            }
+        }
+    });
+}
+</script>
+<script>
+/* =========================================================
+   SHAREABLE LINK
+========================================================= */
+function shareLink() {
+    const core = getCoreInputs();
+    if (!core) {
+        alert("Please fill in all main inputs first.");
+        return;
+    }
+
+    const params = new URLSearchParams();
+
+    params.set("jm", core.journeyMiles);
+    params.set("bk", core.batteryKwh);
+    params.set("soc", core.soc);
+    params.set("eff", core.efficiency);
+    params.set("adhoc", core.adhocRate);
+    params.set("home", core.homeRate);
+    params.set("cheap", core.cheapHome ? "1" : "0");
+
+    const providers = getProviders();
+    providers.forEach((p, i) => {
+        params.set(`p${i}_name`, p.name);
+        params.set(`p${i}_sub`, p.subCost);
+        params.set(`p${i}_rate`, p.discountPence);
+    });
+
+    const url = `${location.origin}${location.pathname}?${params.toString()}`;
+    navigator.clipboard.writeText(url).then(() => {
+        alert("Shareable link copied to clipboard.");
+    });
+}
+
+/* =========================================================
+   LOAD FROM URL PARAMETERS
+========================================================= */
+function loadFromParams() {
+    const params = new URLSearchParams(location.search);
+    if (!params.has("jm")) return;
+
+    document.getElementById("journeyMiles").value = params.get("jm");
+    document.getElementById("batteryKwh").value = params.get("bk");
+    document.getElementById("soc").value = params.get("soc");
+    document.getElementById("efficiency").value = params.get("eff");
+    document.getElementById("adhoc").value = params.get("adhoc");
+    document.getElementById("homeRate").value = params.get("home");
+    document.getElementById("cheapHome").checked = params.get("cheap") === "1";
+
+    document.getElementById("providers").innerHTML = "";
+    providerCount = 0;
+
+    let i = 0;
+    while (params.has(`p${i}_name`)) {
+        const name = params.get(`p${i}_name`);
+        const sub = parseFloat(params.get(`p${i}_sub`)) || 0;
+        const rate = parseFloat(params.get(`p${i}_rate`)) || 0;
+
+        createProviderBox();
+        const newId = providerCount;
+
+        document.getElementById(`name${newId}`).value = name;
+        document.getElementById(`subCost${newId}`).value = sub;
+        document.getElementById(`discount${newId}`).value = rate;
+
+        i++;
+    }
+
+    calculate();
+}
 /* =========================================================
    INITIALISE ON PAGE LOAD (Option 2: no auto provider)
 ========================================================= */
@@ -9,4 +891,3 @@ window.addEventListener("DOMContentLoaded", () => {
 </script>
 </body>
 </html>
-<!-- END PART 6 OF 6 -->
