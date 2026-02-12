@@ -580,19 +580,36 @@ function drawGraph(core, providers) {
 }
 
 // ----------------------
-// PDF EXPORT (fixed)
+// PDF EXPORT (fixed with canvas→image swap)
 // ----------------------
 function exportPdf() {
-    const element = document.getElementById("results");
+    const resultsEl = document.getElementById("results");
 
-    if (!element || element.style.display === "none") {
+    if (!resultsEl || resultsEl.style.display === "none") {
         alert("Please enter inputs and providers so results are visible before exporting.");
         return;
     }
 
-    // Ensure chart is visible and rendered
-    element.scrollIntoView();
+    // Ensure chart is visible
+    resultsEl.scrollIntoView();
 
+    // Convert canvas to image
+    const canvas = document.getElementById("costChart");
+    const imgData = chart.toBase64Image();
+
+    // Create replacement image
+    const img = document.createElement("img");
+    img.src = imgData;
+    img.style.width = "120%";   // B1: 20% larger
+    img.style.maxWidth = "120%";
+    img.style.display = "block";
+    img.style.margin = "0 auto";
+
+    // Replace canvas with image
+    canvas.style.display = "none";
+    canvas.parentNode.insertBefore(img, canvas.nextSibling);
+
+    // Delay ensures image is fully in DOM
     setTimeout(() => {
         const opt = {
             margin: 10,
@@ -602,8 +619,12 @@ function exportPdf() {
             jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
         };
 
-        html2pdf().from(element).set(opt).save();
-    }, 350); // delay ensures Chart.js is fully drawn
+        html2pdf().from(resultsEl).set(opt).save().then(() => {
+            // Restore canvas after export
+            img.remove();
+            canvas.style.display = "block";
+        });
+    }, 350);
 }
 
 // ----------------------
