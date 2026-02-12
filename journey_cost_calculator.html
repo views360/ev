@@ -401,159 +401,7 @@
             margin-bottom: 1rem;
         }
     </style>
-</head>
-
-<body>
-
-<!-- ========================================================= -->
-<!--  FULL-SCREEN CHOICE MODAL (M3)                           -->
-<!-- ========================================================= -->
-<div id="entryChoiceModal" class="entry-modal hidden">
-    <div class="entry-modal-content">
-        <h1>How would you like to begin?</h1>
-        <p>Select an option to continue.</p>
-
-        <button id="startWizardBtn" class="primary-btn">
-            Use Guided Setup
-        </button>
-
-        <button id="skipWizardBtn" class="secondary-btn">
-            Skip Wizard & Go Straight to Calculator
-        </button>
-    </div>
-</div>
-
-
-<!-- ========================================================= -->
-<!--  WIZARD CONTAINER (W2-C + C2 + G2 + T2 + PB1)            -->
-<!-- ========================================================= -->
-<div id="wizardContainer" class="wizard hidden">
-
-    <!-- Progress Bar -->
-    <div id="wizardProgressBar" class="wizard-progress"></div>
-
-    <!-- Wizard Card -->
-    <div class="wizard-card">
-
-        <!-- STEP 1 -->
-        <div class="wizard-step" data-step="1">
-            <h2>How far is your trip?</h2>
-            <p class="wizard-note">
-                You can change this later to instantly see how the results update.
-            </p>
-            <input type="number" id="wizTripDistance" placeholder="Enter miles" />
-            <button class="wizard-next-btn" data-next="2">Next →</button>
-        </div>
-
-        <!-- STEP 2 -->
-        <div class="wizard-step hidden" data-step="2">
-            <h2>What is your battery capacity?</h2>
-            <input type="number" id="wizBatterySize" placeholder="kWh" />
-            <button class="wizard-next-btn" data-next="3">Next →</button>
-        </div>
-
-        <!-- STEP 3 -->
-        <div class="wizard-step hidden" data-step="3">
-            <h2>What percentage charge will you start with?</h2>
-            <input type="number" id="wizStartSOC" placeholder="%" />
-            <button class="wizard-next-btn" data-next="4">Next →</button>
-        </div>
-
-        <!-- STEP 4 -->
-        <div class="wizard-step hidden" data-step="4">
-            <h2>What is your car’s efficiency?</h2>
-            <input type="number" id="wizEfficiency" placeholder="Miles per kWh" />
-            <button class="wizard-next-btn" data-next="5">Next →</button>
-        </div>
-
-        <!-- STEP 5 -->
-        <div class="wizard-step hidden" data-step="5">
-            <h2>What is your ad‑hoc charging rate?</h2>
-            <input type="number" id="wizAdhocRate" placeholder="£ per kWh" />
-            <button class="wizard-next-btn" data-next="6">Next →</button>
-        </div>
-
-        <!-- STEP 6 -->
-        <div class="wizard-step hidden" data-step="6">
-            <h2>Would you like to add subscription providers?</h2>
-            <p class="wizard-note">You can add more later.</p>
-
-            <button id="wizAddProviderBtn" class="primary-btn small">
-                Add Provider
-            </button>
-
-            <button class="wizard-next-btn" data-next="7">
-                Continue →
-            </button>
-        </div>
-
-        <!-- STEP 7 -->
-        <div class="wizard-step hidden" data-step="7">
-            <h2>All set!</h2>
-            <p>Your calculator is ready. You can adjust anything once inside.</p>
-            <button id="wizFinishBtn" class="primary-btn">
-                Go to Calculator →
-            </button>
-        </div>
-
-    </div>
-</div>
-
-
-<!-- ========================================================= -->
-<!--  FULL APP (INITIALLY HIDDEN UNTIL WIZARD COMPLETES)      -->
-<!-- ========================================================= -->
-<div id="fullApp" class="hidden">
-
-    <!-- Your existing app HTML goes here -->
-    <!-- I am preserving your structure exactly as-is -->
-
-    <h1>EV Charging Cost Calculator</h1>
-
-    <div class="input-section">
-        <label>Trip Distance (miles):</label>
-        <input type="number" id="tripDistance" />
-    </div>
-
-    <div class="input-section">
-        <label>Battery Size (kWh):</label>
-        <input type="number" id="batterySize" />
-    </div>
-
-    <div class="input-section">
-        <label>Starting State of Charge (%):</label>
-        <input type="number" id="startSOC" />
-    </div>
-
-    <div class="input-section">
-        <label>Efficiency (miles per kWh):</label>
-        <input type="number" id="efficiency" />
-    </div>
-
-    <div class="input-section">
-        <label>Ad‑hoc Charging Rate (£/kWh):</label>
-        <input type="number" id="adhocRate" />
-    </div>
-
-    <hr />
-
-    <h2>Subscription Providers</h2>
-    <div id="providersContainer"></div>
-    <button id="addProviderBtn" class="primary-btn small">Add Provider</button>
-
-    <hr />
-
-    <button id="calculateBtn" class="primary-btn">Calculate</button>
-
-    <div id="resultsSection" class="hidden">
-        <h2>Results</h2>
-        <div id="resultsOutput"></div>
-        <canvas id="resultsChart"></canvas>
-        <button id="exportPDFBtn" class="secondary-btn">Export as PDF</button>
-    </div>
-
-</div>
-<script>
+    <script>
     // =========================================================
     // ELEMENT REFERENCES
     // =========================================================
@@ -831,5 +679,158 @@ you’d use approximately ${kWhNeeded.toFixed(1)} kWh and pay about £${cost.toF
         });
     }
 </script>
+</head>
+
+<body>
+
+<!-- ========================================================= -->
+<!--  FULL-SCREEN CHOICE MODAL (M3)                           -->
+<!-- ========================================================= -->
+<div id="entryChoiceModal" class="entry-modal hidden">
+    <div class="entry-modal-content">
+        <h1>How would you like to begin?</h1>
+        <p>Select an option to continue.</p>
+
+        <button id="startWizardBtn" class="primary-btn">
+            Use Guided Setup
+        </button>
+
+        <button id="skipWizardBtn" class="secondary-btn">
+            Skip Wizard & Go Straight to Calculator
+        </button>
+    </div>
+</div>
+
+
+<!-- ========================================================= -->
+<!--  WIZARD CONTAINER (W2-C + C2 + G2 + T2 + PB1)            -->
+<!-- ========================================================= -->
+<div id="wizardContainer" class="wizard hidden">
+
+    <!-- Progress Bar -->
+    <div id="wizardProgressBar" class="wizard-progress"></div>
+
+    <!-- Wizard Card -->
+    <div class="wizard-card">
+
+        <!-- STEP 1 -->
+        <div class="wizard-step" data-step="1">
+            <h2>How far is your trip?</h2>
+            <p class="wizard-note">
+                You can change this later to instantly see how the results update.
+            </p>
+            <input type="number" id="wizTripDistance" placeholder="Enter miles" />
+            <button class="wizard-next-btn" data-next="2">Next →</button>
+        </div>
+
+        <!-- STEP 2 -->
+        <div class="wizard-step hidden" data-step="2">
+            <h2>What is your battery capacity?</h2>
+            <input type="number" id="wizBatterySize" placeholder="kWh" />
+            <button class="wizard-next-btn" data-next="3">Next →</button>
+        </div>
+
+        <!-- STEP 3 -->
+        <div class="wizard-step hidden" data-step="3">
+            <h2>What percentage charge will you start with?</h2>
+            <input type="number" id="wizStartSOC" placeholder="%" />
+            <button class="wizard-next-btn" data-next="4">Next →</button>
+        </div>
+
+        <!-- STEP 4 -->
+        <div class="wizard-step hidden" data-step="4">
+            <h2>What is your car’s efficiency?</h2>
+            <input type="number" id="wizEfficiency" placeholder="Miles per kWh" />
+            <button class="wizard-next-btn" data-next="5">Next →</button>
+        </div>
+
+        <!-- STEP 5 -->
+        <div class="wizard-step hidden" data-step="5">
+            <h2>What is your ad‑hoc charging rate?</h2>
+            <input type="number" id="wizAdhocRate" placeholder="£ per kWh" />
+            <button class="wizard-next-btn" data-next="6">Next →</button>
+        </div>
+
+        <!-- STEP 6 -->
+        <div class="wizard-step hidden" data-step="6">
+            <h2>Would you like to add subscription providers?</h2>
+            <p class="wizard-note">You can add more later.</p>
+
+            <button id="wizAddProviderBtn" class="primary-btn small">
+                Add Provider
+            </button>
+
+            <button class="wizard-next-btn" data-next="7">
+                Continue →
+            </button>
+        </div>
+
+        <!-- STEP 7 -->
+        <div class="wizard-step hidden" data-step="7">
+            <h2>All set!</h2>
+            <p>Your calculator is ready. You can adjust anything once inside.</p>
+            <button id="wizFinishBtn" class="primary-btn">
+                Go to Calculator →
+            </button>
+        </div>
+
+    </div>
+</div>
+
+
+<!-- ========================================================= -->
+<!--  FULL APP (INITIALLY HIDDEN UNTIL WIZARD COMPLETES)      -->
+<!-- ========================================================= -->
+<div id="fullApp" class="hidden">
+
+    <!-- Your existing app HTML goes here -->
+    <!-- I am preserving your structure exactly as-is -->
+
+    <h1>EV Charging Cost Calculator</h1>
+
+    <div class="input-section">
+        <label>Trip Distance (miles):</label>
+        <input type="number" id="tripDistance" />
+    </div>
+
+    <div class="input-section">
+        <label>Battery Size (kWh):</label>
+        <input type="number" id="batterySize" />
+    </div>
+
+    <div class="input-section">
+        <label>Starting State of Charge (%):</label>
+        <input type="number" id="startSOC" />
+    </div>
+
+    <div class="input-section">
+        <label>Efficiency (miles per kWh):</label>
+        <input type="number" id="efficiency" />
+    </div>
+
+    <div class="input-section">
+        <label>Ad‑hoc Charging Rate (£/kWh):</label>
+        <input type="number" id="adhocRate" />
+    </div>
+
+    <hr />
+
+    <h2>Subscription Providers</h2>
+    <div id="providersContainer"></div>
+    <button id="addProviderBtn" class="primary-btn small">Add Provider</button>
+
+    <hr />
+
+    <button id="calculateBtn" class="primary-btn">Calculate</button>
+
+    <div id="resultsSection" class="hidden">
+        <h2>Results</h2>
+        <div id="resultsOutput"></div>
+        <canvas id="resultsChart"></canvas>
+        <button id="exportPDFBtn" class="secondary-btn">Export as PDF</button>
+    </div>
+
+</div>
 </body>
 </html>
+
