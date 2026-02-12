@@ -58,7 +58,7 @@
             margin: 0 auto;
             background: radial-gradient(circle at top left, #0b1120 0, #020617 55%, #000 100%);
             border-radius: 18px;
-            border: 1px solid #1f2937;
+            border: 1px solid var(--border);
             box-shadow: 0 24px 80px rgba(0,0,0,0.7);
             padding: 24px 24px 32px;
             transition: background 0.3s ease, border-color 0.3s ease;
@@ -77,7 +77,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 10px;
+            margin-bottom: 14px;
         }
 
         .theme-toggle {
@@ -91,6 +91,13 @@
 
         .theme-toggle input {
             cursor: pointer;
+        }
+
+        .btn.top-reset {
+            margin-left: 12px;
+            background: transparent;
+            border-color: var(--danger);
+            color: var(--danger);
         }
 
         .grid {
@@ -342,17 +349,23 @@
 </head>
 <body>
 <div class="app">
+
     <div class="top-bar">
         <div>
             <h1>EV Public Charging Comparison</h1>
             <div class="subtitle">
-                Compare ad‑hoc vs subscription charging for a specific trip distance, including Be.EV and other major networks.
+                Compare ad‑hoc vs subscription charging for a specific trip distance (e.g., a weekend away or a seven-day break in another area). This tool includes major networks, but you may add your own and/or customise all preset values. <strong>Note:</strong> provider values are hard-coded (not dynamically retrieved). If you'd like the page author to update one or more values or add another provider, message the <a href='https://www.facebook.com/kelvin.a.hill'>author</a>.
             </div>
         </div>
-        <label class="theme-toggle">
-            <input type="checkbox" id="themeToggle">
-            <span>Light mode</span>
-        </label>
+
+        <div style="display:flex; align-items:center; gap:12px;">
+            <label class="theme-toggle">
+                <input type="checkbox" id="themeToggle">
+                <span>Light mode</span>
+            </label>
+
+            <button type="button" class="btn danger top-reset" onclick="resetAll()">Reset all</button>
+        </div>
     </div>
 
     <div class="grid">
@@ -370,7 +383,7 @@
                     </div>
                     <div class="input-group">
                         <label>Battery size (kWh)</label>
-                        <input type="number" id="batteryKwh" placeholder="e.g., 77">
+                        <input type="number" id="batteryKwh" placeholder="e.g., 61">
                     </div>
                 </div>
 
@@ -386,8 +399,8 @@
                 </div>
 
                 <div class="input-group">
-                    <label>Ad‑hoc public rate (pence per kWh)</label>
-                    <input type="number" id="adhoc" placeholder="e.g., 79">
+                    <label>Ad‑hoc public rate (pence per kWh) (e.g., 62p from Lidl with the Lidl+ app)</label>
+                    <input type="number" id="adhoc" placeholder="e.g., 62">
                 </div>
 
                 <div class="input-group">
@@ -408,6 +421,7 @@
         <div class="card">
             <div class="card-header">
                 <h2>Subscriptions & Discounts</h2>
+		<strong>Note:</strong> the selection of providers should be determined by the providers available in the area to which you will travel. There is little point in selecting Tesla if there are no Tesla public charging locations in your area of travel.
                 <button type="button" class="collapse-btn" onclick="toggleSection('providersSection')">Toggle</button>
             </div>
             <div class="card-body" id="providersSection">
@@ -417,7 +431,6 @@
                         <button type="button" class="btn secondary" onclick="addAllProviders()">Add all providers</button>
                         <button type="button" class="btn secondary" onclick="duplicateLastProvider()">Duplicate last</button>
                     </div>
-                    <button type="button" class="btn danger" onclick="resetAll()">Reset all</button>
                 </div>
                 <div id="providers"></div>
             </div>
@@ -541,7 +554,9 @@ fetch("data/providers.json?cache=" + Date.now())
 let providerCount = 0;
 let chart = null;
 
-// THEME TOGGLE
+/* =========================================================
+   THEME TOGGLE
+========================================================= */
 function initTheme() {
     const toggle = document.getElementById("themeToggle");
     const stored = localStorage.getItem("evCalcTheme");
@@ -562,14 +577,18 @@ function initTheme() {
     }
 }
 
-// COLLAPSIBLE SECTIONS
+/* =========================================================
+   COLLAPSIBLE SECTIONS
+========================================================= */
 function toggleSection(id) {
     const el = document.getElementById(id);
     if (!el) return;
     el.style.display = (el.style.display === "none") ? "block" : "none";
 }
 
-// CREATE PROVIDER BOX
+/* =========================================================
+   PROVIDER UI
+========================================================= */
 function createProviderBox(preset) {
     providerCount++;
     const id = providerCount;
@@ -607,7 +626,7 @@ function createProviderBox(preset) {
         </div>
 
         <div class="input-group">
-            <label>Discounted rate (pence per kWh)</label>
+            <label>Subscription discounted rate (pence per kWh)</label>
             <input type="number" id="discount${id}" placeholder="e.g., 49">
         </div>
     `;
@@ -703,7 +722,9 @@ function resetAll() {
 
     calculate();
 }
-// CORE INPUTS
+/* =========================================================
+   CORE INPUTS
+========================================================= */
 function getCoreInputs() {
     const journeyMiles = parseFloat(document.getElementById("journeyMiles").value);
     const batteryKwh = parseFloat(document.getElementById("batteryKwh").value);
@@ -760,7 +781,9 @@ function getCoreInputs() {
     };
 }
 
-// MAIN CALCULATION
+/* =========================================================
+   MAIN CALCULATION
+========================================================= */
 function calculate() {
     const core = getCoreInputs();
 
@@ -813,10 +836,9 @@ function calculate() {
         `Cost using ad‑hoc only (public portion): <span class="highlight">£${core.adhocCost.toFixed(2)}</span>`;
 
     blendedCostLine.innerHTML =
-        `Total blended trip cost (home + public, ad‑hoc public rate): <span class="highlight">£${core.blendedAdhocTripCost.toFixed(2)}</span>`;
+        `Total blended trip cost (home + public): <span class="highlight">£${core.blendedAdhocTripCost.toFixed(2)}</span>`;
     blendedCostPerMileLine.innerHTML =
-        `Effective ad‑hoc cost per mile: <span class="highlight">${(core.blendedAdhocCostPerMile * 100).toFixed(1)} p/mile</span> ` +
-        `(~£${core.blendedAdhocCostPer100.toFixed(2)} per 100 miles)`;
+        `Effective ad‑hoc cost per mile: <span class="highlight">${(core.blendedAdhocCostPerMile * 100).toFixed(1)} p/mile</span>`;
 
     const providers = [];
     const boxes = document.querySelectorAll(".provider-box");
@@ -839,24 +861,17 @@ function calculate() {
             ? Infinity
             : breakEvenKwh * core.efficiency;
 
-        const savingsPublicOnly = core.adhocCost - costWithSubPublicOnly;
-
         const blendedTripCost = core.homeCost + costWithSubPublicOnly;
         const blendedCostPerMile = blendedTripCost / core.journeyMiles;
-        const blendedCostPer100 = blendedCostPerMile * 100;
-
         const blendedSavingsVsAdhoc = core.blendedAdhocTripCost - blendedTripCost;
 
         providers.push({
             name,
-            costWithSubPublicOnly,
-            breakEvenMiles,
-            savingsPublicOnly,
             subCost,
             discountPence,
+            breakEvenMiles,
             blendedTripCost,
             blendedCostPerMile,
-            blendedCostPer100,
             blendedSavingsVsAdhoc
         });
     });
@@ -876,18 +891,20 @@ function calculate() {
     if (best.blendedTripCost < core.blendedAdhocTripCost) {
         summaryBox.className = "summary good";
         summaryBox.textContent =
-            `${best.name} is the cheapest option for this trip (saving £${(core.blendedAdhocTripCost - best.blendedTripCost).toFixed(2)} vs ad‑hoc, including home + public).`;
+            `${best.name} is the cheapest option for this trip (saving £${(core.blendedAdhocTripCost - best.blendedTripCost).toFixed(2)} vs ad‑hoc).`;
     } else {
         summaryBox.className = "summary bad";
         summaryBox.textContent =
-            `Ad‑hoc charging (with your home rate) is cheaper than any subscription for this trip distance.`;
+            `Ad‑hoc charging (with your home rate) is cheaper than any subscription for this trip.`;
     }
 
     renderProviderTable(core, providers);
     drawGraph(core, providers);
 }
 
-// TABLE RENDERING WITH CORRECT BREAK‑EVEN LOGIC + COST PER MILE
+/* =========================================================
+   TABLE RENDERING
+========================================================= */
 function renderProviderTable(core, providers) {
     const tbody = document.querySelector("#providerTable tbody");
     if (!tbody) return;
@@ -918,14 +935,9 @@ function renderProviderTable(core, providers) {
             beText = "No break‑even (discounted rate ≥ ad‑hoc rate)";
         } else {
             const be = p.breakEvenMiles;
-
-            if (showTotal) {
-                beText = `${be.toFixed(0)} miles (public charging required for break‑even)`;
-            } else {
-                beText =
-                    `${be.toFixed(0)} miles of public charging ` +
-                    `(independent of this specific trip)`;
-            }
+            beText = showTotal
+                ? `${be.toFixed(0)} miles (public charging required for break‑even)`
+                : `${be.toFixed(0)} miles of public charging (independent of this trip)`;
         }
 
         const row = document.createElement("tr");
@@ -939,8 +951,9 @@ function renderProviderTable(core, providers) {
         tbody.appendChild(row);
     });
 }
-
-// GRAPH (blended trip cost vs distance)
+/* =========================================================
+   GRAPH (blended cost vs distance)
+========================================================= */
 function drawGraph(core, providers) {
     const ctx = document.getElementById("costChart");
 
@@ -1022,7 +1035,9 @@ function drawGraph(core, providers) {
     });
 }
 
-// SHAREABLE LINK
+/* =========================================================
+   SHAREABLE LINK
+========================================================= */
 function shareLink() {
     const core = getCoreInputs();
     if (!core) {
@@ -1070,7 +1085,9 @@ function shareLink() {
     }
 }
 
-// LOAD FROM URL
+/* =========================================================
+   LOAD FROM URL
+========================================================= */
 function loadFromParams() {
     const params = new URLSearchParams(window.location.search);
 
@@ -1113,7 +1130,9 @@ function loadFromParams() {
     calculate();
 }
 
-// PDF EXPORT
+/* =========================================================
+   PDF EXPORT
+========================================================= */
 async function exportPdf() {
     const resultsEl = document.getElementById("results");
     if (!resultsEl || resultsEl.style.display === "none") {
@@ -1157,7 +1176,9 @@ async function exportPdf() {
     pdf.save("ev-charging-comparison.pdf");
 }
 
-// INITIALISE
+/* =========================================================
+   INITIALISE
+========================================================= */
 ["journeyMiles","batteryKwh","soc","efficiency","adhoc","homeRate"].forEach(id => {
     document.getElementById(id).addEventListener("input", calculate);
 });
