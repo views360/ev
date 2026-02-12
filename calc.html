@@ -254,24 +254,13 @@
 <div class="app">
     <h1>EV Public Charging Comparison</h1>
     <div class="subtitle">
-        Compare ad‑hoc vs subscription charging for a specific trip distance.
+        Compare ad‑hoc vs subscription charging for a specific trip distance, including Be.EV and other major networks.
     </div>
-    <div class="subtitle">
-        When all fields are completed and at least one provider selected, scroll down to view the full results.
-    </div>
-    <div class="subtitle">
-        If you find a value that is out of date or you wish to include another provider, please message <a href='https://www.facebook.com/kelvin.a.hill/'>the author</a> who will update the value(s).
-    </div>
+
     <div class="grid">
         <!-- Trip & vehicle -->
         <div class="card">
             <h2>Trip & Vehicle</h2>
-            <div class="input-group">
-                <label>
-                    <input type="checkbox" id="cheapHome" checked>
-                    <strong>Check this box if you have cheap home charging.</strong> If you do, the calculation(s) will be based on the remaining miles <i>after</i> your cheap charging has depleted. If you leave this box unchecked, the full distance will be considered.
-                </label>
-            </div>
             <div class="input-row">
                 <div class="input-group">
                     <label>Trip distance (miles)</label>
@@ -295,6 +284,16 @@
             <div class="input-group">
                 <label>Ad‑hoc public rate (pence per kWh)</label>
                 <input type="number" id="adhoc" placeholder="e.g., 79">
+            </div>
+            <div class="input-group">
+                <label>Home charging rate (pence per kWh)</label>
+                <input type="number" id="homeRate" placeholder="e.g., 30">
+            </div>
+            <div class="input-group">
+                <label>
+                    <input type="checkbox" id="cheapHome" checked>
+                    I have cheap home charging
+                </label>
             </div>
         </div>
 
@@ -322,6 +321,7 @@
 
         <div class="calc-lines">
             <div id="homeRangeLine"></div>
+            <div id="homeCostLine"></div>
             <div id="publicMilesLine"></div>
             <div id="publicKwhLine"></div>
             <div id="adhocCostLine"></div>
@@ -492,23 +492,28 @@ function getCoreInputs() {
     const soc = parseFloat(document.getElementById("soc").value);
     const efficiency = parseFloat(document.getElementById("efficiency").value);
     const adhocPence = parseFloat(document.getElementById("adhoc").value);
+    const homeRatePence = parseFloat(document.getElementById("homeRate").value);
+    const cheapHome = document.getElementById("cheapHome").checked;
 
     if (!journeyMiles || !batteryKwh || !soc || !efficiency || !adhocPence) return null;
 
-    const cheapHome = document.getElementById("cheapHome").checked;
-    
+    let usableKwhAtStart = 0;
     let homeMiles = 0;
     let publicMiles = journeyMiles;
-    
+
     if (cheapHome) {
-        const usableKwhAtStart = batteryKwh * (soc / 100);
+        usableKwhAtStart = batteryKwh * (soc / 100);
         homeMiles = usableKwhAtStart * efficiency;
         publicMiles = Math.max(0, journeyMiles - homeMiles);
     }
-    
+
     const publicKwh = publicMiles / efficiency;
     const adhocRate = adhocPence / 100;
     const adhocCost = publicKwh * adhocRate;
+
+    const homeKwh = cheapHome ? usableKwhAtStart : 0;
+    const homeRate = !isNaN(homeRatePence) ? homeRatePence / 100 : 0;
+    const homeCost = homeKwh * homeRate;
 
     return {
         journeyMiles,
@@ -516,12 +521,17 @@ function getCoreInputs() {
         soc,
         efficiency,
         adhocPence,
+        homeRatePence: isNaN(homeRatePence) ? null : homeRatePence,
+        cheapHome,
         usableKwhAtStart,
         homeMiles,
         publicMiles,
         publicKwh,
         adhocRate,
-        adhocCost
+        adhocCost,
+        homeKwh,
+        homeRate,
+        homeCost
     };
 }
 
@@ -530,12 +540,14 @@ function calculate() {
     const core = getCoreInputs();
 
     const homeRangeLine = document.getElementById("homeRangeLine");
+    const homeCostLine = document.getElementById("homeCostLine");
     const publicMilesLine = document.getElementById("publicMilesLine");
     const publicKwhLine = document.getElementById("publicKwhLine");
     const adhocCostLine = document.getElementById("adhocCostLine");
 
     if (!core) {
         homeRangeLine.textContent = "Enter all trip, battery, efficiency and ad‑hoc fields to see calculations.";
+        homeCostLine.textContent = "";
         publicMilesLine.textContent = "";
         publicKwhLine.textContent = "";
         adhocCostLine.textContent = "";
@@ -544,13 +556,26 @@ function calculate() {
         return;
     }
 
-    if (document.getElementById("cheapHome").checked) {
+    if (core.cheapHome) {
         homeRangeLine.innerHTML =
             `Estimated range from home charge: <span class="highlight">${core.homeMiles.toFixed(0)} miles</span>`;
+        if (core.homeRate > 0 && core.homeKwh > 0) {
+            homeCostLine.innerHTML =
+                `Home charging energy: <span class="highlight">${core.homeKwh.toFixed(1)} kWh</span>, ` +
+                `cost: <span class="highlight">£${core.homeCost.toFixed(2)}</span>`;
+        } else if (core.homeKwh > 0) {
+            homeCostLine.innerHTML =
+                `Home charging energy: <span class="highlight">${core.homeKwh.toFixed(1)} kWh</span> ` +
+                `(no home rate entered, cost not calculated).`;
+        } else {
+            homeCostLine.textContent = "";
+        }
     } else {
         homeRangeLine.innerHTML =
             `Home charging disabled — full journey requires public charging.`;
+        homeCostLine.textContent = "";
     }
+
     publicMilesLine.innerHTML =
         `Miles requiring public charging: <span class="highlight">${core.publicMiles.toFixed(0)} miles</span>`;
     publicKwhLine.innerHTML =
@@ -714,6 +739,10 @@ function shareLink() {
     params.set("soc", core.soc);
     params.set("eff", core.efficiency);
     params.set("adhoc", core.adhocPence);
+    if (core.homeRatePence !== null) {
+        params.set("hr", core.homeRatePence);
+    }
+    params.set("ch", core.cheapHome ? "1" : "0");
 
     let idx = 0;
     document.querySelectorAll(".provider-box").forEach(box => {
@@ -761,6 +790,14 @@ function loadFromParams() {
     setVal("soc", "soc");
     setVal("efficiency", "eff");
     setVal("adhoc", "adhoc");
+    setVal("homeRate", "hr");
+
+    const ch = params.get("ch");
+    if (ch === "0") {
+        document.getElementById("cheapHome").checked = false;
+    } else if (ch === "1") {
+        document.getElementById("cheapHome").checked = true;
+    }
 
     let idx = 0;
     while (true) {
@@ -828,7 +865,7 @@ async function exportPdf() {
 }
 
 // INITIALISE
-["journeyMiles","batteryKwh","soc","efficiency","adhoc"].forEach(id => {
+["journeyMiles","batteryKwh","soc","efficiency","adhoc","homeRate"].forEach(id => {
     document.getElementById(id).addEventListener("input", calculate);
 });
 document.getElementById("cheapHome").addEventListener("change", calculate);
@@ -838,4 +875,3 @@ loadFromParams();
 </script>
 </body>
 </html>
-
