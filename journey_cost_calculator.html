@@ -1,759 +1,830 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>EV Public Charging Comparison</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EV Journey Cost Calculator</title>
+<style>
+/* =========================================================
+   GLOBAL THEME
+========================================================= */
+:root {
+    --bg-main: #05070b;
+    --bg-elevated: #10131b;
+    --bg-card: #141824;
+    --accent: #3aa9ff;
+    --accent-soft: rgba(58, 169, 255, 0.35);
+    --text-main: #f5f7ff;
+    --text-muted: #a3a7b8;
+    --border-subtle: #262a38;
+    --radius: 16px;
+    --shadow-soft: 0 18px 45px rgba(0, 0, 0, 0.65);
+}
 
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- html2canvas -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <!-- jsPDF -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+/* =========================================================
+   BASE
+========================================================= */
+body {
+    margin: 0;
+    padding: 0;
+    background: radial-gradient(circle at top, #151a26 0, #05070b 55%);
+    color: var(--text-main);
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
 
-    <style>
-        :root {
-            --bg: #020617;
-            --panel: #020617;
-            --panel-alt: #020617;
-            --accent: #38bdf8;
-            --accent-soft: rgba(56,189,248,0.15);
-            --text: #e5e7eb;
-            --muted: #9ca3af;
-            --border: #1f2937;
-            --danger: #f97373;
-            --good: #22c55e;
-        }
+.hidden {
+    display: none !important;
+}
 
-        * {
-            box-sizing: border-box;
-        }
+h1, h2, h3 {
+    margin: 0 0 0.6rem 0;
+    font-weight: 600;
+}
 
-        body {
-            margin: 0;
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-            background: radial-gradient(circle at top, #0f172a 0, #020617 45%, #000 100%);
-            color: var(--text);
-            min-height: 100vh;
-            padding: 24px;
-        }
+.subtitle {
+    color: var(--text-muted);
+    margin-bottom: 1.4rem;
+}
 
-        .app {
-            max-width: 1100px;
-            margin: 0 auto;
-            background: radial-gradient(circle at top left, #0b1120 0, #020617 55%, #000 100%);
-            border-radius: 18px;
-            border: 1px solid #1f2937;
-            box-shadow: 0 24px 80px rgba(0,0,0,0.7);
-            padding: 24px 24px 32px;
-        }
+/* =========================================================
+   BUTTONS
+========================================================= */
+button {
+    font-family: inherit;
+    border: none;
+    cursor: pointer;
+    border-radius: 999px;
+    padding: 0.65rem 1.4rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: 0.2s ease-out;
+}
 
-        h1 {
-            margin: 0 0 4px;
-            font-size: 1.6rem;
-            letter-spacing: 0.03em;
-        }
+.primary-btn {
+    background: linear-gradient(135deg, var(--accent), #6ad0ff);
+    color: #020308;
+    box-shadow: 0 0 18px var(--accent-soft);
+}
 
-        .subtitle {
-            margin-bottom: 20px;
-            color: var(--muted);
-            font-size: 0.9rem;
-        }
+.primary-btn:hover {
+    box-shadow: 0 0 26px var(--accent-soft);
+    transform: translateY(-1px);
+}
 
-        .grid {
-            display: grid;
-            grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.1fr);
-            gap: 20px;
-        }
+.secondary-btn {
+    background: transparent;
+    color: var(--text-main);
+    border: 1px solid var(--border-subtle);
+}
 
-        .card {
-            background: linear-gradient(145deg, rgba(15,23,42,0.96), rgba(15,23,42,0.9));
-            border-radius: 14px;
-            border: 1px solid var(--border);
-            padding: 16px 16px 18px;
-        }
+.secondary-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
 
-        .card h2 {
-            margin: 0 0 10px;
-            font-size: 1rem;
-            letter-spacing: 0.04em;
-            text-transform: uppercase;
-            color: #9ca3af;
-        }
+.primary-btn.small,
+.secondary-btn.small {
+    padding: 0.45rem 1rem;
+    font-size: 0.85rem;
+}
 
-        .input-row {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 10px;
-        }
+.primary-btn.wide {
+    width: 100%;
+}
 
-        .input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            margin-bottom: 10px;
-        }
+/* =========================================================
+   CARD LAYOUT
+========================================================= */
+.card {
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    padding: 1.6rem;
+    margin: 1.4rem 0;
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    box-shadow: var(--shadow-soft);
+}
 
-        .input-group label {
-            font-size: 0.8rem;
-            color: var(--muted);
-        }
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 
-        .input-group input,
-        .input-group select {
-            background: #020617;
-            border-radius: 8px;
-            border: 1px solid #1f2937;
-            padding: 7px 9px;
-            color: var(--text);
-            font-size: 0.85rem;
-        }
+/* =========================================================
+   INPUTS
+========================================================= */
+.input-row {
+    margin-bottom: 1rem;
+}
 
-        .input-group input:focus,
-        .input-group select:focus {
-            outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 0 1px rgba(56,189,248,0.35);
-        }
+.input-row label {
+    display: block;
+    margin-bottom: 0.25rem;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
 
-        .provider-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 6px;
-        }
+.input-row input {
+    width: 100%;
+    padding: 0.55rem 0.8rem;
+    border-radius: 8px;
+    border: 1px solid var(--border-subtle);
+    background: rgba(5, 7, 11, 0.9);
+    color: var(--text-main);
+    font-size: 0.9rem;
+    outline: none;
+}
 
-        .provider-header span {
-            font-size: 0.85rem;
-            color: var(--muted);
-        }
+.input-row input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 1px var(--accent-soft);
+}
 
-        .provider-header button {
-            background: transparent;
-            border-radius: 999px;
-            border: 1px solid #374151;
-            color: #9ca3af;
-            font-size: 0.75rem;
-            padding: 3px 8px;
-            cursor: pointer;
-        }
+/* =========================================================
+   PROVIDER BLOCKS
+========================================================= */
+.providers-container {
+    margin-top: 1rem;
+}
 
-        .provider-header button:hover {
-            border-color: #f97373;
-            color: #fecaca;
-        }
+.provider-block {
+    background: rgba(10, 13, 20, 0.96);
+    border: 1px solid var(--border-subtle);
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
 
-        .provider-box {
-            background: #020617;
-            border-radius: 10px;
-            border: 1px solid #111827;
-            padding: 10px 10px 8px;
-            margin-bottom: 10px;
-        }
+.provider-row {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 0.8rem;
+}
 
-        .providers-header-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
-        }
+.provider-row input {
+    flex: 1;
+}
 
-        .providers-header-row h2 {
-            margin: 0;
-        }
+.remove-provider-btn {
+    background: #ff4b6a;
+    color: white;
+    padding: 0.4rem 1rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    border: none;
+    cursor: pointer;
+}
 
-        .btn {
-            border-radius: 999px;
-            border: 1px solid #1f2937;
-            background: radial-gradient(circle at top left, #0ea5e9, #0369a1);
-            color: white;
-            font-size: 0.8rem;
-            padding: 6px 12px;
-            cursor: pointer;
-        }
+.remove-provider-btn:hover {
+    background: #ff6b82;
+}
 
-        .btn.secondary {
-            background: transparent;
-            border-color: #374151;
-            color: #e5e7eb;
-        }
+/* =========================================================
+   RESULTS TABLE
+========================================================= */
+.results-table-wrapper {
+    overflow-x: auto;
+    margin-top: 1rem;
+}
 
-        .btn-row {
-            display: flex;
-            gap: 8px;
-            margin-top: 10px;
-            flex-wrap: wrap;
-        }
+#resultsTable {
+    width: 100%;
+    border-collapse: collapse;
+    color: var(--text-main);
+}
 
-        .results {
-            margin-top: 16px;
-            display: none;
-        }
+#resultsTable th,
+#resultsTable td {
+    padding: 0.6rem 0.8rem;
+    border-bottom: 1px solid var(--border-subtle);
+}
 
-        .summary {
-            border-radius: 10px;
-            padding: 10px 12px;
-            font-size: 0.85rem;
-            margin-bottom: 10px;
-        }
+#resultsTable th {
+    text-align: left;
+    color: var(--text-muted);
+}
 
-        .summary.good {
-            background: rgba(22,163,74,0.12);
-            border: 1px solid rgba(34,197,94,0.5);
-            color: #bbf7d0;
-        }
+/* =========================================================
+   FULL-SCREEN ENTRY MODAL
+========================================================= */
+.entry-modal {
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(circle at top, #151a26 0, #05070b 55%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.28s ease-out;
+}
 
-        .summary.bad {
-            background: rgba(220,38,38,0.12);
-            border: 1px solid rgba(248,113,113,0.6);
-            color: #fecaca;
-        }
+.entry-modal.active {
+    opacity: 1;
+    pointer-events: auto;
+}
 
-        .result-line {
-            font-size: 0.82rem;
-            margin-bottom: 4px;
-            color: #e5e7eb;
-        }
+.entry-modal-content {
+    background: radial-gradient(circle at top, #1b2233 0, #10131b 55%);
+    border-radius: 18px;
+    padding: 2.2rem 2.4rem;
+    max-width: 480px;
+    width: 90%;
+    box-shadow: var(--shadow-soft);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    transform: translateY(18px);
+    opacity: 0;
+    transition: opacity 0.28s ease-out, transform 0.28s ease-out;
+}
 
-        .highlight {
-            color: var(--accent);
-            font-weight: 500;
-        }
+.entry-modal.active .entry-modal-content {
+    opacity: 1;
+    transform: translateY(0);
+}
 
-        .calc-lines {
-            font-size: 0.82rem;
-            color: #e5e7eb;
-            margin-bottom: 10px;
-        }
+/* =========================================================
+   WIZARD
+========================================================= */
+.wizard {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at top, #151a26 0, #05070b 55%);
+    z-index: 900;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.28s ease-out;
+}
 
-        .calc-lines div {
-            margin-bottom: 3px;
-        }
+.wizard.active {
+    opacity: 1;
+    pointer-events: auto;
+}
 
-        .chart-wrapper {
-            margin-top: 10px;
-            background: #020617;
-            border-radius: 10px;
-            border: 1px solid #111827;
-            padding: 10px;
-        }
+.wizard-progress {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 3px;
+    width: 0%;
+    background: linear-gradient(90deg, var(--accent), #6ad0ff);
+    box-shadow: 0 0 12px var(--accent-soft);
+    transition: width 0.25s ease-out;
+}
 
-        canvas {
-            max-width: 100%;
-        }
+.wizard-card {
+    background: radial-gradient(circle at top, #1b2233 0, #10131b 55%);
+    border-radius: 18px;
+    padding: 2.2rem 2.4rem;
+    width: 95%;
+    max-width: 520px;
+    box-shadow: var(--shadow-soft);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    position: relative;
+    overflow: hidden;
+}
 
-        @media (max-width: 800px) {
-            .grid {
-                grid-template-columns: minmax(0, 1fr);
-            }
-        }
-    </style>
+.wizard-step {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.28s ease-out, transform 0.28s ease-out;
+    position: absolute;
+    inset: 0;
+    padding: 2.2rem 2.4rem;
+}
+
+.wizard-step.active {
+    opacity: 1;
+    transform: translateY(0);
+    position: relative;
+}
+
+.wizard-step.hidden {
+    display: none;
+}
+
+.wizard-step input {
+    width: 100%;
+    padding: 0.7rem 0.9rem;
+    border-radius: 999px;
+    border: 1px solid var(--border-subtle);
+    background: rgba(5, 7, 11, 0.85);
+    color: var(--text-main);
+    margin-bottom: 1.4rem;
+}
+
+.wizard-note {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 1.4rem;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+@media (max-width: 768px) {
+    .wizard-card {
+        width: 100%;
+        max-width: 100%;
+        height: 100%;
+        border-radius: 0;
+        padding: 2rem 1.4rem;
+    }
+
+    .wizard-step {
+        padding: 2rem 1.4rem;
+    }
+
+    .entry-modal-content {
+        max-width: 100%;
+        width: 100%;
+        margin: 0 1.2rem;
+    }
+}
+</style>
 </head>
 <body>
-<div class="app">
-    <h1>EV Public Charging Comparison</h1>
-    <div class="subtitle">
-        Compare ad‑hoc vs subscription charging for a specific trip distance, including Be.EV and other major networks.
+
+    <!-- ========================================================= -->
+    <!--  FULL-SCREEN CHOICE MODAL                                -->
+    <!-- ========================================================= -->
+    <div id="entryChoiceModal" class="entry-modal hidden">
+        <div class="entry-modal-content">
+            <h1>How would you like to begin?</h1>
+            <p>Select an option to continue.</p>
+
+            <button id="startWizardBtn" class="primary-btn">
+                Use Guided Setup
+            </button>
+
+            <button id="skipWizardBtn" class="secondary-btn">
+                Skip Wizard & Go Straight to Calculator
+            </button>
+        </div>
     </div>
 
-    <div class="grid">
-        <!-- Trip & vehicle -->
-        <div class="card">
+    <!-- ========================================================= -->
+    <!--  WIZARD CONTAINER                                         -->
+    <!-- ========================================================= -->
+    <div id="wizardContainer" class="wizard hidden">
+        <div id="wizardProgressBar" class="wizard-progress"></div>
+
+        <div class="wizard-card">
+            <!-- STEP 1 -->
+            <div class="wizard-step active" data-step="1">
+                <h2>How far is your trip?</h2>
+                <p class="wizard-note">
+                    You can change this later to instantly see how the results update.
+                </p>
+                <input type="number" id="wizTripDistance" placeholder="Enter miles" />
+                <button class="wizard-next-btn primary-btn" data-next="2">Next →</button>
+            </div>
+
+            <!-- STEP 2 -->
+            <div class="wizard-step hidden" data-step="2">
+                <h2>What is your battery capacity?</h2>
+                <input type="number" id="wizBatterySize" placeholder="kWh" />
+                <button class="wizard-next-btn primary-btn" data-next="3">Next →</button>
+            </div>
+
+            <!-- STEP 3 -->
+            <div class="wizard-step hidden" data-step="3">
+                <h2>What percentage charge will you start with?</h2>
+                <input type="number" id="wizStartSOC" placeholder="%" />
+                <button class="wizard-next-btn primary-btn" data-next="4">Next →</button>
+            </div>
+
+            <!-- STEP 4 -->
+            <div class="wizard-step hidden" data-step="4">
+                <h2>What is your car’s efficiency?</h2>
+                <input type="number" id="wizEfficiency" placeholder="Miles per kWh" />
+                <button class="wizard-next-btn primary-btn" data-next="5">Next →</button>
+            </div>
+
+            <!-- STEP 5 -->
+            <div class="wizard-step hidden" data-step="5">
+                <h2>What is your ad‑hoc charging rate?</h2>
+                <input type="number" id="wizAdhocRate" placeholder="£ per kWh" />
+                <button class="wizard-next-btn primary-btn" data-next="6">Next →</button>
+            </div>
+
+            <!-- STEP 6 -->
+            <div class="wizard-step hidden" data-step="6">
+                <h2>Add subscription providers</h2>
+                <p class="wizard-note">You can add more later inside the calculator.</p>
+
+                <div id="wizProvidersList"></div>
+
+                <button id="wizAddProviderBtn" class="primary-btn small">
+                    Add Provider
+                </button>
+
+                <button class="wizard-next-btn primary-btn" data-next="7">
+                    Continue →
+                </button>
+            </div>
+
+            <!-- STEP 7 -->
+            <div class="wizard-step hidden" data-step="7">
+                <h2>All set!</h2>
+                <p>Your calculator is ready. You can adjust anything once inside.</p>
+                <button id="wizFinishBtn" class="primary-btn">
+                    Go to Calculator →
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================= -->
+    <!--  FULL APP                                                 -->
+    <!-- ========================================================= -->
+    <div id="fullApp" class="hidden">
+
+        <header>
+            <h1>EV Journey Cost Calculator</h1>
+            <p class="subtitle">
+                Compare ad‑hoc charging with subscription providers for a single trip.
+            </p>
+        </header>
+
+        <section class="card">
             <h2>Trip & Vehicle</h2>
+
             <div class="input-row">
-                <div class="input-group">
-                    <label>Trip distance (miles)</label>
-                    <input type="number" id="journeyMiles" placeholder="e.g., 250">
-                </div>
-                <div class="input-group">
-                    <label>Battery size (kWh)</label>
-                    <input type="number" id="batteryKwh" placeholder="e.g., 77">
-                </div>
+                <label for="tripDistance">Trip distance (miles)</label>
+                <input type="number" id="tripDistance" placeholder="e.g. 180" />
             </div>
+
             <div class="input-row">
-                <div class="input-group">
-                    <label>Starting state of charge (%)</label>
-                    <input type="number" id="soc" placeholder="e.g., 90">
-                </div>
-                <div class="input-group">
-                    <label>Efficiency (miles per kWh)</label>
-                    <input type="number" id="efficiency" placeholder="e.g., 3.5">
-                </div>
+                <label for="batterySize">Battery size (kWh)</label>
+                <input type="number" id="batterySize" placeholder="e.g. 77" />
             </div>
-            <div class="input-group">
-                <label>Ad‑hoc public rate (pence per kWh)</label>
-                <input type="number" id="adhoc" placeholder="e.g., 79">
+
+            <div class="input-row">
+                <label for="startSOC">Starting state of charge (%)</label>
+                <input type="number" id="startSOC" placeholder="e.g. 80" />
             </div>
-        </div>
 
-        <!-- Providers -->
-        <div class="card">
-            <div class="providers-header-row">
-                <h2>Subscriptions & Discounts</h2>
-                <button type="button" class="btn" onclick="addProvider()">Add provider</button>
+            <div class="input-row">
+                <label for="efficiency">Efficiency (miles per kWh)</label>
+                <input type="number" id="efficiency" placeholder="e.g. 3.5" />
             </div>
-            <div id="providers"></div>
-        </div>
+        </section>
+
+        <section class="card">
+            <h2>Ad‑hoc charging</h2>
+
+            <div class="input-row">
+                <label for="adhocRate">Ad‑hoc rate (£/kWh)</label>
+                <input type="number" id="adhocRate" placeholder="e.g. 0.75" step="0.01" />
+            </div>
+        </section>
+
+        <section class="card">
+            <div class="card-header">
+                <h2>Subscription providers</h2>
+                <button id="addProviderBtn" class="primary-btn small">Add provider</button>
+            </div>
+
+            <div id="providersContainer" class="providers-container">
+                <!-- Provider blocks will be injected here -->
+            </div>
+        </section>
+
+        <section class="card">
+            <button id="calculateBtn" class="primary-btn wide">Calculate</button>
+        </section>
+
+        <section id="resultsSection" class="card hidden">
+            <h2>Results</h2>
+            <div id="resultsOutput" class="results-output"></div>
+
+            <div class="results-table-wrapper">
+                <table id="resultsTable">
+                    <thead>
+                        <tr>
+                            <th>Option</th>
+                            <th>Energy needed (kWh)</th>
+                            <th>Cost (£)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Rows injected here -->
+                    </tbody>
+                </table>
+            </div>
+
+            <button id="exportPDFBtn" class="secondary-btn">
+                Export as PDF
+            </button>
+        </section>
+
     </div>
-
-    <div class="btn-row">
-        <button type="button" class="btn secondary" onclick="shareLink()">Copy shareable link</button>
-        <button type="button" class="btn secondary" onclick="exportPdf()">Export as PDF</button>
-    </div>
-
-    <!-- Results -->
-    <div id="results" class="results">
-        <div id="summaryBox" class="summary"></div>
-
-        <div class="calc-lines">
-            <div id="homeRangeLine"></div>
-            <div id="publicMilesLine"></div>
-            <div id="publicKwhLine"></div>
-            <div id="adhocCostLine"></div>
-        </div>
-
-        <div id="providerResults"></div>
-
-        <div class="chart-wrapper">
-            <canvas id="costChart" height="220"></canvas>
-        </div>
-    </div>
-</div>
 
 <script>
-const PRESETS = [
-    { name: "Tesla", subCost: 10.99, rate: 45 },
-    { name: "BP Pulse", subCost: 7.99, rate: 49 },
-    { name: "Osprey", subCost: 0, rate: 79 },
-    { name: "Instavolt", subCost: 0, rate: 85 },
-    { name: "Gridserve", subCost: 0, rate: 79 },
-    { name: "Shell Recharge", subCost: 7.99, rate: 55 },
-    { name: "Be.EV", subCost: 9.99, rate: 39 }
-];
-
-let providerCount = 0;
-let chart = null;
-
-// CREATE PROVIDER BOX
-function createProviderBox(preset) {
-    providerCount++;
-    const id = providerCount;
-
-    const box = document.createElement("div");
-    box.className = "provider-box";
-    box.dataset.id = id;
-
-    const presetOptions = ['Custom', ...PRESETS.map(p => p.name)]
-        .map(name => `<option value="${name}">${name}</option>`)
-        .join("");
-
-    box.innerHTML = `
-        <div class="provider-header">
-            <span>Provider #${id}</span>
-            <button type="button" onclick="removeProvider(${id})">Remove</button>
-        </div>
-
-        <div class="input-group">
-            <label>Preset</label>
-            <select id="preset${id}">
-                ${presetOptions}
-            </select>
-        </div>
-
-        <div class="input-group">
-            <label>Provider name</label>
-            <input type="text" id="name${id}" placeholder="e.g., BP Pulse">
-        </div>
-
-        <div class="input-group">
-            <label>Subscription cost (£ / month)</label>
-            <input type="number" id="subCost${id}" placeholder="e.g., 7.99">
-        </div>
-
-        <div class="input-group">
-            <label>Discounted rate (pence per kWh)</label>
-            <input type="number" id="discount${id}" placeholder="e.g., 49">
-        </div>
-    `;
-
-    document.getElementById("providers").appendChild(box);
-
-    const presetSelect = document.getElementById(`preset${id}`);
-    presetSelect.addEventListener("change", () => applyPreset(id));
-
-    box.querySelectorAll("input").forEach(i => i.addEventListener("input", calculate));
-
-    if (preset) {
-        presetSelect.value = preset.name;
-        document.getElementById(`name${id}`).value = preset.name;
-        document.getElementById(`subCost${id}`).value = preset.subCost;
-        document.getElementById(`discount${id}`).value = preset.rate;
-    }
-}
-
-function addProvider() {
-    createProviderBox();
-    calculate();
-}
-
-function removeProvider(id) {
-    const box = document.querySelector(`.provider-box[data-id="${id}"]`);
-    if (box) box.remove();
-    calculate();
-}
-
-function applyPreset(id) {
-    const presetName = document.getElementById(`preset${id}`).value;
-    const preset = PRESETS.find(p => p.name === presetName);
-    if (!preset) return;
-
-    document.getElementById(`name${id}`).value = preset.name;
-    document.getElementById(`subCost${id}`).value = preset.subCost;
-    document.getElementById(`discount${id}`).value = preset.rate;
-
-    calculate();
-}
-
-// CORE INPUTS
-function getCoreInputs() {
-    const journeyMiles = parseFloat(document.getElementById("journeyMiles").value);
-    const batteryKwh = parseFloat(document.getElementById("batteryKwh").value);
-    const soc = parseFloat(document.getElementById("soc").value);
-    const efficiency = parseFloat(document.getElementById("efficiency").value);
-    const adhocPence = parseFloat(document.getElementById("adhoc").value);
-
-    if (!journeyMiles || !batteryKwh || !soc || !efficiency || !adhocPence) return null;
-
-    const usableKwhAtStart = batteryKwh * (soc / 100);
-    const homeMiles = usableKwhAtStart * efficiency;
-    const publicMiles = Math.max(0, journeyMiles - homeMiles);
-    const publicKwh = publicMiles / efficiency;
-    const adhocRate = adhocPence / 100;
-    const adhocCost = publicKwh * adhocRate;
-
-    return {
-        journeyMiles,
-        batteryKwh,
-        soc,
-        efficiency,
-        adhocPence,
-        usableKwhAtStart,
-        homeMiles,
-        publicMiles,
-        publicKwh,
-        adhocRate,
-        adhocCost
-    };
-}
-
-// MAIN CALCULATION
-function calculate() {
-    const core = getCoreInputs();
-
-    const homeRangeLine = document.getElementById("homeRangeLine");
-    const publicMilesLine = document.getElementById("publicMilesLine");
-    const publicKwhLine = document.getElementById("publicKwhLine");
-    const adhocCostLine = document.getElementById("adhocCostLine");
-
-    if (!core) {
-        homeRangeLine.textContent = "Enter all trip, battery, efficiency and ad‑hoc fields to see calculations.";
-        publicMilesLine.textContent = "";
-        publicKwhLine.textContent = "";
-        adhocCostLine.textContent = "";
-        document.getElementById("results").style.display = "none";
-        if (chart) chart.destroy();
-        return;
-    }
-
-    homeRangeLine.innerHTML =
-        `Estimated range from home charge: <span class="highlight">${core.homeMiles.toFixed(0)} miles</span>`;
-    publicMilesLine.innerHTML =
-        `Miles requiring public charging: <span class="highlight">${core.publicMiles.toFixed(0)} miles</span>`;
-    publicKwhLine.innerHTML =
-        `Energy from public charging: <span class="highlight">${core.publicKwh.toFixed(1)} kWh</span>`;
-    adhocCostLine.innerHTML =
-        `Cost using ad‑hoc only: <span class="highlight">£${core.adhocCost.toFixed(2)}</span>`;
-
-    const providerResults = document.getElementById("providerResults");
-    providerResults.innerHTML = "";
-
-    const providers = [];
-    const boxes = document.querySelectorAll(".provider-box");
-
-    boxes.forEach(box => {
-        const id = box.dataset.id;
-        const name = document.getElementById(`name${id}`).value.trim();
-        const subCost = parseFloat(document.getElementById(`subCost${id}`).value);
-        const discountPence = parseFloat(document.getElementById(`discount${id}`).value);
-
-        if (!name || isNaN(subCost) || isNaN(discountPence)) return;
-
-        const discountRate = discountPence / 100;
-
-        const costWithSub = subCost + (core.publicKwh * discountRate);
-        const breakEvenKwh = (core.adhocRate > discountRate)
-            ? subCost / (core.adhocRate - discountRate)
-            : Infinity;
-        const breakEvenMiles = (breakEvenKwh === Infinity)
-            ? Infinity
-            : breakEvenKwh * core.efficiency;
-        const savings = core.adhocCost - costWithSub;
-
-        providers.push({
-            name,
-            costWithSub,
-            breakEvenMiles,
-            savings,
-            subCost,
-            discountPence
-        });
-
-        const beText = (breakEvenMiles === Infinity)
-            ? "No break‑even (discounted rate ≥ ad‑hoc rate)"
-            : `${breakEvenMiles.toFixed(0)} miles`;
-
-        providerResults.innerHTML += `
-            <div class="result-line">
-                <span class="highlight">${name}</span> —
-                Cost: £${costWithSub.toFixed(2)},
-                Break‑even: ${beText},
-                Savings vs ad‑hoc: £${savings.toFixed(2)}
-            </div>
-        `;
-    });
-
-    if (providers.length === 0) {
-        document.getElementById("results").style.display = "none";
-        if (chart) chart.destroy();
-        return;
-    }
-
-    document.getElementById("results").style.display = "block";
-
-    const best = providers.reduce((a, b) => (a.costWithSub < b.costWithSub ? a : b));
-    const summaryBox = document.getElementById("summaryBox");
-
-    if (best.costWithSub < core.adhocCost) {
-        summaryBox.className = "summary good";
-        summaryBox.textContent =
-            `${best.name} is currently the cheapest option for this trip (saving £${(core.adhocCost - best.costWithSub).toFixed(2)} vs ad‑hoc).`;
-    } else {
-        summaryBox.className = "summary bad";
-        summaryBox.textContent =
-            `Ad‑hoc charging is cheaper than any subscription for this trip distance.`;
-    }
-
-    drawGraph(core, providers);
-}
-
-// GRAPH
-function drawGraph(core, providers) {
-    const ctx = document.getElementById("costChart");
-
-    if (chart) chart.destroy();
-
-    const maxMiles = Math.max(core.journeyMiles, core.homeMiles + core.publicMiles);
-    const steps = 20;
-
-    const labels = [];
-    const adhocData = [];
-
-    for (let i = 0; i <= steps; i++) {
-        const m = (maxMiles * i) / steps;
-        labels.push(m.toFixed(0));
-
-        const publicMilesAtM = Math.max(0, m - core.homeMiles);
-        const publicKwhAtM = publicMilesAtM / core.efficiency;
-        const costAdhocAtM = publicKwhAtM * core.adhocRate;
-
-        adhocData.push(costAdhocAtM);
-    }
-
-    const datasets = [{
-        label: "Ad‑hoc only (£)",
-        data: adhocData,
-        borderColor: "#f97316",
-        backgroundColor: "rgba(249,115,22,0.15)",
-        tension: 0.2
-    }];
-
-    providers.forEach((p, idx) => {
-        const colors = ["#38bdf8", "#4ade80", "#a855f7", "#facc15", "#f472b6", "#22c55e"];
-        const color = colors[idx % colors.length];
-
-        const data = [];
-
-        for (let i = 0; i <= steps; i++) {
-            const m = (maxMiles * i) / steps;
-            const publicMilesAtM = Math.max(0, m - core.homeMiles);
-            const publicKwhAtM = publicMilesAtM / core.efficiency;
-            const costSubAtM = p.subCost + (publicKwhAtM * (p.discountPence / 100));
-
-            data.push(costSubAtM);
-        }
-
-        datasets.push({
-            label: `${p.name} (£)`,
-            data,
-            borderColor: color,
-            backgroundColor: "transparent",
-            tension: 0.2
-        });
-    });
-
-    chart = new Chart(ctx, {
-        type: "line",
-        data: { labels, datasets },
-        options: {
-            responsive: true,
-            interaction: { mode: "index", intersect: false },
-            scales: {
-                x: { title: { display: true, text: "Trip distance (miles)" } },
-                y: { title: { display: true, text: "Total charging cost (£)" }, beginAtZero: true }
-            }
-        }
-    });
-}
-
-// SHAREABLE LINK
-function shareLink() {
-    const core = getCoreInputs();
-    if (!core) {
-        alert("Please fill in all main inputs first.");
-        return;
-    }
-
-    const params = new URLSearchParams();
-
-    params.set("jm", core.journeyMiles);
-    params.set("bk", core.batteryKwh);
-    params.set("soc", core.soc);
-    params.set("eff", core.efficiency);
-    params.set("adhoc", core.adhocPence);
-
-    let idx = 0;
-    document.querySelectorAll(".provider-box").forEach(box => {
-        const id = box.dataset.id;
-
-        const name = document.getElementById(`name${id}`).value.trim();
-        const subCost = document.getElementById(`subCost${id}`).value;
-        const discount = document.getElementById(`discount${id}`).value;
-
-        if (!name || !subCost || !discount) return;
-
-        params.set(`p${idx}n`, name);
-        params.set(`p${idx}s`, subCost);
-        params.set(`p${idx}r`, discount);
-
-        idx++;
-    });
-
-    const base = window.location.href.split("?")[0];
-    const url = `${base}?${params.toString()}`;
-
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(url).then(
-            () => alert("Link copied to clipboard."),
-            () => prompt("Copy this link:", url)
-        );
-    } else {
-        prompt("Copy this link:", url);
-    }
-}
-
-// LOAD FROM URL
-function loadFromParams() {
-    const params = new URLSearchParams(window.location.search);
-
-    if (!params.has("jm")) return;
-
-    const setVal = (id, key) => {
-        const v = params.get(key);
-        if (v !== null) document.getElementById(id).value = v;
-    };
-
-    setVal("journeyMiles", "jm");
-    setVal("batteryKwh", "bk");
-    setVal("soc", "soc");
-    setVal("efficiency", "eff");
-    setVal("adhoc", "adhoc");
-
-    let idx = 0;
-    while (true) {
-        const name = params.get(`p${idx}n`);
-        const sub = params.get(`p${idx}s`);
-        const rate = params.get(`p${idx}r`);
-
-        if (!name || !sub || !rate) break;
-
-        createProviderBox();
-        const id = providerCount;
-
-        document.getElementById(`name${id}`).value = name;
-        document.getElementById(`subCost${id}`).value = sub;
-        document.getElementById(`discount${id}`).value = rate;
-
-        idx++;
-    }
-
-    calculate();
-}
-
-// PDF EXPORT (html2canvas + jsPDF, multi-page A4)
-async function exportPdf() {
-    const resultsEl = document.getElementById("results");
-    if (!resultsEl || resultsEl.style.display === "none") {
-        alert("Please enter inputs and providers so results are visible before exporting.");
-        return;
-    }
-
-    // Ensure chart is rendered
-    resultsEl.scrollIntoView();
-
-    // Slight delay to ensure layout is stable
-    await new Promise(r => setTimeout(r, 300));
-
-    const { jsPDF } = window.jspdf;
-
-    const canvas = await html2canvas(document.body, {
-        scale: 2,
-        useCORS: true,
-        backgroundColor: "#ffffff"
-    });
-
-    const imgData = canvas.toDataURL("image/png");
-
-    const pdf = new jsPDF("p", "mm", "a4");
-    const pageWidth = pdf.internal.pageSize.getWidth();
-    const pageHeight = pdf.internal.pageSize.getHeight();
-
-    const imgWidth = pageWidth;
-    const imgHeight = canvas.height * imgWidth / canvas.width;
-
-    let heightLeft = imgHeight;
-    let position = 0;
-
-    pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-    heightLeft -= pageHeight;
-
-    while (heightLeft > 0) {
-        position = heightLeft - imgHeight;
-        pdf.addPage();
-        pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-        heightLeft -= pageHeight;
-    }
-
-    pdf.save("ev-charging-comparison.pdf");
-}
-
-// INITIALISE
-["journeyMiles","batteryKwh","soc","efficiency","adhoc"].forEach(id => {
-    document.getElementById(id).addEventListener("input", calculate);
+/* =========================================================
+   ELEMENT REFERENCES
+========================================================= */
+const entryModal = document.getElementById("entryChoiceModal");
+const startWizardBtn = document.getElementById("startWizardBtn");
+const skipWizardBtn = document.getElementById("skipWizardBtn");
+
+const wizardContainer = document.getElementById("wizardContainer");
+const wizardSteps = Array.from(document.querySelectorAll(".wizard-step"));
+const wizardProgressBar = document.getElementById("wizardProgressBar");
+
+const wizTripDistance = document.getElementById("wizTripDistance");
+const wizBatterySize = document.getElementById("wizBatterySize");
+const wizStartSOC = document.getElementById("wizStartSOC");
+const wizEfficiency = document.getElementById("wizEfficiency");
+const wizAdhocRate = document.getElementById("wizAdhocRate");
+
+const wizAddProviderBtn = document.getElementById("wizAddProviderBtn");
+const wizProvidersList = document.getElementById("wizProvidersList");
+const wizFinishBtn = document.getElementById("wizFinishBtn");
+
+const fullApp = document.getElementById("fullApp");
+
+const tripDistanceInput = document.getElementById("tripDistance");
+const batterySizeInput = document.getElementById("batterySize");
+const startSOCInput = document.getElementById("startSOC");
+const efficiencyInput = document.getElementById("efficiency");
+const adhocRateInput = document.getElementById("adhocRate");
+
+const addProviderBtn = document.getElementById("addProviderBtn");
+const providersContainer = document.getElementById("providersContainer");
+
+const calculateBtn = document.getElementById("calculateBtn");
+const resultsSection = document.getElementById("resultsSection");
+const resultsOutput = document.getElementById("resultsOutput");
+const resultsTableBody = document.querySelector("#resultsTable tbody");
+const exportPDFBtn = document.getElementById("exportPDFBtn");
+
+/* =========================================================
+   INITIAL MODAL ACTIVATION
+========================================================= */
+document.addEventListener("DOMContentLoaded", () => {
+    entryModal.classList.remove("hidden");
+    entryModal.classList.add("active");
 });
 
-addProvider();
-loadFromParams();
+/* =========================================================
+   ENTRY MODAL LOGIC
+========================================================= */
+startWizardBtn.addEventListener("click", () => {
+    entryModal.classList.remove("active");
+    setTimeout(() => entryModal.classList.add("hidden"), 250);
+    startWizard();
+});
+
+skipWizardBtn.addEventListener("click", () => {
+    entryModal.classList.remove("active");
+    setTimeout(() => entryModal.classList.add("hidden"), 250);
+    showFullApp();
+});
+
+/* =========================================================
+   WIZARD CORE LOGIC
+========================================================= */
+let currentStep = 1;
+const totalSteps = 7;
+
+function startWizard() {
+    wizardContainer.classList.remove("hidden");
+    wizardContainer.classList.add("active");
+    fullApp.classList.add("hidden");
+
+    wizardSteps.forEach(step => {
+        step.classList.add("hidden");
+        step.classList.remove("active");
+    });
+
+    currentStep = 1;
+    showStep(currentStep);
+    updateProgressBar();
+}
+
+function showStep(stepNumber) {
+    wizardSteps.forEach(step => {
+        const s = parseInt(step.getAttribute("data-step"), 10);
+        if (s === stepNumber) {
+            step.classList.remove("hidden");
+            void step.offsetWidth;
+            step.classList.add("active");
+        } else {
+            step.classList.remove("active");
+            step.classList.add("hidden");
+        }
+    });
+}
+
+function updateProgressBar() {
+    wizardProgressBar.style.width = (currentStep / totalSteps) * 100 + "%";
+}
+
+const wizardNextButtons = document.querySelectorAll(".wizard-next-btn");
+wizardNextButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+        const nextStep = parseInt(btn.getAttribute("data-next"), 10);
+        if (!validateCurrentStep()) return;
+        goToStep(nextStep);
+    });
+});
+
+function goToStep(stepNumber) {
+    if (stepNumber < 1 || stepNumber > totalSteps) return;
+    currentStep = stepNumber;
+    showStep(currentStep);
+    updateProgressBar();
+}
+
+function validateCurrentStep() {
+    switch (currentStep) {
+        case 1: return validateNumberInput(wizTripDistance);
+        case 2: return validateNumberInput(wizBatterySize);
+        case 3: return validateNumberInput(wizStartSOC);
+        case 4: return validateNumberInput(wizEfficiency);
+        case 5: return validateNumberInput(wizAdhocRate);
+        default: return true;
+    }
+}
+
+function validateNumberInput(inputEl) {
+    const value = inputEl.value.trim();
+    if (value === "" || isNaN(Number(value))) {
+        inputEl.focus();
+        inputEl.classList.add("input-error");
+        setTimeout(() => inputEl.classList.remove("input-error"), 600);
+        return false;
+    }
+    return true;
+}
+
+/* =========================================================
+   WIZARD PROVIDER CREATION
+========================================================= */
+function createWizardProviderBlock() {
+    const wrapper = document.createElement("div");
+    wrapper.className = "provider-block";
+
+    wrapper.innerHTML = `
+        <div class="provider-row">
+            <input type="text" class="wiz-provider-name" placeholder="Provider name" />
+        </div>
+        <div class="provider-row">
+            <input type="number" class="wiz-provider-sub" placeholder="Subscription £/month" step="0.01" />
+            <input type="number" class="wiz-provider-rate" placeholder="Rate £/kWh" step="0.01" />
+        </div>
+        <button class="remove-provider-btn">Remove</button>
+    `;
+
+    wrapper.querySelector(".remove-provider-btn").addEventListener("click", () => {
+        wrapper.remove();
+    });
+
+    return wrapper;
+}
+
+wizAddProviderBtn.addEventListener("click", () => {
+    wizProvidersList.appendChild(createWizardProviderBlock());
+});
+
+/* =========================================================
+   WIZARD FINISH → SYNC TO MAIN APP
+========================================================= */
+wizFinishBtn.addEventListener("click", () => {
+    syncWizardToMainInputs();
+    syncWizardProvidersToMainApp();
+    showFullApp();
+
+    wizardContainer.classList.remove("active");
+    setTimeout(() => wizardContainer.classList.add("hidden"), 250);
+});
+
+function syncWizardToMainInputs() {
+    tripDistanceInput.value = wizTripDistance.value.trim();
+    batterySizeInput.value = wizBatterySize.value.trim();
+    startSOCInput.value = wizStartSOC.value.trim();
+    efficiencyInput.value = wizEfficiency.value.trim();
+    adhocRateInput.value = wizAdhocRate.value.trim();
+}
+
+function syncWizardProvidersToMainApp() {
+    providersContainer.innerHTML = "";
+
+    const wizardProviders = wizProvidersList.querySelectorAll(".provider-block");
+
+    wizardProviders.forEach(wp => {
+        const name = wp.querySelector(".wiz-provider-name").value.trim();
+        const sub = wp.querySelector(".wiz-provider-sub").value.trim();
+        const rate = wp.querySelector(".wiz-provider-rate").value.trim();
+
+        addProviderToMainApp(name, sub, rate);
+    });
+}
+
+/* =========================================================
+   MAIN APP PROVIDER CREATION
+========================================================= */
+function addProviderToMainApp(name = "", sub = "", rate = "") {
+    const block = document.createElement("div");
+    block.className = "provider-block";
+
+    block.innerHTML = `
+        <div class="provider-row">
+            <input type="text" class="provider-name" placeholder="Provider name" value="${name}" />
+        </div>
+
+        <div class="provider-row">
+            <input type="number" class="provider-sub" placeholder="Subscription £/month" step="0.01" value="${sub}" />
+            <input type="number" class="provider-rate" placeholder="Rate £/kWh" step="0.01" value="${rate}" />
+        </div>
+
+        <button class="remove-provider-btn">Remove</button>
+    `;
+
+    block.querySelector(".remove-provider-btn").addEventListener("click", () => {
+        block.remove();
+    });
+
+    providersContainer.appendChild(block);
+}
+
+addProviderBtn.addEventListener("click", () => {
+    addProviderToMainApp();
+});
+
+/* =========================================================
+   CALCULATION LOGIC
+========================================================= */
+calculateBtn.addEventListener("click", () => {
+    const trip = Number(tripDistanceInput.value);
+    const battery = Number(batterySizeInput.value);
+    const startSOC = Number(startSOCInput.value);
+    const eff = Number(efficiencyInput.value);
+    const adhoc = Number(adhocRateInput.value);
+
+    if (!trip || !battery || !eff) {
+        alert("Please fill in trip distance, battery size, and efficiency.");
+        return;
+    }
+
+    const usableBattery = battery * (startSOC / 100);
+    const milesFromStart = usableBattery * eff;
+    const remainingMiles = Math.max(0, trip - milesFromStart);
+    const kWhNeeded = remainingMiles / eff;
+
+    resultsTableBody.innerHTML = "";
+
+    /* Ad‑hoc row */
+    if (adhoc > 0) {
+        const adhocCost = kWhNeeded * adhoc;
+        addResultRow("Ad‑hoc", kWhNeeded, adhocCost);
+    }
+
+    /* Provider rows */
+    const providerBlocks = providersContainer.querySelectorAll(".provider-block");
+
+    providerBlocks.forEach(pb => {
+        const name = pb.querySelector(".provider-name").value.trim() || "Provider";
+        const sub = Number(pb.querySelector(".provider-sub").value) || 0;
+        const rate = Number(pb.querySelector(".provider-rate").value) || 0;
+
+        const cost = (kWhNeeded * rate) + sub;
+        addResultRow(name, kWhNeeded, cost);
+    });
+
+    resultsSection.classList.remove("hidden");
+});
+
+function addResultRow(label, kWh, cost) {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+        <td>${label}</td>
+        <td>${kWh.toFixed(1)}</td>
+        <td>£${cost.toFixed(2)}</td>
+    `;
+    resultsTableBody.appendChild(row);
+}
+
+/* =========================================================
+   PDF EXPORT (stub)
+========================================================= */
+exportPDFBtn.addEventListener("click", () => {
+    alert("PDF export not yet implemented.");
+});
+
+/* =========================================================
+   SHOW FULL APP
+========================================================= */
+function showFullApp() {
+    wizardContainer.classList.add("hidden");
+    fullApp.classList.remove("hidden");
+}
 </script>
+
 </body>
 </html>
