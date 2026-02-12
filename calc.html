@@ -254,13 +254,24 @@
 <div class="app">
     <h1>EV Public Charging Comparison</h1>
     <div class="subtitle">
-        Compare ad‑hoc vs subscription charging for a specific trip distance, including Be.EV and other major networks.
+        Compare ad‑hoc vs subscription charging for a specific trip distance.
     </div>
-
+    <div class="subtitle">
+        When all fields are completed and at least one provider selected, scroll down to view the full results.
+    </div>
+    <div class="subtitle">
+        If you find a value that is out of date or you wish to include another provider, please message <a href='https://www.facebook.com/kelvin.a.hill/'>the author</a> who will update the value(s).
+    </div>
     <div class="grid">
         <!-- Trip & vehicle -->
         <div class="card">
             <h2>Trip & Vehicle</h2>
+            <div class="input-group">
+                <label>
+                    <input type="checkbox" id="cheapHome" checked>
+                    <strong>Check this box if you have cheap home charging.</strong> If you do, the calculation(s) will be based on the remaining miles <i>after</i> your cheap charging has depleted. If you leave this box unchecked, the full distance will be considered.
+                </label>
+            </div>
             <div class="input-row">
                 <div class="input-group">
                     <label>Trip distance (miles)</label>
@@ -484,9 +495,17 @@ function getCoreInputs() {
 
     if (!journeyMiles || !batteryKwh || !soc || !efficiency || !adhocPence) return null;
 
-    const usableKwhAtStart = batteryKwh * (soc / 100);
-    const homeMiles = usableKwhAtStart * efficiency;
-    const publicMiles = Math.max(0, journeyMiles - homeMiles);
+    const cheapHome = document.getElementById("cheapHome").checked;
+    
+    let homeMiles = 0;
+    let publicMiles = journeyMiles;
+    
+    if (cheapHome) {
+        const usableKwhAtStart = batteryKwh * (soc / 100);
+        homeMiles = usableKwhAtStart * efficiency;
+        publicMiles = Math.max(0, journeyMiles - homeMiles);
+    }
+    
     const publicKwh = publicMiles / efficiency;
     const adhocRate = adhocPence / 100;
     const adhocCost = publicKwh * adhocRate;
@@ -525,8 +544,13 @@ function calculate() {
         return;
     }
 
-    homeRangeLine.innerHTML =
-        `Estimated range from home charge: <span class="highlight">${core.homeMiles.toFixed(0)} miles</span>`;
+    if (document.getElementById("cheapHome").checked) {
+        homeRangeLine.innerHTML =
+            `Estimated range from home charge: <span class="highlight">${core.homeMiles.toFixed(0)} miles</span>`;
+    } else {
+        homeRangeLine.innerHTML =
+            `Home charging disabled — full journey requires public charging.`;
+    }
     publicMilesLine.innerHTML =
         `Miles requiring public charging: <span class="highlight">${core.publicMiles.toFixed(0)} miles</span>`;
     publicKwhLine.innerHTML =
@@ -807,9 +831,11 @@ async function exportPdf() {
 ["journeyMiles","batteryKwh","soc","efficiency","adhoc"].forEach(id => {
     document.getElementById(id).addEventListener("input", calculate);
 });
+document.getElementById("cheapHome").addEventListener("change", calculate);
 
 addProvider();
 loadFromParams();
 </script>
 </body>
 </html>
+
