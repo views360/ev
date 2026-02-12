@@ -35,9 +35,6 @@
       "subCost": 4.00,
       "rate": 46
     },
-
-    /* --- Non‑subscription networks (still useful for comparison) --- */
-
     {
       "name": "Osprey [No Subscription]",
       "subCost": 0,
@@ -63,9 +60,6 @@
       "subCost": 0,
       "rate": 79
     },
-
-    /* --- Regional / LA networks with flat rates --- */
-
     {
       "name": "ChargePlace Scotland (rapid) [No Subscription]",
       "subCost": 0,
