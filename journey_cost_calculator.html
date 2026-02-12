@@ -577,7 +577,7 @@
 
     const fullApp = document.getElementById("fullApp");
 
-    // Main app inputs (to sync wizard values into)
+    // Main app inputs
     const tripDistanceInput = document.getElementById("tripDistance");
     const batterySizeInput = document.getElementById("batterySize");
     const startSOCInput = document.getElementById("startSOC");
@@ -596,30 +596,23 @@
     // INITIALISATION
     // =========================================================
     document.addEventListener("DOMContentLoaded", () => {
-        // Show the entry modal full-screen on load
+        // FIX: Ensure modal becomes visible
+        entryModal.classList.remove("hidden");
         entryModal.classList.add("active");
     });
 
     // =========================================================
-    // ENTRY MODAL LOGIC (M3)
+    // ENTRY MODAL LOGIC
     // =========================================================
     startWizardBtn.addEventListener("click", () => {
-        // Hide modal, show wizard
         entryModal.classList.remove("active");
-        setTimeout(() => {
-            entryModal.classList.add("hidden");
-        }, 250);
-
+        setTimeout(() => entryModal.classList.add("hidden"), 250);
         startWizard();
     });
 
     skipWizardBtn.addEventListener("click", () => {
-        // Hide modal, go straight to app
         entryModal.classList.remove("active");
-        setTimeout(() => {
-            entryModal.classList.add("hidden");
-        }, 250);
-
+        setTimeout(() => entryModal.classList.add("hidden"), 250);
         showFullApp();
     });
 
@@ -630,10 +623,10 @@
     const totalSteps = 7;
 
     function startWizard() {
+        wizardContainer.classList.remove("hidden");
         wizardContainer.classList.add("active");
         fullApp.classList.add("hidden");
 
-        // Reset steps
         wizardSteps.forEach(step => {
             step.classList.add("hidden");
             step.classList.remove("active");
@@ -649,8 +642,7 @@
             const s = parseInt(step.getAttribute("data-step"), 10);
             if (s === stepNumber) {
                 step.classList.remove("hidden");
-                // Force reflow to allow transition
-                void step.offsetWidth;
+                void step.offsetWidth; // force reflow
                 step.classList.add("active");
             } else {
                 step.classList.remove("active");
@@ -660,18 +652,14 @@
     }
 
     function updateProgressBar() {
-        const percentage = (currentStep / totalSteps) * 100;
-        wizardProgressBar.style.width = percentage + "%";
+        wizardProgressBar.style.width = (currentStep / totalSteps) * 100 + "%";
     }
 
-    // Attach click handlers to "Next" buttons
     const wizardNextButtons = wizardContainer.querySelectorAll(".wizard-next-btn");
     wizardNextButtons.forEach(btn => {
         btn.addEventListener("click", () => {
             const nextStep = parseInt(btn.getAttribute("data-next"), 10);
-            if (!validateCurrentStep()) {
-                return;
-            }
+            if (!validateCurrentStep()) return;
             goToStep(nextStep);
         });
     });
@@ -684,20 +672,13 @@
     }
 
     function validateCurrentStep() {
-        // Simple validation: ensure required fields are not empty
         switch (currentStep) {
-            case 1:
-                return validateNumberInput(wizTripDistance);
-            case 2:
-                return validateNumberInput(wizBatterySize);
-            case 3:
-                return validateNumberInput(wizStartSOC);
-            case 4:
-                return validateNumberInput(wizEfficiency);
-            case 5:
-                return validateNumberInput(wizAdhocRate);
-            default:
-                return true;
+            case 1: return validateNumberInput(wizTripDistance);
+            case 2: return validateNumberInput(wizBatterySize);
+            case 3: return validateNumberInput(wizStartSOC);
+            case 4: return validateNumberInput(wizEfficiency);
+            case 5: return validateNumberInput(wizAdhocRate);
+            default: return true;
         }
     }
 
@@ -712,9 +693,8 @@
         return true;
     }
 
-    // Allow Enter key to advance steps
     wizardSteps.forEach(step => {
-        step.addEventListener("keydown", (e) => {
+        step.addEventListener("keydown", e => {
             if (e.key === "Enter") {
                 const nextBtn = step.querySelector(".wizard-next-btn");
                 if (nextBtn) {
@@ -726,16 +706,13 @@
     });
 
     // =========================================================
-    // WIZARD PROVIDER BUTTON (STEP 6)
+    // WIZARD PROVIDER BUTTON
     // =========================================================
     wizAddProviderBtn.addEventListener("click", () => {
-        // For now, just add a simple placeholder provider card in the main app container.
-        // You can later wire this to your real provider-creation logic.
         ensureFullAppProviderPlaceholder();
     });
 
     function ensureFullAppProviderPlaceholder() {
-        if (!providersContainer) return;
         const div = document.createElement("div");
         div.textContent = "Provider placeholder (added from wizard).";
         div.style.padding = "0.4rem 0.6rem";
@@ -746,36 +723,21 @@
     }
 
     // =========================================================
-    // WIZARD FINISH BUTTON (STEP 7)
+    // FINISH WIZARD
     // =========================================================
     wizFinishBtn.addEventListener("click", () => {
-        // Sync wizard values into main app inputs
         syncWizardToMainInputs();
-        // Show full app
         showFullApp();
-        // Hide wizard
         wizardContainer.classList.remove("active");
-        setTimeout(() => {
-            wizardContainer.classList.add("hidden");
-        }, 250);
+        setTimeout(() => wizardContainer.classList.add("hidden"), 250);
     });
 
     function syncWizardToMainInputs() {
-        if (tripDistanceInput && wizTripDistance.value.trim() !== "") {
-            tripDistanceInput.value = wizTripDistance.value.trim();
-        }
-        if (batterySizeInput && wizBatterySize.value.trim() !== "") {
-            batterySizeInput.value = wizBatterySize.value.trim();
-        }
-        if (startSOCInput && wizStartSOC.value.trim() !== "") {
-            startSOCInput.value = wizStartSOC.value.trim();
-        }
-        if (efficiencyInput && wizEfficiency.value.trim() !== "") {
-            efficiencyInput.value = wizEfficiency.value.trim();
-        }
-        if (adhocRateInput && wizAdhocRate.value.trim() !== "") {
-            adhocRateInput.value = wizAdhocRate.value.trim();
-        }
+        if (wizTripDistance.value.trim()) tripDistanceInput.value = wizTripDistance.value.trim();
+        if (wizBatterySize.value.trim()) batterySizeInput.value = wizBatterySize.value.trim();
+        if (wizStartSOC.value.trim()) startSOCInput.value = wizStartSOC.value.trim();
+        if (wizEfficiency.value.trim()) efficiencyInput.value = wizEfficiency.value.trim();
+        if (wizAdhocRate.value.trim()) adhocRateInput.value = wizAdhocRate.value.trim();
     }
 
     // =========================================================
@@ -788,48 +750,34 @@
     }
 
     // =========================================================
-    // BASIC MAIN APP LOGIC STUBS
-    // (Hook these into your existing calculation + PDF logic)
+    // BASIC MAIN APP LOGIC (STUBS)
     // =========================================================
+    calculateBtn.addEventListener("click", () => {
+        const trip = Number(tripDistanceInput.value || 0);
+        const eff = Number(efficiencyInput.value || 0);
+        const adhoc = Number(adhocRateInput.value || 0);
 
-    if (calculateBtn) {
-        calculateBtn.addEventListener("click", () => {
-            // Placeholder: you can replace this with your real calculation logic.
-            const trip = Number(tripDistanceInput.value || 0);
-            const eff = Number(efficiencyInput.value || 0);
-            const adhoc = Number(adhocRateInput.value || 0);
-
-            let text = "";
-            if (trip > 0 && eff > 0 && adhoc > 0) {
-                const kWhNeeded = trip / eff;
-                const cost = kWhNeeded * adhoc;
-                text = `For a ${trip.toFixed(0)} mile trip, using ad‑hoc charging at £${adhoc.toFixed(2)}/kWh, 
+        let text = "";
+        if (trip > 0 && eff > 0 && adhoc > 0) {
+            const kWhNeeded = trip / eff;
+            const cost = kWhNeeded * adhoc;
+            text = `For a ${trip.toFixed(0)} mile trip, using ad‑hoc charging at £${adhoc.toFixed(2)}/kWh, 
 you’d use approximately ${kWhNeeded.toFixed(1)} kWh and pay about £${cost.toFixed(2)}.`;
-            } else {
-                text = "Enter trip distance, efficiency, and ad‑hoc rate to see a basic estimate.";
-            }
+        } else {
+            text = "Enter trip distance, efficiency, and ad‑hoc rate to see a basic estimate.";
+        }
 
-            resultsOutput.textContent = text;
-            resultsSection.classList.remove("hidden");
-        });
-    }
+        resultsOutput.textContent = text;
+        resultsSection.classList.remove("hidden");
+    });
 
-    if (exportPDFBtn) {
-        exportPDFBtn.addEventListener("click", () => {
-            // Hook this into your existing PDF export logic.
-            // This stub is just a placeholder.
-            alert("PDF export: wire this to your existing implementation.");
-        });
-    }
+    exportPDFBtn.addEventListener("click", () => {
+        alert("PDF export: wire this to your existing implementation.");
+    });
 
-    // =========================================================
-    // OPTIONAL: ADD PROVIDER BUTTON IN MAIN APP
-    // =========================================================
-    if (addProviderBtn) {
-        addProviderBtn.addEventListener("click", () => {
-            ensureFullAppProviderPlaceholder();
-        });
-    }
+    addProviderBtn.addEventListener("click", () => {
+        ensureFullAppProviderPlaceholder();
+    });
 </script>
 </body>
 </html>
