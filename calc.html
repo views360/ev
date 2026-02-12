@@ -1,517 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>EV Public Charging Comparison</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- html2canvas -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <!-- jsPDF -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
-    <style>
-        :root {
-            --bg: #020617;
-            --panel: #020617;
-            --panel-alt: #020617;
-            --accent: #38bdf8;
-            --accent-soft: rgba(56,189,248,0.15);
-            --text: #e5e7eb;
-            --muted: #9ca3af;
-            --border: #1f2937;
-            --danger: #f97373;
-            --good: #22c55e;
-        }
-
-        * { box-sizing: border-box; }
-
-        body {
-            margin: 0;
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-            background: radial-gradient(circle at top, #0f172a 0, #020617 45%, #000 100%);
-            color: var(--text);
-            min-height: 100vh;
-            padding: 24px;
-        }
-
-        .app {
-            max-width: 1100px;
-            margin: 0 auto;
-            background: radial-gradient(circle at top left, #0b1120 0, #020617 55%, #000 100%);
-            border-radius: 18px;
-            border: 1px solid #1f2937;
-            box-shadow: 0 24px 80px rgba(0,0,0,0.7);
-            padding: 24px 24px 32px;
-        }
-
-        h1 { margin: 0 0 4px; font-size: 1.6rem; letter-spacing: 0.03em; }
-        .subtitle { margin-bottom: 20px; color: var(--muted); font-size: 0.9rem; }
-
-        .grid {
-            display: grid;
-            grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.1fr);
-            gap: 20px;
-        }
-
-        .card {
-            background: linear-gradient(145deg, rgba(15,23,42,0.96), rgba(15,23,42,0.9));
-            border-radius: 14px;
-            border: 1px solid var(--border);
-            padding: 16px 16px 18px;
-        }
-
-        .card h2 {
-            margin: 0 0 10px;
-            font-size: 1rem;
-            letter-spacing: 0.04em;
-            text-transform: uppercase;
-            color: #9ca3af;
-        }
-
-        .input-row {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 10px;
-        }
-
-        .input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            margin-bottom: 10px;
-        }
-
-        .input-group label { font-size: 0.8rem; color: var(--muted); }
-
-        .input-group input,
-        .input-group select {
-            background: #020617;
-            border-radius: 8px;
-            border: 1px solid #1f2937;
-            padding: 7px 9px;
-            color: var(--text);
-            font-size: 0.85rem;
-        }
-
-        .input-group input:focus,
-        .input-group select:focus {
-            outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 0 1px rgba(56,189,248,0.35);
-        }
-
-        .provider-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 6px;
-        }
-
-        .provider-header span { font-size: 0.85rem; color: var(--muted); }
-
-        .provider-header button {
-            background: transparent;
-            border-radius: 999px;
-            border: 1px solid #374151;
-            color: #9ca3af;
-            font-size: 0.75rem;
-            padding: 3px 8px;
-            cursor: pointer;
-        }
-
-        .provider-header button:hover {
-            border-color: #f97373;
-            color: #fecaca;
-        }
-
-        .provider-box {
-            background: #020617;
-            border-radius: 10px;
-            border: 1px solid #111827;
-            padding: 10px 10px 8px;
-            margin-bottom: 10px;
-        }
-
-        .providers-header-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
-        }
-
-        .btn {
-            border-radius: 999px;
-            border: 1px solid #1f2937;
-            background: radial-gradient(circle at top left, #0ea5e9, #0369a1);
-            color: white;
-            font-size: 0.8rem;
-            padding: 6px 12px;
-            cursor: pointer;
-        }
-
-        .btn.secondary {
-            background: transparent;
-            border-color: #374151;
-            color: #e5e7eb;
-        }
-
-        .btn-row {
-            display: flex;
-            gap: 8px;
-            margin-top: 10px;
-            flex-wrap: wrap;
-        }
-
-        .results { margin-top: 16px; display: none; }
-
-        .summary {
-            border-radius: 10px;
-            padding: 10px 12px;
-            font-size: 0.85rem;
-            margin-bottom: 10px;
-        }
-
-        .summary.good {
-            background: rgba(22,163,74,0.12);
-            border: 1px solid rgba(34,197,94,0.5);
-            color: #bbf7d0;
-        }
-
-        .summary.bad {
-            background: rgba(220,38,38,0.12);
-            border: 1px solid rgba(248,113,113,0.6);
-            color: #fecaca;
-        }
-
-        .highlight { color: var(--accent); font-weight: 500; }
-
-        .calc-lines { font-size: 0.82rem; color: #e5e7eb; margin-bottom: 10px; }
-        .calc-lines div { margin-bottom: 3px; }
-
-        .providers-controls {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            align-items: center;
-            margin: 10px 0;
-        }
-
-        .input-group-inline {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            font-size: 0.8rem;
-            color: var(--muted);
-        }
-
-        .provider-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 6px;
-            font-size: 0.82rem;
-        }
-
-        .provider-table th,
-        .provider-table td {
-            border: 1px solid #111827;
-            padding: 6px 8px;
-            text-align: left;
-        }
-
-        .provider-table th {
-            background: #020617;
-            color: #9ca3af;
-            font-weight: 500;
-        }
-
-        .info {
-            font-size: 0.75rem;
-            margin-left: 4px;
-            cursor: help;
-            color: #9ca3af;
-        }
-
-        .chart-wrapper {
-            margin-top: 10px;
-            background: #020617;
-            border-radius: 10px;
-            border: 1px solid #111827;
-            padding: 10px;
-        }
-
-        canvas { max-width: 100%; }
-
-        @media (max-width: 800px) {
-            .grid { grid-template-columns: minmax(0, 1fr); }
-        }
-    </style>
-</head>
-<body>
-<div class="app">
-    <h1>EV Public Charging Comparison</h1>
-    <div class="subtitle">
-        Compare ad‑hoc vs subscription charging for a specific trip distance, including Be.EV and other major networks.
-    </div>
-
-    <div class="grid">
-        <!-- Trip & vehicle -->
-        <div class="card">
-            <h2>Trip & Vehicle</h2>
-
-            <div class="input-row">
-                <div class="input-group">
-                    <label>Trip distance (miles)</label>
-                    <input type="number" id="journeyMiles" placeholder="e.g., 250">
-                </div>
-                <div class="input-group">
-                    <label>Battery size (kWh)</label>
-                    <input type="number" id="batteryKwh" placeholder="e.g., 77">
-                </div>
-            </div>
-
-            <div class="input-row">
-                <div class="input-group">
-                    <label>Starting state of charge (%)</label>
-                    <input type="number" id="soc" placeholder="e.g., 90">
-                </div>
-                <div class="input-group">
-                    <label>Efficiency (miles per kWh)</label>
-                    <input type="number" id="efficiency" placeholder="e.g., 3.5">
-                </div>
-            </div>
-
-            <div class="input-group">
-                <label>Ad‑hoc public rate (pence per kWh)</label>
-                <input type="number" id="adhoc" placeholder="e.g., 79">
-            </div>
-
-            <div class="input-group">
-                <label>Home charging rate (pence per kWh)</label>
-                <input type="number" id="homeRate" placeholder="e.g., 30">
-            </div>
-
-            <div class="input-group">
-                <label>
-                    <input type="checkbox" id="cheapHome" checked>
-                    I have cheap home charging
-                </label>
-            </div>
-        </div>
-
-        <!-- Providers -->
-        <div class="card">
-            <div class="providers-header-row">
-                <h2>Subscriptions & Discounts</h2>
-                <div style="display:flex; gap:8px;">
-                    <button type="button" class="btn" onclick="addProvider()">Add provider</button>
-                    <button type="button" class="btn secondary" onclick="addAllProviders()">Add all providers</button>
-                </div>
-            </div>
-            <div id="providers"></div>
-        </div>
-    </div>
-
-    <div class="btn-row">
-        <button type="button" class="btn secondary" onclick="shareLink()">Copy shareable link</button>
-        <button type="button" class="btn secondary" onclick="exportPdf()">Export as PDF</button>
-    </div>
-
-    <!-- Results -->
-    <div id="results" class="results">
-        <div id="summaryBox" class="summary"></div>
-
-        <div class="calc-lines">
-            <div id="homeRangeLine"></div>
-            <div id="homeCostLine"></div>
-            <div id="publicMilesLine"></div>
-            <div id="publicKwhLine"></div>
-            <div id="adhocCostLine"></div>
-        </div>
-
-        <div class="providers-controls">
-            <div class="input-group-inline">
-                <label for="sortBy">Sort providers</label>
-                <select id="sortBy">
-                    <option value="cost">Cheapest first</option>
-                    <option value="breakeven">Break‑even miles</option>
-                    <option value="savings">Savings (highest first)</option>
-                </select>
-            </div>
-
-            <div class="input-group-inline">
-                <label>
-                    <input type="checkbox" id="showTotalBreakEven">
-                    Show total break‑even miles only
-                </label>
-            </div>
-        </div>
-
-        <table id="providerTable" class="provider-table">
-            <thead>
-            <tr>
-                <th>Provider</th>
-                <th>Cost (£)</th>
-                <th>
-                    Break‑even
-                    <span class="info"
-                          title="Break‑even is the amount of public charging required before a subscription becomes cheaper than paying ad‑hoc. It is independent of the specific trip distance you enter.">
-                        ⓘ
-                    </span>
-                </th>
-                <th>Savings vs ad‑hoc (£)</th>
-            </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-
-        <div class="chart-wrapper">
-            <canvas id="costChart" height="220"></canvas>
-        </div>
-    </div>
-</div>
-<script>
-/* =========================================================
-   PRESETS (fallback) + JSON LOADING
-========================================================= */
-const PRESETS_FALLBACK = [
-    { name: "Tesla", subCost: 10.99, rate: 45 },
-    { name: "BP Pulse", subCost: 7.99, rate: 49 },
-    { name: "Osprey", subCost: 0, rate: 79 },
-    { name: "Instavolt", subCost: 0, rate: 85 },
-    { name: "Gridserve", subCost: 0, rate: 79 },
-    { name: "Shell Recharge", subCost: 7.99, rate: 55 },
-    { name: "Be.EV", subCost: 9.99, rate: 39 }
-];
-
-let PRESETS = [...PRESETS_FALLBACK];
-
-function buildPresetOptions() {
-    const names = ["Custom", ...PRESETS.map(p => p.name)];
-    return names.map(name => `<option value="${name}">${name}</option>`).join("");
-}
-
-function refreshPresetDropdowns() {
-    document.querySelectorAll(".provider-box").forEach(box => {
-        const id = box.dataset.id;
-        const select = document.getElementById(`preset${id}`);
-        if (!select) return;
-        const current = select.value;
-        select.innerHTML = buildPresetOptions();
-        select.value = current;
-    });
-}
-
-// Load JSON from correct path with cache-busting
-fetch("data/providers.json?cache=" + Date.now())
-    .then(r => r.json())
-    .then(data => {
-        if (Array.isArray(data.providers)) {
-            PRESETS = data.providers.map(p => ({
-                name: p.name,
-                subCost: p.subCost ?? 0,
-                rate: p.rate ?? 0
-            }));
-            refreshPresetDropdowns();
-        }
-    })
-    .catch(() => console.warn("Using built‑in presets; providers.json not found."));
-
-let providerCount = 0;
-let chart = null;
-
-// CREATE PROVIDER BOX
-function createProviderBox(preset) {
-    providerCount++;
-    const id = providerCount;
-
-    const box = document.createElement("div");
-    box.className = "provider-box";
-    box.dataset.id = id;
-
-    const presetOptions = buildPresetOptions();
-
-    box.innerHTML = `
-        <div class="provider-header">
-            <span>Provider #${id}</span>
-            <button type="button" onclick="removeProvider(${id})">Remove</button>
-        </div>
-
-        <div class="input-group">
-            <label>Preset</label>
-            <select id="preset${id}">
-                ${presetOptions}
-            </select>
-        </div>
-
-        <div class="input-group">
-            <label>Provider name</label>
-            <input type="text" id="name${id}" placeholder="e.g., BP Pulse">
-        </div>
-
-        <div class="input-group">
-            <label>Subscription cost (£ / month)</label>
-            <input type="number" id="subCost${id}" placeholder="e.g., 7.99">
-        </div>
-
-        <div class="input-group">
-            <label>Discounted rate (pence per kWh)</label>
-            <input type="number" id="discount${id}" placeholder="e.g., 49">
-        </div>
-    `;
-
-    document.getElementById("providers").appendChild(box);
-
-    const presetSelect = document.getElementById(`preset${id}`);
-    presetSelect.addEventListener("change", () => applyPreset(id));
-
-    box.querySelectorAll("input").forEach(i => i.addEventListener("input", calculate));
-
-    if (preset) {
-        presetSelect.value = preset.name;
-        document.getElementById(`name${id}`).value = preset.name;
-        document.getElementById(`subCost${id}`).value = preset.subCost;
-        document.getElementById(`discount${id}`).value = preset.rate;
-    }
-}
-
-function addProvider() {
-    createProviderBox();
-    calculate();
-}
-
-function addAllProviders() {
-    const existing = Array.from(document.querySelectorAll(".provider-box"))
-        .map(b => document.getElementById(`name${b.dataset.id}`).value.trim().toLowerCase());
-
-    PRESETS.forEach(p => {
-        if (!existing.includes(p.name.toLowerCase())) {
-            createProviderBox(p);
-        }
-    });
-
-    calculate();
-}
-
-function removeProvider(id) {
-    const box = document.querySelector(`.provider-box[data-id="${id}"]`);
-    if (box) box.remove();
-    calculate();
-}
-
-function applyPreset(id) {
-    const presetName = document.getElementById(`preset${id}`).value;
-    const preset = PRESETS.find(p => p.name === presetName);
-    if (!preset) return;
-
-    document.getElementById(`name${id}`).value = preset.name;
-    document.getElementById(`subCost${id}`).value = preset.subCost;
-    document.getElementById(`discount${id}`).value = preset.rate;
-
-    calculate();
-}
 // CORE INPUTS
 function getCoreInputs() {
     const journeyMiles = parseFloat(document.getElementById("journeyMiles").value);
@@ -542,6 +28,10 @@ function getCoreInputs() {
     const homeRate = !isNaN(homeRatePence) ? homeRatePence / 100 : 0;
     const homeCost = homeKwh * homeRate;
 
+    const blendedAdhocTripCost = homeCost + adhocCost;
+    const blendedAdhocCostPerMile = blendedAdhocTripCost / journeyMiles;
+    const blendedAdhocCostPer100 = blendedAdhocCostPerMile * 100;
+
     return {
         journeyMiles,
         batteryKwh,
@@ -558,7 +48,10 @@ function getCoreInputs() {
         adhocCost,
         homeKwh,
         homeRate,
-        homeCost
+        homeCost,
+        blendedAdhocTripCost,
+        blendedAdhocCostPerMile,
+        blendedAdhocCostPer100
     };
 }
 
@@ -571,6 +64,8 @@ function calculate() {
     const publicMilesLine = document.getElementById("publicMilesLine");
     const publicKwhLine = document.getElementById("publicKwhLine");
     const adhocCostLine = document.getElementById("adhocCostLine");
+    const blendedCostLine = document.getElementById("blendedCostLine");
+    const blendedCostPerMileLine = document.getElementById("blendedCostPerMileLine");
     const tableBody = document.querySelector("#providerTable tbody");
 
     if (!core) {
@@ -579,6 +74,8 @@ function calculate() {
         publicMilesLine.textContent = "";
         publicKwhLine.textContent = "";
         adhocCostLine.textContent = "";
+        blendedCostLine.textContent = "";
+        blendedCostPerMileLine.textContent = "";
         if (tableBody) tableBody.innerHTML = "";
         document.getElementById("results").style.display = "none";
         if (chart) chart.destroy();
@@ -608,7 +105,13 @@ function calculate() {
     publicKwhLine.innerHTML =
         `Energy from public charging: <span class="highlight">${core.publicKwh.toFixed(1)} kWh</span>`;
     adhocCostLine.innerHTML =
-        `Cost using ad‑hoc only: <span class="highlight">£${core.adhocCost.toFixed(2)}</span>`;
+        `Cost using ad‑hoc only (public portion): <span class="highlight">£${core.adhocCost.toFixed(2)}</span>`;
+
+    blendedCostLine.innerHTML =
+        `Total blended trip cost (home + public, ad‑hoc public rate): <span class="highlight">£${core.blendedAdhocTripCost.toFixed(2)}</span>`;
+    blendedCostPerMileLine.innerHTML =
+        `Effective ad‑hoc cost per mile: <span class="highlight">${(core.blendedAdhocCostPerMile * 100).toFixed(1)} p/mile</span> ` +
+        `(~£${core.blendedAdhocCostPer100.toFixed(2)} per 100 miles)`;
 
     const providers = [];
     const boxes = document.querySelectorAll(".provider-box");
@@ -623,7 +126,7 @@ function calculate() {
 
         const discountRate = discountPence / 100;
 
-        const costWithSub = subCost + (core.publicKwh * discountRate);
+        const costWithSubPublicOnly = subCost + (core.publicKwh * discountRate);
         const breakEvenKwh = (core.adhocRate > discountRate)
             ? subCost / (core.adhocRate - discountRate)
             : Infinity;
@@ -631,15 +134,25 @@ function calculate() {
             ? Infinity
             : breakEvenKwh * core.efficiency;
 
-        const savings = core.adhocCost - costWithSub;
+        const savingsPublicOnly = core.adhocCost - costWithSubPublicOnly;
+
+        const blendedTripCost = core.homeCost + costWithSubPublicOnly;
+        const blendedCostPerMile = blendedTripCost / core.journeyMiles;
+        const blendedCostPer100 = blendedCostPerMile * 100;
+
+        const blendedSavingsVsAdhoc = core.blendedAdhocTripCost - blendedTripCost;
 
         providers.push({
             name,
-            costWithSub,
+            costWithSubPublicOnly,
             breakEvenMiles,
-            savings,
+            savingsPublicOnly,
             subCost,
-            discountPence
+            discountPence,
+            blendedTripCost,
+            blendedCostPerMile,
+            blendedCostPer100,
+            blendedSavingsVsAdhoc
         });
     });
 
@@ -652,24 +165,24 @@ function calculate() {
 
     document.getElementById("results").style.display = "block";
 
-    const best = providers.reduce((a, b) => (a.costWithSub < b.costWithSub ? a : b));
+    const best = providers.reduce((a, b) => (a.blendedTripCost < b.blendedTripCost ? a : b));
     const summaryBox = document.getElementById("summaryBox");
 
-    if (best.costWithSub < core.adhocCost) {
+    if (best.blendedTripCost < core.blendedAdhocTripCost) {
         summaryBox.className = "summary good";
         summaryBox.textContent =
-            `${best.name} is the cheapest option for this trip (saving £${(core.adhocCost - best.costWithSub).toFixed(2)} vs ad‑hoc).`;
+            `${best.name} is the cheapest option for this trip (saving £${(core.blendedAdhocTripCost - best.blendedTripCost).toFixed(2)} vs ad‑hoc, including home + public).`;
     } else {
         summaryBox.className = "summary bad";
         summaryBox.textContent =
-            `Ad‑hoc charging is cheaper than any subscription for this trip distance.`;
+            `Ad‑hoc charging (with your home rate) is cheaper than any subscription for this trip distance.`;
     }
 
     renderProviderTable(core, providers);
     drawGraph(core, providers);
 }
 
-// TABLE RENDERING WITH CORRECT BREAK‑EVEN LOGIC
+// TABLE RENDERING WITH CORRECT BREAK‑EVEN LOGIC + COST PER MILE
 function renderProviderTable(core, providers) {
     const tbody = document.querySelector("#providerTable tbody");
     if (!tbody) return;
@@ -680,14 +193,14 @@ function renderProviderTable(core, providers) {
     const sorted = [...providers];
 
     sorted.sort((a, b) => {
-        if (sortBy === "cost") return a.costWithSub - b.costWithSub;
+        if (sortBy === "cost") return a.blendedTripCost - b.blendedTripCost;
         if (sortBy === "breakeven") {
             if (a.breakEvenMiles === b.breakEvenMiles) return 0;
             if (a.breakEvenMiles === Infinity) return 1;
             if (b.breakEvenMiles === Infinity) return -1;
             return a.breakEvenMiles - b.breakEvenMiles;
         }
-        if (sortBy === "savings") return b.savings - a.savings;
+        if (sortBy === "savings") return b.blendedSavingsVsAdhoc - a.blendedSavingsVsAdhoc;
         return 0;
     });
 
@@ -713,21 +226,22 @@ function renderProviderTable(core, providers) {
         const row = document.createElement("tr");
         row.innerHTML = `
             <td>${p.name}</td>
-            <td>£${p.costWithSub.toFixed(2)}</td>
+            <td>£${p.blendedTripCost.toFixed(2)}</td>
+            <td>${(p.blendedCostPerMile * 100).toFixed(1)} p/mile</td>
             <td>${beText}</td>
-            <td>£${p.savings.toFixed(2)}</td>
+            <td>£${p.blendedSavingsVsAdhoc.toFixed(2)}</td>
         `;
         tbody.appendChild(row);
     });
 }
 
-// GRAPH
+// GRAPH (blended trip cost vs distance)
 function drawGraph(core, providers) {
     const ctx = document.getElementById("costChart");
 
     if (chart) chart.destroy();
 
-    const maxMiles = Math.max(core.journeyMiles, core.homeMiles + core.publicMiles);
+    const maxMiles = core.journeyMiles;
     const steps = 20;
 
     const labels = [];
@@ -737,15 +251,21 @@ function drawGraph(core, providers) {
         const m = (maxMiles * i) / steps;
         labels.push(m.toFixed(0));
 
-        const publicMilesAtM = Math.max(0, m - core.homeMiles);
+        const homeMilesAtM = core.cheapHome ? Math.min(core.homeMiles, m) : 0;
+        const publicMilesAtM = Math.max(0, m - homeMilesAtM);
+        const homeKwhAtM = homeMilesAtM / core.efficiency;
         const publicKwhAtM = publicMilesAtM / core.efficiency;
-        const costAdhocAtM = publicKwhAtM * core.adhocRate;
 
-        adhocData.push(costAdhocAtM);
+        const homeCostAtM = homeKwhAtM * core.homeRate;
+        const adhocCostAtM = publicKwhAtM * core.adhocRate;
+
+        const blendedAdhocAtM = homeCostAtM + adhocCostAtM;
+
+        adhocData.push(blendedAdhocAtM);
     }
 
     const datasets = [{
-        label: "Ad‑hoc only (£)",
+        label: "Ad‑hoc (home + public) (£)",
         data: adhocData,
         borderColor: "#f97316",
         backgroundColor: "rgba(249,115,22,0.15)",
@@ -760,11 +280,18 @@ function drawGraph(core, providers) {
 
         for (let i = 0; i <= steps; i++) {
             const m = (maxMiles * i) / steps;
-            const publicMilesAtM = Math.max(0, m - core.homeMiles);
-            const publicKwhAtM = publicMilesAtM / core.efficiency;
-            const costSubAtM = p.subCost + (publicKwhAtM * (p.discountPence / 100));
 
-            data.push(costSubAtM);
+            const homeMilesAtM = core.cheapHome ? Math.min(core.homeMiles, m) : 0;
+            const publicMilesAtM = Math.max(0, m - homeMilesAtM);
+            const homeKwhAtM = homeMilesAtM / core.efficiency;
+            const publicKwhAtM = publicMilesAtM / core.efficiency;
+
+            const homeCostAtM = homeKwhAtM * core.homeRate;
+            const subCostAtM = p.subCost + (publicKwhAtM * (p.discountPence / 100));
+
+            const blendedAtM = homeCostAtM + subCostAtM;
+
+            data.push(blendedAtM);
         }
 
         datasets.push({
@@ -784,7 +311,7 @@ function drawGraph(core, providers) {
             interaction: { mode: "index", intersect: false },
             scales: {
                 x: { title: { display: true, text: "Trip distance (miles)" } },
-                y: { title: { display: true, text: "Total charging cost (£)" }, beginAtZero: true }
+                y: { title: { display: true, text: "Total blended trip cost (£)" }, beginAtZero: true }
             }
         }
     });
@@ -933,6 +460,7 @@ document.getElementById("cheapHome").addEventListener("change", calculate);
 document.getElementById("sortBy").addEventListener("change", calculate);
 document.getElementById("showTotalBreakEven").addEventListener("change", calculate);
 
+initTheme();
 addProvider();
 loadFromParams();
 </script>
