@@ -47,32 +47,6 @@
         "50": 59,
         "150": 69
       }
-    },
-    {
-      "name": "Subscription: Be.EV",
-      "subCost": 9.99,
-      "rates": {
-        "default": 39
-      }
-    },
-    {
-      "name": "Pod Point (ad-hoc charging)",
-      "subCost": 0,
-      "rates": {
-        "7": 44,
-        "22": 49,
-        "50": 62
-      }
-    },
-    {
-      "name": "Tesco Pod Point (ad-hoc charging)",
-      "subCost": 0,
-      "rates": {
-        "7": 44,
-        "22": 49,
-        "50": 62,
-        "75": 69
-      }
     }
   ]
 }

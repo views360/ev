@@ -13,7 +13,7 @@ function drawGraph(core, providers) {
         labels.push(m.toFixed(0));
         const publicMilesAtM = Math.max(0, m - core.homeMiles);
         const publicKwhAtM = publicMilesAtM / core.efficiency;
-        adhocData.push(core.startChargeCost + (publicKwhAtM * core.adhocRate));
+        adhocData.push(core.startChargeCost + (publicKwhAtM * core.adhocRate / 100));
     }
 
     const datasets = [{
@@ -28,80 +28,90 @@ function drawGraph(core, providers) {
         const colors = ["#38bdf8", "#4ade80", "#a855f7", "#facc15", "#f472b6", "#22c55e"];
         const color = colors[idx % colors.length];
         const data = [];
-
-        for (let i = 0; i <= steps; i++) {
-            const m = (maxMiles * i) / steps;
-            const publicMilesAtM = Math.max(0, m - core.homeMiles);
-            const publicKwhAtM = publicMilesAtM / core.efficiency;
-            data.push(core.startChargeCost + p.subCost + (publicKwhAtM * (p.ratePence / 100)));
-        }
-
-        datasets.push({
-            label: `${p.name} Total (£)`,
-            data,
-            borderColor: color,
-            backgroundColor: "transparent",
-            tension: 0.2
+        
+        // We need sub cost and rate from somewhere. 
+        // For simple graphing, we recalculate using the same logic as the table.
+        // But since we pass provider objects, let's look for matching elements in the DOM.
+        const box = Array.from(document.querySelectorAll(".provider-box")).find(b => {
+            return document.getElementById(`name${b.dataset.id}`).value === p.name;
         });
+
+        if (box) {
+            const bid = box.dataset.id;
+            let sub = document.getElementById(`subCost${bid}`).value;
+            sub = (sub === "N/A" || sub === "") ? 0 : parseFloat(sub);
+            const rate = parseFloat(document.getElementById(`rate${bid}`).value);
+
+            for (let i = 0; i <= steps; i++) {
+                const m = (maxMiles * i) / steps;
+                const publicMilesAtM = Math.max(0, m - core.homeMiles);
+                const publicKwhAtM = publicMilesAtM / core.efficiency;
+                data.push(core.startChargeCost + sub + (publicKwhAtM * rate / 100));
+            }
+
+            datasets.push({
+                label: `${p.name} (£)`,
+                data: data,
+                borderColor: color,
+                tension: 0.2
+            });
+        }
     });
 
     chart = new Chart(ctx, {
-        type: "line",
+        type: 'line',
         data: { labels, datasets },
         options: {
             responsive: true,
-            interaction: { mode: "index", intersect: false },
+            maintainAspectRatio: false,
+            interaction: { mode: 'index', intersect: false },
+            plugins: {
+                legend: { labels: { color: getComputedStyle(document.body).getPropertyValue('--text').trim() } }
+            },
             scales: {
-                x: { title: { display: true, text: "Trip distance (miles)" } },
-                y: { title: { display: true, text: "Total Journey Cost (£)" }, beginAtZero: true }
+                x: {
+                    title: { display: true, text: 'Trip Miles', color: '#9ca3af' },
+                    ticks: { color: '#9ca3af' },
+                    grid: { color: 'rgba(31, 41, 55, 0.5)' }
+                },
+                y: {
+                    title: { display: true, text: 'Total Cost (£)', color: '#9ca3af' },
+                    ticks: { color: '#9ca3af' },
+                    grid: { color: 'rgba(31, 41, 55, 0.5)' }
+                }
             }
         }
     });
 }
 
-// SHAREABLE LINK (Updated to include new starting charge params)
 function shareLink() {
-    const core = getCoreInputs();
-    if (!core) { alert("Please fill in inputs first."); return; }
-
     const params = new URLSearchParams();
-    params.set("jm", core.journeyMiles);
-    params.set("bk", core.batteryKwh);
-    params.set("soc", core.soc);
-    params.set("eff", core.efficiency);
-    params.set("adhoc", core.adhocPence);
-    params.set("src", core.startRatePence);
-    params.set("st", document.getElementById("startChargeType").value);
-
-    let idx = 0;
-    document.querySelectorAll(".provider-box").forEach(box => {
-        const id = box.dataset.id;
-        const name = document.getElementById(`name${id}`).value.trim();
-        const subCost = document.getElementById(`subCost${id}`).value;
-        const rate = document.getElementById(`rate${id}`).value;
-        if (!name || !subCost || !rate) return;
-        params.set(`p${idx}n`, name);
-        params.set(`p${idx}s`, subCost);
-        params.set(`p${idx}r`, rate);
-        idx++;
+    ["journeyMiles","batteryKwh","soc","efficiency","adhoc","startChargeRate","startChargeType"].forEach(id => {
+        params.set(id, document.getElementById(id).value);
     });
 
-    const url = `${window.location.href.split("?")[0]}?${params.toString()}`;
-    navigator.clipboard.writeText(url).then(() => alert("Link copied!"));
+    const boxes = document.querySelectorAll(".provider-box");
+    boxes.forEach((box, i) => {
+        const id = box.dataset.id;
+        params.set(`p${i}n`, document.getElementById(`name${id}`).value);
+        params.set(`p${i}s`, document.getElementById(`subCost${id}`).value);
+        params.set(`p${i}r`, document.getElementById(`rate${id}`).value);
+    });
+
+    const url = window.location.origin + window.location.pathname + "?" + params.toString();
+    navigator.clipboard.writeText(url).then(() => alert("Shareable link copied!"));
 }
 
-// LOAD FROM URL
-function loadFromParams() {
+function loadFromUrl() {
     const params = new URLSearchParams(window.location.search);
-    if (!params.has("jm")) return;
+    if (!params.has("journeyMiles")) return;
 
-    document.getElementById("journeyMiles").value = params.get("jm");
-    document.getElementById("batteryKwh").value = params.get("bk");
-    document.getElementById("soc").value = params.get("soc");
-    document.getElementById("efficiency").value = params.get("eff");
-    document.getElementById("adhoc").value = params.get("adhoc");
-    document.getElementById("startChargeRate").value = params.get("src") || "";
-    document.getElementById("startChargeType").value = params.get("st") || "home";
+    ["journeyMiles","batteryKwh","soc","efficiency","adhoc","startChargeRate","startChargeType"].forEach(id => {
+        if (params.has(id)) document.getElementById(id).value = params.get(id);
+    });
+
+    const resultsEl = document.getElementById("results");
+    resultsEl.style.display = "none";
 
     let idx = 0;
     document.getElementById("providers").innerHTML = "";
@@ -122,12 +132,17 @@ async function exportPdf() {
         alert("Enter data first."); return;
     }
     const { jsPDF } = window.jspdf;
-    const canvas = await html2canvas(document.body, { scale: 2 });
+    
+    // Scale body slightly for better capture
+    const canvas = await html2canvas(document.body, { 
+        scale: 2,
+        backgroundColor: getComputedStyle(document.body).getPropertyValue('--bg').trim()
+    });
     const imgData = canvas.toDataURL("image/png");
     const pdf = new jsPDF("p", "mm", "a4");
     const width = pdf.internal.pageSize.getWidth();
     pdf.addImage(imgData, "PNG", 0, 0, width, (canvas.height * width) / canvas.width);
-    pdf.save("ev-calc.pdf");
+    pdf.save("ev-charging-comparison.pdf");
 }
 
 // INITIALISE
@@ -137,8 +152,7 @@ async function exportPdf() {
 
 fetch("providers.json")
     .then(r => r.json())
-    .then(data => { if (Array.isArray(data.providers)) PRESETS = data.providers; })
-    .finally(() => { 
-        if (!window.location.search) addProvider(); 
-        loadFromParams(); 
+    .then(data => {
+        PRESETS = data.providers;
+        loadFromUrl();
     });

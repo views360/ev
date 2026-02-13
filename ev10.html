@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>EV Subscription Charging Comparison</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+<div class="app">
+
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+        <h1>EV Subscription vs Regular Ad-Hoc Public Charging Comparison</h1>
+
+        <div style="display:flex; gap:10px; align-items: center;">
+            <button class="btn secondary" id="themeToggle" onclick="toggleTheme()">Switch to Light View</button>
+            <button class="btn secondary" onclick="resetAll()">Reset All</button>
+            <a href="https://www.facebook.com/kelvin.a.hill" target="_blank" class="btn secondary">Contact Author</a>
+        </div>
+    </div>
+
+    <div class="subtitle">
+        Compare your usual average public charging rate with subscription discounted charging for a specific trip distance (e.g., a weekend break or multi-day holiday).
+    </div>
+
+    <div class="grid">
+        <div class="card">
+            <h2>Trip & Vehicle</h2>
+            <div class="input-row">
+                <div class="input-group">
+                    <label>Trip distance (miles)</label>
+                    <input type="number" id="journeyMiles" placeholder="e.g., 250">
+                </div>
+                <div class="input-group">
+                    <label>Battery size (kWh)</label>
+                    <input type="number" id="batteryKwh" placeholder="e.g., 61">
+                </div>
+            </div>
+
+            <div class="input-row">
+                <div class="input-group">
+                    <label>Starting state of charge (%)</label>
+                    <input type="number" id="soc" placeholder="e.g., 90">
+                </div>
+                <div class="input-group">
+                    <label>Efficiency (miles per kWh)</label>
+                    <input type="number" id="efficiency" placeholder="e.g., 3.5">
+                </div>
+            </div>
+
+            <div class="input-row">
+                <div class="input-group">
+                    <label>Starting charge type</label>
+                    <select id="startChargeType">
+                        <option value="home">Cheap home charging</option>
+                        <option value="public">Public charging</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Starting rate (pence per kWh)</label>
+                    <input type="number" id="startChargeRate" placeholder="e.g., 7.5">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>Current average Ad-Hoc public rate (pence per kWh)</label>
+                <input type="number" id="adhoc" placeholder="e.g., 62">
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="providers-header-row">
+                <h2>Subscriptions & Discounts</h2>
+                <div style="display:flex; gap:6px;">
+                    <button type="button" class="btn" onclick="addProvider()">Add provider</button>
+                    <button type="button" class="btn" onclick="addAllProviders()">Add all providers</button>
+                    <button type="button" class="btn" onclick="duplicateLastProvider()">Duplicate last</button>
+                </div>
+            </div>
+
+            <div id="providers"></div>
+        </div>
+    </div>
+
+    <div class="btn-row">
+        <button type="button" class="btn secondary" onclick="shareLink()">Copy shareable link</button>
+        <button type="button" class="btn secondary" onclick="exportPdf()">Export as PDF</button>
+    </div>
+
+    <div id="results" class="results">
+        <div id="summaryBox" class="summary"></div>
+
+        <div class="input-group" style="max-width:200px;">
+            <label>Sort results</label>
+            <select id="sortResults" onchange="calculate()">
+                <option value="cheapest">Cheapest first</option>
+                <option value="az">A → Z</option>
+                <option value="za">Z → A</option>
+            </select>
+        </div>
+
+        <div class="calc-lines">
+            <div id="preChargeLine"></div>
+            <div id="homeRangeLine"></div>
+            <div id="publicMilesLine"></div>
+            <div id="publicKwhLine"></div>
+            <div id="adhocCostLine"></div>
+        </div>
+
+        <div id="providerResults"></div>
+        
+        <div id="conclusionsBox"></div>
+
+        <div class="chart-wrapper">
+            <canvas id="costChart" height="220"></canvas>
+        </div>
+    </div>
+</div>
+
+<script src="functions1.js"></script>
+<script src="functions2.js"></script>
+
+</body>
+</html>
