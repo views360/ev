@@ -27,7 +27,6 @@
     </div>
 
     <div class="grid">
-        <!-- Trip & vehicle -->
         <div class="card">
             <h2>Trip & Vehicle</h2>
             <div class="input-row">
@@ -52,13 +51,26 @@
                 </div>
             </div>
 
+            <div class="input-row">
+                <div class="input-group">
+                    <label>Starting charge type</label>
+                    <select id="startChargeType">
+                        <option value="home">Cheap home charging</option>
+                        <option value="public">Public charging</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Starting rate (pence per kWh)</label>
+                    <input type="number" id="startChargeRate" placeholder="e.g., 7.5">
+                </div>
+            </div>
+
             <div class="input-group">
                 <label>Ad‑hoc public rate (pence per kWh)</label>
                 <input type="number" id="adhoc" placeholder="e.g., 62">
             </div>
         </div>
 
-        <!-- Providers -->
         <div class="card">
             <div class="providers-header-row">
                 <h2>Subscriptions & Discounts</h2>
@@ -78,7 +90,6 @@
         <button type="button" class="btn secondary" onclick="exportPdf()">Export as PDF</button>
     </div>
 
-    <!-- Results -->
     <div id="results" class="results">
         <div id="summaryBox" class="summary"></div>
 
@@ -91,6 +102,7 @@
         </div>
 
         <div class="calc-lines">
+            <div id="preChargeLine"></div>
             <div id="homeRangeLine"></div>
             <div id="publicMilesLine"></div>
             <div id="publicKwhLine"></div>
