@@ -21,7 +21,7 @@
 <div class="app">
     <h1>EV Public Charging Comparison</h1>
     <div class="subtitle">
-        Compare ad‑hoc vs subscription charging for a specific trip distance, including Be.EV and other major networks.
+        Compare ad‑hoc vs subscription charging for a specific trip distance (e.g., a weekend break or multi-day holiday).
     </div>
     <div class="grid">
         <!-- Trip & vehicle -->
@@ -34,7 +34,7 @@
                 </div>
                 <div class="input-group">
                     <label>Battery size (kWh)</label>
-                    <input type="number" id="batteryKwh" placeholder="e.g., 77">
+                    <input type="number" id="batteryKwh" placeholder="e.g., 61">
                 </div>
             </div>
 
@@ -51,7 +51,7 @@
 
             <div class="input-group">
                 <label>Ad‑hoc public rate (pence per kWh)</label>
-                <input type="number" id="adhoc" placeholder="e.g., 79">
+                <input type="number" id="adhoc" placeholder="e.g., 62 [meaning 62p from Lidl with the Lidl+ app]">
             </div>
         </div>
 
@@ -655,8 +655,20 @@ async function exportPdf() {
     document.getElementById(id).addEventListener("input", calculate);
 });
 
-addProvider();
-loadFromParams();
+fetch("providers.json")
+    .then(r => r.json())
+    .then(data => {
+        if (Array.isArray(data.providers)) {
+            PRESETS = data.providers;
+        }
+    })
+    .finally(() => {
+        // Only run AFTER presets are loaded
+        addProvider();
+        loadFromParams();
+    });
+
 </script>
 </body>
+
 </html>
