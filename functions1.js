@@ -218,7 +218,6 @@ function calculate() {
         const publicCostWithSub = subCost + (core.publicKwh * discountRate);
         const totalJourneyCost = core.startChargeCost + publicCostWithSub;
         
-        // Break-even is when savings on public charging cover the subscription cost
         const breakEvenKwh = (core.adhocRate > discountRate) ? subCost / (core.adhocRate - discountRate) : Infinity;
         const breakEvenTripMiles = breakEvenKwh === Infinity ? Infinity : (breakEvenKwh * core.efficiency) + core.homeMiles;
 
@@ -240,11 +239,16 @@ function calculate() {
     providerResults.innerHTML = "";
     providers.forEach(p => {
         const beText = p.breakEvenTripMiles === Infinity ? "Never" : `${p.breakEvenTripMiles.toFixed(0)} miles`;
+        
+        // ADDING THE TOOLTIP HTML HERE
         providerResults.innerHTML += `
             <div class="result-line">
                 <span class="highlight">${p.name}</span> — 
-                Total Journey Cost: £${p.totalJourneyCost.toFixed(2)}, 
-                Break‑even Trip Distance: ${beText}, 
+                Total Journey Cost: £${p.totalJourneyCost.toFixed(2)} | 
+                Break‑even Trip Distance: ${beText}
+                <i class="info-icon">i
+                    <span class="tooltip-text">The trip distance where savings from the discounted rate fully offset the subscription fee, making this plan cheaper than ad‑hoc.</span>
+                </i> | 
                 Savings vs Ad‑hoc: £${p.savings.toFixed(2)}
             </div>`;
     });
