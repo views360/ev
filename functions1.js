@@ -83,6 +83,26 @@ function applyPreset(id) {
     calculate();
 }
 
+// RESET ALL
+function resetAll() {
+    // Clear core inputs
+    document.getElementById("journeyMiles").value = "";
+    document.getElementById("batteryKwh").value = "";
+    document.getElementById("soc").value = "";
+    document.getElementById("efficiency").value = "";
+    document.getElementById("adhoc").value = "";
+
+    // Clear providers
+    document.getElementById("providers").innerHTML = "";
+    providerCount = 0;
+
+    // Reset results and chart
+    if (chart) chart.destroy();
+    document.getElementById("results").style.display = "none";
+
+    // Add a fresh empty provider row
+    addProvider();
+}
 
 // CORE INPUTS
 function getCoreInputs() {
@@ -115,7 +135,6 @@ function getCoreInputs() {
         adhocCost
     };
 }
-
 
 // MAIN CALCULATION
 function calculate() {
