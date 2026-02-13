@@ -203,7 +203,7 @@ function calculate() {
     document.getElementById("homeRangeLine").innerHTML = `Estimated range from initial charge: <span class="highlight">${core.homeMiles.toFixed(0)} miles</span>`;
     document.getElementById("publicMilesLine").innerHTML = `Miles requiring public charging: <span class="highlight">${core.publicMiles.toFixed(0)} miles</span>`;
     document.getElementById("publicKwhLine").innerHTML = `Energy required from public charging: <span class="highlight">${core.publicKwh.toFixed(1)} kWh</span>`;
-    document.getElementById("adhocCostLine").innerHTML = `Total journey cost based on usual average public charging rate: <span class="highlight">£${core.totalAdhocCost.toFixed(2)}</span>`;
+    document.getElementById("adhocCostLine").innerHTML = `Total journey cost (Ad-hoc): <span class="highlight">£${core.totalAdhocCost.toFixed(2)}</span>`;
 
     let providers = [];
     document.querySelectorAll(".provider-box").forEach(box => {
@@ -232,15 +232,20 @@ function calculate() {
         return;
     }
 
+    // UPDATE SORTING LOGIC
     const sortMode = document.getElementById("sortResults")?.value || "cheapest";
-    providers.sort((a, b) => sortMode === "cheapest" ? a.totalJourneyCost - b.totalJourneyCost : a.name.localeCompare(b.name));
+    if (sortMode === "cheapest") {
+        providers.sort((a, b) => a.totalJourneyCost - b.totalJourneyCost);
+    } else if (sortMode === "az") {
+        providers.sort((a, b) => a.name.localeCompare(b.name));
+    } else if (sortMode === "za") {
+        providers.sort((a, b) => b.name.localeCompare(a.name));
+    }
 
     const providerResults = document.getElementById("providerResults");
     providerResults.innerHTML = "";
     providers.forEach(p => {
         const beText = p.breakEvenTripMiles === Infinity ? "Never" : `${p.breakEvenTripMiles.toFixed(0)} miles`;
-        
-        // ADDING THE TOOLTIP HTML HERE
         providerResults.innerHTML += `
             <div class="result-line">
                 <span class="highlight">${p.name}</span> — 
@@ -254,19 +259,35 @@ function calculate() {
     });
 
     document.getElementById("results").style.display = "block";
-    const best = providers.reduce((a, b) => (a.totalJourneyCost < b.totalJourneyCost ? a : b));
+    
+    // Determine the overall winner
+    const bestProvider = providers.reduce((a, b) => (a.totalJourneyCost < b.totalJourneyCost ? a : b));
     const summaryBox = document.getElementById("summaryBox");
-    if (best.totalJourneyCost < core.totalAdhocCost) {
+    const conclusionsBox = document.getElementById("conclusionsBox");
+
+    let conclusionHTML = `<h3>Conclusions</h3>`;
+    const locationDisclaimer = `<p class="disclaimer"><strong>Note:</strong> Please verify that your chosen provider has sufficient charging locations along your planned route. A subscription is only cost-effective if you can actually use their network!</p>`;
+
+    if (bestProvider.totalJourneyCost < core.totalAdhocCost) {
         summaryBox.className = "summary good";
-        summaryBox.textContent = `${best.name} is cheapest for this trip (saves £${best.savings.toFixed(2)} vs Ad‑hoc).`;
+        summaryBox.textContent = `${bestProvider.name} is cheapest for this trip (saves £${bestProvider.savings.toFixed(2)} vs Ad‑hoc).`;
+        
+        conclusionHTML += `<div class="conclusion-card good">
+            <p>For a trip of <strong>${core.journeyMiles} miles</strong>, taking a subscription with <strong>${bestProvider.name}</strong> is the most cost-effective option.</p>
+            <p>The total cost including the subscription fee is <strong>£${bestProvider.totalJourneyCost.toFixed(2)}</strong>, saving you <strong>£${bestProvider.savings.toFixed(2)}</strong> compared to standard ad-hoc charging.</p>
+        </div>`;
     } else {
         summaryBox.className = "summary bad";
         summaryBox.textContent = `Ad‑hoc charging is cheaper for this specific trip distance.`;
+        
+        conclusionHTML += `<div class="conclusion-card bad">
+            <p>Standard <strong>Ad-hoc charging</strong> is the most cost-effective choice for this trip.</p>
+            <p>With a trip distance of only ${core.journeyMiles} miles, the savings from any subscription discount do not yet cover the fixed monthly subscription fee.</p>
+        </div>`;
     }
 
+    conclusionHTML += locationDisclaimer;
+    conclusionsBox.innerHTML = conclusionHTML;
+
     drawGraph(core, providers);
-
 }
-
-
-
