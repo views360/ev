@@ -203,7 +203,7 @@ function calculate() {
     document.getElementById("homeRangeLine").innerHTML = `Estimated range from initial charge: <span class="highlight">${core.homeMiles.toFixed(0)} miles</span>`;
     document.getElementById("publicMilesLine").innerHTML = `Miles requiring public charging: <span class="highlight">${core.publicMiles.toFixed(0)} miles</span>`;
     document.getElementById("publicKwhLine").innerHTML = `Energy required from public charging: <span class="highlight">${core.publicKwh.toFixed(1)} kWh</span>`;
-    document.getElementById("adhocCostLine").innerHTML = `Total journey cost based on usual average public charging rate: <span class="highlight">£${core.totalAdhocCost.toFixed(2)}</span>`;
+    document.getElementById("adhocCostLine").innerHTML = `Total journey cost based on usual average public charging rate: <span class="highlight">£${core.totalAdhocCost.toFixed(2)}</span><hr /><h1>Results</h1>`;
 
     let providers = [];
     document.querySelectorAll(".provider-box").forEach(box => {
@@ -267,4 +267,5 @@ function calculate() {
     drawGraph(core, providers);
 
 }
+
 
