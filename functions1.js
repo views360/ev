@@ -35,28 +35,35 @@ function createProviderBox(preset) {
         </div>
 
         <div class="input-group">
-            <label>Subscription cost (£ / month)</label>
-            <input type="number" id="subCost${id}" placeholder="e.g., 7.99">
+            <label>Speed</label>
+            <select id="speed${id}" style="display:none;"></select>
+            <span id="speedStatic${id}" style="display:none; font-size:0.8rem; color:#9ca3af;">Fastest available</span>
         </div>
 
         <div class="input-group">
-            <label>Discounted rate (pence per kWh)</label>
-            <input type="number" id="discount${id}" placeholder="e.g., 49">
+            <label>Subscription cost (£ / month)</label>
+            <input type="text" id="subCost${id}" placeholder="e.g., 7.99 or N/A">
         </div>
-    `;
+
+        <div class="input-group">
+            <label id="rateLabel${id}">Subscription discounted rate (pence per kWh)</label>
+            <input type="number" id="rate${id}" placeholder="e.g., 49">
+        </div>
+   `;
 
     document.getElementById("providers").appendChild(box);
 
     const presetSelect = document.getElementById(`preset${id}`);
     presetSelect.addEventListener("change", () => applyPreset(id));
 
+    const speedSelect = document.getElementById(`speed${id}`);
+    speedSelect.addEventListener("change", () => updateRateFromSpeed(id));
+
     box.querySelectorAll("input").forEach(i => i.addEventListener("input", calculate));
 
     if (preset) {
         presetSelect.value = preset.name;
-        document.getElementById(`name${id}`).value = preset.name;
-        document.getElementById(`subCost${id}`).value = preset.subCost;
-        document.getElementById(`discount${id}`).value = preset.rate;
+        applyPreset(id);
     }
 }
 
@@ -76,11 +83,79 @@ function applyPreset(id) {
     const preset = PRESETS.find(p => p.name === presetName);
     if (!preset) return;
 
-    document.getElementById(`name${id}`).value = preset.name;
-    document.getElementById(`subCost${id}`).value = preset.subCost;
-    document.getElementById(`discount${id}`).value = preset.rate;
+    const box = document.querySelector(`.provider-box[data-id="${id}"]`);
+    if (!box) return;
+
+    const nameInput = document.getElementById(`name${id}`);
+    const subInput = document.getElementById(`subCost${id}`);
+    const rateLabel = document.getElementById(`rateLabel${id}`);
+    const speedSelect = document.getElementById(`speed${id}`);
+    const speedStatic = document.getElementById(`speedStatic${id}`);
+    const rateInput = document.getElementById(`rate${id}`);
+
+    nameInput.value = preset.name;
+
+    if (preset.subCost && preset.subCost > 0) {
+        subInput.value = preset.subCost;
+        rateLabel.textContent = "Subscription discounted rate (pence per kWh)";
+    } else {
+        subInput.value = "N/A";
+        rateLabel.textContent = "Regular rate (pence per kWh)";
+    }
+
+    const rates = preset.rates || {};
+    const rateKeys = Object.keys(rates);
+    box.dataset.rates = JSON.stringify(rates);
+
+    if (rateKeys.length === 1) {
+        // Single rate → no dropdown, show "Fastest available"
+        speedSelect.style.display = "none";
+        speedStatic.style.display = "inline";
+        speedStatic.textContent = "Fastest available";
+
+        const key = rateKeys[0];
+        rateInput.value = rates[key];
+    } else if (rateKeys.length > 1) {
+        // Multiple speeds → dropdown
+        speedStatic.style.display = "none";
+        speedSelect.style.display = "block";
+        speedSelect.innerHTML = rateKeys
+            .map(k => `<option value="${k}">${k} kW</option>`)
+            .join("");
+
+        const firstKey = rateKeys[0];
+        speedSelect.value = firstKey;
+        rateInput.value = rates[firstKey];
+    } else {
+        // No rates defined (fallback)
+        speedSelect.style.display = "none";
+        speedStatic.style.display = "none";
+        rateInput.value = "";
+    }
 
     calculate();
+}
+
+function updateRateFromSpeed(id) {
+    const box = document.querySelector(`.provider-box[data-id="${id}"]`);
+    if (!box || !box.dataset.rates) return;
+
+    let rates;
+    try {
+        rates = JSON.parse(box.dataset.rates);
+    } catch {
+        return;
+    }
+
+    const speedSelect = document.getElementById(`speed${id}`);
+    const rateInput = document.getElementById(`rate${id}`);
+    if (!speedSelect || !rateInput) return;
+
+    const speedKey = speedSelect.value;
+    if (rates && Object.prototype.hasOwnProperty.call(rates, speedKey)) {
+        rateInput.value = rates[speedKey];
+        calculate();
+    }
 }
 
 // RESET ALL
@@ -173,12 +248,18 @@ function calculate() {
     boxes.forEach(box => {
         const id = box.dataset.id;
         const name = document.getElementById(`name${id}`).value.trim();
-        const subCost = parseFloat(document.getElementById(`subCost${id}`).value);
-        const discountPence = parseFloat(document.getElementById(`discount${id}`).value);
 
-        if (!name || isNaN(subCost) || isNaN(discountPence)) return;
+        const subCostRaw = document.getElementById(`subCost${id}`).value.trim();
+        let subCost = parseFloat(subCostRaw);
+        if (!subCostRaw || subCostRaw.toUpperCase() === "N/A" || isNaN(subCost)) {
+            subCost = 0;
+        }
 
-        const discountRate = discountPence / 100;
+        const ratePence = parseFloat(document.getElementById(`rate${id}`).value);
+
+        if (!name || isNaN(ratePence)) return;
+
+        const discountRate = ratePence / 100;
 
         const costWithSub = subCost + (core.publicKwh * discountRate);
         const breakEvenKwh = (core.adhocRate > discountRate)
@@ -195,7 +276,7 @@ function calculate() {
             breakEvenMiles,
             savings,
             subCost,
-            discountPence
+            ratePence
         });
 
         const beText = (breakEvenMiles === Infinity)

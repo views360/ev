@@ -39,7 +39,7 @@ function drawGraph(core, providers) {
             const m = (maxMiles * i) / steps;
             const publicMilesAtM = Math.max(0, m - core.homeMiles);
             const publicKwhAtM = publicMilesAtM / core.efficiency;
-            const costSubAtM = p.subCost + (publicKwhAtM * (p.discountPence / 100));
+            const costSubAtM = p.subCost + (publicKwhAtM * (p.ratePence / 100));
 
             data.push(costSubAtM);
         }
@@ -90,13 +90,13 @@ function shareLink() {
 
         const name = document.getElementById(`name${id}`).value.trim();
         const subCost = document.getElementById(`subCost${id}`).value;
-        const discount = document.getElementById(`discount${id}`).value;
+        const rate = document.getElementById(`rate${id}`).value;
 
-        if (!name || !subCost || !discount) return;
+        if (!name || !subCost || !rate) return;
 
         params.set(`p${idx}n`, name);
         params.set(`p${idx}s`, subCost);
-        params.set(`p${idx}r`, discount);
+        params.set(`p${idx}r`, rate);
 
         idx++;
     });
@@ -145,7 +145,7 @@ function loadFromParams() {
 
         document.getElementById(`name${id}`).value = name;
         document.getElementById(`subCost${id}`).value = sub;
-        document.getElementById(`discount${id}`).value = rate;
+        document.getElementById(`rate${id}`).value = rate;
 
         idx++;
     }
