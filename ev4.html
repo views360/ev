@@ -5,67 +5,62 @@
     <title>EV Public Charging Comparison</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    <!-- External stylesheet -->
     <link rel="stylesheet" href="style.css">
 
+    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- html2canvas -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <!-- jsPDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
 <div class="app">
-
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
-        <h1>EV Public Charging Comparison</h1>
-
-        <div style="display:flex; gap:10px;">
-            <button class="btn secondary" onclick="resetAll()">Reset All</button>
-            <a href="https://www.facebook.com/kelvin.a.hill" target="_blank" class="btn secondary">Contact Author</a>
-        </div>
-    </div>
-
+    <h1>EV Public Charging Comparison</h1>
     <div class="subtitle">
-        Compare ad‑hoc vs subscription charging for a specific trip distance.<br><br>
-        Select pre-set providers, edit default values, and/or add your own custom provider(s).
+        Compare ad‑hoc vs subscription charging for a specific trip distance (e.g., a weekend break or multi-day holiday).
     </div>
 
     <div class="grid">
+        <!-- Trip & vehicle -->
         <div class="card">
             <h2>Trip & Vehicle</h2>
-
             <div class="input-row">
                 <div class="input-group">
                     <label>Trip distance (miles)</label>
-                    <input type="number" id="journeyMiles">
+                    <input type="number" id="journeyMiles" placeholder="e.g., 250">
                 </div>
-
                 <div class="input-group">
                     <label>Battery size (kWh)</label>
-                    <input type="number" id="batteryKwh">
+                    <input type="number" id="batteryKwh" placeholder="e.g., 61">
                 </div>
             </div>
 
             <div class="input-row">
                 <div class="input-group">
                     <label>Starting state of charge (%)</label>
-                    <input type="number" id="soc">
+                    <input type="number" id="soc" placeholder="e.g., 90">
                 </div>
-
                 <div class="input-group">
                     <label>Efficiency (miles per kWh)</label>
-                    <input type="number" id="efficiency">
+                    <input type="number" id="efficiency" placeholder="e.g., 3.5">
                 </div>
             </div>
 
             <div class="input-group">
-                <label>Ad‑hoc public rate (p/kWh)</label>
-                <input type="number" id="adhoc">
+                <label>Ad‑hoc public rate (pence per kWh)</label>
+                <input type="number" id="adhoc" placeholder="e.g., 62 [meaning 62p from Lidl with the Lidl+ app]">
             </div>
         </div>
 
+        <!-- Providers -->
         <div class="card">
             <div class="providers-header-row">
                 <h2>Subscriptions & Discounts</h2>
-                <button class="btn" onclick="addProvider()">Add provider</button>
+                <button type="button" class="btn" onclick="addProvider()">Add provider</button>
             </div>
 
             <div id="providers"></div>
@@ -73,10 +68,11 @@
     </div>
 
     <div class="btn-row">
-        <button class="btn secondary" onclick="shareLink()">Copy shareable link</button>
-        <button class="btn secondary" onclick="exportPdf()">Export as PDF</button>
+        <button type="button" class="btn secondary" onclick="shareLink()">Copy shareable link</button>
+        <button type="button" class="btn secondary" onclick="exportPdf()">Export as PDF</button>
     </div>
 
+    <!-- Results -->
     <div id="results" class="results">
         <div id="summaryBox" class="summary"></div>
 
@@ -95,6 +91,9 @@
     </div>
 </div>
 
-<script src="functions.js"></script>
+<!-- External JavaScript (split into two files) -->
+<script src="functions1.js"></script>
+<script src="functions2.js"></script>
+
 </body>
 </html>
