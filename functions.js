@@ -3,23 +3,7 @@ let PRESETS = [];
 let providerCount = 0;
 let chart = null;
 
-// Fetch presets from providers.json
-fetch("providers.json")
-    .then(r => r.json())
-    .then(data => {
-        if (Array.isArray(data.providers)) {
-            PRESETS = data.providers;
-        } else {
-            console.warn("providers.json missing 'providers' array");
-        }
-    })
-    .finally(() => {
-        addProvider();
-        loadFromParams();
-    });
-
-
-// CREATE PROVIDER BOX (multi‑rate support)
+// CREATE PROVIDER BOX
 function createProviderBox(preset) {
     providerCount++;
     const id = providerCount;
@@ -35,10 +19,7 @@ function createProviderBox(preset) {
     box.innerHTML = `
         <div class="provider-header">
             <span>Provider #${id}</span>
-            <div style="display:flex; gap:6px;">
-                <button type="button" onclick="duplicateProvider(${id})">Duplicate</button>
-                <button type="button" onclick="removeProvider(${id})">Remove</button>
-            </div>
+            <button type="button" onclick="removeProvider(${id})">Remove</button>
         </div>
 
         <div class="input-group">
@@ -50,138 +31,56 @@ function createProviderBox(preset) {
 
         <div class="input-group">
             <label>Provider name</label>
-            <input type="text" id="name${id}">
+            <input type="text" id="name${id}" placeholder="e.g., BP Pulse">
         </div>
 
         <div class="input-group">
             <label>Subscription cost (£ / month)</label>
-            <input type="number" id="subCost${id}">
-        </div>
-
-        <div class="input-group" id="speedGroup${id}" style="display:none;">
-            <label>Charging speed</label>
-            <select id="speed${id}"></select>
+            <input type="number" id="subCost${id}" placeholder="e.g., 7.99">
         </div>
 
         <div class="input-group">
             <label>Discounted rate (pence per kWh)</label>
-            <input type="number" id="discount${id}">
+            <input type="number" id="discount${id}" placeholder="e.g., 49">
         </div>
     `;
 
     document.getElementById("providers").appendChild(box);
 
-    // Event listeners
-    document.getElementById(`preset${id}`).addEventListener("change", () => applyPreset(id));
-    document.getElementById(`discount${id}`).addEventListener("input", calculate);
+    const presetSelect = document.getElementById(`preset${id}`);
+    presetSelect.addEventListener("change", () => applyPreset(id));
+
+    box.querySelectorAll("input").forEach(i => i.addEventListener("input", calculate));
 
     if (preset) {
-        applyPresetValues(id, preset);
+        presetSelect.value = preset.name;
+        document.getElementById(`name${id}`).value = preset.name;
+        document.getElementById(`subCost${id}`).value = preset.subCost;
+        document.getElementById(`discount${id}`).value = preset.rate;
     }
 }
 
-
-// Apply preset values (multi‑rate aware)
-function applyPresetValues(id, preset) {
-    document.getElementById(`name${id}`).value = preset.name;
-    document.getElementById(`subCost${id}`).value = preset.subCost;
-
-    const speedGroup = document.getElementById(`speedGroup${id}`);
-    const speedSelect = document.getElementById(`speed${id}`);
-
-    const speeds = Object.keys(preset.rates);
-
-    if (speeds.length > 1) {
-        speedGroup.style.display = "block";
-        speedSelect.innerHTML = speeds
-            .map(s => `<option value="${s}">${s} kW</option>`)
-            .join("");
-
-        speedSelect.onchange = () => {
-            const selected = speedSelect.value;
-            document.getElementById(`discount${id}`).value = preset.rates[selected];
-            calculate();
-        };
-
-        // Default selection
-        const defaultSpeed = speeds.includes("default") ? "default" : speeds[0];
-        speedSelect.value = defaultSpeed;
-        document.getElementById(`discount${id}`).value = preset.rates[defaultSpeed];
-
-    } else {
-        speedGroup.style.display = "none";
-        const onlyRate = Object.values(preset.rates)[0];
-        document.getElementById(`discount${id}`).value = onlyRate;
-    }
-
-    calculate();
-}
-
-
-// Called when user selects a preset
-function applyPreset(id) {
-    const presetName = document.getElementById(`preset${id}`).value;
-    const preset = PRESETS.find(p => p.name === presetName);
-    if (!preset) return;
-
-    applyPresetValues(id, preset);
-}
-
-
-// Add provider
 function addProvider() {
     createProviderBox();
     calculate();
 }
 
-
-// Duplicate provider
-function duplicateProvider(id) {
-    const presetName = document.getElementById(`preset${id}`).value;
-    const name = document.getElementById(`name${id}`).value;
-    const sub = document.getElementById(`subCost${id}`).value;
-    const rate = document.getElementById(`discount${id}`).value;
-
-    createProviderBox({
-        name,
-        subCost: sub,
-        rates: { default: rate }
-    });
-
-    const newId = providerCount;
-
-    document.getElementById(`preset${newId}`).value = presetName;
-    document.getElementById(`name${newId}`).value = name;
-    document.getElementById(`subCost${newId}`).value = sub;
-    document.getElementById(`discount${newId}`).value = rate;
-
-    calculate();
-}
-
-
-// Remove provider
 function removeProvider(id) {
     const box = document.querySelector(`.provider-box[data-id="${id}"]`);
     if (box) box.remove();
     calculate();
 }
 
+function applyPreset(id) {
+    const presetName = document.getElementById(`preset${id}`).value;
+    const preset = PRESETS.find(p => p.name === presetName);
+    if (!preset) return;
 
-// RESET ALL
-function resetAll() {
-    document.getElementById("journeyMiles").value = "";
-    document.getElementById("batteryKwh").value = "";
-    document.getElementById("soc").value = "";
-    document.getElementById("efficiency").value = "";
-    document.getElementById("adhoc").value = "";
+    document.getElementById(`name${id}`).value = preset.name;
+    document.getElementById(`subCost${id}`).value = preset.subCost;
+    document.getElementById(`discount${id}`).value = preset.rate;
 
-    document.getElementById("providers").innerHTML = "";
-    providerCount = 0;
-
-    if (chart) chart.destroy();
-    document.getElementById("results").style.display = "none";
-
-    addProvider();
+    calculate();
 }
 
 
@@ -228,7 +127,7 @@ function calculate() {
     const adhocCostLine = document.getElementById("adhocCostLine");
 
     if (!core) {
-        homeRangeLine.textContent = "Enter all trip, battery, efficiency and ad‑hoc fields.";
+        homeRangeLine.textContent = "Enter all trip, battery, efficiency and ad‑hoc fields to see calculations.";
         publicMilesLine.textContent = "";
         publicKwhLine.textContent = "";
         adhocCostLine.textContent = "";
@@ -266,7 +165,9 @@ function calculate() {
         const breakEvenKwh = (core.adhocRate > discountRate)
             ? subCost / (core.adhocRate - discountRate)
             : Infinity;
-        const breakEvenMiles = breakEvenKwh * core.efficiency;
+        const breakEvenMiles = (breakEvenKwh === Infinity)
+            ? Infinity
+            : breakEvenKwh * core.efficiency;
         const savings = core.adhocCost - costWithSub;
 
         providers.push({
@@ -279,7 +180,7 @@ function calculate() {
         });
 
         const beText = (breakEvenMiles === Infinity)
-            ? "No break‑even"
+            ? "No break‑even (discounted rate ≥ ad‑hoc rate)"
             : `${breakEvenMiles.toFixed(0)} miles`;
 
         providerResults.innerHTML += `
@@ -287,7 +188,7 @@ function calculate() {
                 <span class="highlight">${name}</span> —
                 Cost: £${costWithSub.toFixed(2)},
                 Break‑even: ${beText},
-                Savings: £${savings.toFixed(2)}
+                Savings vs ad‑hoc: £${savings.toFixed(2)}
             </div>
         `;
     });
@@ -306,11 +207,11 @@ function calculate() {
     if (best.costWithSub < core.adhocCost) {
         summaryBox.className = "summary good";
         summaryBox.textContent =
-            `${best.name} is the cheapest option (saving £${(core.adhocCost - best.costWithSub).toFixed(2)}).`;
+            `${best.name} is currently the cheapest option for this trip (saving £${(core.adhocCost - best.costWithSub).toFixed(2)} vs ad‑hoc).`;
     } else {
         summaryBox.className = "summary bad";
         summaryBox.textContent =
-            `Ad‑hoc charging is cheaper for this trip.`;
+            `Ad‑hoc charging is cheaper than any subscription for this trip distance.`;
     }
 
     drawGraph(core, providers);
@@ -459,12 +360,7 @@ function loadFromParams() {
 
         if (!name || !sub || !rate) break;
 
-        createProviderBox({
-            name,
-            subCost: sub,
-            rates: { default: rate }
-        });
-
+        createProviderBox();
         const id = providerCount;
 
         document.getElementById(`name${id}`).value = name;
@@ -527,3 +423,16 @@ async function exportPdf() {
 ["journeyMiles","batteryKwh","soc","efficiency","adhoc"].forEach(id => {
     document.getElementById(id).addEventListener("input", calculate);
 });
+
+// *** FIX: Only ONE fetch, and it triggers addProvider ***
+fetch("providers.json")
+    .then(r => r.json())
+    .then(data => {
+        if (Array.isArray(data.providers)) {
+            PRESETS = data.providers;
+        }
+    })
+    .finally(() => {
+        addProvider();
+        loadFromParams();
+    });
