@@ -37,7 +37,7 @@ function createProviderBox(preset) {
         <div class="input-group">
             <label>Speed</label>
             <select id="speed${id}" class="speed-select" style="display:none;"></select>
-            <input id="speedStatic${id}" class="speed-static" style="display:none;" disabled value="Fastest available">
+            <input id="speedStatic${id}" class="speed-static" style="display:block;" disabled value="Fastest available">
         </div>
 
         <div class="input-group">
@@ -53,13 +53,10 @@ function createProviderBox(preset) {
 
     document.getElementById("providers").appendChild(box);
 
-    // Event listeners
     document.getElementById(`preset${id}`).addEventListener("change", () => applyPreset(id));
     document.getElementById(`speed${id}`).addEventListener("change", () => updateRateFromSpeed(id));
+    box.querySelectorAll("input, select").forEach(i => i.addEventListener("input", calculate));
 
-    box.querySelectorAll("input").forEach(i => i.addEventListener("input", calculate));
-
-    // Apply preset if provided
     if (preset) {
         document.getElementById(`preset${id}`).value = preset.name;
         applyPreset(id);
@@ -77,13 +74,11 @@ function removeProvider(id) {
     calculate();
 }
 
-// ADD ALL PROVIDERS
 function addAllProviders() {
     PRESETS.forEach(preset => createProviderBox(preset));
     calculate();
 }
 
-// DUPLICATE LAST PROVIDER
 function duplicateLastProvider() {
     const boxes = document.querySelectorAll(".provider-box");
     if (boxes.length === 0) return;
@@ -97,20 +92,15 @@ function duplicateLastProvider() {
     const rate = document.getElementById(`rate${idOld}`).value;
 
     createProviderBox();
-
     const idNew = providerCount;
-
     document.getElementById(`preset${idNew}`).value = presetName;
     applyPreset(idNew);
-
     document.getElementById(`name${idNew}`).value = name;
     document.getElementById(`subCost${idNew}`).value = subCost;
     document.getElementById(`rate${idNew}`).value = rate;
-
     calculate();
 }
 
-// APPLY PRESET
 function applyPreset(id) {
     const presetName = document.getElementById(`preset${id}`).value;
     const preset = PRESETS.find(p => p.name === presetName);
@@ -125,7 +115,6 @@ function applyPreset(id) {
 
     nameInput.value = preset.name;
 
-    // Subscription cost
     if (preset.subCost && preset.subCost > 0) {
         subInput.value = preset.subCost;
         rateLabel.textContent = "Subscription discounted rate (pence per kWh)";
@@ -134,211 +123,141 @@ function applyPreset(id) {
         rateLabel.textContent = "Regular rate (pence per kWh)";
     }
 
-    // Rates
     const rates = preset.rates || {};
     const rateKeys = Object.keys(rates);
     document.querySelector(`.provider-box[data-id="${id}"]`).dataset.rates = JSON.stringify(rates);
 
-    if (rateKeys.length === 1) {
-        // Single rate
+    if (rateKeys.length <= 1) {
         speedSelect.style.display = "none";
         speedStatic.style.display = "block";
         speedStatic.value = "Fastest available";
-
         const key = rateKeys[0];
-        rateInput.value = rates[key];
+        rateInput.value = rates[key] || "";
     } else {
-        // Multiple speeds
         speedStatic.style.display = "none";
         speedSelect.style.display = "block";
-
-        speedSelect.innerHTML = rateKeys
-            .map(k => `<option value="${k}">${k} kW</option>`)
-            .join("");
-
+        speedSelect.innerHTML = rateKeys.map(k => `<option value="${k}">${k} kW</option>`).join("");
         const firstKey = rateKeys[0];
         speedSelect.value = firstKey;
         rateInput.value = rates[firstKey];
     }
-
     calculate();
 }
 
-// UPDATE RATE WHEN SPEED CHANGES
 function updateRateFromSpeed(id) {
     const box = document.querySelector(`.provider-box[data-id="${id}"]`);
     if (!box || !box.dataset.rates) return;
-
     const rates = JSON.parse(box.dataset.rates);
     const speedKey = document.getElementById(`speed${id}`).value;
-
     if (rates[speedKey] !== undefined) {
         document.getElementById(`rate${id}`).value = rates[speedKey];
         calculate();
     }
 }
 
-// RESET ALL
 function resetAll() {
-    document.getElementById("journeyMiles").value = "";
-    document.getElementById("batteryKwh").value = "";
-    document.getElementById("soc").value = "";
-    document.getElementById("efficiency").value = "";
-    document.getElementById("adhoc").value = "";
-
+    ["journeyMiles","batteryKwh","soc","efficiency","adhoc","startChargeRate"].forEach(id => {
+        document.getElementById(id).value = "";
+    });
     document.getElementById("providers").innerHTML = "";
     providerCount = 0;
-
     if (chart) chart.destroy();
     document.getElementById("results").style.display = "none";
-
     addProvider();
 }
 
-// CORE INPUTS
 function getCoreInputs() {
     const journeyMiles = parseFloat(document.getElementById("journeyMiles").value);
     const batteryKwh = parseFloat(document.getElementById("batteryKwh").value);
     const soc = parseFloat(document.getElementById("soc").value);
     const efficiency = parseFloat(document.getElementById("efficiency").value);
     const adhocPence = parseFloat(document.getElementById("adhoc").value);
+    const startRatePence = parseFloat(document.getElementById("startChargeRate").value) || 0;
 
-    if (!journeyMiles || !batteryKwh || !soc || !efficiency || !adhocPence) return null;
+    if (!journeyMiles || !batteryKwh || isNaN(soc) || !efficiency || !adhocPence) return null;
 
     const usableKwhAtStart = batteryKwh * (soc / 100);
+    const startChargeCost = usableKwhAtStart * (startRatePence / 100);
     const homeMiles = usableKwhAtStart * efficiency;
     const publicMiles = Math.max(0, journeyMiles - homeMiles);
     const publicKwh = publicMiles / efficiency;
     const adhocRate = adhocPence / 100;
-    const adhocCost = publicKwh * adhocRate;
+    const adhocPublicCost = publicKwh * adhocRate;
+    const totalAdhocCost = startChargeCost + adhocPublicCost;
 
     return {
-        journeyMiles,
-        batteryKwh,
-        soc,
-        efficiency,
-        adhocPence,
-        usableKwhAtStart,
-        homeMiles,
-        publicMiles,
-        publicKwh,
-        adhocRate,
-        adhocCost
+        journeyMiles, batteryKwh, soc, efficiency, adhocPence, startRatePence,
+        usableKwhAtStart, startChargeCost, homeMiles, publicMiles, publicKwh, adhocRate, totalAdhocCost
     };
 }
 
-// MAIN CALCULATION
 function calculate() {
     const core = getCoreInputs();
-
-    const homeRangeLine = document.getElementById("homeRangeLine");
-    const publicMilesLine = document.getElementById("publicMilesLine");
-    const publicKwhLine = document.getElementById("publicKwhLine");
-    const adhocCostLine = document.getElementById("adhocCostLine");
-
     if (!core) {
-        homeRangeLine.textContent = "Enter all trip, battery, efficiency and ad‑hoc fields to see calculations.";
-        publicMilesLine.textContent = "";
-        publicKwhLine.textContent = "";
-        adhocCostLine.textContent = "";
         document.getElementById("results").style.display = "none";
-        if (chart) chart.destroy();
         return;
     }
 
-    homeRangeLine.innerHTML =
-        `Estimated range from home charge: <span class="highlight">${core.homeMiles.toFixed(0)} miles</span>`;
-    publicMilesLine.innerHTML =
-        `Miles requiring public charging: <span class="highlight">${core.publicMiles.toFixed(0)} miles</span>`;
-    publicKwhLine.innerHTML =
-        `Energy from public charging: <span class="highlight">${core.publicKwh.toFixed(1)} kWh</span>`;
-    adhocCostLine.innerHTML =
-        `Cost using ad‑hoc only: <span class="highlight">£${core.adhocCost.toFixed(2)}</span>`;
-
-    const providerResults = document.getElementById("providerResults");
-    providerResults.innerHTML = "";
+    const startType = document.getElementById("startChargeType").value === "home" ? "Home" : "Public";
+    document.getElementById("preChargeLine").innerHTML = `Initial charge cost (${startType}): <span class="highlight">£${core.startChargeCost.toFixed(2)}</span>`;
+    document.getElementById("homeRangeLine").innerHTML = `Estimated range from initial charge: <span class="highlight">${core.homeMiles.toFixed(0)} miles</span>`;
+    document.getElementById("publicMilesLine").innerHTML = `Miles requiring public charging: <span class="highlight">${core.publicMiles.toFixed(0)} miles</span>`;
+    document.getElementById("publicKwhLine").innerHTML = `Energy required from public charging: <span class="highlight">${core.publicKwh.toFixed(1)} kWh</span>`;
+    document.getElementById("adhocCostLine").innerHTML = `Total journey cost (Ad-hoc): <span class="highlight">£${core.totalAdhocCost.toFixed(2)}</span>`;
 
     let providers = [];
-    const boxes = document.querySelectorAll(".provider-box");
-
-    boxes.forEach(box => {
+    document.querySelectorAll(".provider-box").forEach(box => {
         const id = box.dataset.id;
         const name = document.getElementById(`name${id}`).value.trim();
-
         const subCostRaw = document.getElementById(`subCost${id}`).value.trim();
-        let subCost = parseFloat(subCostRaw);
-        if (!subCostRaw || subCostRaw.toUpperCase() === "N/A" || isNaN(subCost)) {
-            subCost = 0;
-        }
-
+        let subCost = parseFloat(subCostRaw) || 0;
         const ratePence = parseFloat(document.getElementById(`rate${id}`).value);
         if (!name || isNaN(ratePence)) return;
 
         const discountRate = ratePence / 100;
-
-        const costWithSub = subCost + (core.publicKwh * discountRate);
-        const breakEvenKwh = (core.adhocRate > discountRate)
-            ? subCost / (core.adhocRate - discountRate)
-            : Infinity;
-        const breakEvenMiles = breakEvenKwh === Infinity ? Infinity : breakEvenKwh * core.efficiency;
-        const savings = core.adhocCost - costWithSub;
+        const publicCostWithSub = subCost + (core.publicKwh * discountRate);
+        const totalJourneyCost = core.startChargeCost + publicCostWithSub;
+        
+        // Break-even is when savings on public charging cover the subscription cost
+        const breakEvenKwh = (core.adhocRate > discountRate) ? subCost / (core.adhocRate - discountRate) : Infinity;
+        const breakEvenTripMiles = breakEvenKwh === Infinity ? Infinity : (breakEvenKwh * core.efficiency) + core.homeMiles;
 
         providers.push({
-            name,
-            costWithSub,
-            breakEvenMiles,
-            savings,
-            subCost,
-            ratePence
+            name, totalJourneyCost, breakEvenTripMiles, subCost, ratePence,
+            savings: core.totalAdhocCost - totalJourneyCost
         });
     });
 
     if (providers.length === 0) {
         document.getElementById("results").style.display = "none";
-        if (chart) chart.destroy();
         return;
     }
 
-    // SORTING
     const sortMode = document.getElementById("sortResults")?.value || "cheapest";
+    providers.sort((a, b) => sortMode === "cheapest" ? a.totalJourneyCost - b.totalJourneyCost : a.name.localeCompare(b.name));
 
-    if (sortMode === "cheapest") {
-        providers.sort((a, b) => a.costWithSub - b.costWithSub);
-    } else if (sortMode === "az") {
-        providers.sort((a, b) => a.name.localeCompare(b.name));
-    }
-
-    // DISPLAY RESULTS
+    const providerResults = document.getElementById("providerResults");
     providerResults.innerHTML = "";
     providers.forEach(p => {
-        const beText = p.breakEvenMiles === Infinity
-            ? "No break‑even (discounted rate ≥ ad‑hoc rate)"
-            : `${p.breakEvenMiles.toFixed(0)} miles`;
-
+        const beText = p.breakEvenTripMiles === Infinity ? "Never" : `${p.breakEvenTripMiles.toFixed(0)} miles`;
         providerResults.innerHTML += `
             <div class="result-line">
-                <span class="highlight">${p.name}</span> —
-                Cost: £${p.costWithSub.toFixed(2)},
-                Break‑even: ${beText},
-                Savings vs ad‑hoc: £${p.savings.toFixed(2)}
-            </div>
-        `;
+                <span class="highlight">${p.name}</span> — 
+                Total Journey Cost: £${p.totalJourneyCost.toFixed(2)}, 
+                Break‑even Trip Distance: ${beText}, 
+                Savings vs Ad‑hoc: £${p.savings.toFixed(2)}
+            </div>`;
     });
 
     document.getElementById("results").style.display = "block";
-
-    // SUMMARY
-    const best = providers.reduce((a, b) => (a.costWithSub < b.costWithSub ? a : b));
+    const best = providers.reduce((a, b) => (a.totalJourneyCost < b.totalJourneyCost ? a : b));
     const summaryBox = document.getElementById("summaryBox");
-
-    if (best.costWithSub < core.adhocCost) {
+    if (best.totalJourneyCost < core.totalAdhocCost) {
         summaryBox.className = "summary good";
-        summaryBox.textContent =
-            `${best.name} is currently the cheapest option for this trip (saving £${(core.adhocCost - best.costWithSub).toFixed(2)} vs ad‑hoc).`;
+        summaryBox.textContent = `${best.name} is cheapest for this trip (saves £${best.savings.toFixed(2)} vs Ad‑hoc).`;
     } else {
         summaryBox.className = "summary bad";
-        summaryBox.textContent =
-            `Ad‑hoc charging is cheaper than any subscription for this trip distance.`;
+        summaryBox.textContent = `Ad‑hoc charging is cheaper for this specific trip distance.`;
     }
 
     drawGraph(core, providers);
