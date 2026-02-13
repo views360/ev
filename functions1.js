@@ -27,8 +27,8 @@ function createProviderBox(preset) {
 
     // SORT PRESETS: "Subscription:" first A-Z, then others (Ad-hoc) A-Z
     const sortedPresets = [...PRESETS].sort((a, b) => {
-        const aSub = a.name.startsWith("Subscription:");
-        const bSub = b.name.startsWith("Subscription:");
+        const aSub = a.name.startsWith("Subscription >");
+        const bSub = b.name.startsWith("Subscription >");
         if (aSub && !bSub) return -1;
         if (!aSub && bSub) return 1;
         return a.name.localeCompare(b.name);
@@ -196,7 +196,7 @@ function calculate() {
     document.getElementById("homeRangeLine").innerHTML = `Distance covered by initial charge: <span class="highlight">${initialRange.toFixed(0)} miles</span>`;
     document.getElementById("publicMilesLine").innerHTML = `Public charging distance needed: <span class="highlight">${publicMiles.toFixed(0)} miles</span>`;
     document.getElementById("publicKwhLine").innerHTML = `Public charging energy needed: <span class="highlight">${publicKwh.toFixed(1)} kWh</span>`;
-    document.getElementById("adhocCostLine").innerHTML = `Total journey cost at your <span class="highlight">standard Ad-hoc rate</span>: <span class="highlight">£${totalAdhocCost.toFixed(2)}</span>`;
+    document.getElementById("adhocCostLine").innerHTML = `Total journey cost at your <span class="highlight">standard ad-hoc rate</span>: <span class="highlight">£${totalAdhocCost.toFixed(2)}</span>`;
 
     // Process providers
     const providers = [];
@@ -212,8 +212,6 @@ function calculate() {
             const costWithSub = startChargeCost + sub + (publicKwh * (rate / 100));
             const savings = totalAdhocCost - costWithSub;
             
-            // Break even trip miles: SubCost = (AdHocRate - SubRate) * (Miles / Efficiency)
-            // Miles = (SubCost * Efficiency) / (AdHocRate - SubRate)
             let breakEvenTripMiles = Infinity;
             if (adhocRate > rate && sub > 0) {
                 breakEvenTripMiles = (sub * efficiency) / ((adhocRate - rate) / 100);
@@ -250,7 +248,7 @@ function calculate() {
                 Total Journey Cost: £${p.totalJourneyCost.toFixed(2)} | 
                 Break‑even Trip Distance: ${beText}
                 <i class="info-icon">i
-                    <span class="tooltip-text">The trip distance where savings from the discounted rate fully offset the subscription fee, making this plan cheaper than ad‑hoc.</span>
+                    <span class="tooltip-text">The trip distance where savings from the discounted rate fully offset the subscription fee.</span>
                 </i> | 
                 Savings vs Ad‑hoc: £${p.savings.toFixed(2)}
             </div>`;
@@ -268,7 +266,7 @@ function calculate() {
 
     if (bestProvider.totalJourneyCost < core.totalAdhocCost) {
         summaryBox.className = "summary good";
-        summaryBox.textContent = `${bestProvider.name} is cheapest for this trip (saves £${bestProvider.savings.toFixed(2)} vs Ad‑hoc).`;
+        summaryBox.textContent = `VERDICT: ${bestProvider.name} is cheapest for this trip (saves £${bestProvider.savings.toFixed(2)} vs Ad‑hoc).`;
         
         conclusionHTML += `<div class="conclusion-card good">
             <p>For a trip of <strong>${core.journeyMiles} miles</strong>, taking a subscription with <strong>${bestProvider.name}</strong> is the most cost-effective option.</p>
@@ -276,7 +274,7 @@ function calculate() {
         </div>`;
     } else {
         summaryBox.className = "summary bad";
-        summaryBox.textContent = `Ad‑hoc charging is cheaper for this specific trip distance.`;
+        summaryBox.textContent = `VERDICT: Ad‑hoc charging is cheaper for this specific trip distance.`;
         
         conclusionHTML += `<div class="conclusion-card bad">
             <p>Standard <strong>Ad-hoc charging</strong> is the most cost-effective choice for this trip.</p>
