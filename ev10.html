@@ -92,7 +92,15 @@
     </div>
 
     <div id="results" class="results">
-        <h2 class="results-title">Conclusions</h2>
+
+        <div class="input-group" style="max-width:200px;">
+            <label>Sort results</label>
+            <select id="sortResults" onchange="calculate()">
+                <option value="cheapest">Cheapest first</option>
+                <option value="az">A → Z</option>
+                <option value="za">Z → A</option>
+            </select>
+        </div>
 
         <div class="calc-lines">
             <div id="preChargeLine"></div>
@@ -102,21 +110,12 @@
             <div id="adhocCostLine"></div>
         </div>
 
-        <div id="summaryBox" class="summary"></div>
-
-        <div class="provider-results-area">
-            <div class="input-group" style="max-width:200px;">
-                <label>Sort results</label>
-                <select id="sortResults" onchange="calculate()">
-                    <option value="cheapest">Cheapest first</option>
-                    <option value="az">A → Z</option>
-                    <option value="za">Z → A</option>
-                </select>
-            </div>
-
-            <div id="providerResults"></div>
-            <div id="conclusionsBox"></div>
-        </div>
+        <div id="providerResults"></div>
+        
+        <div id="conclusionsBox">
+		 
+	</div>
+	<div id="summaryBox" class="summary"></div>
 
         <div class="chart-wrapper">
             <canvas id="costChart" height="220"></canvas>
