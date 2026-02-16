@@ -113,7 +113,6 @@ function duplicateLastProvider() {
     document.getElementById(`subCost${newId}`).value = document.getElementById(`subCost${lastId}`).value;
     document.getElementById(`rate${newId}`).value = document.getElementById(`rate${lastId}`).value;
     
-    // Copy speed if applicable
     const speedSelect = document.getElementById(`speed${lastId}`);
     if (speedSelect.style.display !== "none") {
         const newSpeedSelect = document.getElementById(`speed${newId}`);
@@ -182,7 +181,6 @@ function calculate() {
         return;
     }
 
-    // Standard calcs
     const startChargeKwh = (soc / 100) * battery;
     const startChargeCost = (startChargeKwh * (startRate / 100));
     const initialRange = startChargeKwh * efficiency;
@@ -191,14 +189,12 @@ function calculate() {
     const publicKwh = publicMiles / efficiency;
     const totalAdhocCost = startChargeCost + (publicKwh * (adhocRate / 100));
 
-    // Update basic lines
     document.getElementById("preChargeLine").innerHTML = `Initial charge in battery: <span class="highlight">${startChargeKwh.toFixed(1)} kWh</span> (Cost: £${startChargeCost.toFixed(2)})`;
     document.getElementById("homeRangeLine").innerHTML = `Distance covered by initial charge: <span class="highlight">${initialRange.toFixed(0)} miles</span>`;
     document.getElementById("publicMilesLine").innerHTML = `Public charging distance needed: <span class="highlight">${publicMiles.toFixed(0)} miles</span>`;
     document.getElementById("publicKwhLine").innerHTML = `Public charging energy needed: <span class="highlight">${publicKwh.toFixed(1)} kWh</span>`;
     document.getElementById("adhocCostLine").innerHTML = `Total journey cost at your <span class="highlight">standard ad-hoc rate</span>: <span class="highlight">£${totalAdhocCost.toFixed(2)}</span>`;
 
-    // Process providers
     const providers = [];
     const boxes = document.querySelectorAll(".provider-box");
     boxes.forEach(box => {
@@ -211,15 +207,19 @@ function calculate() {
         if (!isNaN(rate)) {
             const costWithSub = startChargeCost + sub + (publicKwh * (rate / 100));
             const savings = totalAdhocCost - costWithSub;
-            
-            // Break even trip miles: SubCost = (AdHocRate - SubRate) * (Miles / Efficiency)
-            // Miles = (SubCost * Efficiency) / (AdHocRate - SubRate)
+
             let breakEvenTripMiles = Infinity;
             if (adhocRate > rate && sub > 0) {
                 breakEvenTripMiles = (sub * efficiency) / ((adhocRate - rate) / 100);
             }
 
-            providers.push({ name, totalJourneyCost: costWithSub, savings, breakEvenTripMiles });
+            providers.push({ 
+                id: bid, 
+                name, 
+                totalJourneyCost: costWithSub, 
+                savings, 
+                breakEvenTripMiles 
+            });
         }
     });
 
