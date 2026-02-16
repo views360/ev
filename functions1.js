@@ -82,18 +82,28 @@ function createProviderBox(preset) {
 
     document.getElementById("providers").appendChild(box);
 
-    // Event listeners
-    document.getElementById(`preset${id}`).addEventListener("change", () => applyPreset(id));
-    document.getElementById(`speed${id}`).addEventListener("change", () => updateRateFromSpeed(id));
+    // Explicitly: when preset changes, apply preset THEN recalc
+    document.getElementById(`preset${id}`).addEventListener("change", () => {
+        applyPreset(id);
+        calculate();
+    });
 
-    box.querySelectorAll("input, select").forEach(i => {
-        i.addEventListener("input", calculate);
+    document.getElementById(`speed${id}`).addEventListener("change", () => {
+        updateRateFromSpeed(id);
+    });
+
+    // Other inputs still trigger calculate on change
+    box.querySelectorAll("input, select").forEach(el => {
+        if (el.id !== `preset${id}` && el.id !== `speed${id}`) {
+            el.addEventListener("input", calculate);
+        }
     });
 
     // Apply preset if provided
     if (preset) {
         document.getElementById(`preset${id}`).value = preset.name;
         applyPreset(id);
+        calculate();
     }
 }
 
@@ -171,6 +181,7 @@ function applyPreset(id) {
     }
 
     const p = PRESETS.find(x => x.name === presetName);
+    if (!p) return;
 
     nameInput.value = p.name;
     subInput.value = p.subCost === 0 ? "N/A" : p.subCost;
@@ -184,7 +195,9 @@ function applyPreset(id) {
     } else {
         speedSelect.style.display = "block";
         speedStatic.style.display = "none";
-        speedSelect.innerHTML = rateKeys.map(k => `<option value="${k}">${k} kW</option>`).join("");
+        speedSelect.innerHTML = rateKeys
+            .map(k => `<option value="${k}">${k} kW</option>`)
+            .join("");
         updateRateFromSpeed(id);
     }
 }
@@ -196,6 +209,7 @@ function updateRateFromSpeed(id) {
     const presetName = document.getElementById(`preset${id}`).value;
     const speed = document.getElementById(`speed${id}`).value;
     const p = PRESETS.find(x => x.name === presetName);
+    if (!p) return;
 
     document.getElementById(`rate${id}`).value = p.rates[speed];
     calculate();
