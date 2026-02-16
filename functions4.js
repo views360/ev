@@ -148,7 +148,7 @@ function resetAll() {
     document.getElementById(id).addEventListener("input", calculate);
 });
 
-// ⭐ CRITICAL: Minimum speed listener
+// Minimum speed listener
 document.getElementById("minSpeed").addEventListener("input", () => {
     enforceSpeedRules();
     calculate();
