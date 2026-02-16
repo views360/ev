@@ -16,7 +16,8 @@ function shareLink() {
         "efficiency",
         "adhoc",
         "startChargeRate",
-        "startChargeType"
+        "startChargeType",
+        "minSpeed"
     ].forEach(id => {
         params.set(id, document.getElementById(id).value);
     });
@@ -29,6 +30,11 @@ function shareLink() {
         params.set(`p${i}n`, document.getElementById(`name${id}`).value);
         params.set(`p${i}s`, document.getElementById(`subCost${id}`).value);
         params.set(`p${i}r`, document.getElementById(`rate${id}`).value);
+
+        const speedSelect = document.getElementById(`speed${id}`);
+        if (speedSelect && speedSelect.style.display !== "none") {
+            params.set(`p${i}spd`, speedSelect.value);
+        }
     });
 
     const url =
@@ -57,7 +63,8 @@ function loadFromUrl() {
         "efficiency",
         "adhoc",
         "startChargeRate",
-        "startChargeType"
+        "startChargeType",
+        "minSpeed"
     ].forEach(id => {
         if (params.has(id)) {
             document.getElementById(id).value = params.get(id);
@@ -77,9 +84,15 @@ function loadFromUrl() {
         document.getElementById(`subCost${id}`).value = params.get(`p${idx}s`);
         document.getElementById(`rate${id}`).value = params.get(`p${idx}r`);
 
+        const speedSelect = document.getElementById(`speed${id}`);
+        if (speedSelect && params.has(`p${idx}spd`)) {
+            speedSelect.value = params.get(`p${idx}spd`);
+        }
+
         idx++;
     }
 
+    enforceSpeedRules();
     calculate();
 }
 
@@ -133,6 +146,12 @@ function resetAll() {
     "startChargeType"
 ].forEach(id => {
     document.getElementById(id).addEventListener("input", calculate);
+});
+
+// ⭐ NEW: Minimum speed listener (the missing piece)
+document.getElementById("minSpeed").addEventListener("input", () => {
+    enforceSpeedRules();
+    calculate();
 });
 
 // Load presets and restore state from URL
