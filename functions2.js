@@ -1,167 +1,201 @@
-// GRAPH
-function drawGraph(core, providers) {
-    const ctx = document.getElementById("costChart");
-    if (chart) chart.destroy();
+// ===============================
+// functions2.js
+// Core Calculation Engine
+// ===============================
 
-    const maxMiles = Math.max(core.journeyMiles, 500); // Chart at least 500 miles
-    const steps = 20;
-    const labels = [];
-    const adhocData = [];
+function calculate() {
+    const miles = parseFloat(document.getElementById("journeyMiles").value);
+    const battery = parseFloat(document.getElementById("batteryKwh").value);
+    const soc = parseFloat(document.getElementById("soc").value);
+    const efficiency = parseFloat(document.getElementById("efficiency").value);
+    const adhocRate = parseFloat(document.getElementById("adhoc").value);
+    const startRate = parseFloat(document.getElementById("startChargeRate").value);
 
-    for (let i = 0; i <= steps; i++) {
-        const m = (maxMiles * i) / steps;
-        labels.push(m.toFixed(0));
-
-        const publicMilesAtM = Math.max(0, m - core.homeMiles);
-        const publicKwhAtM = publicMilesAtM / core.efficiency;
-
-        adhocData.push(core.startChargeCost + (publicKwhAtM * core.adhocRate / 100));
+    if (isNaN(miles) || isNaN(battery) || isNaN(soc) || isNaN(efficiency) || isNaN(adhocRate)) {
+        document.getElementById("results").style.display = "none";
+        return;
     }
 
-    const datasets = [{
-        label: "Ad‑hoc Total (£)",
-        data: adhocData,
-        borderColor: "#f97316",
-        backgroundColor: "rgba(249,115,22,0.15)",
-        tension: 0.2
-    }];
+    // -------------------------------
+    // BASIC CALCULATIONS
+    // -------------------------------
+    const startChargeKwh = (soc / 100) * battery;
+    const startChargeCost = startChargeKwh * (startRate / 100);
+    const initialRange = startChargeKwh * efficiency;
 
-    // Provider lines
-    providers.forEach((p, idx) => {
-        const colors = ["#38bdf8", "#4ade80", "#a855f7", "#facc15", "#f472b6", "#22c55e"];
-        const color = colors[idx % colors.length];
-        const data = [];
+    const publicMiles = Math.max(0, miles - initialRange);
+    const publicKwh = publicMiles / efficiency;
 
-        // FIX: match provider by ID, not name
-        const box = document.querySelector(`.provider-box[data-id="${p.id}"]`);
+    const totalAdhocCost = startChargeCost + (publicKwh * (adhocRate / 100));
 
-        if (box) {
-            const bid = p.id;
+    // Update UI lines
+    document.getElementById("preChargeLine").innerHTML =
+        `Initial charge in battery: <span class="highlight">${startChargeKwh.toFixed(1)} kWh</span> (Cost: £${startChargeCost.toFixed(2)})`;
 
-            let sub = document.getElementById(`subCost${bid}`).value;
-            sub = (sub === "N/A" || sub === "") ? 0 : parseFloat(sub);
+    document.getElementById("homeRangeLine").innerHTML =
+        `Distance covered by initial charge: <span class="highlight">${initialRange.toFixed(0)} miles</span>`;
 
-            const rate = parseFloat(document.getElementById(`rate${bid}`).value);
+    document.getElementById("publicMilesLine").innerHTML =
+        `Public charging distance needed: <span class="highlight">${publicMiles.toFixed(0)} miles</span>`;
 
-            for (let i = 0; i <= steps; i++) {
-                const m = (maxMiles * i) / steps;
-                const publicMilesAtM = Math.max(0, m - core.homeMiles);
-                const publicKwhAtM = publicMilesAtM / core.efficiency;
+    document.getElementById("publicKwhLine").innerHTML =
+        `Public charging energy needed: <span class="highlight">${publicKwh.toFixed(1)} kWh</span>`;
 
-                data.push(core.startChargeCost + sub + (publicKwhAtM * rate / 100));
+    document.getElementById("adhocCostLine").innerHTML =
+        `Total journey cost at your <span class="highlight">standard ad-hoc rate</span>: <span class="highlight">£${totalAdhocCost.toFixed(2)}</span>`;
+
+    // -------------------------------
+    // BUILD PROVIDER OBJECTS
+    // -------------------------------
+    const providers = [];
+    const boxes = document.querySelectorAll(".provider-box");
+
+    boxes.forEach(box => {
+        const bid = box.dataset.id;
+
+        const name = document.getElementById(`name${bid}`).value || `Provider #${bid}`;
+
+        let sub = document.getElementById(`subCost${bid}`).value;
+        sub = (sub === "N/A" || sub === "") ? 0 : parseFloat(sub);
+
+        const rate = parseFloat(document.getElementById(`rate${bid}`).value);
+
+        if (!isNaN(rate)) {
+            const costWithSub = startChargeCost + sub + (publicKwh * (rate / 100));
+            const savings = totalAdhocCost - costWithSub;
+
+            let breakEvenTripMiles = Infinity;
+            if (adhocRate > rate && sub > 0) {
+                breakEvenTripMiles = (sub * efficiency) / ((adhocRate - rate) / 100);
             }
 
-            datasets.push({
-                label: `${p.name} (£)`,
-                data: data,
-                borderColor: color,
-                tension: 0.2
+            providers.push({
+                id: bid,
+                name,
+                sub,
+                rate,
+                totalJourneyCost: costWithSub,
+                savings,
+                breakEvenTripMiles
             });
         }
     });
 
-    chart = new Chart(ctx, {
-        type: 'line',
-        data: { labels, datasets },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            interaction: { mode: 'index', intersect: false },
-            plugins: {
-                legend: {
-                    labels: {
-                        color: getComputedStyle(document.body).getPropertyValue('--text').trim()
-                    }
-                }
+    // -------------------------------
+    // NO PROVIDERS → GRAPH ONLY AD-HOC
+    // -------------------------------
+    if (providers.length === 0) {
+        document.getElementById("providerResults").innerHTML = "";
+        document.getElementById("results").style.display = "block";
+
+        drawGraph(
+            {
+                journeyMiles: miles,
+                homeMiles: initialRange,
+                efficiency,
+                adhocRate,
+                startChargeCost,
+                totalAdhocCost
             },
-            scales: {
-                x: {
-                    title: { display: true, text: 'Trip Miles', color: '#9ca3af' },
-                    ticks: { color: '#9ca3af' },
-                    grid: { color: 'rgba(31, 41, 55, 0.5)' }
-                },
-                y: {
-                    title: { display: true, text: 'Total Cost (£)', color: '#9ca3af' },
-                    ticks: { color: '#9ca3af' },
-                    grid: { color: 'rgba(31, 41, 55, 0.5)' }
-                }
-            }
-        }
-    });
-}
+            []
+        );
 
-function shareLink() {
-    const params = new URLSearchParams();
-    ["journeyMiles","batteryKwh","soc","efficiency","adhoc","startChargeRate","startChargeType"].forEach(id => {
-        params.set(id, document.getElementById(id).value);
-    });
-
-    const boxes = document.querySelectorAll(".provider-box");
-    boxes.forEach((box, i) => {
-        const id = box.dataset.id;
-        params.set(`p${i}n`, document.getElementById(`name${id}`).value);
-        params.set(`p${i}s`, document.getElementById(`subCost${id}`).value);
-        params.set(`p${i}r`, document.getElementById(`rate${id}`).value);
-    });
-
-    const url = window.location.origin + window.location.pathname + "?" + params.toString();
-    navigator.clipboard.writeText(url).then(() => alert("Shareable link copied!"));
-}
-
-function loadFromUrl() {
-    const params = new URLSearchParams(window.location.search);
-    if (!params.has("journeyMiles")) return;
-
-    ["journeyMiles","batteryKwh","soc","efficiency","adhoc","startChargeRate","startChargeType"].forEach(id => {
-        if (params.has(id)) document.getElementById(id).value = params.get(id);
-    });
-
-    const resultsEl = document.getElementById("results");
-    resultsEl.style.display = "none";
-
-    let idx = 0;
-    document.getElementById("providers").innerHTML = "";
-    while (params.has(`p${idx}n`)) {
-        createProviderBox();
-        const id = providerCount;
-        document.getElementById(`name${id}`).value = params.get(`p${idx}n`);
-        document.getElementById(`subCost${id}`).value = params.get(`p${idx}s`);
-        document.getElementById(`rate${id}`).value = params.get(`p${idx}r`);
-        idx++;
-    }
-    calculate();
-}
-
-async function exportPdf() {
-    const resultsEl = document.getElementById("results");
-    if (!resultsEl || resultsEl.style.display === "none") {
-        alert("Enter data first.");
         return;
     }
 
-    const { jsPDF } = window.jspdf;
+    // -------------------------------
+    // SORT PROVIDERS
+    // -------------------------------
+    const sortMode = document.getElementById("sortResults").value;
 
-    const canvas = await html2canvas(document.body, { 
-        scale: 2,
-        backgroundColor: getComputedStyle(document.body).getPropertyValue('--bg').trim()
+    if (sortMode === "cheapest") {
+        providers.sort((a, b) => a.totalJourneyCost - b.totalJourneyCost);
+    } else if (sortMode === "az") {
+        providers.sort((a, b) => a.name.localeCompare(b.name));
+    } else {
+        providers.sort((a, b) => b.name.localeCompare(a.name));
+    }
+
+    // -------------------------------
+    // RENDER PROVIDER RESULTS
+    // -------------------------------
+    const providerResults = document.getElementById("providerResults");
+    providerResults.innerHTML = "";
+
+    providers.forEach(p => {
+        const beText = p.breakEvenTripMiles === Infinity
+            ? "Never"
+            : `${p.breakEvenTripMiles.toFixed(0)} miles`;
+
+        providerResults.innerHTML += `
+            <div class="result-line">
+                <span class="highlight">${p.name}</span> —
+                Total Journey Cost: £${p.totalJourneyCost.toFixed(2)} |
+                Break‑even Trip Distance: ${beText}
+                <i class="info-icon">i
+                    <span class="tooltip-text">
+                        The trip distance where savings from the discounted rate fully offset the subscription fee.
+                    </span>
+                </i> |
+                Savings vs Ad‑hoc: £${p.savings.toFixed(2)}
+            </div>
+        `;
     });
 
-    const imgData = canvas.toDataURL("image/png");
-    const pdf = new jsPDF("p", "mm", "a4");
-    const width = pdf.internal.pageSize.getWidth();
+    // -------------------------------
+    // SUMMARY + CONCLUSIONS
+    // -------------------------------
+    document.getElementById("results").style.display = "block";
 
-    pdf.addImage(imgData, "PNG", 0, 0, width, (canvas.height * width) / canvas.width);
-    pdf.save("ev-charging-comparison.pdf");
+    const bestProvider = providers.reduce((a, b) =>
+        a.totalJourneyCost < b.totalJourneyCost ? a : b
+    );
+
+    const summaryBox = document.getElementById("summaryBox");
+    const conclusionsBox = document.getElementById("conclusionsBox");
+
+    const core = {
+        journeyMiles: miles,
+        homeMiles: initialRange,
+        efficiency,
+        adhocRate,
+        startChargeCost,
+        totalAdhocCost
+    };
+
+    let conclusionHTML = "";
+    const locationDisclaimer =
+        `<p class="disclaimer">Note: Always check charger locations — a subscription only saves money if you can actually use their network.</p>`;
+
+    if (bestProvider.totalJourneyCost < core.totalAdhocCost) {
+        summaryBox.className = "summary good";
+        summaryBox.textContent =
+            `${bestProvider.name} is cheapest for this trip (saves £${bestProvider.savings.toFixed(2)} vs Ad‑hoc).`;
+
+        conclusionHTML += `
+            <div class="conclusion-card good">
+                <p>For a trip of <strong>${core.journeyMiles} miles</strong>, taking a subscription with <strong>${bestProvider.name}</strong> is the most cost‑effective option.</p>
+                <p>Total cost including subscription: <strong>£${bestProvider.totalJourneyCost.toFixed(2)}</strong>.</p>
+            </div>
+        `;
+    } else {
+        summaryBox.className = "summary bad";
+        summaryBox.textContent =
+            `Ad‑hoc charging is cheaper for this specific trip distance.`;
+
+        conclusionHTML += `
+            <div class="conclusion-card bad">
+                <p>Standard <strong>Ad‑hoc charging</strong> is the most cost‑effective choice for this trip.</p>
+                <p>At ${core.journeyMiles} miles, subscription savings do not cover the monthly fee.</p>
+            </div>
+        `;
+    }
+
+    conclusionHTML += locationDisclaimer;
+    conclusionsBox.innerHTML = conclusionHTML;
+
+    // -------------------------------
+    // DRAW GRAPH
+    // -------------------------------
+    drawGraph(core, providers);
 }
-
-// INITIALISE
-["journeyMiles","batteryKwh","soc","efficiency","adhoc","startChargeRate","startChargeType"].forEach(id => {
-    document.getElementById(id).addEventListener("input", calculate);
-});
-
-fetch("providers.json")
-    .then(r => r.json())
-    .then(data => {
-        PRESETS = data.providers;
-        loadFromUrl();
-    });
