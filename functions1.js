@@ -187,15 +187,32 @@ function applyPreset(id) {
     const rateKeys = Object.keys(p.rates);
 
     if (rateKeys.length === 1 && rateKeys[0] === "default") {
+        // Single default rate: treat as "fastest available"
         rateInput.value = p.rates.default;
         speedSelect.style.display = "none";
         speedStatic.style.display = "block";
     } else {
+        // Multi‑speed provider
         speedSelect.style.display = "block";
         speedStatic.style.display = "none";
-        speedSelect.innerHTML = rateKeys
+
+        // Sort speeds numerically
+        const sortedKeys = rateKeys.sort((a, b) => parseFloat(a) - parseFloat(b));
+        speedSelect.innerHTML = sortedKeys
             .map(k => `<option value="${k}">${k} kW</option>`)
             .join("");
+
+        // Choose the first speed that meets the current minimum, or the lowest if none
+        const minSpeed = parseFloat(document.getElementById("minSpeed").value);
+        let chosen = sortedKeys[0];
+        for (const k of sortedKeys) {
+            if (parseFloat(k) >= minSpeed) {
+                chosen = k;
+                break;
+            }
+        }
+        speedSelect.value = chosen;
+
         updateRateFromSpeed(id);
     }
 
@@ -220,7 +237,6 @@ function updateRateFromSpeed(id) {
 // -------------------------------
 function enforceSpeedRules() {
     const minSpeed = parseFloat(document.getElementById("minSpeed").value);
-
     const boxes = document.querySelectorAll(".provider-box");
 
     boxes.forEach(box => {
@@ -230,6 +246,7 @@ function enforceSpeedRules() {
         if (!speedSelect || speedSelect.style.display === "none") return;
 
         let hasValid = false;
+        let firstValidValue = null;
 
         [...speedSelect.options].forEach(opt => {
             const val = parseFloat(opt.value);
@@ -237,15 +254,27 @@ function enforceSpeedRules() {
                 opt.disabled = true;
             } else {
                 opt.disabled = false;
-                hasValid = true;
+                if (!hasValid) {
+                    hasValid = true;
+                    firstValidValue = opt.value;
+                }
             }
         });
 
+        // If no valid speeds remain for this provider, clear all providers (Option B/C behaviour)
         if (!hasValid) {
             alert("Provider list cleared because selected speeds were below your minimum charging speed.");
             document.getElementById("providers").innerHTML = "";
             providerCount = 0;
             calculate();
+            return;
+        }
+
+        // If the currently selected speed is now disabled, bump to the first valid one
+        const selectedOption = speedSelect.options[speedSelect.selectedIndex];
+        if (!selectedOption || selectedOption.disabled) {
+            speedSelect.value = firstValidValue;
+            updateRateFromSpeed(id);
         }
     });
 }
