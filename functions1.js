@@ -3,7 +3,6 @@
 // UI + Provider Box Logic
 // ===============================
 
-// Global state shared across modules
 let PRESETS = [];
 let providerCount = 0;
 let chart = null;
@@ -32,7 +31,6 @@ function createProviderBox(preset) {
     box.className = "provider-box";
     box.dataset.id = id;
 
-    // Sort presets: subscription first, then others
     const sortedPresets = [...PRESETS].sort((a, b) => {
         const aSub = a.name.startsWith("Subscription >");
         const bSub = b.name.startsWith("Subscription >");
@@ -82,7 +80,6 @@ function createProviderBox(preset) {
 
     document.getElementById("providers").appendChild(box);
 
-    // Explicitly: when preset changes, apply preset THEN recalc
     document.getElementById(`preset${id}`).addEventListener("change", () => {
         applyPreset(id);
         calculate();
@@ -92,19 +89,19 @@ function createProviderBox(preset) {
         updateRateFromSpeed(id);
     });
 
-    // Other inputs still trigger calculate on change
     box.querySelectorAll("input, select").forEach(el => {
         if (el.id !== `preset${id}` && el.id !== `speed${id}`) {
             el.addEventListener("input", calculate);
         }
     });
 
-    // Apply preset if provided
     if (preset) {
         document.getElementById(`preset${id}`).value = preset.name;
         applyPreset(id);
         calculate();
     }
+
+    enforceSpeedRules();
 }
 
 // -------------------------------
@@ -157,6 +154,7 @@ function duplicateLastProvider() {
         newSpeedSelect.value = speedSelect.value;
     }
 
+    enforceSpeedRules();
     calculate();
 }
 
@@ -200,6 +198,8 @@ function applyPreset(id) {
             .join("");
         updateRateFromSpeed(id);
     }
+
+    enforceSpeedRules();
 }
 
 // -------------------------------
@@ -213,4 +213,39 @@ function updateRateFromSpeed(id) {
 
     document.getElementById(`rate${id}`).value = p.rates[speed];
     calculate();
+}
+
+// -------------------------------
+// ENFORCE SPEED RULES
+// -------------------------------
+function enforceSpeedRules() {
+    const minSpeed = parseFloat(document.getElementById("minSpeed").value);
+
+    const boxes = document.querySelectorAll(".provider-box");
+
+    boxes.forEach(box => {
+        const id = box.dataset.id;
+        const speedSelect = document.getElementById(`speed${id}`);
+
+        if (!speedSelect || speedSelect.style.display === "none") return;
+
+        let hasValid = false;
+
+        [...speedSelect.options].forEach(opt => {
+            const val = parseFloat(opt.value);
+            if (val < minSpeed) {
+                opt.disabled = true;
+            } else {
+                opt.disabled = false;
+                hasValid = true;
+            }
+        });
+
+        if (!hasValid) {
+            alert("Provider list cleared because selected speeds were below your minimum charging speed.");
+            document.getElementById("providers").innerHTML = "";
+            providerCount = 0;
+            calculate();
+        }
+    });
 }

@@ -10,7 +10,9 @@ function calculate() {
     const efficiency = parseFloat(document.getElementById("efficiency").value);
     const adhocRate = parseFloat(document.getElementById("adhoc").value);
     const startRate = parseFloat(document.getElementById("startChargeRate").value);
+    const minSpeed = parseFloat(document.getElementById("minSpeed").value);
 
+    // If any required fields are missing, hide results
     if (isNaN(miles) || isNaN(battery) || isNaN(soc) || isNaN(efficiency) || isNaN(adhocRate)) {
         document.getElementById("results").style.display = "none";
         return;
@@ -60,6 +62,22 @@ function calculate() {
 
         const rate = parseFloat(document.getElementById(`rate${bid}`).value);
 
+        // Determine provider speed capability
+        let providerSpeed = null;
+        const speedSelect = document.getElementById(`speed${bid}`);
+
+        if (speedSelect && speedSelect.style.display !== "none") {
+            // Multi-speed provider: use selected speed
+            providerSpeed = parseFloat(speedSelect.value);
+        } else {
+            // Default-only provider: treat as >50 kW
+            providerSpeed = 999;
+        }
+
+        // Exclude providers that don't meet the minimum speed
+        if (providerSpeed < minSpeed) return;
+
+        // Only include providers with valid rate
         if (!isNaN(rate)) {
             const costWithSub = startChargeCost + sub + (publicKwh * (rate / 100));
             const savings = totalAdhocCost - costWithSub;
