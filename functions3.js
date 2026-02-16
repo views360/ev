@@ -1,6 +1,6 @@
 // ===============================
 // functions3.js
-// Graphing Engine
+// Graphing Engine (Corrected)
 // ===============================
 
 function drawGraph(core, providers) {
@@ -38,7 +38,7 @@ function drawGraph(core, providers) {
     }];
 
     // -------------------------------
-    // PROVIDER LINES (PURE DATA)
+    // PROVIDER LINES (PURE DATA — NO DOM LOOKUPS)
     // -------------------------------
     providers.forEach((p, idx) => {
         const colors = [
