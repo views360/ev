@@ -1,7 +1,35 @@
 // ===============================
 // functions4.js
-// Utilities + Initialisation
+// Utilities + Initialisation + Local Storage
 // ===============================
+
+// -------------------------------
+// LOCAL STORAGE LOGIC
+// -------------------------------
+function saveToLocalStorage() {
+    const data = {
+        journeyMiles: document.getElementById("journeyMiles").value,
+        batteryKwh: document.getElementById("batteryKwh").value,
+        soc: document.getElementById("soc").value,
+        efficiency: document.getElementById("efficiency").value,
+        adhoc: document.getElementById("adhoc").value,
+        startChargeRate: document.getElementById("startChargeRate").value,
+        startChargeType: document.getElementById("startChargeType").value,
+        minSpeed: document.getElementById("minSpeed").value
+    };
+    localStorage.setItem("ev_calc_settings", JSON.stringify(data));
+}
+
+function loadFromLocalStorage() {
+    const saved = localStorage.getItem("ev_calc_settings");
+    if (!saved) return;
+
+    const data = JSON.parse(saved);
+    Object.keys(data).forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = data[id];
+    });
+}
 
 // -------------------------------
 // SHAREABLE LINK
@@ -130,12 +158,18 @@ async function exportPdf() {
 // RESET ALL
 // -------------------------------
 function resetAll() {
+    localStorage.removeItem("ev_calc_settings"); // Clear storage on reset
     window.location.href = window.location.pathname;
 }
 
 // -------------------------------
 // INITIALISATION
 // -------------------------------
+
+// 1. Load from Local Storage first
+loadFromLocalStorage();
+
+// 2. Attach Listeners for Calculation and Auto-Saving
 [
     "journeyMiles",
     "batteryKwh",
@@ -143,18 +177,15 @@ function resetAll() {
     "efficiency",
     "adhoc",
     "startChargeRate",
-    "startChargeType"
+    "startChargeType",
+    "minSpeed"
 ].forEach(id => {
-    document.getElementById(id).addEventListener("input", calculate);
+    const el = document.getElementById(id);
+    el.addEventListener("input", calculate);
+    el.addEventListener("input", saveToLocalStorage);
 });
 
-// ⭐ CRITICAL: Minimum speed listener
-document.getElementById("minSpeed").addEventListener("input", () => {
-    enforceSpeedRules();
-    calculate();
-});
-
-// Load presets and restore state from URL
+// 3. Load presets and restore state from URL (URL overrides Storage)
 fetch("providers.json")
     .then(r => r.json())
     .then(data => {
