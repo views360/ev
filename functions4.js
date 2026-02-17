@@ -7,7 +7,9 @@
 // LOCAL STORAGE PERSISTENCE
 // -------------------------------
 
-// Save "Trip & Vehicle" inputs to localStorage
+/**
+ * Saves the values from the "Trip & Vehicle" section into the browser's local storage.
+ */
 function saveToLocal() {
     const data = {};
     [
@@ -26,7 +28,10 @@ function saveToLocal() {
     localStorage.setItem("ev_calc_trip_data", JSON.stringify(data));
 }
 
-// Load data from localStorage
+/**
+ * Retrieves saved "Trip & Vehicle" data from local storage and populates the fields.
+ * If all required values are present, it triggers the analysis section.
+ */
 function loadFromLocal() {
     const saved = localStorage.getItem("ev_calc_trip_data");
     if (!saved) return;
@@ -39,7 +44,8 @@ function loadFromLocal() {
         }
     });
 
-    // Only trigger calculation if we aren't already loading from a URL (URL takes priority)
+    // Only trigger calculation if we aren't already loading from a shareable URL 
+    // (URL parameters take priority over local storage)
     const params = new URLSearchParams(window.location.search);
     if (!params.has("journeyMiles")) {
         enforceSpeedRules();
@@ -174,6 +180,7 @@ async function exportPdf() {
 // RESET ALL
 // -------------------------------
 function resetAll() {
+    // Clear local storage data upon reset
     localStorage.removeItem("ev_calc_trip_data");
     window.location.href = window.location.pathname;
 }
@@ -181,6 +188,8 @@ function resetAll() {
 // -------------------------------
 // INITIALISATION
 // -------------------------------
+
+// Attach input listeners to save data locally whenever a value changes
 [
     "journeyMiles",
     "batteryKwh",
@@ -203,7 +212,7 @@ document.getElementById("minSpeed").addEventListener("input", () => {
     calculate();
 });
 
-// Load presets and restore state from URL or LocalStorage
+// Load presets and restore state from either URL (priority) or Local Storage
 fetch("providers.json")
     .then(r => r.json())
     .then(data => {
