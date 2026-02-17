@@ -38,32 +38,23 @@ function drawGraph(core, providers) {
     }];
 
     // -------------------------------
-    // PROVIDER LINES (PURE DATA — NO DOM LOOKUP)
+    // PROVIDER LINES
     // -------------------------------
     providers.forEach(p => {
         const color = getProviderColor(p.name);
         const data = [];
 
-        // We need to look at the PRESETS to see if they have tiered rates
         const preset = PRESETS.find(pr => pr.name === p.name);
-
         let activeRate = p.rate;
 
-        // If it's a known preset with tiered speeds (like Pod Point)
-        // we check if their highest available speed matches our minimum.
-        if (!preset || !preset.rates || preset.rates.default) {
-            // Use the rate provided in the object (Be.EV / Custom)
-            activeRate = p.rate;
-        } else {
-            // Logic for Tiered Providers (Pod Point, BP Pulse, etc.)
+        // Determine correct rate for tiered providers
+        if (preset && preset.rates && !preset.rates.default) {
             const speeds = Object.keys(preset.rates)
                 .map(Number)
-                .filter(s => s >= core.minSpeed) // FIX: Changed from > to >=
+                .filter(s => s >= core.minSpeed) // Uses core.minSpeed from functions2.js
                 .sort((a, b) => a - b);
 
-            if (speeds.length === 0) return; // Skip if provider can't meet min speed
-
-            // Use the lowest available rate that meets or exceeds min speed
+            if (speeds.length === 0) return; // Skip if no available speed meets minimum
             activeRate = preset.rates[speeds[0]];
         }
 
@@ -100,28 +91,18 @@ function drawGraph(core, providers) {
             plugins: {
                 legend: {
                     labels: {
-                        color: getComputedStyle(document.body)
-                            .getPropertyValue("--text")
-                            .trim()
+                        color: getComputedStyle(document.body).getPropertyValue("--text").trim()
                     }
                 }
             },
             scales: {
                 x: {
-                    title: {
-                        display: true,
-                        text: "Trip Miles",
-                        color: "#9ca3af"
-                    },
+                    title: { display: true, text: "Trip Miles", color: "#9ca3af" },
                     ticks: { color: "#9ca3af" },
                     grid: { color: "rgba(31, 41, 55, 0.5)" }
                 },
                 y: {
-                    title: {
-                        display: true,
-                        text: "Total Cost (£)",
-                        color: "#9ca3af"
-                    },
+                    title: { display: true, text: "Total Cost (£)", color: "#9ca3af" },
                     ticks: { color: "#9ca3af" },
                     grid: { color: "rgba(31, 41, 55, 0.5)" }
                 }
