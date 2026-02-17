@@ -81,12 +81,12 @@ function calculate() {
     resultsContainer.innerHTML = html;
 
     // -------------------------------
-    // ANALYSIS & BREAK-EVEN
+    // CONCLUSIONS & SUMMARY
     // -------------------------------
     const conclusionsBox = document.getElementById("conclusionsBox");
     const summaryBox = document.getElementById("summaryBox");
-    summaryBox.style.display = "none"; // Hide redundant line
-
+    summaryBox.style.display = "none"; 
+    
     if (providers.length === 0) {
         conclusionsBox.innerHTML = "";
         drawGraph({ journeyMiles: miles, homeMiles: initialRange, efficiency, startChargeCost, adhocRate }, []);
@@ -95,58 +95,46 @@ function calculate() {
 
     const bestProvider = [...providers].sort((a, b) => a.totalJourneyCost - b.totalJourneyCost)[0];
 
-    // Charging Time Logic
+    // Charging Time Calculation
     const totalHoursDecimal = publicKwh / minSpeed;
     let hrs = Math.floor(totalHoursDecimal);
     let mins = Math.round((totalHoursDecimal % 1) * 60);
     if (mins === 60) { hrs++; mins = 0; }
     const timeLine = `<p class="secondary-result">Total hours charging at <strong>${minSpeed}kW</strong>: <strong>${hrs} hours and ${mins} minutes</strong>.</p>`;
 
-    // Break-even Calculation
+    // Break-even logic (Subscription specific)
     let breakEvenLine = "";
-    if (bestProvider.rate < adhocRate) {
-        const breakEvenPublicMiles = (bestProvider.subCost * efficiency * 100) / (adhocRate - bestProvider.rate);
-        const breakEvenTotalMiles = initialRange + breakEvenPublicMiles;
-        breakEvenLine = `<p class="main-result" style="margin-top:10px;">You need to drive at least <strong>${breakEvenTotalMiles.toFixed(0)} miles</strong> for the subscription to pay for itself.</p>`;
+    const isSaving = bestProvider.totalJourneyCost < totalAdhocCost;
+    
+    if (isSaving && bestProvider.subCost > 0 && bestProvider.rate < adhocRate) {
+        // Miles needed using public charging to offset subscription cost
+        const breakEvenPublicMiles = (bestProvider.subCost * 100 * efficiency) / (adhocRate - bestProvider.rate);
+        breakEvenLine = `<p class="main-result" style="margin-top:10px;">You need to drive at least <strong>${breakEvenPublicMiles.toFixed(0)} miles from your first public charge</strong> for the subscription to pay for itself.</p>`;
     }
-
-    // Speed Comparison Table
-    const comparisonSpeeds = [7, 11, 22, 50, 150];
-    let comparisonRows = "";
-    comparisonSpeeds.forEach(speed => {
-        const hDecimal = publicKwh / speed;
-        let h = Math.floor(hDecimal);
-        let m = Math.round((hDecimal % 1) * 60);
-        if (m === 60) { h++; m = 0; }
-        const isSelected = speed === minSpeed ? 'style="color: var(--accent); font-weight: bold;"' : "";
-        comparisonRows += `<tr ${isSelected}><td>${speed}kW</td><td>${h}h ${m}m</td></tr>`;
-    });
-
-    const speedTableHtml = `
-        <div class="speed-comparison-container">
-            <p style="font-size:0.9rem; margin-bottom:10px;"><strong>Public Charging Time Comparison</strong> (for ${publicKwh.toFixed(1)} kWh):</p>
-            <table class="mini-table">
-                <thead><tr><th>Speed</th><th>Time</th></tr></thead>
-                <tbody>${comparisonRows}</tbody>
-            </table>
-        </div>
-    `;
 
     const locationDisclaimer = `<p class="disclaimer">Note: A subscription will only save money if the provider has charging stations where you plan to travel. Additionally, charging times are based on constant speeds and do not account for the typical charging curve slowdown that occurs between 80% and 100% SoC.</p>`;
 
     let conclusionHTML = `<h3>Analysis</h3>`;
-    const isSaving = bestProvider.totalJourneyCost < totalAdhocCost;
-    const cardClass = isSaving ? "good" : "bad";
-
-    conclusionHTML += `
-        <div class="conclusion-card ${cardClass}">
-            <p class="main-result"><strong>${isSaving ? bestProvider.name : 'Standard Ad-hoc'}</strong> is most cost-effective for this <strong>${miles}-mile trip</strong>.</p>
-            ${breakEvenLine}
-            ${timeLine}
-            ${speedTableHtml}
-            ${locationDisclaimer}
-        </div>
-    `;
+    if (isSaving) {
+        conclusionHTML += `
+            <div class="conclusion-card good">
+                <p class="main-result"><strong>${bestProvider.name}</strong> is cheapest for a <strong>${miles}-mile trip</strong> (saving <strong>£${bestProvider.savings.toFixed(2)}</strong> vs Ad‑hoc).</p>
+                ${breakEvenLine}
+                <p class="secondary-result">Total cost including subscription: <strong>£${bestProvider.totalJourneyCost.toFixed(2)}</strong>.</p>
+                ${timeLine}
+                ${locationDisclaimer}
+            </div>
+        `;
+    } else {
+        conclusionHTML += `
+            <div class="conclusion-card bad">
+                <p class="main-result">Standard <strong>Ad‑hoc charging</strong> is the most cost‑effective choice for this trip at <strong>${minSpeed}kW</strong>.</p>
+                <p class="secondary-result">At <strong>${miles} miles</strong>, subscription savings do not cover the monthly fee.</p>
+                ${timeLine}
+                ${locationDisclaimer}
+            </div>
+        `;
+    }
 
     conclusionsBox.innerHTML = conclusionHTML;
     drawGraph({ journeyMiles: miles, homeMiles: initialRange, efficiency, startChargeCost, adhocRate }, providers);
