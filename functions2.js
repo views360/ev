@@ -55,12 +55,7 @@ function calculate() {
         const savings = totalAdhocCost - totalJourneyCost;
 
         providers.push({
-            id,
-            name,
-            subCost,
-            rate,
-            totalJourneyCost,
-            savings
+            id, name, subCost, rate, totalJourneyCost, savings
         });
     });
 
@@ -69,80 +64,53 @@ function calculate() {
     if (sortVal === "cheapest") {
         providers.sort((a, b) => a.totalJourneyCost - b.totalJourneyCost);
     } else if (sortVal === "az") {
-        providers.sort((a, b) => a.name.localeCompare(name));
+        providers.sort((a, b) => a.name.localeCompare(b.name));
     } else if (sortVal === "za") {
         providers.sort((a, b) => b.name.localeCompare(a.name));
     }
 
     // Render Table
     const resultsContainer = document.getElementById("providerResults");
-    let html = `
-        <table>
-            <thead>
-                <tr>
-                    <th>Provider</th>
-                    <th>Sub. Fee</th>
-                    <th>Rate</th>
-                    <th>Trip Cost</th>
-                    <th>vs. Ad-hoc</th>
-                </tr>
-            </thead>
-            <tbody>
-    `;
-
+    let html = `<table><thead><tr><th>Provider</th><th>Sub. Fee</th><th>Rate</th><th>Trip Cost</th><th>vs. Ad-hoc</th></tr></thead><tbody>`;
     providers.forEach(p => {
         const rowClass = p.savings > 0 ? "good" : (p.savings < 0 ? "bad" : "");
         const diffText = p.savings > 0 ? `-£${p.savings.toFixed(2)}` : `+£${Math.abs(p.savings).toFixed(2)}`;
-        
-        html += `
-            <tr class="${rowClass}">
-                <td>${p.name}</td>
-                <td>£${p.subCost.toFixed(2)}</td>
-                <td>${p.rate}p</td>
-                <td>£${p.totalJourneyCost.toFixed(2)}</td>
-                <td><strong>${diffText}</strong></td>
-            </tr>
-        `;
+        html += `<tr class="${rowClass}"><td>${p.name}</td><td>£${p.subCost.toFixed(2)}</td><td>${p.rate}p</td><td>£${p.totalJourneyCost.toFixed(2)}</td><td><strong>${diffText}</strong></td></tr>`;
     });
-
     html += `</tbody></table>`;
     resultsContainer.innerHTML = html;
 
     // -------------------------------
-    // CONCLUSIONS & ANALYSIS
+    // ANALYSIS & BREAK-EVEN
     // -------------------------------
     const conclusionsBox = document.getElementById("conclusionsBox");
     const summaryBox = document.getElementById("summaryBox");
-    
-    const core = {
-        journeyMiles: miles,
-        homeMiles: initialRange,
-        efficiency: efficiency,
-        startChargeCost: startChargeCost,
-        adhocRate: adhocRate
-    };
+    summaryBox.style.display = "none"; // Hide redundant line
 
     if (providers.length === 0) {
         conclusionsBox.innerHTML = "";
-        summaryBox.style.display = "none";
-        drawGraph(core, []);
+        drawGraph({ journeyMiles: miles, homeMiles: initialRange, efficiency, startChargeCost, adhocRate }, []);
         return;
     }
 
     const bestProvider = [...providers].sort((a, b) => a.totalJourneyCost - b.totalJourneyCost)[0];
-    
-    // Ensure Line 4 (summaryBox) is hidden
-    summaryBox.style.display = "none";
 
-    // Primary Charging Time Calc
+    // Charging Time Logic
     const totalHoursDecimal = publicKwh / minSpeed;
     let hrs = Math.floor(totalHoursDecimal);
     let mins = Math.round((totalHoursDecimal % 1) * 60);
     if (mins === 60) { hrs++; mins = 0; }
-    
     const timeLine = `<p class="secondary-result">Total hours charging at <strong>${minSpeed}kW</strong>: <strong>${hrs} hours and ${mins} minutes</strong>.</p>`;
 
-    // Public Charging Speed Comparison Table
+    // Break-even Calculation
+    let breakEvenLine = "";
+    if (bestProvider.rate < adhocRate) {
+        const breakEvenPublicMiles = (bestProvider.subCost * efficiency * 100) / (adhocRate - bestProvider.rate);
+        const breakEvenTotalMiles = initialRange + breakEvenPublicMiles;
+        breakEvenLine = `<p class="main-result" style="margin-top:10px;">You need to drive at least <strong>${breakEvenTotalMiles.toFixed(0)} miles</strong> for the subscription to pay for itself.</p>`;
+    }
+
+    // Speed Comparison Table
     const comparisonSpeeds = [7, 11, 22, 50, 150];
     let comparisonRows = "";
     comparisonSpeeds.forEach(speed => {
@@ -150,54 +118,36 @@ function calculate() {
         let h = Math.floor(hDecimal);
         let m = Math.round((hDecimal % 1) * 60);
         if (m === 60) { h++; m = 0; }
-        
         const isSelected = speed === minSpeed ? 'style="color: var(--accent); font-weight: bold;"' : "";
-        comparisonRows += `<tr ${isSelected}><td>${speed}kW</td><td>${h} hours and ${m} minutes</td></tr>`;
+        comparisonRows += `<tr ${isSelected}><td>${speed}kW</td><td>${h}h ${m}m</td></tr>`;
     });
 
     const speedTableHtml = `
         <div class="speed-comparison-container">
-            <p><strong>Public Charging Time Comparison</strong> (for the ${publicKwh.toFixed(1)} kWh needed):</p>
+            <p style="font-size:0.9rem; margin-bottom:10px;"><strong>Public Charging Time Comparison</strong> (for ${publicKwh.toFixed(1)} kWh):</p>
             <table class="mini-table">
-                <thead>
-                    <tr>
-                        <th>Speed</th>
-                        <th>Time Required</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${comparisonRows}
-                </tbody>
+                <thead><tr><th>Speed</th><th>Time</th></tr></thead>
+                <tbody>${comparisonRows}</tbody>
             </table>
         </div>
     `;
-    
-    let conclusionHTML = `<h3>Analysis</h3>`;
+
     const locationDisclaimer = `<p class="disclaimer">Note: A subscription will only save money if the provider has charging stations where you plan to travel. Additionally, charging times are based on constant speeds and do not account for the typical charging curve slowdown that occurs between 80% and 100% SoC.</p>`;
-    
-    if (bestProvider.totalJourneyCost < totalAdhocCost) {
-        conclusionHTML += `
-            <div class="conclusion-card good">
-                <p class="main-result"><strong>${bestProvider.name}</strong> is cheapest for a <strong>${miles}-mile trip charging at ${minSpeed}kW</strong> (saving <strong>£${bestProvider.savings.toFixed(2)}</strong> vs Ad‑hoc).</p>
-                <p class="secondary-result">Total cost including subscription: <strong>£${bestProvider.totalJourneyCost.toFixed(2)}</strong>.</p>
-                ${timeLine}
-                ${speedTableHtml}
-                ${locationDisclaimer}
-            </div>
-        `;
-    } else {
-        conclusionHTML += `
-            <div class="conclusion-card bad">
-                <p class="main-result">Standard <strong>Ad‑hoc charging</strong> is the most cost‑effective choice for this trip at <strong>${minSpeed}kW</strong>.</p>
-                <p class="secondary-result">At <strong>${miles} miles</strong>, subscription savings do not cover the monthly fee.</p>
-                ${timeLine}
-                ${speedTableHtml}
-                ${locationDisclaimer}
-            </div>
-        `;
-    }
+
+    let conclusionHTML = `<h3>Analysis</h3>`;
+    const isSaving = bestProvider.totalJourneyCost < totalAdhocCost;
+    const cardClass = isSaving ? "good" : "bad";
+
+    conclusionHTML += `
+        <div class="conclusion-card ${cardClass}">
+            <p class="main-result"><strong>${isSaving ? bestProvider.name : 'Standard Ad-hoc'}</strong> is most cost-effective for this <strong>${miles}-mile trip</strong>.</p>
+            ${breakEvenLine}
+            ${timeLine}
+            ${speedTableHtml}
+            ${locationDisclaimer}
+        </div>
+    `;
 
     conclusionsBox.innerHTML = conclusionHTML;
-    drawGraph(core, providers);
+    drawGraph({ journeyMiles: miles, homeMiles: initialRange, efficiency, startChargeCost, adhocRate }, providers);
 }
-
