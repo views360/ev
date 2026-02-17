@@ -11,7 +11,7 @@ function toggleTheme() {
     const body = document.body;
     const btn = document.getElementById("themeToggle");
     body.classList.toggle("light-mode");
-    btn.textContent = body.classList.contains("light-mode") ? "Switch to Light View" : "Switch to Light View";
+    btn.textContent = body.classList.contains("light-mode") ? "Switch to Dark View" : "Switch to Light View";
 }
 
 /**
@@ -107,7 +107,7 @@ function updateProviderFields(id) {
         speedSelect.innerHTML = speeds.map(s => `<option value="${s}">${s}kW</option>`).join("");
         speedRow.style.display = "flex";
         
-        // Default to first speed, enforceSpeedRules will adjust if it's too slow
+        // Initially set to the first (lowest) rate, then let enforceSpeedRules snap it to the minimum required
         rateInput.value = p.rates[speeds[0]];
         enforceSpeedRules(); 
     } else {
@@ -134,6 +134,7 @@ function enforceSpeedRules() {
     boxes.forEach(box => {
         const id = box.dataset.id;
         const speedSelect = document.getElementById(`speed${id}`);
+        // If the speed dropdown isn't visible/existing, this provider has a flat rate
         if (!speedSelect || speedSelect.offsetParent === null) return;
 
         let firstValidValue = null;
@@ -141,19 +142,17 @@ function enforceSpeedRules() {
             const val = parseFloat(opt.value);
             const isInvalid = val < minSpeed;
             opt.disabled = isInvalid;
+            // Find the lowest speed that satisfies the minimum requirement
             if (!isInvalid && firstValidValue === null) firstValidValue = opt.value;
         });
 
-        if (speedSelect.selectedOptions[0]?.disabled && firstValidValue !== null) {
+        // Always snap the selection to the lowest valid speed to match the "minimum desired" requirement
+        if (firstValidValue !== null) {
             speedSelect.value = firstValidValue;
             updateRateFromSpeed(id);
         }
     });
 }
-
-// ===============================
-// Missing Button Handlers
-// ===============================
 
 function addProvider() {
     createProviderBox();
@@ -161,13 +160,10 @@ function addProvider() {
 
 function addAllProviders() {
     const minSpeed = parseFloat(document.getElementById("minSpeed").value) || 0;
-    
-    // Clear current list to avoid massive duplicates if clicked twice
     document.getElementById("providers").innerHTML = "";
 
     PRESETS.forEach(preset => {
         let canSupportSpeed = false;
-
         if (preset.rates.default) {
             canSupportSpeed = true; 
         } else {
@@ -192,7 +188,6 @@ function duplicateLastProvider() {
     createProviderBox();
     const newId = providerCount;
 
-    // Manually sync values
     document.getElementById(`name${newId}`).value = document.getElementById(`name${lastId}`).value;
     document.getElementById(`preset${newId}`).value = document.getElementById(`preset${lastId}`).value;
     document.getElementById(`subCost${newId}`).value = document.getElementById(`subCost${lastId}`).value;
