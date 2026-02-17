@@ -69,7 +69,7 @@ function calculate() {
     if (sortVal === "cheapest") {
         providers.sort((a, b) => a.totalJourneyCost - b.totalJourneyCost);
     } else if (sortVal === "az") {
-        providers.sort((a, b) => a.name.localeCompare(b.name));
+        providers.sort((a, b) => a.name.localeCompare(name));
     } else if (sortVal === "za") {
         providers.sort((a, b) => b.name.localeCompare(a.name));
     }
@@ -109,7 +109,7 @@ function calculate() {
     resultsContainer.innerHTML = html;
 
     // -------------------------------
-    // CONCLUSIONS & SUMMARY
+    // CONCLUSIONS & ANALYSIS
     // -------------------------------
     const conclusionsBox = document.getElementById("conclusionsBox");
     const summaryBox = document.getElementById("summaryBox");
@@ -131,10 +131,10 @@ function calculate() {
 
     const bestProvider = [...providers].sort((a, b) => a.totalJourneyCost - b.totalJourneyCost)[0];
     
-    // Hide summaryBox
+    // Ensure Line 4 (summaryBox) is hidden
     summaryBox.style.display = "none";
 
-    // 1. Calculate charging time for selected speed
+    // Primary Charging Time Calc
     const totalHoursDecimal = publicKwh / minSpeed;
     let hrs = Math.floor(totalHoursDecimal);
     let mins = Math.round((totalHoursDecimal % 1) * 60);
@@ -142,24 +142,32 @@ function calculate() {
     
     const timeLine = `<p class="secondary-result">Total hours charging at <strong>${minSpeed}kW</strong>: <strong>${hrs} hours and ${mins} minutes</strong>.</p>`;
 
-    // 2. Generate Comparison Table
-    const compareSpeeds = [7, 11, 22, 50, 150];
-    let speedRows = "";
-    compareSpeeds.forEach(s => {
-        const hDec = publicKwh / s;
-        let h = Math.floor(hDec);
-        let m = Math.round((hDec % 1) * 60);
+    // Public Charging Speed Comparison Table
+    const comparisonSpeeds = [7, 11, 22, 50, 150];
+    let comparisonRows = "";
+    comparisonSpeeds.forEach(speed => {
+        const hDecimal = publicKwh / speed;
+        let h = Math.floor(hDecimal);
+        let m = Math.round((hDecimal % 1) * 60);
         if (m === 60) { h++; m = 0; }
-        const highlight = s === minSpeed ? 'style="color: var(--accent); font-weight: bold;"' : "";
-        speedRows += `<tr ${highlight}><td>${s}kW</td><td>${h}h ${m}m</td></tr>`;
+        
+        const isSelected = speed === minSpeed ? 'style="color: var(--accent); font-weight: bold;"' : "";
+        comparisonRows += `<tr ${isSelected}><td>${speed}kW</td><td>${h} hours and ${m} minutes</td></tr>`;
     });
 
-    const comparisonTable = `
-        <div class="speed-comparison">
-            <label>Charging Time Comparison</label>
+    const speedTableHtml = `
+        <div class="speed-comparison-container">
+            <p><strong>Public Charging Time Comparison</strong> (for the ${publicKwh.toFixed(1)} kWh needed):</p>
             <table class="mini-table">
-                <thead><tr><th>Speed</th><th>Time Required</th></tr></thead>
-                <tbody>${speedRows}</tbody>
+                <thead>
+                    <tr>
+                        <th>Speed</th>
+                        <th>Time Required</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${comparisonRows}
+                </tbody>
             </table>
         </div>
     `;
@@ -173,7 +181,7 @@ function calculate() {
                 <p class="main-result"><strong>${bestProvider.name}</strong> is cheapest for a <strong>${miles}-mile trip charging at ${minSpeed}kW</strong> (saving <strong>£${bestProvider.savings.toFixed(2)}</strong> vs Ad‑hoc).</p>
                 <p class="secondary-result">Total cost including subscription: <strong>£${bestProvider.totalJourneyCost.toFixed(2)}</strong>.</p>
                 ${timeLine}
-                ${comparisonTable}
+                ${speedTableHtml}
                 ${locationDisclaimer}
             </div>
         `;
@@ -183,7 +191,7 @@ function calculate() {
                 <p class="main-result">Standard <strong>Ad‑hoc charging</strong> is the most cost‑effective choice for this trip at <strong>${minSpeed}kW</strong>.</p>
                 <p class="secondary-result">At <strong>${miles} miles</strong>, subscription savings do not cover the monthly fee.</p>
                 ${timeLine}
-                ${comparisonTable}
+                ${speedTableHtml}
                 ${locationDisclaimer}
             </div>
         `;
