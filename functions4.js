@@ -4,48 +4,6 @@
 // ===============================
 
 // -------------------------------
-// LOCAL STORAGE PERSISTENCE
-// -------------------------------
-
-function saveToLocal() {
-    const data = {};
-    [
-        "journeyMiles",
-        "batteryKwh",
-        "soc",
-        "efficiency",
-        "adhoc",
-        "startChargeRate",
-        "startChargeType",
-        "minSpeed"
-    ].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) data[id] = el.value;
-    });
-    localStorage.setItem("ev_calc_trip_data", JSON.stringify(data));
-}
-
-function loadFromLocal() {
-    const saved = localStorage.getItem("ev_calc_trip_data");
-    if (!saved) return;
-
-    const data = JSON.parse(saved);
-    Object.keys(data).forEach(id => {
-        const el = document.getElementById(id);
-        if (el && data[id] !== undefined) {
-            el.value = data[id];
-        }
-    });
-
-    // Only auto-trigger if not loading from a shared URL
-    const params = new URLSearchParams(window.location.search);
-    if (!params.has("journeyMiles")) {
-        enforceSpeedRules();
-        calculate();
-    }
-}
-
-// -------------------------------
 // SHAREABLE LINK
 // -------------------------------
 function shareLink() {
@@ -68,6 +26,7 @@ function shareLink() {
 
     boxes.forEach((box, i) => {
         const id = box.dataset.id;
+
         params.set(`p${i}n`, document.getElementById(`name${id}`).value);
         params.set(`p${i}s`, document.getElementById(`subCost${id}`).value);
         params.set(`p${i}r`, document.getElementById(`rate${id}`).value);
@@ -78,7 +37,12 @@ function shareLink() {
         }
     });
 
-    const url = window.location.origin + window.location.pathname + "?" + params.toString();
+    const url =
+        window.location.origin +
+        window.location.pathname +
+        "?" +
+        params.toString();
+
     navigator.clipboard.writeText(url).then(() => {
         alert("Shareable link copied!");
     });
@@ -89,6 +53,7 @@ function shareLink() {
 // -------------------------------
 function loadFromUrl() {
     const params = new URLSearchParams(window.location.search);
+
     if (!params.has("journeyMiles")) return;
 
     [
@@ -110,9 +75,11 @@ function loadFromUrl() {
     document.getElementById("providers").innerHTML = "";
 
     let idx = 0;
+
     while (params.has(`p${idx}n`)) {
         createProviderBox();
         const id = providerCount;
+
         document.getElementById(`name${id}`).value = params.get(`p${idx}n`);
         document.getElementById(`subCost${id}`).value = params.get(`p${idx}s`);
         document.getElementById(`rate${id}`).value = params.get(`p${idx}r`);
@@ -121,6 +88,7 @@ function loadFromUrl() {
         if (speedSelect && params.has(`p${idx}spd`)) {
             speedSelect.value = params.get(`p${idx}spd`);
         }
+
         idx++;
     }
 
@@ -133,19 +101,24 @@ function loadFromUrl() {
 // -------------------------------
 async function exportPdf() {
     const resultsEl = document.getElementById("results");
+
     if (!resultsEl || resultsEl.style.display === "none") {
         alert("Enter data first.");
         return;
     }
 
     const { jsPDF } = window.jspdf;
+
     const canvas = await html2canvas(document.body, {
         scale: 2,
-        backgroundColor: getComputedStyle(document.body).getPropertyValue("--bg").trim()
+        backgroundColor: getComputedStyle(document.body)
+            .getPropertyValue("--bg")
+            .trim()
     });
 
     const imgData = canvas.toDataURL("image/png");
     const pdf = new jsPDF("p", "mm", "a4");
+
     const width = pdf.internal.pageSize.getWidth();
     const height = (canvas.height * width) / canvas.width;
 
@@ -157,7 +130,6 @@ async function exportPdf() {
 // RESET ALL
 // -------------------------------
 function resetAll() {
-    localStorage.removeItem("ev_calc_trip_data");
     window.location.href = window.location.pathname;
 }
 
@@ -173,26 +145,19 @@ function resetAll() {
     "startChargeRate",
     "startChargeType"
 ].forEach(id => {
-    document.getElementById(id).addEventListener("input", () => {
-        saveToLocal();
-        calculate();
-    });
+    document.getElementById(id).addEventListener("input", calculate);
 });
 
+// ⭐ CRITICAL: Minimum speed listener
 document.getElementById("minSpeed").addEventListener("input", () => {
-    saveToLocal();
     enforceSpeedRules();
     calculate();
 });
 
+// Load presets and restore state from URL
 fetch("providers.json")
     .then(r => r.json())
     .then(data => {
         PRESETS = data.providers;
-        const params = new URLSearchParams(window.location.search);
-        if (params.has("journeyMiles")) {
-            loadFromUrl();
-        } else {
-            loadFromLocal();
-        }
+        loadFromUrl();
     });
