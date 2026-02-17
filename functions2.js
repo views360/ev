@@ -131,19 +131,41 @@ function calculate() {
 
     const bestProvider = [...providers].sort((a, b) => a.totalJourneyCost - b.totalJourneyCost)[0];
     
-    // Hide summaryBox to remove redundant Line 4
+    // Hide summaryBox
     summaryBox.style.display = "none";
 
-    // Calculate charging time
+    // 1. Calculate charging time for selected speed
     const totalHoursDecimal = publicKwh / minSpeed;
     let hrs = Math.floor(totalHoursDecimal);
     let mins = Math.round((totalHoursDecimal % 1) * 60);
     if (mins === 60) { hrs++; mins = 0; }
     
     const timeLine = `<p class="secondary-result">Total hours charging at <strong>${minSpeed}kW</strong>: <strong>${hrs} hours and ${mins} minutes</strong>.</p>`;
+
+    // 2. Generate Comparison Table
+    const compareSpeeds = [7, 11, 22, 50, 150];
+    let speedRows = "";
+    compareSpeeds.forEach(s => {
+        const hDec = publicKwh / s;
+        let h = Math.floor(hDec);
+        let m = Math.round((hDec % 1) * 60);
+        if (m === 60) { h++; m = 0; }
+        const highlight = s === minSpeed ? 'style="color: var(--accent); font-weight: bold;"' : "";
+        speedRows += `<tr ${highlight}><td>${s}kW</td><td>${h}h ${m}m</td></tr>`;
+    });
+
+    const comparisonTable = `
+        <div class="speed-comparison">
+            <label>Charging Time Comparison</label>
+            <table class="mini-table">
+                <thead><tr><th>Speed</th><th>Time Required</th></tr></thead>
+                <tbody>${speedRows}</tbody>
+            </table>
+        </div>
+    `;
     
     let conclusionHTML = `<h3>Analysis</h3>`;
-    const locationDisclaimer = `<p class="disclaimer">Note: Cost is only one factor — a subscription will only save money if the provider has charging stations where you plan to travel.</p>`;
+    const locationDisclaimer = `<p class="disclaimer">Note: A subscription will only save money if the provider has charging stations where you plan to travel.</p>`;
 
     if (bestProvider.totalJourneyCost < totalAdhocCost) {
         conclusionHTML += `
@@ -151,6 +173,7 @@ function calculate() {
                 <p class="main-result"><strong>${bestProvider.name}</strong> is cheapest for a <strong>${miles}-mile trip charging at ${minSpeed}kW</strong> (saving <strong>£${bestProvider.savings.toFixed(2)}</strong> vs Ad‑hoc).</p>
                 <p class="secondary-result">Total cost including subscription: <strong>£${bestProvider.totalJourneyCost.toFixed(2)}</strong>.</p>
                 ${timeLine}
+                ${comparisonTable}
                 ${locationDisclaimer}
             </div>
         `;
@@ -160,6 +183,7 @@ function calculate() {
                 <p class="main-result">Standard <strong>Ad‑hoc charging</strong> is the most cost‑effective choice for this trip at <strong>${minSpeed}kW</strong>.</p>
                 <p class="secondary-result">At <strong>${miles} miles</strong>, subscription savings do not cover the monthly fee.</p>
                 ${timeLine}
+                ${comparisonTable}
                 ${locationDisclaimer}
             </div>
         `;
