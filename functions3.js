@@ -1,6 +1,6 @@
 // ===============================
 // functions3.js
-// Graphing Engine (Corrected)
+// Graphing Engine (Robust Version)
 // ===============================
 
 function drawGraph(core, providers) {
@@ -9,24 +9,14 @@ function drawGraph(core, providers) {
 
     const maxMiles = Math.max(core.journeyMiles, 500);
     const steps = 20;
-
     const labels = [];
     const adhocData = [];
 
-    // -------------------------------
-    // BUILD AD-HOC LINE
-    // -------------------------------
     for (let i = 0; i <= steps; i++) {
         const m = (maxMiles * i) / steps;
         labels.push(m.toFixed(0));
-
-        const publicMilesAtM = Math.max(0, m - core.homeMiles);
-        const publicKwhAtM = publicMilesAtM / core.efficiency;
-
-        adhocData.push(
-            core.startChargeCost +
-            (publicKwhAtM * core.adhocRate / 100)
-        );
+        const publicKwhAtM = Math.max(0, m - core.homeMiles) / core.efficiency;
+        adhocData.push(core.startChargeCost + (publicKwhAtM * core.adhocRate / 100));
     }
 
     const datasets = [{
@@ -37,88 +27,69 @@ function drawGraph(core, providers) {
         tension: 0.2
     }];
 
-    // -------------------------------
-    // PROVIDER LINES
-    // -------------------------------
     providers.forEach(p => {
-        const color = getProviderColor(p.name);
-        const data = [];
-
         const preset = PRESETS.find(pr => pr.name === p.name);
         let activeRate = p.rate;
 
-        // Determine correct rate for tiered providers
+        // Use tiered logic only if preset exists and has multiple rates
         if (preset && preset.rates && !preset.rates.default) {
-            const speeds = Object.keys(preset.rates)
-                .map(Number)
-                .filter(s => s >= core.minSpeed) // Uses core.minSpeed from functions2.js
-                .sort((a, b) => a - b);
+            const keys = Object.keys(preset.rates);
+            const validSpeeds = keys
+                .filter(k => parseFloat(k) >= core.minSpeed)
+                .sort((a, b) => parseFloat(a) - parseFloat(b));
 
-            if (speeds.length === 0) return; // Skip if no available speed meets minimum
-            activeRate = preset.rates[speeds[0]];
+            if (validSpeeds.length > 0) {
+                activeRate = preset.rates[validSpeeds[0]];
+            } else {
+                return; // Skip if no speeds meet minimum
+            }
         }
 
+        if (isNaN(activeRate)) return;
+
+        const data = [];
         for (let i = 0; i <= steps; i++) {
             const m = (maxMiles * i) / steps;
-            const publicMilesAtM = Math.max(0, m - core.homeMiles);
-            const publicKwhAtM = publicMilesAtM / core.efficiency;
-
-            data.push(
-                p.subCost +
-                core.startChargeCost +
-                (publicKwhAtM * activeRate / 100)
-            );
+            const publicKwhAtM = Math.max(0, m - core.homeMiles) / core.efficiency;
+            data.push(p.subCost + core.startChargeCost + (publicKwhAtM * activeRate / 100));
         }
 
         datasets.push({
             label: `${p.name} (£)`,
             data,
-            borderColor: color,
+            borderColor: getProviderColor(p.name),
             tension: 0.2
         });
     });
 
-    // -------------------------------
-    // RENDER CHART
-    // -------------------------------
     chart = new Chart(ctx, {
         type: "line",
         data: { labels, datasets },
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            interaction: { mode: "index", intersect: false },
-            plugins: {
-                legend: {
-                    labels: {
-                        color: getComputedStyle(document.body).getPropertyValue("--text").trim()
-                    }
-                }
-            },
             scales: {
-                x: {
-                    title: { display: true, text: "Trip Miles", color: "#9ca3af" },
-                    ticks: { color: "#9ca3af" },
-                    grid: { color: "rgba(31, 41, 55, 0.5)" }
-                },
-                y: {
-                    title: { display: true, text: "Total Cost (£)", color: "#9ca3af" },
-                    ticks: { color: "#9ca3af" },
-                    grid: { color: "rgba(31, 41, 55, 0.5)" }
-                }
+                x: { title: { display: true, text: "Trip Miles", color: "#9ca3af" }, ticks: { color: "#9ca3af" } },
+                y: { title: { display: true, text: "Total Cost (£)", color: "#9ca3af" }, ticks: { color: "#9ca3af" } }
+            },
+            plugins: {
+                legend: { labels: { color: getComputedStyle(document.body).getPropertyValue("--text").trim() } }
             }
         }
     });
 }
 
 function getProviderColor(name) {
-    if (name.includes("Be.EV")) return "#bef264";
-    if (name.includes("Tesla")) return "#f87171";
-    if (name.includes("BP Pulse")) return "#22c55e";
-    if (name.includes("Shell Recharge")) return "#fbbf24";
-    if (name.includes("Pod Point")) return "#38bdf8";
-    if (name.includes("Ionity")) return "#a855f7";
-    if (name.includes("Osprey")) return "#f472b6";
-    if (name.includes("Instavolt")) return "#fb923c";
+    const colors = {
+        "Be.EV": "#bef264",
+        "Tesla": "#f87171",
+        "BP Pulse": "#22c55e",
+        "Shell Recharge": "#fbbf24",
+        "Pod Point": "#38bdf8",
+        "Ionity": "#a855f7"
+    };
+    for (const key in colors) {
+        if (name.includes(key)) return colors[key];
+    }
     return "#94a3b8";
 }
