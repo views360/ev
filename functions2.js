@@ -107,7 +107,7 @@ function calculate() {
     const bestProvider = providers[0];
     let conclusionHTML = `<h3>Analysis</h3>`;
     
-    const locationDisclaimer = `<p class="disclaimer">Note: Cost is only one factor—a subscription only saves money if you can actually use their network.</p>`;
+    const locationDisclaimer = `<p class="disclaimer">Note: Cost is only one factor — a subscription will only save money if the provider has charging stations where you plan to travel.</p>`;
 
     if (bestProvider.totalJourneyCost < totalAdhocCost) {
         summaryBox.className = "summary good";
