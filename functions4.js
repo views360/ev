@@ -29,6 +29,12 @@ function loadFromLocalStorage() {
         const el = document.getElementById(id);
         if (el) el.value = data[id];
     });
+
+    // TRIGGER CALCULATION:
+    // Once data is loaded, we update the UI logic and run the calculations
+    // to reveal the results section immediately.
+    enforceSpeedRules();
+    calculate();
 }
 
 // -------------------------------
@@ -158,7 +164,7 @@ async function exportPdf() {
 // RESET ALL
 // -------------------------------
 function resetAll() {
-    localStorage.removeItem("ev_calc_settings"); // Clear storage on reset
+    localStorage.removeItem("ev_calc_settings");
     window.location.href = window.location.pathname;
 }
 
@@ -166,10 +172,7 @@ function resetAll() {
 // INITIALISATION
 // -------------------------------
 
-// 1. Load from Local Storage first
-loadFromLocalStorage();
-
-// 2. Attach Listeners for Calculation and Auto-Saving
+// 1. Attach Event Listeners first
 [
     "journeyMiles",
     "batteryKwh",
@@ -181,14 +184,26 @@ loadFromLocalStorage();
     "minSpeed"
 ].forEach(id => {
     const el = document.getElementById(id);
-    el.addEventListener("input", calculate);
+    // Standard calculation trigger
+    el.addEventListener("input", () => {
+        if(id === "minSpeed") enforceSpeedRules();
+        calculate();
+    });
+    // Persistence trigger
     el.addEventListener("input", saveToLocalStorage);
 });
 
-// 3. Load presets and restore state from URL (URL overrides Storage)
+// 2. Fetch presets then handle data restoration
 fetch("providers.json")
     .then(r => r.json())
     .then(data => {
         PRESETS = data.providers;
-        loadFromUrl();
+        
+        // Priority: URL parameters first, then Local Storage
+        const params = new URLSearchParams(window.location.search);
+        if (params.has("journeyMiles")) {
+            loadFromUrl();
+        } else {
+            loadFromLocalStorage();
+        }
     });
