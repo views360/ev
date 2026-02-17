@@ -133,6 +133,14 @@ function calculate() {
     
     // Hide summaryBox to remove redundant Line 4
     summaryBox.style.display = "none";
+
+    // Calculate charging time
+    const totalHoursDecimal = publicKwh / minSpeed;
+    let hrs = Math.floor(totalHoursDecimal);
+    let mins = Math.round((totalHoursDecimal % 1) * 60);
+    if (mins === 60) { hrs++; mins = 0; }
+    
+    const timeLine = `<p class="secondary-result">Total hours charging at <strong>${minSpeed}kW</strong>: <strong>${hrs} hours and ${mins} minutes</strong>.</p>`;
     
     let conclusionHTML = `<h3>Analysis</h3>`;
     const locationDisclaimer = `<p class="disclaimer">Note: Cost is only one factor — a subscription will only save money if the provider has charging stations where you plan to travel.</p>`;
@@ -142,6 +150,7 @@ function calculate() {
             <div class="conclusion-card good">
                 <p class="main-result"><strong>${bestProvider.name}</strong> is cheapest for a <strong>${miles}-mile trip charging at ${minSpeed}kW</strong> (saving <strong>£${bestProvider.savings.toFixed(2)}</strong> vs Ad‑hoc).</p>
                 <p class="secondary-result">Total cost including subscription: <strong>£${bestProvider.totalJourneyCost.toFixed(2)}</strong>.</p>
+                ${timeLine}
                 ${locationDisclaimer}
             </div>
         `;
@@ -150,6 +159,7 @@ function calculate() {
             <div class="conclusion-card bad">
                 <p class="main-result">Standard <strong>Ad‑hoc charging</strong> is the most cost‑effective choice for this trip at <strong>${minSpeed}kW</strong>.</p>
                 <p class="secondary-result">At <strong>${miles} miles</strong>, subscription savings do not cover the monthly fee.</p>
+                ${timeLine}
                 ${locationDisclaimer}
             </div>
         `;
