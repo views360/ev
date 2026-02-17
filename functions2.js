@@ -173,7 +173,7 @@ function calculate() {
     `;
     
     let conclusionHTML = `<h3>Analysis</h3>`;
-    const locationDisclaimer = `<p class="disclaimer">Note: A subscription will only save money if the provider has charging stations where you plan to travel.</p>`;
+    const locationDisclaimer = `<p class="disclaimer">Note: A subscription will only save money if the provider has charging stations where you plan to travel. Also, the above timings do not take into account the slowdown between 80% and 100% charge.</p>`;
 
     if (bestProvider.totalJourneyCost < totalAdhocCost) {
         conclusionHTML += `
