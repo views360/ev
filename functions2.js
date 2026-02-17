@@ -131,7 +131,7 @@ function calculate() {
 
     const bestProvider = [...providers].sort((a, b) => a.totalJourneyCost - b.totalJourneyCost)[0];
     
-    // Line 4 removed by keeping summaryBox hidden
+    // Hide summaryBox to remove redundant Line 4
     summaryBox.style.display = "none";
     
     let conclusionHTML = `<h3>Analysis</h3>`;
@@ -140,7 +140,7 @@ function calculate() {
     if (bestProvider.totalJourneyCost < totalAdhocCost) {
         conclusionHTML += `
             <div class="conclusion-card good">
-                <p class="main-result"><strong>${bestProvider.name}</strong> is cheapest for a <strong>${miles}-mile trip</strong> (saving <strong>£${bestProvider.savings.toFixed(2)}</strong> vs Ad‑hoc).</p>
+                <p class="main-result"><strong>${bestProvider.name}</strong> is cheapest for a <strong>${miles}-mile trip charging at ${minSpeed}kW</strong> (saving <strong>£${bestProvider.savings.toFixed(2)}</strong> vs Ad‑hoc).</p>
                 <p class="secondary-result">Total cost including subscription: <strong>£${bestProvider.totalJourneyCost.toFixed(2)}</strong>.</p>
                 ${locationDisclaimer}
             </div>
@@ -148,7 +148,7 @@ function calculate() {
     } else {
         conclusionHTML += `
             <div class="conclusion-card bad">
-                <p class="main-result">Standard <strong>Ad‑hoc charging</strong> is the most cost‑effective choice for this trip.</p>
+                <p class="main-result">Standard <strong>Ad‑hoc charging</strong> is the most cost‑effective choice for this trip at <strong>${minSpeed}kW</strong>.</p>
                 <p class="secondary-result">At <strong>${miles} miles</strong>, subscription savings do not cover the monthly fee.</p>
                 ${locationDisclaimer}
             </div>
