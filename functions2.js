@@ -136,6 +136,9 @@ function calculate() {
     const locationDisclaimer = `<p class="disclaimer">Note: Cost is only one factor — a subscription will only save money if the provider has charging stations where you plan to travel.</p>`;
 
     if (bestProvider.totalJourneyCost < totalAdhocCost) {
+        summaryBox.className = "summary good";
+        summaryBox.textContent = `${bestProvider.name} is the most cost-effective choice for this trip.`;
+        
         conclusionHTML += `
             <div class="conclusion-card good">
                 <p class="main-result"><strong>${bestProvider.name}</strong> is cheapest for a <strong>${miles}-mile trip</strong> (saving <strong>£${bestProvider.savings.toFixed(2)}</strong> vs Ad‑hoc).</p>
@@ -144,6 +147,9 @@ function calculate() {
             </div>
         `;
     } else {
+        summaryBox.className = "summary bad";
+        summaryBox.textContent = `Standard Ad-hoc charging is cheaper for this trip distance.`;
+        
         conclusionHTML += `
             <div class="conclusion-card bad">
                 <p class="main-result">Standard <strong>Ad‑hoc charging</strong> is the most cost‑effective choice for this trip.</p>
