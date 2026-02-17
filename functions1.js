@@ -48,55 +48,49 @@ function createProviderBox(preset) {
     box.innerHTML = `
         <div class="provider-header">
             <input type="text" id="name${id}" placeholder="Provider Name" oninput="calculate()">
-            <button class="remove-btn" onclick="removeProvider(${id})">×</button>
+            <button class="remove-btn" onclick="this.parentElement.parentElement.remove(); calculate();">×</button>
         </div>
-        
-        <div class="grid-3">
+        <div class="input-group">
+            <label>Preset</label>
+            <select id="preset${id}" onchange="updateProviderFields(${id})">${presetOptions}</select>
+        </div>
+        <div class="input-row">
             <div class="input-group">
-                <label>Preset</label>
-                <select id="preset${id}" onchange="applyPreset(${id})">
-                    ${presetOptions}
-                </select>
-            </div>
-            <div class="input-group">
-                <label>Monthly Fee (£)</label>
-                <input type="number" id="subCost${id}" value="0" step="0.01" oninput="calculate()">
+                <label>Monthly Sub (£)</label>
+                <input type="number" id="subCost${id}" step="0.01" value="0" oninput="calculate()">
             </div>
             <div class="input-group">
                 <label>Rate (p/kWh)</label>
-                <input type="number" id="rate${id}" value="79" oninput="calculate()">
+                <input type="number" id="rate${id}" step="0.1" value="0" oninput="calculate()">
             </div>
         </div>
-
-        <div id="speedRow${id}" class="input-group" style="display:none; margin-top:10px;">
-            <label>Charger Speed</label>
+        <div class="input-group" id="speedRow${id}" style="display:none">
+            <label>Charging Speed</label>
             <select id="speed${id}" onchange="updateRateFromSpeed(${id})"></select>
         </div>
     `;
 
     document.getElementById("providers").appendChild(box);
-
+    
     if (preset) {
-        document.getElementById(`preset${id}`).value = preset.name;
-        applyPreset(id);
+        const select = document.getElementById(`preset${id}`);
+        select.value = preset.name;
+        updateProviderFields(id);
     }
 }
 
-function removeProvider(id) {
-    const box = document.querySelector(`.provider-box[data-id="${id}"]`);
-    if (box) box.remove();
-    calculate();
-}
-
-function applyPreset(id) {
+function updateProviderFields(id) {
     const presetName = document.getElementById(`preset${id}`).value;
     const nameInput = document.getElementById(`name${id}`);
-    const subInput = document.getElementById(`subCost${id}`);
+    const subCostInput = document.getElementById(`subCost${id}`);
     const rateInput = document.getElementById(`rate${id}`);
     const speedRow = document.getElementById(`speedRow${id}`);
     const speedSelect = document.getElementById(`speed${id}`);
 
-    if (presetName === "Custom") {
+    if (presetName === 'Custom') {
+        nameInput.value = '';
+        subCostInput.value = '0';
+        rateInput.value = '0';
         speedRow.style.display = "none";
         calculate();
         return;
@@ -106,16 +100,16 @@ function applyPreset(id) {
     if (!p) return;
 
     nameInput.value = p.name;
-    subInput.value = p.subCost;
+    subCostInput.value = p.subCost;
 
     if (p.rates && !p.rates.default) {
-        speedRow.style.display = "block";
-        speedSelect.innerHTML = Object.keys(p.rates)
-            .map(s => `<option value="${s}">${s}kW</option>`)
-            .join("");
+        const speeds = Object.keys(p.rates);
+        speedSelect.innerHTML = speeds.map(s => `<option value="${s}">${s}kW</option>`).join("");
+        speedRow.style.display = "flex";
         
-        // Trigger speed enforcement immediately
-        enforceSpeedRules();
+        // Initially set to the first (lowest) rate, then let enforceSpeedRules snap it to the minimum required
+        rateInput.value = p.rates[speeds[0]];
+        enforceSpeedRules(); 
     } else {
         rateInput.value = p.rates.default;
         speedRow.style.display = "none";
@@ -140,6 +134,7 @@ function enforceSpeedRules() {
     boxes.forEach(box => {
         const id = box.dataset.id;
         const speedSelect = document.getElementById(`speed${id}`);
+        // If the speed dropdown isn't visible/existing, this provider has a flat rate
         if (!speedSelect || speedSelect.offsetParent === null) return;
 
         let firstValidValue = null;
@@ -147,23 +142,27 @@ function enforceSpeedRules() {
             const val = parseFloat(opt.value);
             const isInvalid = val < minSpeed;
             opt.disabled = isInvalid;
+            // Find the lowest speed that satisfies the minimum requirement
             if (!isInvalid && firstValidValue === null) firstValidValue = opt.value;
         });
 
-        // If current selection is now disabled, switch to first valid speed
-        if (speedSelect.selectedOptions[0].disabled && firstValidValue !== null) {
+        // Always snap the selection to the lowest valid speed to match the "minimum desired" requirement
+        if (firstValidValue !== null) {
             speedSelect.value = firstValidValue;
             updateRateFromSpeed(id);
         }
     });
 }
 
-function addSubscriptionPresets() {
+function addProvider() {
+    createProviderBox();
+}
+
+function addAllProviders() {
     const minSpeed = parseFloat(document.getElementById("minSpeed").value) || 0;
+    document.getElementById("providers").innerHTML = "";
 
     PRESETS.forEach(preset => {
-        if (!preset.name.startsWith("Subscription >")) return;
-
         let canSupportSpeed = false;
         if (preset.rates.default) {
             canSupportSpeed = true; 
@@ -197,9 +196,10 @@ function duplicateLastProvider() {
     const lastSpeed = document.getElementById(`speed${lastId}`);
     if (lastSpeed && lastSpeed.offsetParent !== null) {
         const newSpeed = document.getElementById(`speed${newId}`);
-        document.getElementById(`speedRow${newId}`).style.display = "block";
+        document.getElementById(`speedRow${newId}`).style.display = "flex";
         newSpeed.innerHTML = lastSpeed.innerHTML;
         newSpeed.value = lastSpeed.value;
     }
+
     calculate();
 }

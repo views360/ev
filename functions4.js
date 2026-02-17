@@ -44,12 +44,16 @@ function shareLink() {
         params.toString();
 
     navigator.clipboard.writeText(url).then(() => {
-        alert("Shareable link copied to clipboard!");
+        alert("Shareable link copied!");
     });
 }
 
+// -------------------------------
+// LOAD FROM URL PARAMETERS
+// -------------------------------
 function loadFromUrl() {
     const params = new URLSearchParams(window.location.search);
+
     if (!params.has("journeyMiles")) return;
 
     [
@@ -62,28 +66,33 @@ function loadFromUrl() {
         "startChargeType",
         "minSpeed"
     ].forEach(id => {
-        if (params.has(id)) document.getElementById(id).value = params.get(id);
+        if (params.has(id)) {
+            document.getElementById(id).value = params.get(id);
+        }
     });
 
-    // Load providers
-    let i = 0;
-    while (params.has(`p${i}n`)) {
+    document.getElementById("results").style.display = "none";
+    document.getElementById("providers").innerHTML = "";
+
+    let idx = 0;
+
+    while (params.has(`p${idx}n`)) {
         createProviderBox();
         const id = providerCount;
-        document.getElementById(`name${id}`).value = params.get(`p${i}n`);
-        document.getElementById(`subCost${id}`).value = params.get(`p${i}s`);
-        document.getElementById(`rate${id}`).value = params.get(`p${i}r`);
-        
-        const speed = params.get(`p${i}spd`);
-        if (speed) {
-            const speedRow = document.getElementById(`speedRow${id}`);
-            const speedSelect = document.getElementById(`speed${id}`);
-            speedRow.style.display = "block";
-            speedSelect.innerHTML = `<option value="${speed}">${speed}kW</option>`;
-            speedSelect.value = speed;
+
+        document.getElementById(`name${id}`).value = params.get(`p${idx}n`);
+        document.getElementById(`subCost${id}`).value = params.get(`p${idx}s`);
+        document.getElementById(`rate${id}`).value = params.get(`p${idx}r`);
+
+        const speedSelect = document.getElementById(`speed${id}`);
+        if (speedSelect && params.has(`p${idx}spd`)) {
+            speedSelect.value = params.get(`p${idx}spd`);
         }
-        i++;
+
+        idx++;
     }
+
+    enforceSpeedRules();
     calculate();
 }
 
@@ -92,7 +101,8 @@ function loadFromUrl() {
 // -------------------------------
 async function exportPdf() {
     const resultsEl = document.getElementById("results");
-    if (resultsEl.style.display === "none") {
+
+    if (!resultsEl || resultsEl.style.display === "none") {
         alert("Enter data first.");
         return;
     }
@@ -144,19 +154,10 @@ document.getElementById("minSpeed").addEventListener("input", () => {
     calculate();
 });
 
-window.addEventListener("DOMContentLoaded", async () => {
-    try {
-        const resp = await fetch('providers.json');
-        const data = await resp.json();
+// Load presets and restore state from URL
+fetch("providers.json")
+    .then(r => r.json())
+    .then(data => {
         PRESETS = data.providers;
-        
         loadFromUrl();
-        
-        // If no URL params, add defaults
-        if (document.querySelectorAll(".provider-box").length === 0) {
-            addSubscriptionPresets();
-        }
-    } catch (e) {
-        console.error("Failed to load presets", e);
-    }
-});
+    });
