@@ -26,7 +26,7 @@ body.light-mode {
 body {
     background-color: var(--bg);
     color: var(--text);
-    font-family: 'Inter', sans-serif;
+    font-family: 'Inter', -apple-system, sans-serif;
     margin: 0;
     padding: 15px;
     line-height: 1.4;
@@ -34,7 +34,9 @@ body {
 
 .app { max-width: 900px; margin: 0 auto; }
 
-h1 { font-size: 1.3rem; letter-spacing: -0.5px; border-left: 4px solid var(--accent); padding-left: 12px; }
+h1 { font-size: 1.2rem; letter-spacing: -0.5px; border-left: 4px solid var(--accent); padding-left: 12px; margin-bottom: 20px; }
+
+.subtitle { color: var(--muted); font-size: 0.9rem; margin-bottom: 15px; }
 
 .card {
     background: var(--panel);
@@ -51,16 +53,25 @@ h1 { font-size: 1.3rem; letter-spacing: -0.5px; border-left: 4px solid var(--acc
     gap: 12px;
 }
 
-.input-group label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+.input-group label { 
+    display: block;
+    font-size: 0.7rem; 
+    text-transform: uppercase; 
+    letter-spacing: 0.5px; 
+    margin-bottom: 6px; 
+    color: var(--muted);
+}
 
 input, select {
+    width: 100%;
+    box-sizing: border-box;
     background: var(--panel-alt);
     border: 1px solid var(--border);
     color: var(--text);
     padding: 8px;
     border-radius: 4px;
     font-size: 0.9rem;
-    transition: all 0.2s;
+    transition: all 0.2s ease;
 }
 
 input:focus, select:focus {
@@ -69,62 +80,64 @@ input:focus, select:focus {
     outline: none;
 }
 
-/* Consistently Formatted Buttons */
 .btn {
-    padding: 8px 16px;
+    padding: 8px 14px;
     border-radius: 4px;
     font-weight: 600;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     cursor: pointer;
     border: 1px solid var(--border);
     transition: all 0.2s;
+    background: var(--panel-alt);
+    color: var(--text);
 }
 
 .btn.primary { 
-    background: transparent; 
     border-color: var(--accent); 
     color: var(--accent);
-    text-shadow: 0 0 5px var(--accent-glow);
 }
 
 .btn.primary:hover { 
     background: var(--accent); 
     color: #000; 
-    box-shadow: 0 0 15px var(--accent-glow);
+    box-shadow: 0 0 12px var(--accent-glow);
 }
 
-.btn.secondary { background: var(--panel-alt); color: var(--text); }
 .btn.secondary:hover { border-color: var(--accent); color: var(--accent); }
 
 .provider-box {
-    background: var(--panel);
+    background: var(--panel-alt);
     border: 1px solid var(--border);
-    border-radius: 8px;
+    border-radius: 6px;
     padding: 12px;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
 }
 
-.results { border-top: 1px solid var(--border); margin-top: 20px; padding-top: 20px; }
+.results { border-top: 2px solid var(--border); margin-top: 25px; padding-top: 20px; }
 
-table { width: 100%; border-collapse: separate; border-spacing: 0 4px; }
-th { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; padding: 8px; text-align: left; }
-td { padding: 10px; background: var(--panel-alt); }
+.calc-lines { font-size: 0.9rem; margin-bottom: 20px; color: var(--muted); }
+.calc-lines strong { color: var(--text); }
+
+table { width: 100%; border-collapse: separate; border-spacing: 0 4px; margin-bottom: 20px; }
+th { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; padding: 8px; text-align: left; }
+td { padding: 10px; background: var(--panel-alt); font-size: 0.9rem; }
 td:first-child { border-radius: 4px 0 0 4px; }
 td:last-child { border-radius: 0 4px 4px 0; }
 
-tr.good td { border-left: 2px solid var(--good); }
-tr.bad td { border-left: 2px solid var(--danger); }
+tr.good td:last-child { color: var(--good); }
+tr.bad td:last-child { color: var(--danger); }
 
 .conclusion-card {
     padding: 16px;
     border-radius: 6px;
-    margin-top: 12px;
-    background: rgba(255, 255, 255, 0.03);
+    margin-top: 15px;
+    background: rgba(255, 255, 255, 0.02);
     border: 1px solid var(--border);
 }
 
-.conclusion-card.good { border-color: var(--good); box-shadow: 0 0 10px rgba(0, 255, 136, 0.1); }
-.main-result { font-size: 1.1rem; color: var(--text); }
-.secondary-result { font-size: 0.95rem; color: var(--muted); }
+.conclusion-card.good { border-left: 4px solid var(--good); }
+.conclusion-card.bad { border-left: 4px solid var(--danger); }
+.main-result { font-size: 1.05rem; margin: 0 0 5px 0; }
+.secondary-result { font-size: 0.9rem; color: var(--muted); margin: 0; }
 
-.chart-wrapper { height: 300px; margin-top: 25px; }
+.chart-wrapper { height: 320px; margin-top: 30px; }

@@ -68,15 +68,20 @@ function drawGraph(core, providers) {
 
 function getProviderColor(name) {
     const colors = {
-        "Be.EV": "#bef264",
-        "Tesla": "#f87171",
-        "BP Pulse": "#22c55e",
-        "Shell Recharge": "#fbbf24",
-        "Pod Point": "#38bdf8",
-        "Ionity": "#a855f7"
+        "Be.EV": "#38bdf8",
+        "Tesla": "#e8171f",
+        "BP Pulse": "#00914d",
+        "Shell Recharge": "#fbce07",
+        "Osprey": "#f97316",
+        "Instavolt": "#000000"
     };
+    
     for (const key in colors) {
         if (name.includes(key)) return colors[key];
     }
-    return "#94a3b8";
+
+    // Default palette for unknown/custom
+    const palette = ["#a855f7", "#ec4899", "#22c55e", "#14b8a6", "#f59e0b"];
+    const hash = name.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    return palette[hash % palette.length];
 }

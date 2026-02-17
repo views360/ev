@@ -40,7 +40,7 @@ function calculate() {
         const subCost = parseFloat(document.getElementById(`subCost${id}`).value) || 0;
         const rate = parseFloat(document.getElementById(`rate${id}`).value) || 0;
         
-        // Capture selected speed for the analysis text
+        // Retrieve selected speed for the analysis text
         const speedSelect = document.getElementById(`speed${id}`);
         const speedText = (speedSelect && speedSelect.offsetParent !== null) ? `${speedSelect.value}kW` : "standard speed";
 
@@ -78,20 +78,20 @@ function calculate() {
     }
 
     const bestProvider = [...providers].sort((a, b) => a.totalJourneyCost - b.totalJourneyCost)[0];
-    summaryBox.style.display = "block";
-    let conclusionHTML = `<h3>Analysis</h3>`;
+    
+    // REDUNDANCY FIX: Hide the summaryBox entirely
+    summaryBox.style.display = "none";
+    summaryBox.textContent = "";
+
+    let conclusionHTML = `<h3 style="font-size:1rem; margin-top:20px;">Analysis</h3>`;
 
     if (bestProvider.totalJourneyCost < totalAdhocCost) {
-        summaryBox.className = "summary good";
-        summaryBox.textContent = `${bestProvider.name} is cheapest for this trip.`;
         conclusionHTML += `
             <div class="conclusion-card good">
                 <p class="main-result"><strong>${bestProvider.name}</strong> is cheapest for a <strong>${miles}-mile trip</strong> charging at <strong>${bestProvider.speedText}</strong> (saving <strong>£${bestProvider.savings.toFixed(2)}</strong> vs Ad‑hoc).</p>
                 <p class="secondary-result">Total cost including subscription: <strong>£${bestProvider.totalJourneyCost.toFixed(2)}</strong>.</p>
             </div>`;
     } else {
-        summaryBox.className = "summary bad";
-        summaryBox.textContent = `Ad‑hoc charging is cheaper.`;
         conclusionHTML += `
             <div class="conclusion-card bad">
                 <p class="main-result">Standard <strong>Ad‑hoc charging</strong> is the most cost‑effective choice for this trip.</p>
