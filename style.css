@@ -111,7 +111,7 @@ tr.bad { color: var(--danger); }
     padding: 20px;
     border-radius: 12px;
     margin-top: 15px;
-    margin-bottom: 20px; /* Spacing added after removing summary box */
+    margin-bottom: 20px; /* Added spacing after removing summary box */
 }
 
 .conclusion-card.good { background: rgba(34, 197, 94, 0.05); border: 1px solid rgba(34, 197, 94, 0.3); }
