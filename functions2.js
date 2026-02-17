@@ -173,8 +173,8 @@ function calculate() {
     `;
     
     let conclusionHTML = `<h3>Analysis</h3>`;
-    const locationDisclaimer = `<p class="disclaimer">Note: A subscription will only save money if the provider has charging stations where you plan to travel.</p>`;
-
+    const locationDisclaimer = `<p class="disclaimer">Note: A subscription will only save money if the provider has charging stations where you plan to travel. Additionally, charging times are based on constant speeds and do not account for the typical charging curve slowdown that occurs between 80% and 100% SoC.</p>`;
+    
     if (bestProvider.totalJourneyCost < totalAdhocCost) {
         conclusionHTML += `
             <div class="conclusion-card good">
@@ -200,3 +200,4 @@ function calculate() {
     conclusionsBox.innerHTML = conclusionHTML;
     drawGraph(core, providers);
 }
+
