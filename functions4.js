@@ -4,6 +4,50 @@
 // ===============================
 
 // -------------------------------
+// LOCAL STORAGE PERSISTENCE
+// -------------------------------
+
+// Save "Trip & Vehicle" inputs to localStorage
+function saveToLocal() {
+    const data = {};
+    [
+        "journeyMiles",
+        "batteryKwh",
+        "soc",
+        "efficiency",
+        "adhoc",
+        "startChargeRate",
+        "startChargeType",
+        "minSpeed"
+    ].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) data[id] = el.value;
+    });
+    localStorage.setItem("ev_calc_trip_data", JSON.stringify(data));
+}
+
+// Load data from localStorage
+function loadFromLocal() {
+    const saved = localStorage.getItem("ev_calc_trip_data");
+    if (!saved) return;
+
+    const data = JSON.parse(saved);
+    Object.keys(data).forEach(id => {
+        const el = document.getElementById(id);
+        if (el && data[id] !== undefined) {
+            el.value = data[id];
+        }
+    });
+
+    // Only trigger calculation if we aren't already loading from a URL (URL takes priority)
+    const params = new URLSearchParams(window.location.search);
+    if (!params.has("journeyMiles")) {
+        enforceSpeedRules();
+        calculate();
+    }
+}
+
+// -------------------------------
 // SHAREABLE LINK
 // -------------------------------
 function shareLink() {
@@ -130,6 +174,7 @@ async function exportPdf() {
 // RESET ALL
 // -------------------------------
 function resetAll() {
+    localStorage.removeItem("ev_calc_trip_data");
     window.location.href = window.location.pathname;
 }
 
@@ -145,19 +190,29 @@ function resetAll() {
     "startChargeRate",
     "startChargeType"
 ].forEach(id => {
-    document.getElementById(id).addEventListener("input", calculate);
+    document.getElementById(id).addEventListener("input", () => {
+        saveToLocal();
+        calculate();
+    });
 });
 
 // ⭐ CRITICAL: Minimum speed listener
 document.getElementById("minSpeed").addEventListener("input", () => {
+    saveToLocal();
     enforceSpeedRules();
     calculate();
 });
 
-// Load presets and restore state from URL
+// Load presets and restore state from URL or LocalStorage
 fetch("providers.json")
     .then(r => r.json())
     .then(data => {
         PRESETS = data.providers;
-        loadFromUrl();
+        
+        const params = new URLSearchParams(window.location.search);
+        if (params.has("journeyMiles")) {
+            loadFromUrl();
+        } else {
+            loadFromLocal();
+        }
     });
