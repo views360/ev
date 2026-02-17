@@ -14,6 +14,10 @@ function toggleTheme() {
     btn.textContent = body.classList.contains("light-mode") ? "Switch to Dark View" : "Switch to Light View";
 }
 
+/**
+ * Creates a provider input box. 
+ * If a preset is passed, it populates the fields automatically.
+ */
 function createProviderBox(preset) {
     providerCount++;
     const id = providerCount;
@@ -21,6 +25,7 @@ function createProviderBox(preset) {
     box.className = "provider-box";
     box.dataset.id = id;
 
+    // Filter and sort presets based on minimum speed before showing in the dropdown
     const minSpeed = parseFloat(document.getElementById("minSpeed").value) || 0;
     
     const filteredPresets = PRESETS.filter(p => {
@@ -42,26 +47,26 @@ function createProviderBox(preset) {
 
     box.innerHTML = `
         <div class="provider-header">
-            <input type="text" id="name${id}" placeholder="Provider Name" oninput="calculate(); saveToLocalStorage();">
-            <button class="remove-btn" onclick="this.parentElement.parentElement.remove(); calculate(); saveToLocalStorage();">×</button>
+            <input type="text" id="name${id}" placeholder="Provider Name" oninput="calculate()">
+            <button class="remove-btn" onclick="this.parentElement.parentElement.remove(); calculate();">×</button>
         </div>
         <div class="input-group">
             <label>Preset</label>
-            <select id="preset${id}" onchange="updateProviderFields(${id}); saveToLocalStorage();">${presetOptions}</select>
+            <select id="preset${id}" onchange="updateProviderFields(${id})">${presetOptions}</select>
         </div>
         <div class="input-row">
             <div class="input-group">
                 <label>Monthly Sub (£)</label>
-                <input type="number" id="subCost${id}" step="0.01" value="0" oninput="calculate(); saveToLocalStorage();">
+                <input type="number" id="subCost${id}" step="0.01" value="0" oninput="calculate()">
             </div>
             <div class="input-group">
                 <label>Rate (p/kWh)</label>
-                <input type="number" id="rate${id}" step="0.1" value="0" oninput="calculate(); saveToLocalStorage();">
+                <input type="number" id="rate${id}" step="0.1" value="0" oninput="calculate()">
             </div>
         </div>
         <div class="input-group" id="speedRow${id}" style="display:none">
             <label>Charging Speed</label>
-            <select id="speed${id}" onchange="updateRateFromSpeed(${id}); saveToLocalStorage();"></select>
+            <select id="speed${id}" onchange="updateRateFromSpeed(${id})"></select>
         </div>
     `;
 
@@ -101,6 +106,8 @@ function updateProviderFields(id) {
         const speeds = Object.keys(p.rates);
         speedSelect.innerHTML = speeds.map(s => `<option value="${s}">${s}kW</option>`).join("");
         speedRow.style.display = "flex";
+        
+        // Initially set to the first (lowest) rate, then let enforceSpeedRules snap it to the minimum required
         rateInput.value = p.rates[speeds[0]];
         enforceSpeedRules(); 
     } else {
@@ -127,6 +134,7 @@ function enforceSpeedRules() {
     boxes.forEach(box => {
         const id = box.dataset.id;
         const speedSelect = document.getElementById(`speed${id}`);
+        // If the speed dropdown isn't visible/existing, this provider has a flat rate
         if (!speedSelect || speedSelect.offsetParent === null) return;
 
         let firstValidValue = null;
@@ -134,9 +142,11 @@ function enforceSpeedRules() {
             const val = parseFloat(opt.value);
             const isInvalid = val < minSpeed;
             opt.disabled = isInvalid;
+            // Find the lowest speed that satisfies the minimum requirement
             if (!isInvalid && firstValidValue === null) firstValidValue = opt.value;
         });
 
+        // Always snap the selection to the lowest valid speed to match the "minimum desired" requirement
         if (firstValidValue !== null) {
             speedSelect.value = firstValidValue;
             updateRateFromSpeed(id);
@@ -146,7 +156,6 @@ function enforceSpeedRules() {
 
 function addProvider() {
     createProviderBox();
-    saveToLocalStorage();
 }
 
 function addAllProviders() {
@@ -167,7 +176,6 @@ function addAllProviders() {
         }
     });
     calculate();
-    saveToLocalStorage();
 }
 
 function duplicateLastProvider() {
@@ -194,5 +202,4 @@ function duplicateLastProvider() {
     }
 
     calculate();
-    saveToLocalStorage();
 }
