@@ -11,9 +11,13 @@ function toggleTheme() {
     const body = document.body;
     const btn = document.getElementById("themeToggle");
     body.classList.toggle("light-mode");
-    btn.textContent = body.classList.contains("light-mode") ? "Switch to Dark View" : "Switch to Light View";
+    btn.textContent = body.classList.contains("light-mode") ? "Switch to Light View" : "Switch to Light View";
 }
 
+/**
+ * Creates a provider input box. 
+ * If a preset is passed, it populates the fields automatically.
+ */
 function createProviderBox(preset) {
     providerCount++;
     const id = providerCount;
@@ -21,7 +25,16 @@ function createProviderBox(preset) {
     box.className = "provider-box";
     box.dataset.id = id;
 
-    const sortedPresets = [...PRESETS].sort((a, b) => {
+    // Filter and sort presets based on minimum speed before showing in the dropdown
+    const minSpeed = parseFloat(document.getElementById("minSpeed").value) || 0;
+    
+    const filteredPresets = PRESETS.filter(p => {
+        if (p.rates && p.rates.default) return true;
+        const speeds = Object.keys(p.rates).map(Number);
+        return speeds.some(s => s >= minSpeed);
+    });
+
+    const sortedPresets = [...filteredPresets].sort((a, b) => {
         const aSub = a.name.startsWith("Subscription >");
         const bSub = b.name.startsWith("Subscription >");
         if (aSub && !bSub) return -1;
@@ -58,8 +71,10 @@ function createProviderBox(preset) {
     `;
 
     document.getElementById("providers").appendChild(box);
+    
     if (preset) {
-        document.getElementById(`preset${id}`).value = preset.name;
+        const select = document.getElementById(`preset${id}`);
+        select.value = preset.name;
         updateProviderFields(id);
     }
 }
@@ -91,10 +106,10 @@ function updateProviderFields(id) {
         const speeds = Object.keys(p.rates);
         speedSelect.innerHTML = speeds.map(s => `<option value="${s}">${s}kW</option>`).join("");
         speedRow.style.display = "flex";
-        rateInput.value = p.rates[speeds[0]];
         
-        // Apply speed limits immediately
-        enforceSpeedRules();
+        // Default to first speed, enforceSpeedRules will adjust if it's too slow
+        rateInput.value = p.rates[speeds[0]];
+        enforceSpeedRules(); 
     } else {
         rateInput.value = p.rates.default;
         speedRow.style.display = "none";
@@ -129,10 +144,67 @@ function enforceSpeedRules() {
             if (!isInvalid && firstValidValue === null) firstValidValue = opt.value;
         });
 
-        // If current selection is now disabled, switch to first valid speed
         if (speedSelect.selectedOptions[0]?.disabled && firstValidValue !== null) {
             speedSelect.value = firstValidValue;
             updateRateFromSpeed(id);
         }
     });
+}
+
+// ===============================
+// Missing Button Handlers
+// ===============================
+
+function addProvider() {
+    createProviderBox();
+}
+
+function addAllProviders() {
+    const minSpeed = parseFloat(document.getElementById("minSpeed").value) || 0;
+    
+    // Clear current list to avoid massive duplicates if clicked twice
+    document.getElementById("providers").innerHTML = "";
+
+    PRESETS.forEach(preset => {
+        let canSupportSpeed = false;
+
+        if (preset.rates.default) {
+            canSupportSpeed = true; 
+        } else {
+            const speeds = Object.keys(preset.rates).map(Number);
+            canSupportSpeed = speeds.some(s => s >= minSpeed);
+        }
+
+        if (canSupportSpeed) {
+            createProviderBox(preset);
+        }
+    });
+    calculate();
+}
+
+function duplicateLastProvider() {
+    const boxes = document.querySelectorAll(".provider-box");
+    if (boxes.length === 0) return;
+
+    const lastBox = boxes[boxes.length - 1];
+    const lastId = lastBox.dataset.id;
+    
+    createProviderBox();
+    const newId = providerCount;
+
+    // Manually sync values
+    document.getElementById(`name${newId}`).value = document.getElementById(`name${lastId}`).value;
+    document.getElementById(`preset${newId}`).value = document.getElementById(`preset${lastId}`).value;
+    document.getElementById(`subCost${newId}`).value = document.getElementById(`subCost${lastId}`).value;
+    document.getElementById(`rate${newId}`).value = document.getElementById(`rate${lastId}`).value;
+    
+    const lastSpeed = document.getElementById(`speed${lastId}`);
+    if (lastSpeed && lastSpeed.offsetParent !== null) {
+        const newSpeed = document.getElementById(`speed${newId}`);
+        document.getElementById(`speedRow${newId}`).style.display = "flex";
+        newSpeed.innerHTML = lastSpeed.innerHTML;
+        newSpeed.value = lastSpeed.value;
+    }
+
+    calculate();
 }
