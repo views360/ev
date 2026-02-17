@@ -32,24 +32,11 @@ function calculate() {
 
     // Update UI lines
     document.getElementById("results").style.display = "block";
-    document.getElementById("preChargeLine").innerHTML = `Start Charge: <strong>${startChargeKwh.toFixed(1)} kWh</strong> (£${startChargeCost.toFixed(2)})`;
-    document.getElementById("homeRangeLine").innerHTML = `Range from Start Charge: <strong>${initialRange.toFixed(0)} miles</strong>`;
-    document.getElementById("publicMilesLine").innerHTML = `Public Miles Needed: <strong>${publicMiles.toFixed(0)} miles</strong>`;
-    document.getElementById("publicKwhLine").innerHTML = `Public Energy Needed: <strong>${publicKwh.toFixed(1)} kWh</strong>`;
-    document.getElementById("adhocCostLine").innerHTML = `Total Ad-hoc Trip Cost: <strong>£${totalAdhocCost.toFixed(2)}</strong>`;
-
-    // -------------------------------
-    // CORE DATA OBJECT for Graphing
-    // -------------------------------
-    const core = {
-        journeyMiles: miles,
-        homeMiles: initialRange, // Added this
-        efficiency: efficiency,
-        adhocRate: adhocRate,
-        minSpeed: minSpeed,      // Added this
-        startChargeCost: startChargeCost,
-        totalAdhocCost: totalAdhocCost
-    };
+    document.getElementById("preChargeLine").innerHTML = `Pre-journey charge: <strong>${startChargeKwh.toFixed(1)} kWh</strong> (£${startChargeCost.toFixed(2)})`;
+    document.getElementById("homeRangeLine").innerHTML = `Range from start charge: <strong>${initialRange.toFixed(0)} miles</strong>`;
+    document.getElementById("publicMilesLine").innerHTML = `Public charging miles needed: <strong>${publicMiles.toFixed(0)} miles</strong>`;
+    document.getElementById("publicKwhLine").innerHTML = `Public charging energy needed: <strong>${publicKwh.toFixed(1)} kWh</strong>`;
+    document.getElementById("adhocCostLine").innerHTML = `Total cost (Standard Ad-hoc @ ${adhocRate}p): <strong>£${totalAdhocCost.toFixed(2)}</strong>`;
 
     // -------------------------------
     // PROVIDER CALCULATIONS
@@ -59,68 +46,112 @@ function calculate() {
 
     boxes.forEach(box => {
         const id = box.dataset.id;
-        const name = document.getElementById(`name${id}`).value;
-        const subCost = parseFloat(document.getElementById(`subCost${id}`).value);
-        const rate = parseFloat(document.getElementById(`rate${id}`).value);
+        const name = document.getElementById(`name${id}`).value || "Unnamed";
+        const subCost = parseFloat(document.getElementById(`subCost${id}`).value) || 0;
+        const rate = parseFloat(document.getElementById(`rate${id}`).value) || 0;
 
-        if (!isNaN(subCost) && !isNaN(rate)) {
-            const totalCost = subCost + startChargeCost + (publicKwh * (rate / 100));
-            const savings = totalAdhocCost - totalCost;
-            providers.push({ name, subCost, rate, totalJourneyCost: totalCost, savings });
-        }
+        const journeyCost = publicKwh * (rate / 100);
+        const totalJourneyCost = subCost + startChargeCost + journeyCost;
+        const savings = totalAdhocCost - totalJourneyCost;
+
+        providers.push({
+            id,
+            name,
+            subCost,
+            rate,
+            totalJourneyCost,
+            savings
+        });
     });
 
-    // Sort Results
+    // Sort results
     const sortVal = document.getElementById("sortResults").value;
-    if (sortVal === "cheapest") providers.sort((a, b) => a.totalJourneyCost - b.totalJourneyCost);
-    else if (sortVal === "az") providers.sort((a, b) => a.name.localeCompare(b.name));
-    else if (sortVal === "za") providers.sort((a, b) => b.name.localeCompare(a.name));
+    if (sortVal === "cheapest") {
+        providers.sort((a, b) => a.totalJourneyCost - b.totalJourneyCost);
+    } else if (sortVal === "az") {
+        providers.sort((a, b) => a.name.localeCompare(b.name));
+    } else if (sortVal === "za") {
+        providers.sort((a, b) => b.name.localeCompare(a.name));
+    }
 
-    // Render HTML Results
-    let resultsHTML = "";
+    // Render Table
+    const resultsContainer = document.getElementById("providerResults");
+    let html = `
+        <table>
+            <thead>
+                <tr>
+                    <th>Provider</th>
+                    <th>Sub. Fee</th>
+                    <th>Rate</th>
+                    <th>Trip Cost</th>
+                    <th>vs. Ad-hoc</th>
+                </tr>
+            </thead>
+            <tbody>
+    `;
+
     providers.forEach(p => {
-        const color = getProviderColor(p.name);
-        const savingText = p.savings >= 0 
-            ? `<span style="color:#22c55e">Saves £${p.savings.toFixed(2)}</span>`
-            : `<span style="color:#f87171">Costs £${Math.abs(p.savings).toFixed(2)} more</span>`;
-
-        resultsHTML += `
-            <div class="provider-result" style="border-left: 4px solid ${color}">
-                <div><strong>${p.name}</strong></div>
-                <div>Total: £${p.totalJourneyCost.toFixed(2)} (${savingText})</div>
-            </div>
+        const rowClass = p.savings > 0 ? "good" : (p.savings < 0 ? "bad" : "");
+        const diffText = p.savings > 0 ? `-£${p.savings.toFixed(2)}` : `+£${Math.abs(p.savings).toFixed(2)}`;
+        
+        html += `
+            <tr class="${rowClass}">
+                <td>${p.name}</td>
+                <td>£${p.subCost.toFixed(2)}</td>
+                <td>${p.rate}p</td>
+                <td>£${p.totalJourneyCost.toFixed(2)}</td>
+                <td><strong>${diffText}</strong></td>
+            </tr>
         `;
     });
-    document.getElementById("providerResults").innerHTML = resultsHTML;
 
-    // Summary & Conclusions
-    const summaryBox = document.getElementById("summaryBox");
+    html += `</tbody></table>`;
+    resultsContainer.innerHTML = html;
+
+    // -------------------------------
+    // CONCLUSIONS & SUMMARY
+    // -------------------------------
     const conclusionsBox = document.getElementById("conclusionsBox");
+    const summaryBox = document.getElementById("summaryBox");
+    
+    // Core data for the graph
+    const core = {
+        journeyMiles: miles,
+        homeMiles: initialRange,
+        efficiency: efficiency,
+        startChargeCost: startChargeCost,
+        adhocRate: adhocRate
+    };
+
     if (providers.length === 0) {
-        summaryBox.style.display = "none";
         conclusionsBox.innerHTML = "";
+        summaryBox.style.display = "none";
         drawGraph(core, []);
         return;
     }
 
-    summaryBox.style.display = "block";
-    const bestProvider = providers[0];
-    let conclusionHTML = `<h3>Analysis</h3>`;
+    // Find best provider (already sorted if 'cheapest' is selected, but let's be safe)
+    const bestProvider = [...providers].sort((a, b) => a.totalJourneyCost - b.totalJourneyCost)[0];
     
+    summaryBox.style.display = "block";
+    let conclusionHTML = `<h3>Analysis</h3>`;
     const locationDisclaimer = `<p class="disclaimer">Note: Cost is only one factor — a subscription will only save money if the provider has charging stations where you plan to travel.</p>`;
 
     if (bestProvider.totalJourneyCost < totalAdhocCost) {
         summaryBox.className = "summary good";
-        summaryBox.textContent = `${bestProvider.name} is cheapest for this trip (saves £${bestProvider.savings.toFixed(2)} vs Ad‑hoc).`;
+        // Merged Line 1 and 4
+        summaryBox.textContent = `${bestProvider.name} is cheapest for a ${miles}-mile trip (saving £${bestProvider.savings.toFixed(2)} vs Ad‑hoc).`;
+        
         conclusionHTML += `
             <div class="conclusion-card good">
-                <p>For a trip of <strong>${miles} miles</strong>, taking a subscription with <strong>${bestProvider.name}</strong> is the most cost‑effective option.</p>
+                <p><strong>${bestProvider.name}</strong> is cheapest for a <strong>${miles}-mile trip</strong> (saving <strong>£${bestProvider.savings.toFixed(2)}</strong> vs Ad‑hoc).</p>
                 <p>Total cost including subscription: <strong>£${bestProvider.totalJourneyCost.toFixed(2)}</strong>.</p>
             </div>
         `;
     } else {
         summaryBox.className = "summary bad";
         summaryBox.textContent = `Ad‑hoc charging is cheaper for this specific trip distance.`;
+        
         conclusionHTML += `
             <div class="conclusion-card bad">
                 <p>Standard <strong>Ad‑hoc charging</strong> is the most cost‑effective choice for this trip.</p>
