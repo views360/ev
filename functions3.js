@@ -28,22 +28,9 @@ function drawGraph(core, providers) {
     }];
 
     providers.forEach(p => {
-        const preset = PRESETS.find(pr => pr.name === p.name);
-        let activeRate = p.rate;
-
-        // Use tiered logic only if preset exists and has multiple rates
-        if (preset && preset.rates && !preset.rates.default) {
-            const keys = Object.keys(preset.rates);
-            const validSpeeds = keys
-                .filter(k => parseFloat(k) >= core.minSpeed)
-                .sort((a, b) => parseFloat(a) - parseFloat(b));
-
-            if (validSpeeds.length > 0) {
-                activeRate = preset.rates[validSpeeds[0]];
-            } else {
-                return; // Skip if no speeds meet minimum
-            }
-        }
+        // Trust the rate currently selected in the UI/Box.
+        // This ensures the graph and table are always in sync.
+        const activeRate = p.rate;
 
         if (isNaN(activeRate)) return;
 
