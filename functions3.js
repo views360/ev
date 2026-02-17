@@ -38,29 +38,44 @@ function drawGraph(core, providers) {
     }];
 
     // -------------------------------
-    // PROVIDER LINES (PURE DATA — NO DOM LOOKUPS)
+    // PROVIDER LINES (PURE DATA — NO DOM LOOKUP)
     // -------------------------------
-    providers.forEach((p, idx) => {
-        const colors = [
-            "#38bdf8", "#4ade80", "#a855f7",
-            "#facc15", "#f472b6", "#22c55e"
-        ];
-        const color = colors[idx % colors.length];
-
+    providers.forEach(p => {
+        const color = getProviderColor(p.name);
         const data = [];
-        const sub = p.sub || 0;
-        const rate = p.rate;
+
+        // We need to look at the PRESETS to see if they have tiered rates
+        const preset = PRESETS.find(pr => pr.name === p.name);
+
+        let activeRate = p.rate;
+
+        // If it's a known preset with tiered speeds (like Pod Point)
+        // we check if their highest available speed matches our minimum.
+        if (!preset || !preset.rates || preset.rates.default) {
+            // Use the rate provided in the object (Be.EV / Custom)
+            activeRate = p.rate;
+        } else {
+            // Logic for Tiered Providers (Pod Point, BP Pulse, etc.)
+            const speeds = Object.keys(preset.rates)
+                .map(Number)
+                .filter(s => s >= core.minSpeed) // FIX: Changed from > to >=
+                .sort((a, b) => a - b);
+
+            if (speeds.length === 0) return; // Skip if provider can't meet min speed
+
+            // Use the lowest available rate that meets or exceeds min speed
+            activeRate = preset.rates[speeds[0]];
+        }
 
         for (let i = 0; i <= steps; i++) {
             const m = (maxMiles * i) / steps;
-
             const publicMilesAtM = Math.max(0, m - core.homeMiles);
             const publicKwhAtM = publicMilesAtM / core.efficiency;
 
             data.push(
+                p.subCost +
                 core.startChargeCost +
-                sub +
-                (publicKwhAtM * rate / 100)
+                (publicKwhAtM * activeRate / 100)
             );
         }
 
@@ -113,4 +128,16 @@ function drawGraph(core, providers) {
             }
         }
     });
+}
+
+function getProviderColor(name) {
+    if (name.includes("Be.EV")) return "#bef264";
+    if (name.includes("Tesla")) return "#f87171";
+    if (name.includes("BP Pulse")) return "#22c55e";
+    if (name.includes("Shell Recharge")) return "#fbbf24";
+    if (name.includes("Pod Point")) return "#38bdf8";
+    if (name.includes("Ionity")) return "#a855f7";
+    if (name.includes("Osprey")) return "#f472b6";
+    if (name.includes("Instavolt")) return "#fb923c";
+    return "#94a3b8";
 }
