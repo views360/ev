@@ -28,15 +28,6 @@ function loadFromLocalStorage() {
     calculate();
 }
 
-function shareLink() {
-    const params = new URLSearchParams();
-    ["journeyMiles","batteryKwh","soc","efficiency","adhoc","startChargeRate","minSpeed"].forEach(id => {
-        params.set(id, document.getElementById(id).value);
-    });
-    const url = window.location.origin + window.location.pathname + "?" + params.toString();
-    navigator.clipboard.writeText(url).then(() => alert("Link copied!"));
-}
-
 function exportPdf() {
     const results = document.getElementById("results");
     const body = document.body;
@@ -45,7 +36,6 @@ function exportPdf() {
     // Force light mode for export
     if (wasDarkMode) body.classList.add("light-mode");
 
-    // Small delay to allow CSS to paint the light mode
     setTimeout(() => {
         html2canvas(results, { 
             scale: 2,
@@ -57,9 +47,9 @@ function exportPdf() {
             const width = pdf.internal.pageSize.getWidth();
             const height = (canvas.height * width) / canvas.width;
             pdf.addImage(imgData, "PNG", 0, 0, width, height);
-            pdf.save("ev-comparison.pdf");
+            pdf.save("ev-comparison-report.pdf");
 
-            // Restore dark mode if it was active
+            // Restore dark mode
             if (wasDarkMode) body.classList.remove("light-mode");
         });
     }, 150);
@@ -70,7 +60,7 @@ function resetAll() {
     window.location.href = window.location.pathname;
 }
 
-// Initial Listeners
+// Initializers
 [ "journeyMiles", "batteryKwh", "soc", "efficiency", "adhoc", "startChargeRate", "minSpeed" ].forEach(id => {
     document.getElementById(id).addEventListener("input", () => {
         if(id === "minSpeed") enforceSpeedRules();

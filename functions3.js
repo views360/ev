@@ -67,9 +67,8 @@ function getProviderColor(name) {
     const colors = {
         "Be.EV": "#00d1ff",
         "Tesla": "#e81010",
-        "BP Pulse": "#00a14b",
-        "Shell Recharge": "#ffda00",
-        "Osprey": "#f97316"
+        "BP Pulse": "#00ff00",
+        "Shell Recharge": "#fbbf24"
     };
-    return colors[name] || `#${Math.floor(Math.random()*16777215).toString(16)}`;
+    return colors[name] || "#" + Math.floor(Math.random()*16777215).toString(16);
 }
