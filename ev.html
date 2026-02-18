@@ -24,51 +24,37 @@
     </div>
 
     <div class="subtitle">
-        Compare your usual average public charging rate with subscription discounted charging for...
+        Compare your usual average public charging rate with subscription discounted charging for a specific trip distance (e.g., a weekend break or multi-day holiday).
     </div>
 
-    <div class="main-grid">
+    <div class="grid">
         <div class="card">
             <h2>Trip & Vehicle</h2>
-            <div class="input-group">
-                <label>Planned journey distance (miles)</label>
-                <input type="number" id="journeyMiles" value="500">
-            </div>
-            <div class="input-group">
-                <label>Vehicle battery size (usable kWh)</label>
-                <input type="number" id="batteryKwh" value="77">
-            </div>
-            <div class="input-group">
-                <label>Starting state of charge (%)</label>
-                <input type="number" id="soc" value="100">
-            </div>
-            <div class="input-group">
-                <label>Real-world efficiency (miles/kWh)</label>
-                <input type="number" id="efficiency" value="3.2" step="0.1">
-            </div>
-            
-            <hr style="margin:20px 0; opacity:0.1;">
 
-            <div class="input-group">
-                <label>Usual public charging rate (pence/kWh)</label>
-                <input type="number" id="adhoc" value="79">
+            <div class="input-row">
+                <div class="input-group">
+                    <label>Trip distance (miles)</label>
+                    <input type="number" id="journeyMiles" placeholder="e.g., 250">
+                </div>
+                <div class="input-group">
+                    <label>Battery size (kWh)</label>
+                    <input type="number" id="batteryKwh" placeholder="e.g., 61">
+                </div>
             </div>
 
-            <div class="input-group">
-                <label>Pre-journey charging source</label>
-                <select id="startChargeType" onchange="updateStartChargeRate()">
-                    <option value="home">Home / Cheap (7p)</option>
-                    <option value="adhoc">Public / Ad-hoc (79p)</option>
-                    <option value="custom">Custom Rate</option>
-                </select>
-            </div>
-            <div class="input-group">
-                <label>Pre-journey rate (pence/kWh)</label>
-                <input type="number" id="startChargeRate" value="7">
+            <div class="input-row">
+                <div class="input-group">
+                    <label>Starting state of charge (%)</label>
+                    <input type="number" id="soc" placeholder="e.g., 90">
+                </div>
+                <div class="input-group">
+                    <label>Vehicle efficiency (miles per kWh)</label>
+                    <input type="number" id="efficiency" placeholder="e.g., 3.5">
+                </div>
             </div>
 
             <div class="input-group">
-                <label>Minimum desired charging speed</label>
+                <label>Minimum desired charging speed during trip</label>
                 <select id="minSpeed">
                     <option value="7">7kW (fast)</option>
                     <option value="22">22kW (accelerated)</option>
@@ -77,14 +63,34 @@
                     <option value="150">150kW (high power)</option>
                 </select>
             </div>
+
+            <div class="input-row">
+                <div class="input-group">
+                    <label>Starting charge type</label>
+                    <select id="startChargeType">
+                        <option value="home">Cheap home charging</option>
+                        <option value="public">Public charging</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Starting rate (pence per kWh)</label>
+                    <input type="number" id="startChargeRate" placeholder="e.g., 7.5">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>Typical average ad-hoc public rate you pay (pence per kWh)</label>
+                <input type="number" id="adhoc" placeholder="e.g., 62 (where 62p is the 50kW price available from Lidl)">
+            </div>
         </div>
 
         <div class="card">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-                <h2 style="margin:0;">Providers</h2>
-                <div style="display:flex; gap:8px;">
-                    <button class="btn" onclick="addAllProviders()">Add All</button>
-                    <button class="btn" onclick="duplicateLastProvider()">Duplicate Last</button>
+            <div class="providers-header-row">
+                <h2>Subscriptions & Discounts</h2>
+                <div style="display:flex; gap:6px;">
+                    <button type="button" class="btn" onclick="addProvider()">Add provider</button>
+                    <button type="button" class="btn" onclick="addAllProviders()">Add all providers</button>
+                    <button type="button" class="btn" onclick="duplicateLastProvider()">Duplicate last</button>
                 </div>
             </div>
 
@@ -132,27 +138,5 @@
 <script src="functions3.js"></script>
 <script src="functions4.js"></script>
 
-<script>
-    fetch('providers.json')
-        .then(response => response.json())
-        .then(data => {
-            PRESETS = data.providers;
-            loadFromLocalStorage();
-            if (document.querySelectorAll('.provider-box').length === 0) {
-                const urlParams = new URLSearchParams(window.location.search);
-                if (!urlParams.has('p0n')) {
-                    createProviderBox();
-                }
-            }
-        });
-
-    function updateStartChargeRate() {
-        const type = document.getElementById("startChargeType").value;
-        const rateInput = document.getElementById("startChargeRate");
-        if (type === "home") rateInput.value = 7;
-        else if (type === "adhoc") rateInput.value = document.getElementById("adhoc").value;
-        calculate();
-    }
-</script>
 </body>
 </html>
