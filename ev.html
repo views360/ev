@@ -10,13 +10,14 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
+
 <body>
 <div class="app">
 
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+    <div class="header-row">
         <h1>EV Subscription Charging Comparison</h1>
 
-        <div style="display:flex; gap:10px; align-items: center;">
+        <div class="header-buttons">
             <button class="btn secondary" id="themeToggle" onclick="toggleTheme()">Switch to Light View</button>
             <button class="btn secondary" onclick="resetAll()">Reset All</button>
             <a href="https://www.facebook.com/kelvin.a.hill" target="_blank" class="btn secondary">Contact Author</a>
@@ -24,7 +25,7 @@
     </div>
 
     <div class="subtitle">
-        Compare your usual average public charging rate with subscription discounted charging for a specific trip distance (e.g., a weekend break or multi-day holiday). <strong>Note:</strong> This tool is a general aid for comparing fixed pricing against subscription+discount pricing. There is no dynamic lookup for values, and it cannot take into account peak times and rates versus off-peak times where they exist because these are arbitrarily applied to different locations.
+        Compare your usual average public charging rate with subscription discounted charging for a specific trip distance (e.g., a weekend break or multi-day holiday). <strong>Note:</strong> This tool is a general aid for comparing fixed pricing against subscription+discount pricing. There is no dynamic lookup for values, and it cannot take into account peak times &amp; rates versus off-peak times &amp; rates where they exist because these are arbitrarily applied to different locations.
     </div>
 
     <div class="grid">
