@@ -14,10 +14,6 @@ function toggleTheme() {
     btn.textContent = body.classList.contains("light-mode") ? "Switch to Dark View" : "Switch to Light View";
 }
 
-/**
- * Creates a provider input box. 
- * If a preset is passed, it populates the fields automatically.
- */
 function createProviderBox(preset) {
     providerCount++;
     const id = providerCount;
@@ -33,7 +29,6 @@ function createProviderBox(preset) {
         return speeds.some(s => s >= minSpeed);
     });
 
-    // Updated sorting logic to use the new hasSubscription boolean
     const sortedPresets = [...filteredPresets].sort((a, b) => {
         const aSub = a.subscription.hasSubscription;
         const bSub = b.subscription.hasSubscription;
@@ -100,7 +95,6 @@ function updateProviderFields(id) {
     if (!p) return;
 
     nameInput.value = p.name;
-    // Updated to pull from the new nested subscription.monthlyCost field
     subCostInput.value = p.subscription.monthlyCost;
 
     if (p.rates && !p.rates.default) {

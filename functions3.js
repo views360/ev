@@ -1,6 +1,6 @@
 // ===============================
 // functions3.js
-// Graphing Engine (Robust Version)
+// Graphing Engine
 // ===============================
 
 function drawGraph(core, providers) {
@@ -15,7 +15,7 @@ function drawGraph(core, providers) {
     for (let i = 0; i <= steps; i++) {
         const m = (maxMiles * i) / steps;
         labels.push(m.toFixed(0));
-        const publicKwhAtM = Math.max(0, m - core.homeMiles) / core.efficiency;
+        const publicKwhAtM = Math.max(0, m - core.homeRange) / core.efficiency;
         adhocData.push(core.startChargeCost + (publicKwhAtM * core.adhocRate / 100));
     }
 
@@ -34,8 +34,7 @@ function drawGraph(core, providers) {
         const data = [];
         for (let i = 0; i <= steps; i++) {
             const m = (maxMiles * i) / steps;
-            const publicKwhAtM = Math.max(0, m - core.homeMiles) / core.efficiency;
-            // Updated: Using the subCost property from the provider object
+            const publicKwhAtM = Math.max(0, m - core.homeRange) / core.efficiency;
             data.push(p.subCost + core.startChargeCost + (publicKwhAtM * activeRate / 100));
         }
 
@@ -55,7 +54,7 @@ function drawGraph(core, providers) {
             maintainAspectRatio: false,
             scales: {
                 x: { title: { display: true, text: "Trip Miles", color: "#9ca3af" }, ticks: { color: "#9ca3af" } },
-                y: { title: { display: true, text: "Total Cost (£)\", color: "#9ca3af" }, ticks: { color: "#9ca3af" } }
+                y: { title: { display: true, text: "Total Cost (£)", color: "#9ca3af" }, ticks: { color: "#9ca3af" } }
             },
             plugins: {
                 legend: { labels: { color: getComputedStyle(document.body).getPropertyValue("--text").trim() } }
@@ -70,10 +69,7 @@ function getProviderColor(name) {
         "Tesla": "#e81010",
         "BP Pulse": "#00a14b",
         "Shell Recharge": "#ffda00",
-        "Osprey": "#f97316",
-        "Instavolt": "#ffeb3b",
-        "Gridserve": "#4caf50",
-        "Ionity": "#2196f3"
+        "Osprey": "#f97316"
     };
     return colors[name] || `#${Math.floor(Math.random()*16777215).toString(16)}`;
 }
