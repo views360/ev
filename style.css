@@ -124,7 +124,9 @@ input:focus, select:focus {
 }
 
 .btn {
-    padding: 10px 20px;
+    box-sizing: border-box; /* Ensures padding doesn't add to height */
+    height: 40px; /* Forces identical height */
+    padding: 0 20px;
     border-radius: 8px;
     font-weight: 600;
     cursor: pointer;
@@ -135,6 +137,7 @@ input:focus, select:focus {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    line-height: 1; /* Normalizes text position */
 }
 
 .btn.secondary {
