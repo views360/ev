@@ -80,50 +80,61 @@ function shareLink() {
 }
 
 /* ============================================
-   UPDATED PDF EXPORT — NOW GREYSCALE
+   UPDATED PDF EXPORT — TEMPORARY LIGHT MODE
    ============================================ */
 function exportPdf() {
     const results = document.getElementById("results");
 
-    html2canvas(results).then(canvas => {
+    // Detect current theme
+    const wasLight = document.body.classList.contains("light-mode");
 
-        // Create greyscale canvas
-        const greyCanvas = document.createElement("canvas");
-        const gctx = greyCanvas.getContext("2d");
+    // Force light mode for high-contrast PDF
+    document.body.classList.add("light-mode");
 
-        greyCanvas.width = canvas.width;
-        greyCanvas.height = canvas.height;
+    // Wait for repaint so light mode fully applies
+    requestAnimationFrame(() => {
+        html2canvas(results).then(canvas => {
 
-        gctx.drawImage(canvas, 0, 0);
+            // Restore original theme immediately after capture
+            if (!wasLight) {
+                document.body.classList.remove("light-mode");
+            }
 
-        const imgData = gctx.getImageData(0, 0, greyCanvas.width, greyCanvas.height);
-        const pixels = imgData.data;
+            // Create greyscale canvas
+            const greyCanvas = document.createElement("canvas");
+            const gctx = greyCanvas.getContext("2d");
 
-        // Convert to greyscale
-        for (let i = 0; i < pixels.length; i += 4) {
-            const r = pixels[i];
-            const g = pixels[i + 1];
-            const b = pixels[i + 2];
+            greyCanvas.width = canvas.width;
+            greyCanvas.height = canvas.height;
 
-            // Luma formula for perceptual greyscale
-            const grey = 0.299 * r + 0.587 * g + 0.114 * b;
+            gctx.drawImage(canvas, 0, 0);
 
-            pixels[i] = grey;
-            pixels[i + 1] = grey;
-            pixels[i + 2] = grey;
-        }
+            const imgData = gctx.getImageData(0, 0, greyCanvas.width, greyCanvas.height);
+            const pixels = imgData.data;
 
-        gctx.putImageData(imgData, 0, 0);
+            // Convert to greyscale
+            for (let i = 0; i < pixels.length; i += 4) {
+                const r = pixels[i];
+                const g = pixels[i + 1];
+                const b = pixels[i + 2];
+                const grey = 0.299 * r + 0.587 * g + 0.114 * b;
+                pixels[i] = grey;
+                pixels[i + 1] = grey;
+                pixels[i + 2] = grey;
+            }
 
-        const greyImg = greyCanvas.toDataURL("image/png");
+            gctx.putImageData(imgData, 0, 0);
 
-        const { jsPDF } = window.jspdf;
-        const pdf = new jsPDF("p", "mm", "a4");
-        const width = pdf.internal.pageSize.getWidth();
-        const height = (greyCanvas.height * width) / greyCanvas.width;
+            const greyImg = greyCanvas.toDataURL("image/png");
 
-        pdf.addImage(greyImg, "PNG", 0, 0, width, height);
-        pdf.save("ev-comparison.pdf");
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF("p", "mm", "a4");
+            const width = pdf.internal.pageSize.getWidth();
+            const height = (greyCanvas.height * width) / greyCanvas.width;
+
+            pdf.addImage(greyImg, "PNG", 0, 0, width, height);
+            pdf.save("ev-comparison.pdf");
+        });
     });
 }
 
