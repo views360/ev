@@ -80,13 +80,61 @@ function shareLink() {
 }
 
 /* ============================================
+   PDF PREVIEW MODE (INLINE)
+   ============================================ */
+function showPdfPreview() {
+    const existing = document.getElementById("pdfPreview");
+    if (existing) existing.remove();
+
+    const preview = document.createElement("div");
+    preview.id = "pdfPreview";
+    preview.style.padding = "20px";
+    preview.style.background = "#fff";
+    preview.style.color = "#000";
+    preview.style.border = "2px solid #000";
+    preview.style.marginTop = "20px";
+
+    const header = document.createElement("h2");
+    header.textContent = "EV Public Charging Comparison";
+    header.style.textAlign = "center";
+    header.style.marginBottom = "20px";
+
+    const clone = document.getElementById("results").cloneNode(true);
+
+    clone.querySelector(".chart-wrapper")?.remove();
+    clone.querySelector(".input-group")?.remove();
+
+    preview.appendChild(header);
+    preview.appendChild(clone);
+
+    const btnRow = document.createElement("div");
+    btnRow.style.marginTop = "20px";
+    btnRow.style.display = "flex";
+    btnRow.style.gap = "10px";
+
+    const closeBtn = document.createElement("button");
+    closeBtn.textContent = "Close preview";
+    closeBtn.onclick = () => preview.remove();
+
+    const pdfBtn = document.createElement("button");
+    pdfBtn.textContent = "Download PDF";
+    pdfBtn.onclick = exportPdf;
+
+    btnRow.appendChild(closeBtn);
+    btnRow.appendChild(pdfBtn);
+    preview.appendChild(btnRow);
+
+    document.querySelector(".app").appendChild(preview);
+}
+
+/* ============================================
    UPDATED PDF EXPORT — PURE B&W + MARGINS + FIT TO A4
    WITH PRINT-SAFE OVERRIDE (ALL TEXT BLACK, ALL BACKGROUNDS WHITE)
+   GRAPH REMOVED, SORT REMOVED, HEADER ADDED
    ============================================ */
 function exportPdf() {
     const results = document.getElementById("results");
 
-    // Create print-safe override
     const override = document.createElement("style");
     override.id = "printSafeStyles";
     override.innerHTML = `
@@ -97,7 +145,10 @@ function exportPdf() {
             box-shadow: none !important;
         }
         .chart-wrapper {
-            background: #ffffff !important;
+            display: none !important;
+        }
+        #sortResults, label[for="sortResults"] {
+            display: none !important;
         }
         .btn, button {
             display: none !important;
@@ -105,14 +156,11 @@ function exportPdf() {
     `;
     document.head.appendChild(override);
 
-    // Wait for repaint
     requestAnimationFrame(() => {
         html2canvas(results).then(canvas => {
 
-            // Remove override immediately after capture
             override.remove();
 
-            // Create black & white canvas
             const bwCanvas = document.createElement("canvas");
             const bctx = bwCanvas.getContext("2d");
 
@@ -124,7 +172,6 @@ function exportPdf() {
             const imgData = bctx.getImageData(0, 0, bwCanvas.width, bwCanvas.height);
             const pixels = imgData.data;
 
-            // Convert to pure black & white (threshold)
             const threshold = 160;
             for (let i = 0; i < pixels.length; i += 4) {
                 const r = pixels[i];
@@ -146,16 +193,13 @@ function exportPdf() {
             const { jsPDF } = window.jspdf;
             const pdf = new jsPDF("p", "mm", "a4");
 
-            // A4 dimensions
             const pageWidth = pdf.internal.pageSize.getWidth();
             const pageHeight = pdf.internal.pageSize.getHeight();
 
-            // 1cm margins
             const margin = 10;
             const usableWidth = pageWidth - margin * 2;
             const usableHeight = pageHeight - margin * 2;
 
-            // Scale image to fit inside margins
             const imgAspect = bwCanvas.width / bwCanvas.height;
             const pageAspect = usableWidth / usableHeight;
 
@@ -169,7 +213,11 @@ function exportPdf() {
                 renderWidth = usableHeight * imgAspect;
             }
 
-            pdf.addImage(bwImg, "PNG", margin, margin, renderWidth, renderHeight);
+            pdf.setFontSize(18);
+            pdf.text("EV Public Charging Comparison", pageWidth / 2, margin, { align: "center" });
+
+            pdf.addImage(bwImg, "PNG", margin, margin + 10, renderWidth, renderHeight);
+
             pdf.save("ev-comparison.pdf");
         });
     });
