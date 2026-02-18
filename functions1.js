@@ -23,8 +23,8 @@ function createProviderBox(preset) {
 
     const minSpeed = parseFloat(document.getElementById("minSpeed").value) || 0;
     
-    // Filter: Show provider if it has a default rate (assumed ultra-fast) 
-    // OR if it has at least one specific speed >= minSpeed
+    // Filter: Only include providers that meet the minimum speed requirement
+    // Providers with a 'default' rate are assumed ultra-fast and always shown.
     const filteredPresets = PRESETS.filter(p => {
         if (p.rates && p.rates.default) return true;
         const speeds = Object.keys(p.rates).map(Number);
@@ -101,6 +101,7 @@ function updateProviderFields(id) {
 
     if (p.rates && !p.rates.default) {
         const minSpeed = parseFloat(document.getElementById("minSpeed").value) || 0;
+        // Only show speeds that are >= the selected minSpeed.
         const speeds = Object.keys(p.rates).filter(s => parseFloat(s) >= minSpeed);
         
         speedSelect.innerHTML = speeds.map(s => `<option value="${s}">${s}kW</option>`).join("");
@@ -126,6 +127,10 @@ function updateRateFromSpeed(id) {
     calculate();
 }
 
+/**
+ * Updates all existing provider boxes when the global minSpeed changes.
+ * Hides providers that no longer meet the speed criteria.
+ */
 function enforceSpeedRules() {
     const minSpeed = parseFloat(document.getElementById("minSpeed").value) || 0;
     const boxes = document.querySelectorAll(".provider-box");
@@ -135,7 +140,6 @@ function enforceSpeedRules() {
         const presetSelect = document.getElementById(`preset${id}`);
         const currentPreset = presetSelect.value;
 
-        // Re-generate the preset dropdown options based on the new minSpeed
         const filteredPresets = PRESETS.filter(p => {
             if (p.rates && p.rates.default) return true;
             const speeds = Object.keys(p.rates).map(Number);
@@ -155,11 +159,10 @@ function enforceSpeedRules() {
         
         presetSelect.innerHTML = presetOptions;
 
-        // If the previously selected provider is no longer valid, revert to Custom
+        // If the selected provider is now invalid for this speed, revert to Custom.
         const stillValid = sortedPresets.some(p => p.name === currentPreset) || currentPreset === 'Custom';
         if (stillValid) {
             presetSelect.value = currentPreset;
-            // Also refresh the speed options for the currently selected provider
             if (currentPreset !== 'Custom') {
                 updateProviderFields(id);
             }
