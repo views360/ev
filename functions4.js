@@ -1,86 +1,100 @@
 // ===============================
 // functions4.js
-// Utilities + Initialisation + Local Storage
+// Utilities + Initialisation + Local Storage (Full Version)
 // ===============================
 
-// ... (saveToLocalStorage, loadFromLocalStorage, shareLink, loadFromUrl remain the same)
+function saveToLocalStorage() {
+    const data = {
+        journeyMiles: document.getElementById("journeyMiles").value,
+        batteryKwh: document.getElementById("batteryKwh").value,
+        soc: document.getElementById("soc").value,
+        efficiency: document.getElementById("efficiency").value,
+        adhoc: document.getElementById("adhoc").value,
+        startChargeRate: document.getElementById("startChargeRate").value,
+        minSpeed: document.getElementById("minSpeed").value
+    };
+    localStorage.setItem("ev_calc_settings_v2", JSON.stringify(data));
+}
 
-// -------------------------------
-// EXPORT PDF (Updated for Hardware Categories & Sleek Style)
-// -------------------------------
+function loadFromLocalStorage() {
+    const saved = localStorage.getItem("ev_calc_settings_v2");
+    if (!saved) return;
+    const data = JSON.parse(saved);
+    Object.keys(data).forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = data[id];
+    });
+    calculate();
+}
+
 async function exportPdf() {
-    const resultsEl = document.getElementById("results");
-
-    if (!resultsEl || resultsEl.style.display === "none") {
-        alert("Please calculate your journey results before exporting.");
-        return;
-    }
-
     const { jsPDF } = window.jspdf;
-
-    // We capture the entire .app container to ensure the sleek 
-    // styling and neon accents are preserved in the export.
-    const elementToCapture = document.querySelector(".app");
-
+    const element = document.querySelector(".app");
+    
     try {
-        const canvas = await html2canvas(elementToCapture, {
-            scale: 2, // High resolution
+        const canvas = await html2canvas(element, {
+            scale: 2,
             useCORS: true,
-            backgroundColor: getComputedStyle(document.body).getPropertyValue("--bg").trim(),
-            // Ensure neon blue shadows and borders are rendered correctly
-            logging: false,
+            backgroundColor: getComputedStyle(document.body).getPropertyValue("--bg").trim()
         });
-
         const imgData = canvas.toDataURL("image/png");
         const pdf = new jsPDF("p", "mm", "a4");
-
         const pdfWidth = pdf.internal.pageSize.getWidth();
         const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-
-        // If the content is very long, it will scale to fit the width of the A4 page
+        
         pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
-        pdf.save("EV-Charging-Comparison-Report.pdf");
-    } catch (error) {
-        console.error("PDF Export failed:", error);
-        alert("There was an error generating your PDF. Please try again.");
+        pdf.save("EV-Charging-Report.pdf");
+    } catch (e) {
+        alert("PDF Export failed. Check console for details.");
+        console.error(e);
     }
 }
 
-// ... (resetAll remains the same)
+function shareLink() {
+    const params = new URLSearchParams();
+    params.set("journeyMiles", document.getElementById("journeyMiles").value);
+    params.set("batteryKwh", document.getElementById("batteryKwh").value);
+    params.set("soc", document.getElementById("soc").value);
+    params.set("efficiency", document.getElementById("efficiency").value);
+    params.set("adhoc", document.getElementById("adhoc").value);
+    
+    const url = window.location.origin + window.location.pathname + "?" + params.toString();
+    navigator.clipboard.writeText(url).then(() => alert("Link copied to clipboard!"));
+}
 
-// -------------------------------
-// INITIALISATION
-// -------------------------------
+function resetAll() {
+    localStorage.removeItem("ev_calc_settings_v2");
+    window.location.href = window.location.pathname;
+}
 
-// 1. Attach Event Listeners
-[
-    "journeyMiles",
-    "batteryKwh",
-    "soc",
-    "efficiency",
-    "adhoc",
-    "startChargeRate",
-    "startChargeType",
-    "minSpeed"
-].forEach(id => {
-    const el = document.getElementById(id);
-    el.addEventListener("input", () => {
-        if(id === "minSpeed") enforceSpeedRules();
-        calculate();
-    });
-    el.addEventListener("input", saveToLocalStorage);
-});
-
-// 2. Fetch presets from the NEW JSON structure
-fetch("providers.json") // Updated to point to your new data file
-    .then(r => r.json())
-    .then(data => {
-        PRESETS = data.providers;
-        
-        const params = new URLSearchParams(window.location.search);
-        if (params.has("journeyMiles")) {
-            loadFromUrl();
-        } else {
-            loadFromLocalStorage();
+// Initialization
+document.addEventListener("DOMContentLoaded", () => {
+    // Attach listeners to all inputs
+    const inputs = ["journeyMiles", "batteryKwh", "soc", "efficiency", "adhoc", "startChargeRate", "minSpeed"];
+    inputs.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.addEventListener("input", calculate);
+            el.addEventListener("input", saveToLocalStorage);
         }
     });
+
+    // Fetch the NEW data
+    fetch("providers-new.json")
+        .then(r => r.json())
+        .then(data => {
+            PRESETS = data.providers;
+            // Check for URL params first, then local storage
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has("journeyMiles")) {
+                urlParams.forEach((value, key) => {
+                    const el = document.getElementById(key);
+                    if (el) el.value = value;
+                });
+                calculate();
+            } else {
+                loadFromLocalStorage();
+            }
+        })
+        .catch(err => console.error("Data Load Error:", err));
+});
