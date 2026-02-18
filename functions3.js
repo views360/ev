@@ -28,16 +28,14 @@ function drawGraph(core, providers) {
     }];
 
     providers.forEach(p => {
-        // Trust the rate currently selected in the UI/Box.
-        // This ensures the graph and table are always in sync.
         const activeRate = p.rate;
-
         if (isNaN(activeRate)) return;
 
         const data = [];
         for (let i = 0; i <= steps; i++) {
             const m = (maxMiles * i) / steps;
             const publicKwhAtM = Math.max(0, m - core.homeMiles) / core.efficiency;
+            // Updated: Using the subCost property from the provider object
             data.push(p.subCost + core.startChargeCost + (publicKwhAtM * activeRate / 100));
         }
 
@@ -57,7 +55,7 @@ function drawGraph(core, providers) {
             maintainAspectRatio: false,
             scales: {
                 x: { title: { display: true, text: "Trip Miles", color: "#9ca3af" }, ticks: { color: "#9ca3af" } },
-                y: { title: { display: true, text: "Total Cost (£)", color: "#9ca3af" }, ticks: { color: "#9ca3af" } }
+                y: { title: { display: true, text: "Total Cost (£)\", color: "#9ca3af" }, ticks: { color: "#9ca3af" } }
             },
             plugins: {
                 legend: { labels: { color: getComputedStyle(document.body).getPropertyValue("--text").trim() } }
@@ -68,15 +66,14 @@ function drawGraph(core, providers) {
 
 function getProviderColor(name) {
     const colors = {
-        "Be.EV": "#bef264",
-        "Tesla": "#f87171",
-        "BP Pulse": "#22c55e",
-        "Shell Recharge": "#fbbf24",
-        "Pod Point": "#38bdf8",
-        "Ionity": "#a855f7"
+        "Be.EV": "#00d1ff",
+        "Tesla": "#e81010",
+        "BP Pulse": "#00a14b",
+        "Shell Recharge": "#ffda00",
+        "Osprey": "#f97316",
+        "Instavolt": "#ffeb3b",
+        "Gridserve": "#4caf50",
+        "Ionity": "#2196f3"
     };
-    for (const key in colors) {
-        if (name.includes(key)) return colors[key];
-    }
-    return "#94a3b8";
+    return colors[name] || `#${Math.floor(Math.random()*16777215).toString(16)}`;
 }

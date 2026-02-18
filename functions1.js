@@ -25,7 +25,6 @@ function createProviderBox(preset) {
     box.className = "provider-box";
     box.dataset.id = id;
 
-    // Filter and sort presets based on minimum speed before showing in the dropdown
     const minSpeed = parseFloat(document.getElementById("minSpeed").value) || 0;
     
     const filteredPresets = PRESETS.filter(p => {
@@ -108,8 +107,6 @@ function updateProviderFields(id) {
         const speeds = Object.keys(p.rates);
         speedSelect.innerHTML = speeds.map(s => `<option value="${s}">${s}kW</option>`).join("");
         speedRow.style.display = "flex";
-        
-        // Initially set to the first (lowest) rate, then let enforceSpeedRules snap it to the minimum required
         rateInput.value = p.rates[speeds[0]];
         enforceSpeedRules(); 
     } else {
@@ -136,7 +133,6 @@ function enforceSpeedRules() {
     boxes.forEach(box => {
         const id = box.dataset.id;
         const speedSelect = document.getElementById(`speed${id}`);
-        // If the speed dropdown isn't visible/existing, this provider has a flat rate
         if (!speedSelect || speedSelect.offsetParent === null) return;
 
         let firstValidValue = null;
@@ -144,11 +140,9 @@ function enforceSpeedRules() {
             const val = parseFloat(opt.value);
             const isInvalid = val < minSpeed;
             opt.disabled = isInvalid;
-            // Find the lowest speed that satisfies the minimum requirement
             if (!isInvalid && firstValidValue === null) firstValidValue = opt.value;
         });
 
-        // Always snap the selection to the lowest valid speed to match the "minimum desired" requirement
         if (firstValidValue !== null) {
             speedSelect.value = firstValidValue;
             updateRateFromSpeed(id);
