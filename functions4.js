@@ -1,6 +1,6 @@
 // ===============================
 // functions4.js
-// Utilities + Initialisation + Local Storage (Full Version)
+// Utilities + Initialisation + Local Storage
 // ===============================
 
 function saveToLocalStorage() {
@@ -13,11 +13,11 @@ function saveToLocalStorage() {
         startChargeRate: document.getElementById("startChargeRate").value,
         minSpeed: document.getElementById("minSpeed").value
     };
-    localStorage.setItem("ev_calc_settings_v2", JSON.stringify(data));
+    localStorage.setItem("ev_calc_settings_v3", JSON.stringify(data));
 }
 
 function loadFromLocalStorage() {
-    const saved = localStorage.getItem("ev_calc_settings_v2");
+    const saved = localStorage.getItem("ev_calc_settings_v3");
     if (!saved) return;
     const data = JSON.parse(saved);
     Object.keys(data).forEach(id => {
@@ -28,6 +28,12 @@ function loadFromLocalStorage() {
 }
 
 async function exportPdf() {
+    const resultsEl = document.getElementById("results");
+    if (!resultsEl || resultsEl.style.display === "none") {
+        alert("Please calculate results first.");
+        return;
+    }
+
     const { jsPDF } = window.jspdf;
     const element = document.querySelector(".app");
     
@@ -45,31 +51,27 @@ async function exportPdf() {
         pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
         pdf.save("EV-Charging-Report.pdf");
     } catch (e) {
-        alert("PDF Export failed. Check console for details.");
-        console.error(e);
+        console.error("PDF Export Error:", e);
+        alert("PDF Generation failed.");
     }
 }
 
 function shareLink() {
     const params = new URLSearchParams();
-    params.set("journeyMiles", document.getElementById("journeyMiles").value);
-    params.set("batteryKwh", document.getElementById("batteryKwh").value);
-    params.set("soc", document.getElementById("soc").value);
-    params.set("efficiency", document.getElementById("efficiency").value);
-    params.set("adhoc", document.getElementById("adhoc").value);
-    
+    ["journeyMiles", "batteryKwh", "soc", "efficiency", "adhoc"].forEach(id => {
+        params.set(id, document.getElementById(id).value);
+    });
     const url = window.location.origin + window.location.pathname + "?" + params.toString();
     navigator.clipboard.writeText(url).then(() => alert("Link copied to clipboard!"));
 }
 
 function resetAll() {
-    localStorage.removeItem("ev_calc_settings_v2");
+    localStorage.removeItem("ev_calc_settings_v3");
     window.location.href = window.location.pathname;
 }
 
-// Initialization
+// Initialization Logic
 document.addEventListener("DOMContentLoaded", () => {
-    // Attach listeners to all inputs
     const inputs = ["journeyMiles", "batteryKwh", "soc", "efficiency", "adhoc", "startChargeRate", "minSpeed"];
     inputs.forEach(id => {
         const el = document.getElementById(id);
@@ -79,12 +81,10 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // Fetch the NEW data
-    fetch("providers-new.json")
+    fetch("providers.json") // Renamed as per your request
         .then(r => r.json())
         .then(data => {
             PRESETS = data.providers;
-            // Check for URL params first, then local storage
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.has("journeyMiles")) {
                 urlParams.forEach((value, key) => {
@@ -96,5 +96,5 @@ document.addEventListener("DOMContentLoaded", () => {
                 loadFromLocalStorage();
             }
         })
-        .catch(err => console.error("Data Load Error:", err));
+        .catch(err => console.error("Could not load provider data:", err));
 });
