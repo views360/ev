@@ -2,7 +2,7 @@
   "providers": [
     {
       "id": "beev",
-      "name": "Be.EV",
+      "name": "Subscription > Be.EV",
       "subscription": {
         "hasSubscription": true,
         "monthlyCost": 9.99
@@ -17,7 +17,7 @@
     },
     {
       "id": "tesla",
-      "name": "Tesla",
+      "name": "Subscription > Tesla",
       "subscription": {
         "hasSubscription": true,
         "monthlyCost": 10.99
@@ -32,7 +32,7 @@
     },
     {
       "id": "bp-pulse",
-      "name": "BP Pulse",
+      "name": "Subscription > BP Pulse",
       "subscription": {
         "hasSubscription": true,
         "monthlyCost": 7.99
@@ -50,7 +50,7 @@
     },
     {
       "id": "shell-recharge",
-      "name": "Shell Recharge",
+      "name": "Subscription > Shell Recharge",
       "subscription": {
         "hasSubscription": true,
         "monthlyCost": 7.99
@@ -68,7 +68,7 @@
     },
     {
       "id": "osprey",
-      "name": "Osprey",
+      "name": "Osprey (ad-hoc only)",
       "subscription": {
         "hasSubscription": false,
         "monthlyCost": 0
@@ -83,7 +83,7 @@
     },
     {
       "id": "instavolt",
-      "name": "Instavolt",
+      "name": "Instavolt (ad-hoc only)",
       "subscription": {
         "hasSubscription": false,
         "monthlyCost": 0
@@ -98,7 +98,7 @@
     },
     {
       "id": "gridserve",
-      "name": "Gridserve",
+      "name": "Gridserve (ad-hoc only)",
       "subscription": {
         "hasSubscription": false,
         "monthlyCost": 0
@@ -113,7 +113,7 @@
     },
     {
       "id": "pod-point",
-      "name": "Pod Point",
+      "name": "Pod Point (ad-hoc only)",
       "subscription": {
         "hasSubscription": false,
         "monthlyCost": 0
@@ -130,7 +130,7 @@
     },
     {
       "id": "tesco-pod-point",
-      "name": "Tesco Pod Point",
+      "name": "Tesco Pod Point (ad-hoc only)",
       "subscription": {
         "hasSubscription": false,
         "monthlyCost": 0
@@ -148,7 +148,7 @@
     },
     {
       "id": "lidl",
-      "name": "Lidl (via Lidl+ app)",
+      "name": "Lidl via Lidl+ app (ad-hoc only)",
       "subscription": {
         "hasSubscription": false,
         "monthlyCost": 0
