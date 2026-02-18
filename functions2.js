@@ -69,7 +69,7 @@ function calculate() {
     if (sortVal === "cheapest") {
         providers.sort((a, b) => a.totalJourneyCost - b.totalJourneyCost);
     } else if (sortVal === "az") {
-        providers.sort((a, b) => a.name.localeCompare(name));
+        providers.sort((a, b) => a.name.localeCompare(b.name));
     } else if (sortVal === "za") {
         providers.sort((a, b) => b.name.localeCompare(a.name));
     }
@@ -131,7 +131,7 @@ function calculate() {
 
     const bestProvider = [...providers].sort((a, b) => a.totalJourneyCost - b.totalJourneyCost)[0];
     
-    // Ensure Line 4 (summaryBox) is hidden
+    // Ensure Line 4 (summaryBox) is hidden per your project structure
     summaryBox.style.display = "none";
 
     // Primary Charging Time Calc
@@ -175,11 +175,18 @@ function calculate() {
     let conclusionHTML = `<h3>Analysis</h3>`;
     const locationDisclaimer = `<p class="disclaimer">Note: A subscription will only save money if the provider has charging stations where you plan to travel. Also, the above timings do not take into account the slowdown between 80% and 100% charge.</p>`;
 
+    // Determine wording based on whether the best provider has a subscription fee
+    const isSubscription = bestProvider.subCost > 0;
+    const line2Label = isSubscription ? "Total cost including subscription" : "Total journey cost";
+    const line2BadLuck = isSubscription 
+        ? `At <strong>${miles} miles</strong>, subscription savings do not cover the monthly fee.` 
+        : `At <strong>${miles} miles</strong>, this provider's rate is more expensive than standard Ad‑hoc charging.`;
+
     if (bestProvider.totalJourneyCost < totalAdhocCost) {
         conclusionHTML += `
             <div class="conclusion-card good">
                 <p class="main-result"><strong>${bestProvider.name}</strong> is cheapest for a <strong>${miles}-mile trip charging at ${minSpeed}kW</strong> (saving <strong>£${bestProvider.savings.toFixed(2)}</strong> vs Ad‑hoc).</p>
-                <p class="secondary-result">Total cost including subscription: <strong>£${bestProvider.totalJourneyCost.toFixed(2)}</strong>.</p>
+                <p class="secondary-result">${line2Label}: <strong>£${bestProvider.totalJourneyCost.toFixed(2)}</strong>.</p>
                 ${timeLine}
                 ${speedTableHtml}
                 ${locationDisclaimer}
@@ -189,7 +196,7 @@ function calculate() {
         conclusionHTML += `
             <div class="conclusion-card bad">
                 <p class="main-result">Standard <strong>Ad‑hoc charging</strong> is the most cost‑effective choice for this trip at <strong>${minSpeed}kW</strong>.</p>
-                <p class="secondary-result">At <strong>${miles} miles</strong>, subscription savings do not cover the monthly fee.</p>
+                <p class="secondary-result">${line2BadLuck}</p>
                 ${timeLine}
                 ${speedTableHtml}
                 ${locationDisclaimer}
