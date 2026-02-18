@@ -23,10 +23,9 @@ function createProviderBox(preset) {
 
     const minSpeed = parseFloat(document.getElementById("minSpeed").value) || 0;
     
-    // Filter: Only include providers that meet the minimum speed requirement
-    // Providers with a 'default' rate are assumed ultra-fast and always shown.
+    // Filter presets: include if it has a default rate or at least one speed >= minSpeed
     const filteredPresets = PRESETS.filter(p => {
-        if (p.rates && p.rates.default) return true;
+        if (!p.rates || p.rates.default) return true;
         const speeds = Object.keys(p.rates).map(Number);
         return speeds.some(s => s >= minSpeed);
     });
@@ -101,7 +100,7 @@ function updateProviderFields(id) {
 
     if (p.rates && !p.rates.default) {
         const minSpeed = parseFloat(document.getElementById("minSpeed").value) || 0;
-        // Only show speeds that are >= the selected minSpeed.
+        // Only show speeds >= minSpeed
         const speeds = Object.keys(p.rates).filter(s => parseFloat(s) >= minSpeed);
         
         speedSelect.innerHTML = speeds.map(s => `<option value="${s}">${s}kW</option>`).join("");
@@ -111,7 +110,7 @@ function updateProviderFields(id) {
             rateInput.value = p.rates[speeds[0]];
         }
     } else {
-        rateInput.value = p.rates.default;
+        rateInput.value = p.rates.default || 0;
         speedRow.style.display = "none";
     }
     calculate();
@@ -127,10 +126,6 @@ function updateRateFromSpeed(id) {
     calculate();
 }
 
-/**
- * Updates all existing provider boxes when the global minSpeed changes.
- * Hides providers that no longer meet the speed criteria.
- */
 function enforceSpeedRules() {
     const minSpeed = parseFloat(document.getElementById("minSpeed").value) || 0;
     const boxes = document.querySelectorAll(".provider-box");
@@ -141,7 +136,7 @@ function enforceSpeedRules() {
         const currentPreset = presetSelect.value;
 
         const filteredPresets = PRESETS.filter(p => {
-            if (p.rates && p.rates.default) return true;
+            if (!p.rates || p.rates.default) return true;
             const speeds = Object.keys(p.rates).map(Number);
             return speeds.some(s => s >= minSpeed);
         });
@@ -159,12 +154,11 @@ function enforceSpeedRules() {
         
         presetSelect.innerHTML = presetOptions;
 
-        // If the selected provider is now invalid for this speed, revert to Custom.
         const stillValid = sortedPresets.some(p => p.name === currentPreset) || currentPreset === 'Custom';
         if (stillValid) {
             presetSelect.value = currentPreset;
             if (currentPreset !== 'Custom') {
-                updateProviderFields(id);
+                updateProviderFields(id); 
             }
         } else {
             presetSelect.value = 'Custom';
@@ -183,7 +177,7 @@ function addAllProviders() {
 
     PRESETS.forEach(preset => {
         let canSupportSpeed = false;
-        if (preset.rates.default) {
+        if (!preset.rates || preset.rates.default) {
             canSupportSpeed = true; 
         } else {
             const speeds = Object.keys(preset.rates).map(Number);
