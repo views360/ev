@@ -1,6 +1,5 @@
 // ===============================
-// functions2.js
-// Core Calculation Engine (Updated for Hardware Categories)
+// functions2.js - Calculation Engine
 // ===============================
 
 function calculate() {
@@ -10,8 +9,8 @@ function calculate() {
     const efficiency = parseFloat(document.getElementById("efficiency").value);
     const adhocRate = parseFloat(document.getElementById("adhoc").value);
     const startRate = parseFloat(document.getElementById("startChargeRate").value);
-    const minSpeed = parseFloat(document.getElementById("minSpeed").value);
 
+    // Hide results if primary inputs are missing
     if (isNaN(miles) || isNaN(battery) || isNaN(soc) || isNaN(efficiency) || isNaN(adhocRate)) {
         document.getElementById("results").style.display = "none";
         return;
@@ -24,6 +23,7 @@ function calculate() {
     const publicKwh = publicMiles / efficiency;
     const totalAdhocCost = startChargeCost + (publicKwh * (adhocRate / 100));
 
+    // Show Results Section
     document.getElementById("results").style.display = "block";
     document.getElementById("preChargeLine").innerHTML = `Pre-journey charge: <strong>${startChargeKwh.toFixed(1)} kWh</strong> (£${startChargeCost.toFixed(2)})`;
     document.getElementById("homeRangeLine").innerHTML = `Range from start charge: <strong>${initialRange.toFixed(0)} miles</strong>`;
@@ -33,15 +33,14 @@ function calculate() {
     const providers = [];
     document.querySelectorAll(".provider-box").forEach(box => {
         const id = box.dataset.id;
-        const speedEl = document.getElementById(`speed${id}`);
-        const speedVal = speedEl ? speedEl.value : "Unknown";
+        const speedSelect = document.getElementById(`speed${id}`);
+        const speedLabel = speedSelect && speedSelect.options[speedSelect.selectedIndex] ? speedSelect.options[speedSelect.selectedIndex].text : "any hardware";
         
         providers.push({
-            name: document.getElementById(`name${id}`).value,
+            name: document.getElementById(`name${id}`).value || `Provider ${id}`,
             subCost: parseFloat(document.getElementById(`subCost${id}`).value) || 0,
             rate: parseFloat(document.getElementById(`rate${id}`).value) || 0,
-            speed: speedVal,
-            category: speedVal === "default" ? "any hardware" : getSpeedCategory(speedVal)
+            categoryLabel: speedLabel
         });
     });
 
@@ -50,32 +49,25 @@ function calculate() {
         p.savings = totalAdhocCost - p.totalJourneyCost;
     });
 
-    // Ranking and Analysis Logic
-    const bestProvider = [...providers].sort((a, b) => a.totalJourneyCost - b.totalJourneyCost)[0];
+    // Ranking
+    const sorted = [...providers].sort((a, b) => a.totalJourneyCost - b.totalJourneyCost);
+    const best = sorted[0];
     const conclusionsBox = document.getElementById("conclusionsBox");
 
-    if (!bestProvider) return;
-
-    const isSubscription = bestProvider.subCost > 0;
-    const line2Label = isSubscription ? "Total cost including subscription" : "Total journey cost";
-    
-    let conclusionHTML = `<h3>Analysis</h3>`;
-    
-    if (bestProvider.totalJourneyCost < totalAdhocCost) {
-        conclusionHTML += `
-            <div class="conclusion-card good">
-                <p class="main-result"><strong>${bestProvider.name}</strong> is cheapest for this trip using <strong>${bestProvider.category}</strong> hardware (saving <strong>£${bestProvider.savings.toFixed(2)}</strong>).</p>
-                <p class="secondary-result">${line2Label}: <strong>£${bestProvider.totalJourneyCost.toFixed(2)}</strong>.</p>
-            </div>
-        `;
-    } else {
-        conclusionHTML += `
-            <div class="conclusion-card bad">
-                <p class="main-result">Standard <strong>Ad‑hoc charging</strong> remains the best choice for this trip.</p>
-            </div>
-        `;
+    if (best) {
+        if (best.totalJourneyCost < totalAdhocCost) {
+            conclusionsBox.innerHTML = `
+                <div class="conclusion-card good">
+                    <p class="main-result"><strong>${best.name}</strong> is cheapest using <strong>${best.categoryLabel}</strong>.</p>
+                    <p class="secondary-result">Saving <strong>£${best.savings.toFixed(2)}</strong> vs Ad-hoc.</p>
+                </div>`;
+        } else {
+            conclusionsBox.innerHTML = `
+                <div class="conclusion-card bad">
+                    <p class="main-result">Standard <strong>Ad-hoc charging</strong> remains the best choice for this trip.</p>
+                </div>`;
+        }
     }
 
-    conclusionsBox.innerHTML = conclusionHTML;
     drawGraph({journeyMiles: miles, homeMiles: initialRange, efficiency, startChargeCost, adhocRate}, providers);
 }
