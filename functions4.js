@@ -85,50 +85,51 @@ function shareLink() {
    GRAPH REMOVED, SORT REMOVED, HEADER ADDED
    ============================================ */
 function exportPdf() {
+    const results = document.getElementById("results");
+    if (!results) return;
 
-    // Clone #results into an off-screen container
+    // Create off-screen clone wrapper with random id
     const cloneWrapper = document.createElement("div");
+    const cloneId = "pdfClone_" + Math.floor(Math.random() * 1000000);
+    cloneWrapper.id = cloneId;
     cloneWrapper.style.position = "absolute";
     cloneWrapper.style.left = "-99999px";
     cloneWrapper.style.top = "0";
-    cloneWrapper.style.width = "1000px"; // ensure consistent layout width
+    cloneWrapper.style.width = results.offsetWidth + "px";
 
-    const clone = document.getElementById("results").cloneNode(true);
+    // Clone results into wrapper
+    const clone = results.cloneNode(true);
     cloneWrapper.appendChild(clone);
     document.body.appendChild(cloneWrapper);
 
-    // Apply print-safe overrides ONLY to the clone
+    // Remove the "Sort results" input-group inside the clone
+    const groups = cloneWrapper.querySelectorAll(".input-group");
+    groups.forEach(group => {
+        const label = group.querySelector("label");
+        if (label && label.textContent.trim() === "Sort results") {
+            group.remove();
+        }
+    });
+
+    // Remove graph inside the clone
+    const charts = cloneWrapper.querySelectorAll(".chart-wrapper");
+    charts.forEach(el => el.remove());
+
+    // Apply print-safe override ONLY to the clone
     const override = document.createElement("style");
     override.innerHTML = `
-        #${cloneWrapper.id}, #${cloneWrapper.id} * {
+        #${cloneId}, #${cloneId} * {
             background: #ffffff !important;
             color: #000000 !important;
             border-color: #000000 !important;
             box-shadow: none !important;
         }
-
-        /* Remove graph */
-        #${cloneWrapper.id} .chart-wrapper {
-            display: none !important;
-        }
-
-        /* Remove sort label + dropdown */
-        #${cloneWrapper.id} #sortResults,
-        #${cloneWrapper.id} .input-group label {
-            display: none !important;
-        }
-
-        /* Remove buttons */
-        #${cloneWrapper.id} .btn,
-        #${cloneWrapper.id} button {
-            display: none !important;
-        }
     `;
     document.head.appendChild(override);
 
-    // Wait for layout
+    // Wait for layout, then capture the clone
     requestAnimationFrame(() => {
-        html2canvas(clone).then(canvas => {
+        html2canvas(cloneWrapper).then(canvas => {
 
             // Clean up clone + override
             cloneWrapper.remove();
@@ -210,7 +211,7 @@ function resetAll() {
 ].forEach(id => {
     const el = document.getElementById(id);
     el.addEventListener("input", () => {
-        if(id === "minSpeed") enforceSpeedRules();
+        if (id === "minSpeed") enforceSpeedRules();
         calculate();
         saveToLocalStorage();
     });
