@@ -80,7 +80,7 @@ function shareLink() {
 }
 
 /* ============================================
-   UPDATED PDF EXPORT — TEMPORARY LIGHT MODE
+   UPDATED PDF EXPORT — TRUE BLACK & WHITE
    ============================================ */
 function exportPdf() {
     const results = document.getElementById("results");
@@ -100,39 +100,43 @@ function exportPdf() {
                 document.body.classList.remove("light-mode");
             }
 
-            // Create greyscale canvas
-            const greyCanvas = document.createElement("canvas");
-            const gctx = greyCanvas.getContext("2d");
+            // Create black & white canvas
+            const bwCanvas = document.createElement("canvas");
+            const bctx = bwCanvas.getContext("2d");
 
-            greyCanvas.width = canvas.width;
-            greyCanvas.height = canvas.height;
+            bwCanvas.width = canvas.width;
+            bwCanvas.height = canvas.height;
 
-            gctx.drawImage(canvas, 0, 0);
+            bctx.drawImage(canvas, 0, 0);
 
-            const imgData = gctx.getImageData(0, 0, greyCanvas.width, greyCanvas.height);
+            const imgData = bctx.getImageData(0, 0, bwCanvas.width, bwCanvas.height);
             const pixels = imgData.data;
 
-            // Convert to greyscale
+            // Convert to pure black & white (threshold)
+            const threshold = 160; // adjust if needed
             for (let i = 0; i < pixels.length; i += 4) {
                 const r = pixels[i];
                 const g = pixels[i + 1];
                 const b = pixels[i + 2];
+
                 const grey = 0.299 * r + 0.587 * g + 0.114 * b;
-                pixels[i] = grey;
-                pixels[i + 1] = grey;
-                pixels[i + 2] = grey;
+                const bw = grey < threshold ? 0 : 255;
+
+                pixels[i] = bw;
+                pixels[i + 1] = bw;
+                pixels[i + 2] = bw;
             }
 
-            gctx.putImageData(imgData, 0, 0);
+            bctx.putImageData(imgData, 0, 0);
 
-            const greyImg = greyCanvas.toDataURL("image/png");
+            const bwImg = bwCanvas.toDataURL("image/png");
 
             const { jsPDF } = window.jspdf;
             const pdf = new jsPDF("p", "mm", "a4");
             const width = pdf.internal.pageSize.getWidth();
-            const height = (greyCanvas.height * width) / greyCanvas.width;
+            const height = (bwCanvas.height * width) / bwCanvas.width;
 
-            pdf.addImage(greyImg, "PNG", 0, 0, width, height);
+            pdf.addImage(bwImg, "PNG", 0, 0, width, height);
             pdf.save("ev-comparison.pdf");
         });
     });
