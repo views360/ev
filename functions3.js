@@ -64,12 +64,10 @@ function drawGraph(core, providers) {
 }
 
 function getProviderColor(name) {
-    const colors = {
-        "Be.EV": "#00d1ff",
-        "Tesla": "#e81010",
-        "BP Pulse": "#00a14b",
-        "Shell Recharge": "#ffda00",
-        "Osprey": "#f97316"
-    };
-    return colors[name] || `#${Math.floor(Math.random()*16777215).toString(16)}`;
+    const colors = ["#38bdf8", "#818cf8", "#c084fc", "#fb7185", "#34d399", "#fbbf24"];
+    let hash = 0;
+    for (let i = 0; i < name.length; i++) {
+        hash = name.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    return colors[Math.abs(hash) % colors.length];
 }
