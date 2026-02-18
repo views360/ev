@@ -1,5 +1,6 @@
 // ===============================
-// functions1.js - UI & Provider Logic
+// functions1.js
+// UI + Provider Box Logic (Full Version)
 // ===============================
 
 let PRESETS = [];
@@ -13,9 +14,10 @@ function toggleTheme() {
     btn.textContent = body.classList.contains("light-mode") ? "Switch to Dark View" : "Switch to Light View";
 }
 
-// Helper to label speeds based on kW
+// Global helper to distinguish hardware types
 function getSpeedCategory(speed) {
     const s = parseFloat(speed);
+    if (isNaN(s)) return "Generic";
     if (s <= 22) return "AC (Fast)";
     if (s <= 50) return "DC (Rapid)";
     return "Ultra-Rapid";
@@ -30,13 +32,13 @@ function createProviderBox(preset = null) {
 
     const minSpeed = parseFloat(document.getElementById("minSpeed").value) || 0;
 
-    // Filter presets for the dropdown
+    // Filter presets based on new structure: p.chargingSpeeds.ac/dc
     const filteredPresets = PRESETS.filter(p => {
         if (p.rates && p.rates.default) return true;
-        const acSpeeds = (p.chargingSpeeds && p.chargingSpeeds.ac) || [];
-        const dcSpeeds = (p.chargingSpeeds && p.chargingSpeeds.dc) || [];
-        const allSpeeds = [...acSpeeds, ...dcSpeeds];
-        return allSpeeds.length === 0 || allSpeeds.some(s => s >= minSpeed);
+        const ac = (p.chargingSpeeds && p.chargingSpeeds.ac) || [];
+        const dc = (p.chargingSpeeds && p.chargingSpeeds.dc) || [];
+        const combined = [...ac, ...dc];
+        return combined.length === 0 || combined.some(s => s >= minSpeed);
     });
 
     const presetOptions = filteredPresets.map(p => 
@@ -46,7 +48,7 @@ function createProviderBox(preset = null) {
     box.innerHTML = `
         <div class="providers-header-row">
             <strong style="color:var(--accent)">Provider #${id}</strong>
-            <button type="button" class="btn secondary" style="padding:4px 8px; font-size:10px;" onclick="this.closest('.provider-box').remove(); calculate();">Remove</button>
+            <button type="button" class="btn secondary" style="padding:4px 12px; font-size:11px;" onclick="this.closest('.provider-box').remove(); calculate();">Remove</button>
         </div>
         <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:15px;">
             <div class="input-group">
@@ -76,7 +78,17 @@ function createProviderBox(preset = null) {
     `;
 
     document.getElementById("providers").appendChild(box);
-    if (preset) applyPreset(id, preset);
+    
+    // If no preset, add a default option to the speed dropdown
+    if (!preset) {
+        const speedSelect = document.getElementById(`speed${id}`);
+        const opt = document.createElement("option");
+        opt.value = "default";
+        opt.textContent = "Custom/Any Speed";
+        speedSelect.appendChild(opt);
+    } else {
+        applyPreset(id, preset);
+    }
 }
 
 function applyPreset(id, presetData = null) {
@@ -85,7 +97,7 @@ function applyPreset(id, presetData = null) {
     if (!p) return;
 
     document.getElementById(`name${id}`).value = p.name;
-    document.getElementById(`subCost${id}`).value = p.subscription ? p.subscription.monthlyCost : 0;
+    document.getElementById(`subCost${id}`).value = (p.subscription && p.subscription.monthlyCost) ? p.subscription.monthlyCost : 0;
 
     const speedSelect = document.getElementById(`speed${id}`);
     speedSelect.innerHTML = "";
@@ -115,6 +127,25 @@ function updateRateFromSpeed(id) {
     if (!p || !p.rates) return;
 
     const speedVal = document.getElementById(`speed${id}`).value;
-    document.getElementById(`rate${id}`).value = p.rates[speedVal] || 0;
+    if (p.rates[speedVal]) {
+        document.getElementById(`rate${id}`).value = p.rates[speedVal];
+    }
     calculate();
+}
+
+function addAllPresets() {
+    const minSpeed = parseFloat(document.getElementById("minSpeed").value) || 0;
+    document.getElementById("providers").innerHTML = "";
+    
+    PRESETS.forEach(preset => {
+        let canSupport = false;
+        if (preset.rates.default) {
+            canSupport = true;
+        } else {
+            const ac = (preset.chargingSpeeds && preset.chargingSpeeds.ac) || [];
+            const dc = (preset.chargingSpeeds && preset.chargingSpeeds.dc) || [];
+            canSupport = [...ac, ...dc].some(s => s >= minSpeed);
+        }
+        if (canSupport) createProviderBox(preset);
+    });
 }
