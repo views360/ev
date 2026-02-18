@@ -175,10 +175,28 @@ function calculate() {
     let conclusionHTML = `<h3>Analysis</h3>`;
     const locationDisclaimer = `<p class="disclaimer">Note: A subscription will only save money if the provider has charging stations where you plan to travel. Also, the above timings do not take into account the slowdown between 80% and 100% charge.</p>`;
 
-    // Logic to handle subscription-specific text
-    const hasSub = bestProvider.subCost > 0;
-    const subTextLine2 = hasSub 
-        ? `Total cost including subscription: <strong>£${bestProvider.totalJourneyCost.toFixed(2)}</strong>.`
-        : `Total journey cost: <strong>£${bestProvider.totalJourneyCost.toFixed(2)}</strong>.`;
+    if (bestProvider.totalJourneyCost < totalAdhocCost) {
+        conclusionHTML += `
+            <div class="conclusion-card good">
+                <p class="main-result"><strong>${bestProvider.name}</strong> is cheapest for a <strong>${miles}-mile trip charging at ${minSpeed}kW</strong> (saving <strong>£${bestProvider.savings.toFixed(2)}</strong> vs Ad‑hoc).</p>
+                <p class="secondary-result">Total cost including subscription: <strong>£${bestProvider.totalJourneyCost.toFixed(2)}</strong>.</p>
+                ${timeLine}
+                ${speedTableHtml}
+                ${locationDisclaimer}
+            </div>
+        `;
+    } else {
+        conclusionHTML += `
+            <div class="conclusion-card bad">
+                <p class="main-result">Standard <strong>Ad‑hoc charging</strong> is the most cost‑effective choice for this trip at <strong>${minSpeed}kW</strong>.</p>
+                <p class="secondary-result">At <strong>${miles} miles</strong>, subscription savings do not cover the monthly fee.</p>
+                ${timeLine}
+                ${speedTableHtml}
+                ${locationDisclaimer}
+            </div>
+        `;
+    }
 
-    const badLuckTextLine
+    conclusionsBox.innerHTML = conclusionHTML;
+    drawGraph(core, providers);
+}
