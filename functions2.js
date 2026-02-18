@@ -1,6 +1,6 @@
 // ===============================
 // functions2.js
-// Core Calculation Engine (Full Version)
+// Core Calculation Engine
 // ===============================
 
 function calculate() {
@@ -11,7 +11,7 @@ function calculate() {
     const adhocRate = parseFloat(document.getElementById("adhoc").value);
     const startRate = parseFloat(document.getElementById("startChargeRate").value);
 
-    // Stop if basic trip info is missing
+    // Stop if mandatory journey data is missing
     if (isNaN(miles) || isNaN(battery) || isNaN(soc) || isNaN(efficiency) || isNaN(adhocRate)) {
         document.getElementById("results").style.display = "none";
         return;
@@ -24,7 +24,7 @@ function calculate() {
     const publicKwh = publicMiles / efficiency;
     const totalAdhocCost = startChargeCost + (publicKwh * (adhocRate / 100));
 
-    // Show and Update UI
+    // Show results section
     document.getElementById("results").style.display = "block";
     document.getElementById("preChargeLine").innerHTML = `Pre-journey charge: <strong>${startChargeKwh.toFixed(1)} kWh</strong> (£${startChargeCost.toFixed(2)})`;
     document.getElementById("homeRangeLine").innerHTML = `Range from start charge: <strong>${initialRange.toFixed(0)} miles</strong>`;
@@ -35,13 +35,12 @@ function calculate() {
     document.querySelectorAll(".provider-box").forEach(box => {
         const id = box.dataset.id;
         const speedSelect = document.getElementById(`speed${id}`);
-        // Get the descriptive text like "50kW (DC Rapid)"
         const hardwareLabel = speedSelect && speedSelect.options[speedSelect.selectedIndex] 
             ? speedSelect.options[speedSelect.selectedIndex].text 
             : "standard";
 
         providers.push({
-            name: document.getElementById(`name${id}`).value || "Unnamed Provider",
+            name: document.getElementById(`name${id}`).value || `Provider ${id}`,
             subCost: parseFloat(document.getElementById(`subCost${id}`).value) || 0,
             rate: parseFloat(document.getElementById(`rate${id}`).value) || 0,
             hardware: hardwareLabel
@@ -53,7 +52,7 @@ function calculate() {
         p.savings = totalAdhocCost - p.totalJourneyCost;
     });
 
-    // Ranking and Analysis
+    // Generate the Analysis Card
     const sorted = [...providers].sort((a, b) => a.totalJourneyCost - b.totalJourneyCost);
     const best = sorted[0];
     const conclusionsBox = document.getElementById("conclusionsBox");
@@ -63,14 +62,13 @@ function calculate() {
         if (best.totalJourneyCost < totalAdhocCost) {
             html += `
                 <div class="conclusion-card good">
-                    <p class="main-result"><strong>${best.name}</strong> is cheapest for this trip using <strong>${best.hardware}</strong> hardware.</p>
+                    <p class="main-result"><strong>${best.name}</strong> is cheapest using <strong>${best.hardware}</strong>.</p>
                     <p class="secondary-result">You save <strong>£${best.savings.toFixed(2)}</strong> compared to standard Ad-hoc.</p>
                 </div>`;
         } else {
             html += `
                 <div class="conclusion-card bad">
                     <p class="main-result">Standard <strong>Ad-hoc charging</strong> remains the best choice for this trip.</p>
-                    <p class="secondary-result">No subscription tested offers a lower total cost for ${miles} miles.</p>
                 </div>`;
         }
         conclusionsBox.innerHTML = html;
