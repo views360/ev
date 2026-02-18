@@ -295,7 +295,7 @@ tr.bad td { color: var(--danger); }
     h1 { font-size: 1.4rem; }
     .btn { width: 100%; }
 
-    /* Added mobile header fix */
+    /* Mobile header fix */
     .header-row {
         flex-direction: column;
         align-items: flex-start;
@@ -310,6 +310,12 @@ tr.bad td { color: var(--danger); }
 
     .header-buttons .btn {
         width: 100%;
+    }
+
+    /* ⭐ NEW: Trip & Vehicle fields stack vertically */
+    .input-row {
+        flex-direction: column;
+        gap: 0;
     }
 }
 
