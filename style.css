@@ -62,11 +62,29 @@ h1 {
 }
 
 /* Input Grid Layout */
-.input-grid {
+.grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 20px;
     margin-bottom: 30px;
+}
+
+.card {
+    background: var(--panel-alt);
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+}
+
+.input-row {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.input-group {
+    flex: 1;
+    margin-bottom: 15px;
 }
 
 .input-group label {
@@ -119,17 +137,6 @@ input:focus, select:focus {
     justify-content: center;
 }
 
-.btn.primary {
-    background: var(--accent);
-    color: var(--bg);
-    box-shadow: var(--glow);
-}
-
-.btn.primary:hover {
-    transform: translateY(-1px);
-    box-shadow: var(--glow-strong);
-}
-
 .btn.secondary {
     background: var(--accent-soft);
     border: 1px solid var(--accent);
@@ -141,15 +148,9 @@ input:focus, select:focus {
     color: var(--bg);
 }
 
-.btn.danger {
-    background: rgba(239, 68, 68, 0.1);
-    border: 1px solid var(--danger);
-    color: var(--danger);
-}
-
 /* Provider Boxes */
 .provider-box {
-    background: var(--panel-alt);
+    background: var(--bg);
     padding: 20px;
     border-radius: 12px;
     margin-bottom: 15px;
@@ -157,14 +158,19 @@ input:focus, select:focus {
     position: relative;
 }
 
-.provider-box:hover {
-    border-color: var(--accent);
+.provider-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
 }
 
 .remove-btn {
-    position: absolute;
-    top: 15px;
-    right: 15px;
+    background: none;
+    border: none;
+    color: var(--danger);
+    font-size: 1.5rem;
+    cursor: pointer;
 }
 
 /* Results Section */
@@ -172,6 +178,40 @@ input:focus, select:focus {
     margin-top: 40px;
     padding-top: 30px;
     border-top: 2px dashed var(--border);
+}
+
+/* Main Provider Results Table */
+#providerResults table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+#providerResults th {
+    background: var(--panel-alt);
+    text-align: left;
+    padding: 14px 12px;
+    font-size: 0.9rem;
+    color: var(--muted);
+    border-bottom: 2px solid var(--border);
+}
+
+#providerResults td {
+    padding: 14px 12px;
+    border-bottom: 1px solid var(--border);
+}
+
+/* Alternating Column Shading */
+#providerResults td:nth-child(even),
+#providerResults th:nth-child(even) {
+    background-color: rgba(255, 255, 255, 0.03);
+}
+
+body.light-mode #providerResults td:nth-child(even),
+body.light-mode #providerResults th:nth-child(even) {
+    background-color: rgba(0, 0, 0, 0.02);
 }
 
 .calc-lines {
@@ -206,11 +246,6 @@ input:focus, select:focus {
     margin-bottom: 10px;
 }
 
-.secondary-result {
-    opacity: 0.8;
-    margin-bottom: 15px;
-}
-
 /* Mini Table for Comparisons */
 .speed-comparison-container {
     margin-top: 20px;
@@ -238,8 +273,8 @@ input:focus, select:focus {
     border-bottom: 1px solid var(--border);
 }
 
-tr.good { color: var(--good); }
-tr.bad { color: var(--danger); }
+tr.good td { color: var(--good); }
+tr.bad td { color: var(--danger); }
 
 /* Chart Styling */
 .chart-wrapper {
