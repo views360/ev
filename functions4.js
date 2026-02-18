@@ -80,65 +80,74 @@ function shareLink() {
 }
 
 /* ============================================
-   UPDATED PDF EXPORT — TRUE BLACK & WHITE
+   UPDATED PDF EXPORT — PURE B&W + MARGINS + FIT TO A4
    ============================================ */
 function exportPdf() {
     const results = document.getElementById("results");
 
-    // Detect current theme
-    const wasLight = document.body.classList.contains("light-mode");
+    html2canvas(results).then(canvas => {
 
-    // Force light mode for high-contrast PDF
-    document.body.classList.add("light-mode");
+        // Create black & white canvas
+        const bwCanvas = document.createElement("canvas");
+        const bctx = bwCanvas.getContext("2d");
 
-    // Wait for repaint so light mode fully applies
-    requestAnimationFrame(() => {
-        html2canvas(results).then(canvas => {
+        bwCanvas.width = canvas.width;
+        bwCanvas.height = canvas.height;
 
-            // Restore original theme immediately after capture
-            if (!wasLight) {
-                document.body.classList.remove("light-mode");
-            }
+        bctx.drawImage(canvas, 0, 0);
 
-            // Create black & white canvas
-            const bwCanvas = document.createElement("canvas");
-            const bctx = bwCanvas.getContext("2d");
+        const imgData = bctx.getImageData(0, 0, bwCanvas.width, bwCanvas.height);
+        const pixels = imgData.data;
 
-            bwCanvas.width = canvas.width;
-            bwCanvas.height = canvas.height;
+        // Convert to pure black & white (threshold)
+        const threshold = 160;
+        for (let i = 0; i < pixels.length; i += 4) {
+            const r = pixels[i];
+            const g = pixels[i + 1];
+            const b = pixels[i + 2];
 
-            bctx.drawImage(canvas, 0, 0);
+            const grey = 0.299 * r + 0.587 * g + 0.114 * b;
+            const bw = grey < threshold ? 0 : 255;
 
-            const imgData = bctx.getImageData(0, 0, bwCanvas.width, bwCanvas.height);
-            const pixels = imgData.data;
+            pixels[i] = bw;
+            pixels[i + 1] = bw;
+            pixels[i + 2] = bw;
+        }
 
-            // Convert to pure black & white (threshold)
-            const threshold = 160; // adjust if needed
-            for (let i = 0; i < pixels.length; i += 4) {
-                const r = pixels[i];
-                const g = pixels[i + 1];
-                const b = pixels[i + 2];
+        bctx.putImageData(imgData, 0, 0);
 
-                const grey = 0.299 * r + 0.587 * g + 0.114 * b;
-                const bw = grey < threshold ? 0 : 255;
+        const bwImg = bwCanvas.toDataURL("image/png");
 
-                pixels[i] = bw;
-                pixels[i + 1] = bw;
-                pixels[i + 2] = bw;
-            }
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF("p", "mm", "a4");
 
-            bctx.putImageData(imgData, 0, 0);
+        // A4 dimensions
+        const pageWidth = pdf.internal.pageSize.getWidth();   // 210mm
+        const pageHeight = pdf.internal.pageSize.getHeight(); // 297mm
 
-            const bwImg = bwCanvas.toDataURL("image/png");
+        // 1cm margins
+        const margin = 10; // mm
+        const usableWidth = pageWidth - margin * 2;
+        const usableHeight = pageHeight - margin * 2;
 
-            const { jsPDF } = window.jspdf;
-            const pdf = new jsPDF("p", "mm", "a4");
-            const width = pdf.internal.pageSize.getWidth();
-            const height = (bwCanvas.height * width) / bwCanvas.width;
+        // Scale image to fit inside margins
+        const imgAspect = bwCanvas.width / bwCanvas.height;
+        const pageAspect = usableWidth / usableHeight;
 
-            pdf.addImage(bwImg, "PNG", 0, 0, width, height);
-            pdf.save("ev-comparison.pdf");
-        });
+        let renderWidth, renderHeight;
+
+        if (imgAspect > pageAspect) {
+            // Image is wider than page area
+            renderWidth = usableWidth;
+            renderHeight = usableWidth / imgAspect;
+        } else {
+            // Image is taller than page area
+            renderHeight = usableHeight;
+            renderWidth = usableHeight * imgAspect;
+        }
+
+        pdf.addImage(bwImg, "PNG", margin, margin, renderWidth, renderHeight);
+        pdf.save("ev-comparison.pdf");
     });
 }
 
