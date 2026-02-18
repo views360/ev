@@ -38,7 +38,6 @@ function shareLink() {
     boxes.forEach((box, i) => {
         const id = box.dataset.id;
         params.set(`p${i}n`, document.getElementById(`name${id}`).value);
-        params.set(`p${i}p`, document.getElementById(`preset${id}`).value);
         params.set(`p${i}s`, document.getElementById(`subCost${id}`).value);
         params.set(`p${i}r`, document.getElementById(`rate${id}`).value);
     });
@@ -69,5 +68,14 @@ function resetAll() {
     el.addEventListener("input", () => {
         if(id === "minSpeed") enforceSpeedRules();
         calculate();
+        saveToLocalStorage();
     });
 });
+
+fetch("providers.json")
+    .then(r => r.json())
+    .then(data => {
+        PRESETS = data.providers;
+        if (window.location.search) loadFromUrl();
+        else loadFromLocalStorage();
+    });

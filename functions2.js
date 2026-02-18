@@ -91,30 +91,14 @@ function updateConclusions(providers, publicKwh) {
     const minSpeedSelect = document.getElementById("minSpeed");
     const minSpeedLabel = minSpeedSelect.options[minSpeedSelect.selectedIndex].text;
 
-    // UPDATED TABLE TO INCLUDE 75kW and 150kW
-    const speedTableHtml = `
-        <div class="speed-comparison-container">
-            <table class="mini-table">
-                <thead>
-                    <tr><th>Speed Tier</th><th>Est. Charge Time*</th></tr>
-                </thead>
-                <tbody>
-                    <tr><td>7kW (Fast)</td><td>${(publicKwh/7).toFixed(1)}h</td></tr>
-                    <tr><td>22kW (Accelerated)</td><td>${(publicKwh/22).toFixed(1)}h</td></tr>
-                    <tr><td>50kW (Rapid)</td><td>${((publicKwh/50)*60).toFixed(0)}m</td></tr>
-                    <tr><td>75kW (Ultra Rapid)</td><td>${((publicKwh/75)*60).toFixed(0)}m</td></tr>
-                    <tr><td>150kW+ (High Power)</td><td>${((publicKwh/150)*60).toFixed(0)}m</td></tr>
-                </tbody>
-            </table>
-        </div>`;
-
-    const locationDisclaimer = `<p style="font-size:0.85rem; margin-top:12px; opacity:0.8;">* Times are estimates based on total kWh needed. Actual speeds vary based on vehicle curve and temperature.</p>`;
+    const speedTableHtml = `<div class="speed-comparison-container"><table class="mini-table"><thead><tr><th>Speed</th><th>Est. Charge Time</th></tr></thead><tbody><tr><td>7kW (Fast)</td><td>${(publicKwh/7).toFixed(1)}h</td></tr><tr><td>22kW (Acc.)</td><td>${(publicKwh/22).toFixed(1)}h</td></tr><tr><td>50kW (Rapid)</td><td>${((publicKwh/50)*60).toFixed(0)}m</td></tr><tr><td>75kW (Ultra)</td><td>${((publicKwh/75)*60).toFixed(0)}m</td></tr><tr><td>150kW (High)</td><td>${((publicKwh/150)*60).toFixed(0)}m</td></tr></tbody></table></div>`;
+    const locationDisclaimer = `<p style="font-size:0.85rem; margin-top:12px; opacity:0.8;">* Times exclude the "80-100%\" charging slowdown. Also, you will need to ensure that this provider has charging stations in your planned area of travel.</p>`;
     
     let conclusionHTML = "";
     if (bestProvider.savings > 0) {
-        conclusionHTML += `<div class="conclusion-card good"><p class="main-result"><strong>${bestProvider.name}</strong> is cheapest at <strong>${minSpeedLabel}</strong> (saving <strong>£${bestProvider.savings.toFixed(2)}</strong>).</p>${timeLine}${speedTableHtml}${locationDisclaimer}</div>`;
+        conclusionHTML += `<div class="conclusion-card good"><p class="main-result"><strong>${bestProvider.name}</strong> is cheapest at the selected minimum charging rate of <strong>${minSpeedLabel}</strong> (saving <strong>£${bestProvider.savings.toFixed(2)}</strong>).</p>${timeLine}${speedTableHtml}${locationDisclaimer}</div>`;
     } else {
-        conclusionHTML += `<div class="conclusion-card bad"><p class="main-result"><strong>Ad-hoc charging</strong> is cheapest at <strong>${minSpeedLabel}</strong>.</p>${timeLine}${speedTableHtml}${locationDisclaimer}</div>`;
+        conclusionHTML += `<div class="conclusion-card bad"><p class="main-result"><strong>Ad-hoc charging</strong> is cheapest at the selected minimum charging rate of <strong>${minSpeedLabel}</strong>.</p>${timeLine}${speedTableHtml}${locationDisclaimer}</div>`;
     }
 
     box.innerHTML = conclusionHTML;
