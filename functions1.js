@@ -1,6 +1,6 @@
 // ===============================
 // functions1.js
-// UI + Provider Box Logic (Full Version)
+// UI + Provider Box Logic
 // ===============================
 
 let PRESETS = [];
@@ -32,7 +32,7 @@ function createProviderBox(preset = null) {
 
     const minSpeed = parseFloat(document.getElementById("minSpeed").value) || 0;
 
-    // Filter presets based on new structure: p.chargingSpeeds.ac/dc
+    // Filter presets based on your new JSON structure
     const filteredPresets = PRESETS.filter(p => {
         if (p.rates && p.rates.default) return true;
         const ac = (p.chargingSpeeds && p.chargingSpeeds.ac) || [];
@@ -79,15 +79,15 @@ function createProviderBox(preset = null) {
 
     document.getElementById("providers").appendChild(box);
     
-    // If no preset, add a default option to the speed dropdown
-    if (!preset) {
+    if (preset) {
+        applyPreset(id, preset);
+    } else {
+        // Default hardware option for manual/custom providers
         const speedSelect = document.getElementById(`speed${id}`);
         const opt = document.createElement("option");
         opt.value = "default";
         opt.textContent = "Custom/Any Speed";
         speedSelect.appendChild(opt);
-    } else {
-        applyPreset(id, preset);
     }
 }
 
