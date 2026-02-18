@@ -37,7 +37,7 @@ function calculate() {
         journeyMiles: miles,
         efficiency: efficiency,
         startChargeCost: startChargeCost,
-        homeRange: initialRange, // Standardized property name
+        homeRange: initialRange,
         adhocRate: adhocRate
     };
 
@@ -79,7 +79,6 @@ function calculate() {
     }
 
     const bestProvider = providers[0];
-    const isSubscription = bestProvider.subCost > 0;
     const timeLine = `Approx driving time (at 60mph): <strong>${(miles/60).toFixed(1)} hours</strong>.`;
     const speedTableHtml = `<div class="speed-comparison-container"><table class="mini-table"><thead><tr><th>Speed</th><th>Est. Charge Time</th></tr></thead><tbody><tr><td>7kW (AC)</td><td>${(publicKwh/7).toFixed(1)}h</td></tr><tr><td>50kW (Rapid)</td><td>${((publicKwh/50)*60).toFixed(0)}m</td></tr><tr><td>150kW+ (Ultra)</td><td>${((publicKwh/150)*60).toFixed(0)}m</td></tr></tbody></table></div>`;
     const locationDisclaimer = `<p style="font-size:0.85rem; margin-top:12px; opacity:0.8;">* Times exclude the "80-100%" charging slowdown and location scouting.</p>`;
