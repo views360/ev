@@ -96,13 +96,23 @@ function exportPdf() {
             border-color: #000000 !important;
             box-shadow: none !important;
         }
+
+        /* Remove graph */
         .chart-wrapper {
             display: none !important;
         }
-        /* Hide sort label + dropdown */
-        #sortResults, label[for="sortResults"], #sortResults + label, #sortResults ~ * label {
+
+        /* Remove sort label + dropdown */
+        #sortResults {
             display: none !important;
         }
+        #sortResults + label,
+        #sortResults ~ label,
+        .input-group label {
+            display: none !important;
+        }
+
+        /* Remove buttons */
         .btn, button {
             display: none !important;
         }
