@@ -89,7 +89,7 @@ h1 {
 
 .input-group label {
     display: block;
-    font-size: 0.8rem;
+    font-size: 0.6rem;
     font-weight: 600;
     color: var(--muted);
     margin-bottom: 8px;

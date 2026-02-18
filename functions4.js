@@ -78,7 +78,7 @@ function shareLink() {
         params.set(`p${i}r`, document.getElementById(`rate${id}`).value);
     });
     const url = window.location.origin + window.location.pathname + "?" + params.toString();
-    navigator.clipboard.writeText(url).then(() => alert("Link copied!"));
+    navigator.clipboard.writeText(url).then(() => alert("Link copied! You may paste it elsewhere."));
 }
 
 function exportPdf() {
