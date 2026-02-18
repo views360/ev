@@ -30,12 +30,11 @@ function loadFromLocalStorage() {
 }
 
 /* ============================================
-   NEW FUNCTION — FIXES SHAREABLE LINK LOADING
+   LOAD FROM URL (SHAREABLE LINK RESTORE)
    ============================================ */
 function loadFromUrl() {
     const params = new URLSearchParams(window.location.search);
 
-    // Load main fields
     [
         "journeyMiles","batteryKwh","soc","efficiency","adhoc",
         "startChargeRate","startChargeType","minSpeed"
@@ -46,7 +45,6 @@ function loadFromUrl() {
         }
     });
 
-    // Rebuild provider boxes
     document.getElementById("providers").innerHTML = "";
     let i = 0;
 
@@ -81,15 +79,50 @@ function shareLink() {
     navigator.clipboard.writeText(url).then(() => alert("Link copied! You may paste it elsewhere."));
 }
 
+/* ============================================
+   UPDATED PDF EXPORT — NOW GREYSCALE
+   ============================================ */
 function exportPdf() {
     const results = document.getElementById("results");
+
     html2canvas(results).then(canvas => {
-        const imgData = canvas.toDataURL("image/png");
+
+        // Create greyscale canvas
+        const greyCanvas = document.createElement("canvas");
+        const gctx = greyCanvas.getContext("2d");
+
+        greyCanvas.width = canvas.width;
+        greyCanvas.height = canvas.height;
+
+        gctx.drawImage(canvas, 0, 0);
+
+        const imgData = gctx.getImageData(0, 0, greyCanvas.width, greyCanvas.height);
+        const pixels = imgData.data;
+
+        // Convert to greyscale
+        for (let i = 0; i < pixels.length; i += 4) {
+            const r = pixels[i];
+            const g = pixels[i + 1];
+            const b = pixels[i + 2];
+
+            // Luma formula for perceptual greyscale
+            const grey = 0.299 * r + 0.587 * g + 0.114 * b;
+
+            pixels[i] = grey;
+            pixels[i + 1] = grey;
+            pixels[i + 2] = grey;
+        }
+
+        gctx.putImageData(imgData, 0, 0);
+
+        const greyImg = greyCanvas.toDataURL("image/png");
+
         const { jsPDF } = window.jspdf;
         const pdf = new jsPDF("p", "mm", "a4");
         const width = pdf.internal.pageSize.getWidth();
-        const height = (canvas.height * width) / canvas.width;
-        pdf.addImage(imgData, "PNG", 0, 0, width, height);
+        const height = (greyCanvas.height * width) / greyCanvas.width;
+
+        pdf.addImage(greyImg, "PNG", 0, 0, width, height);
         pdf.save("ev-comparison.pdf");
     });
 }
