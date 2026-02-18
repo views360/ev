@@ -81,73 +81,97 @@ function shareLink() {
 
 /* ============================================
    UPDATED PDF EXPORT — PURE B&W + MARGINS + FIT TO A4
+   WITH PRINT-SAFE OVERRIDE (ALL TEXT BLACK, ALL BACKGROUNDS WHITE)
    ============================================ */
 function exportPdf() {
     const results = document.getElementById("results");
 
-    html2canvas(results).then(canvas => {
-
-        // Create black & white canvas
-        const bwCanvas = document.createElement("canvas");
-        const bctx = bwCanvas.getContext("2d");
-
-        bwCanvas.width = canvas.width;
-        bwCanvas.height = canvas.height;
-
-        bctx.drawImage(canvas, 0, 0);
-
-        const imgData = bctx.getImageData(0, 0, bwCanvas.width, bwCanvas.height);
-        const pixels = imgData.data;
-
-        // Convert to pure black & white (threshold)
-        const threshold = 160;
-        for (let i = 0; i < pixels.length; i += 4) {
-            const r = pixels[i];
-            const g = pixels[i + 1];
-            const b = pixels[i + 2];
-
-            const grey = 0.299 * r + 0.587 * g + 0.114 * b;
-            const bw = grey < threshold ? 0 : 255;
-
-            pixels[i] = bw;
-            pixels[i + 1] = bw;
-            pixels[i + 2] = bw;
+    // Create print-safe override
+    const override = document.createElement("style");
+    override.id = "printSafeStyles";
+    override.innerHTML = `
+        #results, #results * {
+            background: #ffffff !important;
+            color: #000000 !important;
+            border-color: #000000 !important;
+            box-shadow: none !important;
         }
-
-        bctx.putImageData(imgData, 0, 0);
-
-        const bwImg = bwCanvas.toDataURL("image/png");
-
-        const { jsPDF } = window.jspdf;
-        const pdf = new jsPDF("p", "mm", "a4");
-
-        // A4 dimensions
-        const pageWidth = pdf.internal.pageSize.getWidth();   // 210mm
-        const pageHeight = pdf.internal.pageSize.getHeight(); // 297mm
-
-        // 1cm margins
-        const margin = 10; // mm
-        const usableWidth = pageWidth - margin * 2;
-        const usableHeight = pageHeight - margin * 2;
-
-        // Scale image to fit inside margins
-        const imgAspect = bwCanvas.width / bwCanvas.height;
-        const pageAspect = usableWidth / usableHeight;
-
-        let renderWidth, renderHeight;
-
-        if (imgAspect > pageAspect) {
-            // Image is wider than page area
-            renderWidth = usableWidth;
-            renderHeight = usableWidth / imgAspect;
-        } else {
-            // Image is taller than page area
-            renderHeight = usableHeight;
-            renderWidth = usableHeight * imgAspect;
+        .chart-wrapper {
+            background: #ffffff !important;
         }
+        .btn, button {
+            display: none !important;
+        }
+    `;
+    document.head.appendChild(override);
 
-        pdf.addImage(bwImg, "PNG", margin, margin, renderWidth, renderHeight);
-        pdf.save("ev-comparison.pdf");
+    // Wait for repaint
+    requestAnimationFrame(() => {
+        html2canvas(results).then(canvas => {
+
+            // Remove override immediately after capture
+            override.remove();
+
+            // Create black & white canvas
+            const bwCanvas = document.createElement("canvas");
+            const bctx = bwCanvas.getContext("2d");
+
+            bwCanvas.width = canvas.width;
+            bwCanvas.height = canvas.height;
+
+            bctx.drawImage(canvas, 0, 0);
+
+            const imgData = bctx.getImageData(0, 0, bwCanvas.width, bwCanvas.height);
+            const pixels = imgData.data;
+
+            // Convert to pure black & white (threshold)
+            const threshold = 160;
+            for (let i = 0; i < pixels.length; i += 4) {
+                const r = pixels[i];
+                const g = pixels[i + 1];
+                const b = pixels[i + 2];
+
+                const grey = 0.299 * r + 0.587 * g + 0.114 * b;
+                const bw = grey < threshold ? 0 : 255;
+
+                pixels[i] = bw;
+                pixels[i + 1] = bw;
+                pixels[i + 2] = bw;
+            }
+
+            bctx.putImageData(imgData, 0, 0);
+
+            const bwImg = bwCanvas.toDataURL("image/png");
+
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF("p", "mm", "a4");
+
+            // A4 dimensions
+            const pageWidth = pdf.internal.pageSize.getWidth();
+            const pageHeight = pdf.internal.pageSize.getHeight();
+
+            // 1cm margins
+            const margin = 10;
+            const usableWidth = pageWidth - margin * 2;
+            const usableHeight = pageHeight - margin * 2;
+
+            // Scale image to fit inside margins
+            const imgAspect = bwCanvas.width / bwCanvas.height;
+            const pageAspect = usableWidth / usableHeight;
+
+            let renderWidth, renderHeight;
+
+            if (imgAspect > pageAspect) {
+                renderWidth = usableWidth;
+                renderHeight = usableWidth / imgAspect;
+            } else {
+                renderHeight = usableHeight;
+                renderWidth = usableHeight * imgAspect;
+            }
+
+            pdf.addImage(bwImg, "PNG", margin, margin, renderWidth, renderHeight);
+            pdf.save("ev-comparison.pdf");
+        });
     });
 }
 
