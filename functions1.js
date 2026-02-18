@@ -23,9 +23,10 @@ function createProviderBox(preset) {
 
     const minSpeed = parseFloat(document.getElementById("minSpeed").value) || 0;
     
-    // Filter presets: include if it has a default rate or at least one speed >= minSpeed
+    // Improved filtering logic
     const filteredPresets = PRESETS.filter(p => {
-        if (!p.rates || p.rates.default) return true;
+        if (!p.rates) return false;
+        if (p.rates.default) return true;
         const speeds = Object.keys(p.rates).map(Number);
         return speeds.some(s => s >= minSpeed);
     });
@@ -38,6 +39,7 @@ function createProviderBox(preset) {
         return a.name.localeCompare(b.name);
     });
 
+    // Ensure 'Custom' is always the first option and options are generated correctly
     const presetOptions = ['Custom', ...sortedPresets.map(p => p.name)]
         .map(name => `<option value="${name}">${name}</option>`).join("");
 
@@ -99,18 +101,13 @@ function updateProviderFields(id) {
     subCostInput.value = p.subscription.monthlyCost;
 
     if (p.rates && !p.rates.default) {
-        const minSpeed = parseFloat(document.getElementById("minSpeed").value) || 0;
-        // Only show speeds >= minSpeed
-        const speeds = Object.keys(p.rates).filter(s => parseFloat(s) >= minSpeed);
-        
+        const speeds = Object.keys(p.rates);
         speedSelect.innerHTML = speeds.map(s => `<option value="${s}">${s}kW</option>`).join("");
         speedRow.style.display = "flex";
-        
-        if (speeds.length > 0) {
-            rateInput.value = p.rates[speeds[0]];
-        }
+        rateInput.value = p.rates[speeds[0]];
+        enforceSpeedRules(); 
     } else {
-        rateInput.value = p.rates.default || 0;
+        rateInput.value = p.rates.default;
         speedRow.style.display = "none";
     }
     calculate();
@@ -132,37 +129,20 @@ function enforceSpeedRules() {
 
     boxes.forEach(box => {
         const id = box.dataset.id;
-        const presetSelect = document.getElementById(`preset${id}`);
-        const currentPreset = presetSelect.value;
+        const speedSelect = document.getElementById(`speed${id}`);
+        if (!speedSelect || speedSelect.offsetParent === null) return;
 
-        const filteredPresets = PRESETS.filter(p => {
-            if (!p.rates || p.rates.default) return true;
-            const speeds = Object.keys(p.rates).map(Number);
-            return speeds.some(s => s >= minSpeed);
+        let firstValidValue = null;
+        [...speedSelect.options].forEach(opt => {
+            const val = parseFloat(opt.value);
+            const isInvalid = val < minSpeed;
+            opt.disabled = isInvalid;
+            if (!isInvalid && firstValidValue === null) firstValidValue = opt.value;
         });
 
-        const sortedPresets = [...filteredPresets].sort((a, b) => {
-            const aSub = a.subscription.hasSubscription;
-            const bSub = b.subscription.hasSubscription;
-            if (aSub && !bSub) return -1;
-            if (!aSub && bSub) return 1;
-            return a.name.localeCompare(b.name);
-        });
-
-        const presetOptions = ['Custom', ...sortedPresets.map(p => p.name)]
-            .map(name => `<option value="${name}">${name}</option>`).join("");
-        
-        presetSelect.innerHTML = presetOptions;
-
-        const stillValid = sortedPresets.some(p => p.name === currentPreset) || currentPreset === 'Custom';
-        if (stillValid) {
-            presetSelect.value = currentPreset;
-            if (currentPreset !== 'Custom') {
-                updateProviderFields(id); 
-            }
-        } else {
-            presetSelect.value = 'Custom';
-            updateProviderFields(id);
+        if (firstValidValue !== null) {
+            speedSelect.value = firstValidValue;
+            updateRateFromSpeed(id);
         }
     });
 }
@@ -177,7 +157,7 @@ function addAllProviders() {
 
     PRESETS.forEach(preset => {
         let canSupportSpeed = false;
-        if (!preset.rates || preset.rates.default) {
+        if (preset.rates.default) {
             canSupportSpeed = true; 
         } else {
             const speeds = Object.keys(preset.rates).map(Number);

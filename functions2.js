@@ -81,26 +81,10 @@ function calculate() {
     const bestProvider = providers[0];
     const timeLine = `Approx driving time (at 60mph): <strong>${(miles/60).toFixed(1)} hours</strong>.`;
     
-    // Capture the text of the selected speed (e.g., "50 kW")
     const minSpeedSelect = document.getElementById("minSpeed");
     const minSpeedLabel = minSpeedSelect.options[minSpeedSelect.selectedIndex].text;
 
-    // UPDATED TABLE TO INCLUDE ALL REQUESTED SPEED TIERS
-    const speedTableHtml = `
-        <div class="speed-comparison-container">
-            <table class="mini-table">
-                <thead>
-                    <tr><th>Speed</th><th>Est. Charge Time</th></tr>
-                </thead>
-                <tbody>
-                    <tr><td>7kW (fast)</td><td>${(publicKwh/7).toFixed(1)}h</td></tr>
-                    <tr><td>22kW (accelerated)</td><td>${(publicKwh/22).toFixed(1)}h</td></tr>
-                    <tr><td>50kW (rapid)</td><td>${((publicKwh/50)*60).toFixed(0)}m</td></tr>
-                    <tr><td>75kW (ultra rapid)</td><td>${((publicKwh/75)*60).toFixed(0)}m</td></tr>
-                    <tr><td>150kW (high power)</td><td>${((publicKwh/150)*60).toFixed(0)}m</td></tr>
-                </tbody>
-            </table>
-        </div>`;
+    const speedTableHtml = `<div class="speed-comparison-container"><table class="mini-table"><thead><tr><th>Speed</th><th>Est. Charge Time</th></tr></thead><tbody><tr><td>7kW (AC)</td><td>${(publicKwh/7).toFixed(1)}h</td></tr><tr><td>50kW (Rapid)</td><td>${((publicKwh/50)*60).toFixed(0)}m</td></tr><tr><td>150kW+ (Ultra)</td><td>${((publicKwh/150)*60).toFixed(0)}m</td></tr></tbody></table></div>`;
     const locationDisclaimer = `<p style="font-size:0.85rem; margin-top:12px; opacity:0.8;">* Times exclude the "80-100%" charging slowdown. Also, you will need to ensure that this provider has charging stations in your planned area of travel.</p>`;
     
     let conclusionHTML = "";
