@@ -80,17 +80,27 @@ function shareLink() {
 }
 
 /* ============================================
-   PDF EXPORT — PURE B&W + MARGINS + FIT TO A4
+   PDF EXPORT — OFF-SCREEN CLONE (NO FLASH)
+   PURE B&W + MARGINS + FIT TO A4
    GRAPH REMOVED, SORT REMOVED, HEADER ADDED
    ============================================ */
 function exportPdf() {
-    const results = document.getElementById("results");
 
-    // Create print-safe override
+    // Clone #results into an off-screen container
+    const cloneWrapper = document.createElement("div");
+    cloneWrapper.style.position = "absolute";
+    cloneWrapper.style.left = "-99999px";
+    cloneWrapper.style.top = "0";
+    cloneWrapper.style.width = "1000px"; // ensure consistent layout width
+
+    const clone = document.getElementById("results").cloneNode(true);
+    cloneWrapper.appendChild(clone);
+    document.body.appendChild(cloneWrapper);
+
+    // Apply print-safe overrides ONLY to the clone
     const override = document.createElement("style");
-    override.id = "printSafeStyles";
     override.innerHTML = `
-        #results, #results * {
+        #${cloneWrapper.id}, #${cloneWrapper.id} * {
             background: #ffffff !important;
             color: #000000 !important;
             border-color: #000000 !important;
@@ -98,33 +108,33 @@ function exportPdf() {
         }
 
         /* Remove graph */
-        .chart-wrapper {
+        #${cloneWrapper.id} .chart-wrapper {
             display: none !important;
         }
 
         /* Remove sort label + dropdown */
-        #sortResults {
-            display: none !important;
-        }
-        #sortResults + label,
-        #sortResults ~ label,
-        .input-group label {
+        #${cloneWrapper.id} #sortResults,
+        #${cloneWrapper.id} .input-group label {
             display: none !important;
         }
 
         /* Remove buttons */
-        .btn, button {
+        #${cloneWrapper.id} .btn,
+        #${cloneWrapper.id} button {
             display: none !important;
         }
     `;
     document.head.appendChild(override);
 
+    // Wait for layout
     requestAnimationFrame(() => {
-        html2canvas(results).then(canvas => {
+        html2canvas(clone).then(canvas => {
 
+            // Clean up clone + override
+            cloneWrapper.remove();
             override.remove();
 
-            // Create black & white canvas
+            // Convert to pure black & white
             const bwCanvas = document.createElement("canvas");
             const bctx = bwCanvas.getContext("2d");
 
@@ -136,7 +146,6 @@ function exportPdf() {
             const imgData = bctx.getImageData(0, 0, bwCanvas.width, bwCanvas.height);
             const pixels = imgData.data;
 
-            // Convert to pure black & white (threshold)
             const threshold = 160;
             for (let i = 0; i < pixels.length; i += 4) {
                 const r = pixels[i];
