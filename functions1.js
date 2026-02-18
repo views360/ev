@@ -1,6 +1,5 @@
 // ===============================
-// functions1.js
-// UI + Provider Box Logic (Enhanced for AC/DC/Ultra)
+// functions1.js - UI & Provider Logic
 // ===============================
 
 let PRESETS = [];
@@ -14,13 +13,15 @@ function toggleTheme() {
     btn.textContent = body.classList.contains("light-mode") ? "Switch to Dark View" : "Switch to Light View";
 }
 
+// Helper to label speeds based on kW
 function getSpeedCategory(speed) {
-    if (speed <= 22) return "AC (Fast)";
-    if (speed <= 50) return "DC (Rapid)";
+    const s = parseFloat(speed);
+    if (s <= 22) return "AC (Fast)";
+    if (s <= 50) return "DC (Rapid)";
     return "Ultra-Rapid";
 }
 
-function createProviderBox(preset) {
+function createProviderBox(preset = null) {
     providerCount++;
     const id = providerCount;
     const box = document.createElement("div");
@@ -29,11 +30,13 @@ function createProviderBox(preset) {
 
     const minSpeed = parseFloat(document.getElementById("minSpeed").value) || 0;
 
-    // Filter presets based on new JSON structure
+    // Filter presets for the dropdown
     const filteredPresets = PRESETS.filter(p => {
         if (p.rates && p.rates.default) return true;
-        const availableSpeeds = [...(p.chargingSpeeds.ac || []), ...(p.chargingSpeeds.dc || [])];
-        return availableSpeeds.some(s => s >= minSpeed);
+        const acSpeeds = (p.chargingSpeeds && p.chargingSpeeds.ac) || [];
+        const dcSpeeds = (p.chargingSpeeds && p.chargingSpeeds.dc) || [];
+        const allSpeeds = [...acSpeeds, ...dcSpeeds];
+        return allSpeeds.length === 0 || allSpeeds.some(s => s >= minSpeed);
     });
 
     const presetOptions = filteredPresets.map(p => 
@@ -61,7 +64,7 @@ function createProviderBox(preset) {
                 <label>Monthly Fee (£)</label>
                 <input type="number" id="subCost${id}" step="0.01" oninput="calculate()" value="0">
             </div>
-            <div class="input-group" id="speedRow${id}">
+            <div class="input-group">
                 <label>Hardware/Speed</label>
                 <select id="speed${id}" onchange="updateRateFromSpeed(${id})"></select>
             </div>
@@ -76,13 +79,13 @@ function createProviderBox(preset) {
     if (preset) applyPreset(id, preset);
 }
 
-function applyPreset(id, presetData) {
+function applyPreset(id, presetData = null) {
     const presetName = document.getElementById(`preset${id}`).value;
     const p = presetData || PRESETS.find(x => x.name === presetName);
     if (!p) return;
 
     document.getElementById(`name${id}`).value = p.name;
-    document.getElementById(`subCost${id}`).value = p.subscription.monthlyCost;
+    document.getElementById(`subCost${id}`).value = p.subscription ? p.subscription.monthlyCost : 0;
 
     const speedSelect = document.getElementById(`speed${id}`);
     speedSelect.innerHTML = "";
@@ -94,7 +97,7 @@ function applyPreset(id, presetData) {
         speedSelect.appendChild(opt);
         document.getElementById(`rate${id}`).value = p.rates.default;
     } else {
-        const speeds = Object.keys(p.rates).sort((a, b) => a - b);
+        const speeds = Object.keys(p.rates).sort((a, b) => parseFloat(a) - parseFloat(b));
         speeds.forEach(s => {
             const opt = document.createElement("option");
             opt.value = s;
@@ -109,21 +112,9 @@ function applyPreset(id, presetData) {
 function updateRateFromSpeed(id) {
     const presetName = document.getElementById(`preset${id}`).value;
     const p = PRESETS.find(x => x.name === presetName);
-    if (!p) return;
+    if (!p || !p.rates) return;
 
     const speedVal = document.getElementById(`speed${id}`).value;
-    document.getElementById(`rate${id}`).value = p.rates[speedVal];
+    document.getElementById(`rate${id}`).value = p.rates[speedVal] || 0;
     calculate();
-}
-
-function addAllPresets() {
-    const minSpeed = parseFloat(document.getElementById("minSpeed").value) || 0;
-    document.getElementById("providers").innerHTML = "";
-    
-    PRESETS.forEach(preset => {
-        const availableSpeeds = preset.rates.default ? [999] : Object.keys(preset.rates).map(Number);
-        if (availableSpeeds.some(s => s >= minSpeed)) {
-            createProviderBox(preset);
-        }
-    });
 }
