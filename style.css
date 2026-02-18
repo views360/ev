@@ -124,8 +124,8 @@ input:focus, select:focus {
 }
 
 .btn {
-    box-sizing: border-box; /* Ensures padding doesn't add to height */
-    height: 40px; /* Forces identical height */
+    box-sizing: border-box;
+    height: 40px;
     padding: 0 20px;
     border-radius: 8px;
     font-weight: 600;
@@ -137,7 +137,7 @@ input:focus, select:focus {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    line-height: 1; /* Normalizes text position */
+    line-height: 1;
 }
 
 .btn.secondary {
@@ -206,7 +206,6 @@ input:focus, select:focus {
     border-bottom: 1px solid var(--border);
 }
 
-/* Alternating Column Shading */
 #providerResults td:nth-child(even),
 #providerResults th:nth-child(even) {
     background-color: rgba(255, 255, 255, 0.03);
@@ -295,4 +294,36 @@ tr.bad td { color: var(--danger); }
     .app { padding: 15px; border-radius: 0; }
     h1 { font-size: 1.4rem; }
     .btn { width: 100%; }
+
+    /* Added mobile header fix */
+    .header-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .header-buttons {
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .header-buttons .btn {
+        width: 100%;
+    }
+}
+
+/* Desktop header layout */
+.header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+}
+
+.header-buttons {
+    display: flex;
+    gap: 10px;
+    align-items: center;
 }
