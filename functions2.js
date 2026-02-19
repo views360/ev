@@ -30,7 +30,7 @@ function calculate() {
     document.getElementById("homeRangeLine").innerHTML = `Range from start charge: <strong>${initialRange.toFixed(0)} miles</strong>`;
     document.getElementById("publicMilesLine").innerHTML = `Public charging miles needed: <strong>${publicMiles.toFixed(0)} miles</strong>`;
     document.getElementById("publicKwhLine").innerHTML = `Public charging energy needed: <strong>${publicKwh.toFixed(1)} kWh</strong>`;
-    document.getElementById("adhocCostLine").innerHTML = `Total cost (Standard Ad-hoc @ ${adhocRate}p): <strong>£${totalAdhocCost.toFixed(2)}</strong>`;
+    document.getElementById("adhocCostLine").innerHTML = `Total cost (Standard PAYG @ ${adhocRate}p): <strong>£${totalAdhocCost.toFixed(2)}</strong>`;
 
     const core = {
         journeyMiles: miles,
@@ -70,7 +70,7 @@ function calculate() {
     else if (sortVal === "za") providers.sort((a, b) => b.name.localeCompare(a.name));
 
     const resultsContainer = document.getElementById("providerResults");
-    let html = `<table><thead><tr><th>Provider</th><th>Sub. Fee</th><th>Rate</th><th>Trip Cost</th><th>vs. Ad-hoc</th></tr></thead><tbody>`;
+    let html = `<table><thead><tr><th>Provider</th><th>Sub. Fee</th><th>Rate</th><th>Trip Cost</th><th>vs. PAYG</th></tr></thead><tbody>`;
     providers.forEach(p => {
         const rowClass = p.savings > 0 ? "good" : (p.savings < 0 ? "bad" : "");
         const rateLabel = p.discount > 0
@@ -121,7 +121,7 @@ function calculate() {
     if (bestProvider.savings > 0) {
         conclusionHTML += `<div class="conclusion-card good"><p class="main-result"><strong>${bestProvider.name}</strong> is cheapest at the selected minimum charging rate of <strong>${minSpeedLabel}</strong> (saving <strong>£${bestProvider.savings.toFixed(2)}</strong>).</p>${timeLine}${speedTableHtml}${locationDisclaimer}</div>`;
     } else {
-        conclusionHTML += `<div class="conclusion-card bad"><p class="main-result"><strong>Ad-hoc charging</strong> is cheapest at the selected minimum charging rate of <strong>${minSpeedLabel}</strong>.</p>${timeLine}${speedTableHtml}${locationDisclaimer}</div>`;
+        conclusionHTML += `<div class="conclusion-card bad"><p class="main-result"><strong>PAYG charging</strong> is cheapest at the selected minimum charging rate of <strong>${minSpeedLabel}</strong>.</p>${timeLine}${speedTableHtml}${locationDisclaimer}</div>`;
     }
 
     conclusionsBox.innerHTML = conclusionHTML;
