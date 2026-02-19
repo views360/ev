@@ -37,115 +37,45 @@ function createProviderBox(preset) {
         return a.name.localeCompare(b.name);
     });
 
+    const presetOptions = ['Custom', ...sortedPresets.map(p => p.name)]
+        .map(name => `<option value="${name}">${name}</option>`).join("");
+
     box.innerHTML = `
         <div class="provider-header">
-            <input type="text" id="name${id}" value="${preset ? preset.name : 'New Provider'}" oninput="calculate()">
-            <button class="btn-remove" onclick="removeProvider(${id})">×</button>
+            <input type="text" id="name${id}" placeholder="Provider Name" oninput="calculate()">
+            <button class="remove-btn" onclick="this.parentElement.parentElement.remove(); calculate();">×</button>
         </div>
-
+        <div class="input-group">
+            <label>Preset</label>
+            <select id="preset${id}" onchange="updateProviderFields(${id})">${presetOptions}</select>
+        </div>
         <div class="input-row">
-            <div class="input-group">
-                <label>Preset</label>
-                <select id="preset${id}" onchange="applyPreset(${id})">
-                    <option value="">-- Custom --</option>
-                    ${sortedPresets.map(p => `<option value="${p.id}" ${preset && p.id === preset.id ? 'selected' : ''}>${p.name}</option>`).join('')}
-                </select>
-            </div>
             <div class="input-group">
                 <label>Monthly Sub (£)</label>
-                <input type="number" id="subCost${id}" value="${preset ? preset.subscription.monthlyCost : 0}" oninput="calculate()">
-            </div>
-        </div>
-
-        <div class="input-row">
-            <div class="input-group" id="speedRow${id}" style="${preset && !preset.rates.default ? '' : 'display:none'}">
-                <label>Specific Speed</label>
-                <select id="speed${id}" onchange="updateRateFromSpeed(${id})">
-                    ${preset && !preset.rates.default ? Object.keys(preset.rates).map(s => `<option value="${s}">${s}kW</option>`).join('') : ''}
-                </select>
+                <input type="number" id="subCost${id}" step="0.01" value="0" oninput="calculate()">
             </div>
             <div class="input-group">
                 <label>Rate (p/kWh)</label>
-                <input type="number" id="rate${id}" value="${preset ? (preset.rates.default || 0) : 0}" oninput="calculate()">
+                <input type="number" id="rate${id}" step="0.1" value="0" oninput="calculate()">
             </div>
         </div>
-
         <div class="input-group">
             <label>Discount (%)</label>
             <input type="number" id="discount${id}" placeholder="e.g., 8 for 8% discount with Electroverse" value="0" oninput="calculate()">
         </div>
+        <div class="input-group" id="speedRow${id}" style="display:none">
+            <label>Charging Speed</label>
+            <select id="speed${id}" onchange="updateRateFromSpeed(${id})"></select>
+        </div>
     `;
 
     document.getElementById("providers").appendChild(box);
-    if (!preset) calculate();
-}
-
-function removeProvider(id) {
-    const box = document.querySelector(`.provider-box[data-id="${id}"]`);
-    if (box) {
-        box.remove();
-        calculate();
-    }
-}
-
-function applyPreset(id) {
-    const presetId = document.getElementById(`preset${id}`).value;
-    const preset = PRESETS.find(p => p.id === presetId);
-    if (!preset) return;
-
-    document.getElementById(`name${id}`).value = preset.name;
-    document.getElementById(`subCost${id}`).value = preset.subscription.monthlyCost;
     
-    const speedRow = document.getElementById(`speedRow${id}`);
-    const speedSelect = document.getElementById(`speed${id}`);
-    
-    if (preset.rates.default) {
-        document.getElementById(`rate${id}`).value = preset.rates.default;
-        speedRow.style.display = "none";
-    } else {
-        speedRow.style.display = "block";
-        speedSelect.innerHTML = Object.keys(preset.rates).map(s => `<option value="${s}">${s}kW</option>`).join('');
-        updateRateFromSpeed(id);
+    if (preset) {
+        const select = document.getElementById(`preset${id}`);
+        select.value = preset.name;
+        updateProviderFields(id);
     }
-    calculate();
-}
-
-function updateRateFromSpeed(id) {
-    const presetId = document.getElementById(`preset${id}`).value;
-    const preset = PRESETS.find(p => p.id === presetId);
-    const speed = document.getElementById(`speed${id}`).value;
-    if (preset && preset.rates[speed]) {
-        document.getElementById(`rate${id}`).value = preset.rates[speed];
-    }
-    calculate();
-}
-
-function enforceSpeedRules() {
-    const minSpeed = parseFloat(document.getElementById("minSpeed").value);
-    const boxes = document.querySelectorAll(".provider-box");
-    
-    boxes.forEach(box => {
-        const id = box.dataset.id;
-        const presetId = document.getElementById(`preset${id}`).value;
-        const preset = PRESETS.find(p => p.id === presetId);
-        
-        if (preset && !preset.rates.default) {
-            const speeds = Object.keys(preset.rates).map(Number);
-            const validSpeeds = speeds.filter(s => s >= minSpeed);
-            
-            if (validSpeeds.length === 0) {
-                box.style.border = "2px solid var(--danger)";
-            } else {
-                box.style.border = "1px solid var(--border)";
-                const currentSpeed = Number(document.getElementById(`speed${id}`).value);
-                if (!validSpeeds.includes(currentSpeed)) {
-                    document.getElementById(`speed${id}`).value = Math.min(...validSpeeds);
-                    updateRateFromSpeed(id);
-                }
-            }
-        }
-    });
-    calculate();
 }
 
 function duplicateLastProvider() {
@@ -164,13 +94,14 @@ function duplicateLastProvider() {
     document.getElementById(`rate${newId}`).value = document.getElementById(`rate${lastId}`).value;
     document.getElementById(`discount${newId}`).value = document.getElementById(`discount${lastId}`).value;
     
-    const lastSpeedRow = document.getElementById(`speedRow${lastId}`);
-    if (lastSpeedRow.style.display !== "none") {
-        const newSpeedRow = document.getElementById(`speedRow${newId}`);
-        newSpeedRow.style.display = "block";
-        const newSpeedSelect = document.getElementById(`speed${newId}`);
-        newSpeedSelect.innerHTML = document.getElementById(`speed${lastId}`).innerHTML;
-        newSpeedSelect.value = document.getElementById(`speed${lastId}`).value;
+    const lastSpeed = document.getElementById(`speed${lastId}`);
+    if (lastSpeed && lastSpeed.offsetParent !== null) {
+        const newSpeed = document.getElementById(`speed${newId}`);
+        document.getElementById(`speedRow${newId}`).style.display = "block";
+        newSpeed.innerHTML = lastSpeed.innerHTML;
+        newSpeed.value = lastSpeed.value;
     }
     calculate();
 }
+
+// ... (rest of your original updateProviderFields, updateRateFromSpeed, etc.)

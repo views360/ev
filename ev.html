@@ -13,10 +13,10 @@
 <body>
 <div class="app">
 
-    <div class="header-row">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
         <h1>EV Subscription Charging Comparison</h1>
 
-        <div class="header-buttons">
+        <div style="display:flex; gap:10px; align-items: center;">
             <button class="btn secondary" id="themeToggle" onclick="toggleTheme()">Switch to Light View</button>
             <button class="btn secondary" onclick="resetAll()">Reset All</button>
             <a href="https://www.facebook.com/kelvin.a.hill" target="_blank" class="btn secondary">Contact Author</a>
@@ -24,69 +24,74 @@
     </div>
 
     <div class="subtitle">
-        Compare your usual average public charging rate with subscription discounted charging for a specific trip distance.
+        Compare your usual average public charging rate with subscription discounted charging for a specific trip distance (e.g., a weekend break or multi-day holiday). <strong>Note:</strong> This tool is a general aid for comparing fixed pricing against subscription+discount pricing. There is no dynamic lookup for values, and it cannot take into account peak times &amp; rates versus off-peak times &amp; rates where they exist because these are arbitrarily applied to different locations.
     </div>
 
-    <div class="main-grid">
-        <div class="panel">
-            <h2>1. Journey & Vehicle</h2>
-            <div class="input-group">
-                <label>Total Trip Miles</label>
-                <input type="number" id="journeyMiles" value="300">
-            </div>
+    <div class="grid">
+        <div class="card">
+            <h2>Trip & Vehicle</h2>
+
             <div class="input-row">
                 <div class="input-group">
-                    <label>Battery Size (kWh)</label>
-                    <input type="number" id="batteryKwh" value="64">
+                    <label>Trip distance (miles)</label>
+                    <input type="number" id="journeyMiles" placeholder="e.g., 250">
                 </div>
                 <div class="input-group">
-                    <label>Start SoC (%)</label>
-                    <input type="number" id="soc" value="100">
+                    <label>Battery size (kWh)</label>
+                    <input type="number" id="batteryKwh" placeholder="e.g., 61">
                 </div>
-            </div>
-            <div class="input-group">
-                <label>Efficiency (miles/kWh)</label>
-                <input type="number" id="efficiency" value="3.5">
             </div>
 
-            <h2 style="margin-top:24px;">2. Baseline Costs</h2>
-            <div class="input-group">
-                <label>Usual Public Rate (p/kWh) - "Ad-hoc"</label>
-                <input type="number" id="adhoc" value="79">
-            </div>
             <div class="input-row">
                 <div class="input-group">
-                    <label>Start Charge Rate (p/kWh)</label>
-                    <input type="number" id="startChargeRate" value="7">
+                    <label>Starting state of charge (%)</label>
+                    <input type="number" id="soc" placeholder="e.g., 90">
                 </div>
                 <div class="input-group">
-                    <label>Type</label>
+                    <label>Vehicle efficiency (miles per kWh)</label>
+                    <input type="number" id="efficiency" placeholder="e.g., 3.5">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>Minimum desired charging speed during trip</label>
+                <select id="minSpeed">
+                    <option value="7">7kW (fast)</option>
+                    <option value="22">22kW (accelerated)</option>
+                    <option value="50" selected>50kW (rapid)</option>
+                    <option value="75">75kW (ultra rapid)</option>
+                    <option value="150">150kW (high power)</option>
+                </select>
+            </div>
+
+            <div class="input-row">
+                <div class="input-group">
+                    <label>Starting charge type</label>
                     <select id="startChargeType">
-                        <option value="home">Home</option>
-                        <option value="public">Public</option>
+                        <option value="home">Cheap home charging</option>
+                        <option value="public">Public charging</option>
                     </select>
                 </div>
+                <div class="input-group">
+                    <label>Starting rate (pence per kWh)</label>
+                    <input type="number" id="startChargeRate" placeholder="e.g., 7.5">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>Typical average ad-hoc public rate you pay (pence per kWh)</label>
+                <input type="number" id="adhoc" placeholder="e.g., 62 (where 62p is the 50kW price available from Lidl)">
             </div>
         </div>
 
-        <div class="panel">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-                <h2>3. Comparison Providers</h2>
-                <div style="display:flex; gap:8px;">
-                    <button class="btn" onclick="createProviderBox()">+ Add Custom</button>
-                    <button class="btn" onclick="duplicateLastProvider()">Duplicate Last</button>
+        <div class="card">
+            <div class="providers-header-row">
+                <h2>Subscriptions & Discounts</h2>
+                <div style="display:flex; gap:6px;">
+                    <button type="button" class="btn" onclick="addProvider()">Add provider</button>
+                    <button type="button" class="btn" onclick="addAllProviders()">Add all providers</button>
+                    <button type="button" class="btn" onclick="duplicateLastProvider()">Duplicate last</button>
                 </div>
-            </div>
-
-            <div class="input-group" style="margin-bottom:16px;">
-                <label>Min. Charger Speed Needed (kW)</label>
-                <select id="minSpeed" onchange="enforceSpeedRules()">
-                    <option value="0">Any (inc. Slow AC)</option>
-                    <option value="22">22kW+ (Accelerated)</option>
-                    <option value="50">50kW+ (Rapid)</option>
-                    <option value="100">100kW+ (Ultra Rapid)</option>
-                    <option value="150">150kW+ (High Power)</option>
-                </select>
             </div>
 
             <div id="providers"></div>
@@ -99,6 +104,7 @@
     </div>
 
     <div id="results" class="results">
+
         <div class="input-group" style="max-width:200px;">
             <label>Sort results</label>
             <select id="sortResults" onchange="calculate()">
@@ -117,6 +123,7 @@
         </div>
 
         <div id="providerResults"></div>
+        
         <div id="conclusionsBox"></div>
         <div id="summaryBox" class="summary"></div>
 
@@ -130,5 +137,6 @@
 <script src="functions2.js"></script>
 <script src="functions3.js"></script>
 <script src="functions4.js"></script>
+
 </body>
 </html>
