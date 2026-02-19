@@ -2,14 +2,10 @@
   "providers": [
     {
       "id": "beev-mini",
-      "name": "Subscription > Be.EV (The Mini)",
+      "name": "Be.EV (The Mini)",
       "subscription": {
         "hasSubscription": true,
         "monthlyCost": 4.99
-      },
-      "chargingSpeeds": {
-        "ac": [],
-        "dc": []
       },
       "rates": {
         "default": 49
@@ -17,14 +13,10 @@
     },
     {
       "id": "beev-mega",
-      "name": "Subscription > Be.EV (The Mega)",
+      "name": "Be.EV (The Mega)",
       "subscription": {
         "hasSubscription": true,
         "monthlyCost": 9.99
-      },
-      "chargingSpeeds": {
-        "ac": [],
-        "dc": []
       },
       "rates": {
         "default": 39
@@ -32,14 +24,10 @@
     },
     {
       "id": "bp-pulse-sub",
-      "name": "Subscription > BP Pulse",
+      "name": "BP Pulse",
       "subscription": {
         "hasSubscription": true,
         "monthlyCost": 7.85
-      },
-      "chargingSpeeds": {
-        "ac": [7],
-        "dc": [50, 150]
       },
       "rates": {
         "7": 52,
@@ -49,29 +37,33 @@
     },
     {
       "id": "fastned-gold",
-      "name": "Subscription > Fastned (Gold)",
+      "name": "Fastned (Gold)",
       "subscription": {
         "hasSubscription": true,
-        "monthlyCost": 10.00
-      },
-      "chargingSpeeds": {
-        "ac": [],
-        "dc": []
+        "monthlyCost": 9.98
       },
       "rates": {
         "default": 55
       }
     },
     {
+      "id": "gridserve-plus",
+      "name": "GRIDSERVE Plus",
+      "subscription": {
+        "hasSubscription": true,
+        "monthlyCost": 7.99
+      },
+      "rates": {
+        "50": 37,
+        "150": 60
+      }
+    },
+    {
       "id": "ionity-motion",
-      "name": "Subscription > IONITY (Motion)",
+      "name": "IONITY (Passport Motion)",
       "subscription": {
         "hasSubscription": true,
         "monthlyCost": 5.49
-      },
-      "chargingSpeeds": {
-        "ac": [],
-        "dc": []
       },
       "rates": {
         "default": 58
@@ -79,14 +71,10 @@
     },
     {
       "id": "ionity-power",
-      "name": "Subscription > IONITY (Power)",
+      "name": "IONITY (Passport Power)",
       "subscription": {
         "hasSubscription": true,
         "monthlyCost": 10.50
-      },
-      "chargingSpeeds": {
-        "ac": [],
-        "dc": []
       },
       "rates": {
         "default": 46
@@ -94,169 +82,13 @@
     },
     {
       "id": "tesla-member",
-      "name": "Subscription > Tesla (Non-Tesla Member)",
+      "name": "Tesla (Non-Tesla Member)",
       "subscription": {
         "hasSubscription": true,
-        "monthlyCost": 10.99
-      },
-      "chargingSpeeds": {
-        "ac": [],
-        "dc": []
+        "monthlyCost": 9.99
       },
       "rates": {
-        "default": 34
-      }
-    },
-    {
-      "id": "bp-pulse-adhoc",
-      "name": "BP Pulse (PAYG)",
-      "subscription": {
-        "hasSubscription": false,
-        "monthlyCost": 0
-      },
-      "chargingSpeeds": {
-        "ac": [7],
-        "dc": [50, 150]
-      },
-      "rates": {
-        "7": 65,
-        "50": 89,
-        "150": 89
-      }
-    },
-    {
-      "id": "gridserve",
-      "name": "Gridserve (PAYG)",
-      "subscription": {
-        "hasSubscription": false,
-        "monthlyCost": 0
-      },
-      "chargingSpeeds": {
-        "ac": [],
-        "dc": []
-      },
-      "rates": {
-        "default": 79
-      }
-    },
-    {
-      "id": "instavolt-app",
-      "name": "InstaVolt (App/RFID)",
-      "subscription": {
-        "hasSubscription": false,
-        "monthlyCost": 0
-      },
-      "chargingSpeeds": {
-        "ac": [],
-        "dc": []
-      },
-      "rates": {
-        "default": 89
-      }
-    },
-    {
-      "id": "instavolt-adhoc",
-      "name": "InstaVolt (PAYG)",
-      "subscription": {
-        "hasSubscription": false,
-        "monthlyCost": 0
-      },
-      "chargingSpeeds": {
-        "ac": [],
-        "dc": []
-      },
-      "rates": {
-        "default": 89
-      }
-    },
-    {
-      "id": "ionity-adhoc",
-      "name": "IONITY Direct (PAYG)",
-      "subscription": {
-        "hasSubscription": false,
-        "monthlyCost": 0
-      },
-      "chargingSpeeds": {
-        "ac": [],
-        "dc": []
-      },
-      "rates": {
-        "default": 81
-      }
-    },
-    {
-      "id": "mfg-ev",
-      "name": "MFG EV Power (PAYG)",
-      "subscription": {
-        "hasSubscription": false,
-        "monthlyCost": 0
-      },
-      "chargingSpeeds": {
-        "ac": [],
-        "dc": []
-      },
-      "rates": {
-        "default": 79
-      }
-    },
-    {
-      "id": "osprey-adhoc",
-      "name": "Osprey (PAYG)",
-      "subscription": {
-        "hasSubscription": false,
-        "monthlyCost": 0
-      },
-      "chargingSpeeds": {
-        "ac": [],
-        "dc": []
-      },
-      "rates": {
-        "default": 87
-      }
-    },
-    {
-      "id": "osprey-app",
-      "name": "Osprey (App)",
-      "subscription": {
-        "hasSubscription": false,
-        "monthlyCost": 0
-      },
-      "chargingSpeeds": {
-        "ac": [],
-        "dc": []
-      },
-      "rates": {
-        "default": 82
-      }
-    },
-    {
-      "id": "sainsburys",
-      "name": "Sainsbury’s Smart Charge (PAYG)",
-      "subscription": {
-        "hasSubscription": false,
-        "monthlyCost": 0
-      },
-      "chargingSpeeds": {
-        "ac": [],
-        "dc": []
-      },
-      "rates": {
-        "default": 72
-      }
-    },
-    {
-      "id": "tesla-adhoc",
-      "name": "Tesla (Non-Tesla PAYG)",
-      "subscription": {
-        "hasSubscription": false,
-        "monthlyCost": 0
-      },
-      "chargingSpeeds": {
-        "ac": [],
-        "dc": []
-      },
-      "rates": {
-        "default": 57
+        "default": 47
       }
     }
   ]
