@@ -1,8 +1,23 @@
 {
   "providers": [
     {
-      "id": "beev",
-      "name": "Subscription > Be.EV",
+      "id": "beev-mini",
+      "name": "Subscription > Be.EV (The Mini)",
+      "subscription": {
+        "hasSubscription": true,
+        "monthlyCost": 4.99
+      },
+      "chargingSpeeds": {
+        "ac": [],
+        "dc": []
+      },
+      "rates": {
+        "default": 49
+      }
+    },
+    {
+      "id": "beev-mega",
+      "name": "Subscription > Be.EV (The Mega)",
       "subscription": {
         "hasSubscription": true,
         "monthlyCost": 9.99
@@ -16,8 +31,70 @@
       }
     },
     {
-      "id": "tesla",
-      "name": "Subscription > Tesla",
+      "id": "bp-pulse-sub",
+      "name": "Subscription > BP Pulse",
+      "subscription": {
+        "hasSubscription": true,
+        "monthlyCost": 7.85
+      },
+      "chargingSpeeds": {
+        "ac": [7],
+        "dc": [50, 150]
+      },
+      "rates": {
+        "7": 52,
+        "50": 69,
+        "150": 69
+      }
+    },
+    {
+      "id": "fastned-gold",
+      "name": "Subscription > Fastned (Gold)",
+      "subscription": {
+        "hasSubscription": true,
+        "monthlyCost": 10.00
+      },
+      "chargingSpeeds": {
+        "ac": [],
+        "dc": []
+      },
+      "rates": {
+        "default": 55
+      }
+    },
+    {
+      "id": "ionity-motion",
+      "name": "Subscription > IONITY (Motion)",
+      "subscription": {
+        "hasSubscription": true,
+        "monthlyCost": 5.49
+      },
+      "chargingSpeeds": {
+        "ac": [],
+        "dc": []
+      },
+      "rates": {
+        "default": 58
+      }
+    },
+    {
+      "id": "ionity-power",
+      "name": "Subscription > IONITY (Power)",
+      "subscription": {
+        "hasSubscription": true,
+        "monthlyCost": 10.50
+      },
+      "chargingSpeeds": {
+        "ac": [],
+        "dc": []
+      },
+      "rates": {
+        "default": 46
+      }
+    },
+    {
+      "id": "tesla-member",
+      "name": "Subscription > Tesla (Non-Tesla Member)",
       "subscription": {
         "hasSubscription": true,
         "monthlyCost": 10.99
@@ -27,78 +104,29 @@
         "dc": []
       },
       "rates": {
-        "default": 45
+        "default": 34
       }
     },
     {
-      "id": "bp-pulse",
-      "name": "Subscription > BP Pulse",
-      "subscription": {
-        "hasSubscription": true,
-        "monthlyCost": 7.99
-      },
-      "chargingSpeeds": {
-        "ac": [7, 22],
-        "dc": [50, 150]
-      },
-      "rates": {
-        "7": 45,
-        "22": 49,
-        "50": 59,
-        "150": 69
-      }
-    },
-    {
-      "id": "shell-recharge",
-      "name": "Subscription > Shell Recharge",
-      "subscription": {
-        "hasSubscription": true,
-        "monthlyCost": 7.99
-      },
-      "chargingSpeeds": {
-        "ac": [7, 22],
-        "dc": [50, 150]
-      },
-      "rates": {
-        "7": 45,
-        "22": 49,
-        "50": 59,
-        "150": 69
-      }
-    },
-    {
-      "id": "osprey",
-      "name": "Osprey (ad-hoc only)",
+      "id": "bp-pulse-adhoc",
+      "name": "BP Pulse (PAYG)",
       "subscription": {
         "hasSubscription": false,
         "monthlyCost": 0
       },
       "chargingSpeeds": {
-        "ac": [],
-        "dc": []
+        "ac": [7],
+        "dc": [50, 150]
       },
       "rates": {
-        "default": 79
-      }
-    },
-    {
-      "id": "instavolt",
-      "name": "Instavolt (ad-hoc only)",
-      "subscription": {
-        "hasSubscription": false,
-        "monthlyCost": 0
-      },
-      "chargingSpeeds": {
-        "ac": [],
-        "dc": []
-      },
-      "rates": {
-        "default": 85
+        "7": 65,
+        "50": 89,
+        "150": 89
       }
     },
     {
       "id": "gridserve",
-      "name": "Gridserve (ad-hoc only)",
+      "name": "Gridserve (PAYG)",
       "subscription": {
         "hasSubscription": false,
         "monthlyCost": 0
@@ -112,55 +140,123 @@
       }
     },
     {
-      "id": "pod-point",
-      "name": "Pod Point (ad-hoc only)",
+      "id": "instavolt-adhoc",
+      "name": "InstaVolt (Contactless)",
       "subscription": {
         "hasSubscription": false,
         "monthlyCost": 0
       },
       "chargingSpeeds": {
-        "ac": [7, 22],
-        "dc": [50]
+        "ac": [],
+        "dc": []
       },
       "rates": {
-        "7": 44,
-        "22": 49,
-        "50": 62
+        "default": 89
       }
     },
     {
-      "id": "tesco-pod-point",
-      "name": "Tesco Pod Point (ad-hoc only)",
+      "id": "instavolt-app",
+      "name": "InstaVolt (App/RFID)",
       "subscription": {
         "hasSubscription": false,
         "monthlyCost": 0
       },
       "chargingSpeeds": {
-        "ac": [7, 22],
-        "dc": [50, 75]
+        "ac": [],
+        "dc": []
       },
       "rates": {
-        "7": 44,
-        "22": 49,
-        "50": 62,
-        "75": 69
+        "default": 89
       }
     },
     {
-      "id": "lidl",
-      "name": "Lidl via Lidl+ app (ad-hoc only)",
+      "id": "ionity-adhoc",
+      "name": "IONITY Direct (Ad-hoc)",
       "subscription": {
         "hasSubscription": false,
         "monthlyCost": 0
       },
       "chargingSpeeds": {
-        "ac": [7, 22],
-        "dc": [50]
+        "ac": [],
+        "dc": []
       },
       "rates": {
-        "7": 40,
-        "22": 40,
-        "50": 62
+        "default": 81
+      }
+    },
+    {
+      "id": "mfg-ev",
+      "name": "MFG EV Power (PAYG)",
+      "subscription": {
+        "hasSubscription": false,
+        "monthlyCost": 0
+      },
+      "chargingSpeeds": {
+        "ac": [],
+        "dc": []
+      },
+      "rates": {
+        "default": 79
+      }
+    },
+    {
+      "id": "osprey-adhoc",
+      "name": "Osprey (Contactless)",
+      "subscription": {
+        "hasSubscription": false,
+        "monthlyCost": 0
+      },
+      "chargingSpeeds": {
+        "ac": [],
+        "dc": []
+      },
+      "rates": {
+        "default": 87
+      }
+    },
+    {
+      "id": "osprey-app",
+      "name": "Osprey (App)",
+      "subscription": {
+        "hasSubscription": false,
+        "monthlyCost": 0
+      },
+      "chargingSpeeds": {
+        "ac": [],
+        "dc": []
+      },
+      "rates": {
+        "default": 82
+      }
+    },
+    {
+      "id": "sainsburys",
+      "name": "Sainsbury’s Smart Charge",
+      "subscription": {
+        "hasSubscription": false,
+        "monthlyCost": 0
+      },
+      "chargingSpeeds": {
+        "ac": [],
+        "dc": []
+      },
+      "rates": {
+        "default": 72
+      }
+    },
+    {
+      "id": "tesla-adhoc",
+      "name": "Tesla (Non-Tesla PAYG)",
+      "subscription": {
+        "hasSubscription": false,
+        "monthlyCost": 0
+      },
+      "chargingSpeeds": {
+        "ac": [],
+        "dc": []
+      },
+      "rates": {
+        "default": 57
       }
     }
   ]
