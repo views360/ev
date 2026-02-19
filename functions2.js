@@ -10,7 +10,6 @@ function calculate() {
     const efficiency = parseFloat(document.getElementById("efficiency").value);
     const adhocRate = parseFloat(document.getElementById("adhoc").value);
     const startRate = parseFloat(document.getElementById("startChargeRate").value);
-    const minSpeed = parseFloat(document.getElementById("minSpeed").value);
 
     if (isNaN(miles) || isNaN(battery) || isNaN(soc) || isNaN(efficiency) || isNaN(adhocRate)) {
         document.getElementById("results").style.display = "none";
@@ -49,12 +48,20 @@ function calculate() {
         const name = document.getElementById(`name${id}`).value || "Unnamed";
         const subCost = parseFloat(document.getElementById(`subCost${id}`).value) || 0;
         const rate = parseFloat(document.getElementById(`rate${id}`).value) || 0;
+        const discount = parseFloat(document.getElementById(`discount${id}`).value) || 0;
 
-        const journeyCost = publicKwh * (rate / 100);
+        // Apply percentage discount to rate
+        let effectiveRate = rate;
+        if (!isNaN(discount) && discount > 0) {
+            effectiveRate = rate * (1 - (discount / 100));
+            if (effectiveRate < 0) effectiveRate = 0;
+        }
+
+        const journeyCost = publicKwh * (effectiveRate / 100);
         const totalJourneyCost = subCost + startChargeCost + journeyCost;
         const savings = totalAdhocCost - totalJourneyCost;
 
-        providers.push({ id, name, subCost, rate, totalJourneyCost, savings });
+        providers.push({ id, name, subCost, rate: effectiveRate, displayRate: rate, discount, totalJourneyCost, savings });
     });
 
     const sortVal = document.getElementById("sortResults").value;
@@ -66,7 +73,16 @@ function calculate() {
     let html = `<table><thead><tr><th>Provider</th><th>Sub. Fee</th><th>Rate</th><th>Trip Cost</th><th>vs. Ad-hoc</th></tr></thead><tbody>`;
     providers.forEach(p => {
         const rowClass = p.savings > 0 ? "good" : (p.savings < 0 ? "bad" : "");
-        html += `<tr class="${rowClass}"><td>${p.name}</td><td>£${p.subCost.toFixed(2)}</td><td>${p.rate}p</td><td>£${p.totalJourneyCost.toFixed(2)}</td><td>${p.savings > 0 ? 'Save £' : 'Cost £'}${Math.abs(p.savings).toFixed(2)}</td></tr>`;
+        const rateLabel = p.discount > 0
+            ? `${p.displayRate}p → ${p.rate.toFixed(1)}p`
+            : `${p.rate.toFixed(1)}p`;
+        html += `<tr class="${rowClass}">
+                    <td>${p.name}</td>
+                    <td>£${p.subCost.toFixed(2)}</td>
+                    <td>${rateLabel}</td>
+                    <td>£${p.totalJourneyCost.toFixed(2)}</td>
+                    <td>${p.savings > 0 ? 'Save £' : 'Cost £'}${Math.abs(p.savings).toFixed(2)}</td>
+                 </tr>`;
     });
     html += `</tbody></table>`;
     resultsContainer.innerHTML = html;
@@ -81,11 +97,9 @@ function calculate() {
     const bestProvider = providers[0];
     const timeLine = `Approx driving time (at 60mph): <strong>${(miles/60).toFixed(1)} hours</strong>.`;
     
-    // Capture the text of the selected speed (e.g., "50 kW")
     const minSpeedSelect = document.getElementById("minSpeed");
     const minSpeedLabel = minSpeedSelect.options[minSpeedSelect.selectedIndex].text;
 
-    // UPDATED TABLE TO INCLUDE ALL REQUESTED SPEED TIERS
     const speedTableHtml = `
         <div class="speed-comparison-container">
             <table class="mini-table">

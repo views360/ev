@@ -61,6 +61,10 @@ function createProviderBox(preset) {
                 <input type="number" id="rate${id}" step="0.1" value="0" oninput="calculate()">
             </div>
         </div>
+        <div class="input-group">
+            <label>% Discount (e.g., Electroverse 8%)</label>
+            <input type="number" id="discount${id}" step="0.1" value="0" oninput="calculate()">
+        </div>
         <div class="input-group" id="speedRow${id}" style="display:none">
             <label>Charging Speed</label>
             <select id="speed${id}" onchange="updateRateFromSpeed(${id})"></select>
@@ -208,6 +212,7 @@ function duplicateLastProvider() {
     document.getElementById(`preset${newId}`).value = document.getElementById(`preset${lastId}`).value;
     document.getElementById(`subCost${newId}`).value = document.getElementById(`subCost${lastId}`).value;
     document.getElementById(`rate${newId}`).value = document.getElementById(`rate${lastId}`).value;
+    document.getElementById(`discount${newId}`).value = document.getElementById(`discount${lastId}`).value;
     
     const lastSpeed = document.getElementById(`speed${lastId}`);
     if (lastSpeed && lastSpeed.offsetParent !== null) {
