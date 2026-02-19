@@ -115,7 +115,7 @@ function calculate() {
                 </tbody>
             </table>
         </div>`;
-    const locationDisclaimer = `<p style="font-size:0.85rem; margin-top:12px; opacity:0.8;">* Times exclude the "80-100%" charging slowdown. Also, you will need to ensure that this provider has charging stations in your planned area of travel.</p>`;
+    const locationDisclaimer = `<p style="font-size:0.85rem; margin-top:12px; opacity:0.8;">Important*<ul><li>You must ensure that your chosen provider has charging stations in your planned area of travel.</li><li>Timings exclude the "80-100%" charging slowdown.</li><li>Your motor has a maximum charging power, which may be lower than your selected charger power and will affect timings accordingly. Suggested timings are illustrative only.</ul></p>`;
     
     let conclusionHTML = "";
     if (bestProvider.savings > 0) {
