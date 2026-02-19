@@ -115,7 +115,7 @@ function calculate() {
                 </tbody>
             </table>
         </div>`;
-    const locationDisclaimer = `<p style="font-size:0.85rem; margin-top:12px; opacity:0.8;"><strong>Important</strong><ul><li>You must ensure that your chosen provider has charging stations in your planned area of travel.</li><li>Suggested timings are illustrative only. If you motor's maximum charging power is lower than the selected charger, timing charges will be affected accordingly. Also, timings exclude the "80-100%" charging slowdown.</li></ul></p>`;
+    const locationDisclaimer = `<p style="font-size:0.85rem; margin-top:12px; opacity:0.8;"><strong style='font-size:1.2 em'>Important</strong><ul><li>You must ensure that your chosen provider has charging stations in your planned area of travel.</li><li>Suggested timings are illustrative only. If your motor's maximum charging power is lower than the selected charger, timing charges will be affected accordingly. Also, timings exclude the "80-100%" charging slowdown.</li></ul></p>`;
     
     let conclusionHTML = "";
     if (bestProvider.savings > 0) {
