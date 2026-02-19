@@ -140,21 +140,6 @@
       }
     },
     {
-      "id": "instavolt-adhoc",
-      "name": "InstaVolt (Contactless)",
-      "subscription": {
-        "hasSubscription": false,
-        "monthlyCost": 0
-      },
-      "chargingSpeeds": {
-        "ac": [],
-        "dc": []
-      },
-      "rates": {
-        "default": 89
-      }
-    },
-    {
       "id": "instavolt-app",
       "name": "InstaVolt (App/RFID)",
       "subscription": {
@@ -170,8 +155,23 @@
       }
     },
     {
+      "id": "instavolt-adhoc",
+      "name": "InstaVolt (PAYG)",
+      "subscription": {
+        "hasSubscription": false,
+        "monthlyCost": 0
+      },
+      "chargingSpeeds": {
+        "ac": [],
+        "dc": []
+      },
+      "rates": {
+        "default": 89
+      }
+    },
+    {
       "id": "ionity-adhoc",
-      "name": "IONITY Direct (Ad-hoc)",
+      "name": "IONITY Direct (PAYG)",
       "subscription": {
         "hasSubscription": false,
         "monthlyCost": 0
@@ -201,7 +201,7 @@
     },
     {
       "id": "osprey-adhoc",
-      "name": "Osprey (Contactless)",
+      "name": "Osprey (PAYG)",
       "subscription": {
         "hasSubscription": false,
         "monthlyCost": 0
@@ -231,7 +231,7 @@
     },
     {
       "id": "sainsburys",
-      "name": "Sainsbury’s Smart Charge",
+      "name": "Sainsbury’s Smart Charge (PAYG)",
       "subscription": {
         "hasSubscription": false,
         "monthlyCost": 0
