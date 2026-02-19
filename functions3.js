@@ -20,7 +20,7 @@ function drawGraph(core, providers) {
     }
 
     const datasets = [{
-        label: "Ad-hoc (£)",
+        label: "Ad‑hoc Total (£)",
         data: adhocData,
         borderColor: "#f97316",
         backgroundColor: "rgba(249,115,22,0.15)",
@@ -28,12 +28,16 @@ function drawGraph(core, providers) {
     }];
 
     providers.forEach(p => {
+        const activeRate = p.rate;
+        if (isNaN(activeRate)) return;
+
         const data = [];
         for (let i = 0; i <= steps; i++) {
             const m = (maxMiles * i) / steps;
             const publicKwhAtM = Math.max(0, m - core.homeRange) / core.efficiency;
-            data.push(p.subCost + core.startChargeCost + (publicKwhAtM * p.rate / 100));
+            data.push(p.subCost + core.startChargeCost + (publicKwhAtM * activeRate / 100));
         }
+
         datasets.push({
             label: `${p.name} (£)`,
             data,
@@ -49,17 +53,23 @@ function drawGraph(core, providers) {
             responsive: true,
             maintainAspectRatio: false,
             scales: {
-                x: { title: { display: true, text: "Trip Miles" } },
-                y: { title: { display: true, text: "Total Cost (£)" } }
+                x: { title: { display: true, text: "Trip Miles", color: "#9ca3af" }, ticks: { color: "#9ca3af" } },
+                y: { title: { display: true, text: "Total Cost (£)", color: "#9ca3af" }, ticks: { color: "#9ca3af" } }
+            },
+            plugins: {
+                legend: { labels: { color: getComputedStyle(document.body).getPropertyValue("--text").trim() } }
             }
         }
     });
 }
 
 function getProviderColor(name) {
-    let hash = 0;
-    for (let i = 0; i < name.length; i++) {
-        hash = name.charCodeAt(i) + ((hash << 5) - hash);
-    }
-    return `hsl(${hash % 360}, 70%, 50%)`;
+    const colors = {
+        "Be.EV": "#00d1ff",
+        "Tesla": "#e81010",
+        "BP Pulse": "#00a14b",
+        "Shell Recharge": "#ffda00",
+        "Osprey": "#f97316"
+    };
+    return colors[name] || `#${Math.floor(Math.random()*16777215).toString(16)}`;
 }
