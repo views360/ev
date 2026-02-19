@@ -10,6 +10,7 @@ function calculate() {
     const efficiency = parseFloat(document.getElementById("efficiency").value);
     const adhocRate = parseFloat(document.getElementById("adhoc").value);
     const startRate = parseFloat(document.getElementById("startChargeRate").value);
+    const startType = document.getElementById("startChargeType").value;
     const minSpeed = parseFloat(document.getElementById("minSpeed").value);
 
     if (isNaN(miles) || isNaN(battery) || isNaN(soc) || isNaN(efficiency) || isNaN(adhocRate)) {
@@ -19,97 +20,83 @@ function calculate() {
 
     const startChargeKwh = (soc / 100) * battery;
     const startChargeCost = startChargeKwh * (startRate / 100);
-    const initialRange = startChargeKwh * efficiency;
+    const homeRange = startChargeKwh * efficiency;
 
-    const publicMiles = Math.max(0, miles - initialRange);
+    const publicMiles = Math.max(0, miles - homeRange);
     const publicKwh = publicMiles / efficiency;
-
     const totalAdhocCost = startChargeCost + (publicKwh * (adhocRate / 100));
 
     document.getElementById("results").style.display = "block";
-    document.getElementById("preChargeLine").innerHTML = `Pre-journey charge: <strong>${startChargeKwh.toFixed(1)} kWh</strong> (£${startChargeCost.toFixed(2)})`;
-    document.getElementById("homeRangeLine").innerHTML = `Range from start charge: <strong>${initialRange.toFixed(0)} miles</strong>`;
-    document.getElementById("publicMilesLine").innerHTML = `Public charging miles needed: <strong>${publicMiles.toFixed(0)} miles</strong>`;
-    document.getElementById("publicKwhLine").innerHTML = `Public charging energy needed: <strong>${publicKwh.toFixed(1)} kWh</strong>`;
-    document.getElementById("adhocCostLine").innerHTML = `Total cost (Standard Ad-hoc @ ${adhocRate}p): <strong>£${totalAdhocCost.toFixed(2)}</strong>`;
+    document.getElementById("preChargeLine").innerHTML = `Pre-journey charge: <strong>${startChargeKwh.toFixed(1)} kWh</strong> (Cost: <strong>£${startChargeCost.toFixed(2)}</strong>)`;
+    document.getElementById("homeRangeLine").innerHTML = `Distance covered by start charge: <strong>${homeRange.toFixed(0)} miles</strong>`;
+    document.getElementById("publicMilesLine").innerHTML = `Remaining distance to charge publicly: <strong>${publicMiles.toFixed(0)} miles</strong>`;
+    document.getElementById("publicKwhLine").innerHTML = `Public energy needed: <strong>${publicKwh.toFixed(1)} kWh</strong>`;
+    document.getElementById("adhocCostLine").innerHTML = `Total cost at ad-hoc rate (${adhocRate}p): <strong>£${totalAdhocCost.toFixed(2)}</strong>`;
 
-    const core = {
-        journeyMiles: miles,
-        efficiency: efficiency,
-        startChargeCost: startChargeCost,
-        homeRange: initialRange,
-        adhocRate: adhocRate
-    };
+    const providerBoxes = document.querySelectorAll(".provider-box");
+    let providerData = [];
 
-    const providers = [];
-    const boxes = document.querySelectorAll(".provider-box");
-
-    boxes.forEach(box => {
+    providerBoxes.forEach(box => {
         const id = box.dataset.id;
-        const name = document.getElementById(`name${id}`).value || "Unnamed";
+        const name = document.getElementById(`name${id}`).value;
         const subCost = parseFloat(document.getElementById(`subCost${id}`).value) || 0;
-        const rate = parseFloat(document.getElementById(`rate${id}`).value) || 0;
+        let rate = parseFloat(document.getElementById(`rate${id}`).value) || 0;
+        const discountVal = parseFloat(document.getElementById(`discount${id}`).value) || 0;
 
-        const journeyCost = publicKwh * (rate / 100);
-        const totalJourneyCost = subCost + startChargeCost + journeyCost;
-        const savings = totalAdhocCost - totalJourneyCost;
+        // Apply discount percentage
+        if (discountVal > 0) {
+            rate = rate * (1 - (discountVal / 100));
+        }
 
-        providers.push({ id, name, subCost, rate, totalJourneyCost, savings });
+        const cost = subTypeCalculation(startChargeCost, publicKwh, rate, subCost);
+        const savings = totalAdhocCost - cost;
+
+        providerData.push({ id, name, subCost, rate, cost, savings });
     });
+
+    function subTypeCalculation(startCost, pubKwh, pRate, sCost) {
+        return sCost + startCost + (pubKwh * (pRate / 100));
+    }
 
     const sortVal = document.getElementById("sortResults").value;
-    if (sortVal === "cheapest") providers.sort((a, b) => a.totalJourneyCost - b.totalJourneyCost);
-    else if (sortVal === "az") providers.sort((a, b) => a.name.localeCompare(b.name));
-    else if (sortVal === "za") providers.sort((a, b) => b.name.localeCompare(a.name));
+    if (sortVal === "cheapest") providerData.sort((a, b) => b.savings - a.savings);
+    else if (sortVal === "az") providerData.sort((a, b) => a.name.localeCompare(b.name));
+    else if (sortVal === "za") providerData.sort((a, b) => b.name.localeCompare(a.name));
 
-    const resultsContainer = document.getElementById("providerResults");
-    let html = `<table><thead><tr><th>Provider</th><th>Sub. Fee</th><th>Rate</th><th>Trip Cost</th><th>vs. Ad-hoc</th></tr></thead><tbody>`;
-    providers.forEach(p => {
-        const rowClass = p.savings > 0 ? "good" : (p.savings < 0 ? "bad" : "");
-        html += `<tr class="${rowClass}"><td>${p.name}</td><td>£${p.subCost.toFixed(2)}</td><td>${p.rate}p</td><td>£${p.totalJourneyCost.toFixed(2)}</td><td>${p.savings > 0 ? 'Save £' : 'Cost £'}${Math.abs(p.savings).toFixed(2)}</td></tr>`;
+    renderResults(providerData, totalAdhocCost);
+    drawGraph({journeyMiles: miles, homeRange, efficiency, startChargeCost, adhocRate}, providerData);
+}
+
+function renderResults(data, adhocTotal) {
+    const container = document.getElementById("providerResults");
+    const conclusions = document.getElementById("conclusionsBox");
+    container.innerHTML = "";
+    conclusions.innerHTML = "";
+
+    if (data.length === 0) return;
+
+    data.forEach(p => {
+        const card = document.createElement("div");
+        card.className = `result-card ${p.savings > 0 ? 'better' : 'worse'}`;
+        card.innerHTML = `
+            <div class="result-header">
+                <strong>${p.name}</strong>
+                <span>Total: £${p.cost.toFixed(2)}</span>
+            </div>
+            <div class="result-meta">
+                ${p.savings > 0 ? `<span class="tag good">Save £${p.savings.toFixed(2)}</span>` : `<span class="tag bad">£${Math.abs(p.savings).toFixed(2)} more</span>`}
+                <small>(Effective Rate: ${p.rate.toFixed(1)}p)</small>
+            </div>
+        `;
+        container.appendChild(card);
     });
-    html += `</tbody></table>`;
-    resultsContainer.innerHTML = html;
 
-    const conclusionsBox = document.getElementById("conclusionsBox");
-    if (providers.length === 0) {
-        conclusionsBox.innerHTML = "";
-        drawGraph(core, []);
-        return;
-    }
+    const best = data[0];
+    const minSpeedLabel = document.getElementById("minSpeed").options[document.getElementById("minSpeed").selectedIndex].text;
 
-    const bestProvider = providers[0];
-    const timeLine = `Approx driving time (at 60mph): <strong>${(miles/60).toFixed(1)} hours</strong>.`;
-    
-    // Capture the text of the selected speed (e.g., "50 kW")
-    const minSpeedSelect = document.getElementById("minSpeed");
-    const minSpeedLabel = minSpeedSelect.options[minSpeedSelect.selectedIndex].text;
-
-    // UPDATED TABLE TO INCLUDE ALL REQUESTED SPEED TIERS
-    const speedTableHtml = `
-        <div class="speed-comparison-container">
-            <table class="mini-table">
-                <thead>
-                    <tr><th>Speed</th><th>Est. Charge Time</th></tr>
-                </thead>
-                <tbody>
-                    <tr><td>7kW (fast)</td><td>${(publicKwh/7).toFixed(1)}h</td></tr>
-                    <tr><td>22kW (accelerated)</td><td>${(publicKwh/22).toFixed(1)}h</td></tr>
-                    <tr><td>50kW (rapid)</td><td>${((publicKwh/50)*60).toFixed(0)}m</td></tr>
-                    <tr><td>75kW (ultra rapid)</td><td>${((publicKwh/75)*60).toFixed(0)}m</td></tr>
-                    <tr><td>150kW (high power)</td><td>${((publicKwh/150)*60).toFixed(0)}m</td></tr>
-                </tbody>
-            </table>
-        </div>`;
-    const locationDisclaimer = `<p style="font-size:0.85rem; margin-top:12px; opacity:0.8;">* Times exclude the "80-100%" charging slowdown. Also, you will need to ensure that this provider has charging stations in your planned area of travel.</p>`;
-    
-    let conclusionHTML = "";
-    if (bestProvider.savings > 0) {
-        conclusionHTML += `<div class="conclusion-card good"><p class="main-result"><strong>${bestProvider.name}</strong> is cheapest at the selected minimum charging rate of <strong>${minSpeedLabel}</strong> (saving <strong>£${bestProvider.savings.toFixed(2)}</strong>).</p>${timeLine}${speedTableHtml}${locationDisclaimer}</div>`;
+    if (best.savings > 0) {
+        conclusions.innerHTML = `<div class="conclusion-card good"><p class="main-result"><strong>${best.name}</strong> is your best option, saving you <strong>£${best.savings.toFixed(2)}</strong> on this trip.</p></div>`;
     } else {
-        conclusionHTML += `<div class="conclusion-card bad"><p class="main-result"><strong>Ad-hoc charging</strong> is cheapest at the selected minimum charging rate of <strong>${minSpeedLabel}</strong>.</p>${timeLine}${speedTableHtml}${locationDisclaimer}</div>`;
+        conclusions.innerHTML = `<div class="conclusion-card bad"><p class="main-result">Standard <strong>Ad-hoc charging</strong> is currently cheaper than your added subscriptions for this trip.</p></div>`;
     }
-
-    conclusionsBox.innerHTML = conclusionHTML;
-    drawGraph(core, providers);
 }
