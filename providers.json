@@ -20,7 +20,7 @@
         "hasSubscription": true,
         "monthlyCost": 9.99,
         "url": "https://be-ev.co.uk/charging/subscribe-save/",
-        "comments": "150k"+ charging."
+        "comments": "150k+ charging."
       },
       "rates": {
         "default": 39
@@ -66,7 +66,7 @@
       "rates": {
         "7": 37,
         "22": 37,
-        "50": 64,
+        "50": 64
       }
     },
     {
