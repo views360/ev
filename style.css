@@ -55,6 +55,7 @@ h1 {
 
 .subtitle {
     color: var(--muted);
+    margin-top: 20px;
     margin-bottom: 25px;
     font-size: 0.95rem;
 }
@@ -297,7 +298,6 @@ tr.bad td { color: var(--danger); }
 
     .top-buttons {
         margin-top: 12px;
-        margin-bottom: 12px;
         display: flex;
         flex-direction: column;
         gap: 10px;
