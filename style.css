@@ -142,8 +142,6 @@ input:focus, select:focus {
     align-items: center;
     justify-content: center;
     line-height: 1; 
-    background: var(--accent);
-    color: var(--bg);
 }
 
 .btn.secondary {
@@ -288,45 +286,43 @@ tr.bad td { color: var(--danger); }
     height: 350px;
 }
 
-/* --- MOBILE OVERRIDES (< 700px) --- */
+/* MOBILE FIXES (< 700px) */
 @media (max-width: 700px) {
     body { padding: 10px; }
     .app { padding: 15px; border-radius: 0; }
     h1 { font-size: 1.4rem; }
 
-    /* (1) Move top buttons below the heading */
-    .app > div[style*="flex"]:first-of-type {
-        flex-direction: column !important;
-        align-items: flex-start !important;
-        gap: 15px !important;
+    /* Fix 1: Specificity for Title vs Header Buttons */
+    .app > div:first-child {
+        display: block !important;
     }
-    .app > div[style*="flex"]:first-of-type > div[style*="flex"] {
+    .app > div:first-child > div:last-child {
+        display: flex !important;
         flex-direction: column;
-        width: 100%;
-        gap: 8px !important;
+        margin-top: 15px;
+        gap: 8px;
     }
 
-    /* (2) Trip & Vehicle fields: Full width, one per line */
+    /* Fix 2: Full width fields */
     .grid { grid-template-columns: 1fr; }
     .input-row { flex-direction: column; gap: 0; }
-
-    /* Fix: Explicitly ensure "Add Provider" / "Add All" buttons remain visible */
+    
+    /* Ensure the Add Provider buttons stack and stay visible */
     .providers-header-row {
-        flex-direction: column !important;
-        align-items: flex-start !important;
-        gap: 10px !important;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
     }
-    .providers-header-row > div:last-child {
-        display: flex !important;
-        flex-direction: column !important;
-        width: 100% !important;
-        gap: 8px !important;
+    .providers-header-row div {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
     }
 
     /* All buttons full width */
-    .btn { width: 100% !important; }
+    .btn { width: 100%; }
 
-    /* (3) Add "RESULTS" heading */
+    /* Fix 3: Results Heading */
     .btn-row::before {
         content: "RESULTS";
         display: block;
@@ -335,15 +331,12 @@ tr.bad td { color: var(--danger); }
         font-weight: bold;
         color: var(--accent);
         margin-bottom: 10px;
+        text-shadow: var(--glow);
     }
 
-    /* (4) Responsive table */
+    /* Fix 4: Table Scroll */
     #providerResults {
         width: 100%;
         overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
     }
     #providerResults table {
-        min-width: 600px;
-    }
-}
