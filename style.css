@@ -1,5 +1,4 @@
 :root {
-    /* Neon Blue Theme - Dark Mode */
     --bg: #020617;
     --panel: #0f172a;
     --panel-alt: #1e293b;
@@ -74,13 +73,6 @@ h1 {
     border: 1px solid var(--border);
 }
 
-.providers-header-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-}
-
 .input-row {
     display: flex;
     gap: 15px;
@@ -128,8 +120,8 @@ input:focus, select:focus {
 }
 
 .btn {
-    box-sizing: border-box; 
-    height: 40px; 
+    box-sizing: border-box;
+    height: 40px;
     padding: 0 20px;
     border-radius: 8px;
     font-weight: 600;
@@ -141,7 +133,7 @@ input:focus, select:focus {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    line-height: 1; 
+    line-height: 1;
 }
 
 .btn.secondary {
@@ -286,57 +278,49 @@ tr.bad td { color: var(--danger); }
     height: 350px;
 }
 
-/* MOBILE FIXES (< 700px) */
-@media (max-width: 700px) {
+@media (max-width: 600px) {
     body { padding: 10px; }
     .app { padding: 15px; border-radius: 0; }
     h1 { font-size: 1.4rem; }
+    .btn { width: 100%; }
+}
 
-    /* Fix 1: Specificity for Title vs Header Buttons */
-    .app > div:first-child {
-        display: block !important;
-    }
-    .app > div:first-child > div:last-child {
-        display: flex !important;
-        flex-direction: column;
-        margin-top: 15px;
-        gap: 8px;
+/* ============================================================
+   MOBILE FIXES REQUESTED BY USER (APPLY BELOW 700px ONLY)
+   ============================================================ */
+@media (max-width: 700px) {
+
+    /* 1. Move buttons below heading */
+    .header-row {
+        display: block;
     }
 
-    /* Fix 2: Full width fields */
-    .grid { grid-template-columns: 1fr; }
-    .input-row { flex-direction: column; gap: 0; }
-    
-    /* Ensure the Add Provider buttons stack and stay visible */
-    .providers-header-row {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 10px;
-    }
-    .providers-header-row div {
+    .top-buttons {
+        margin-top: 12px;
         display: flex;
         flex-direction: column;
-        gap: 8px;
+        gap: 10px;
     }
 
-    /* All buttons full width */
-    .btn { width: 100%; }
+    /* 2. Trip & Vehicle fields full width, one per line */
+    .input-row {
+        flex-direction: column;
+    }
 
-    /* Fix 3: Results Heading */
-    .btn-row::before {
-        content: "RESULTS";
-        display: block;
-        width: 100%;
-        font-size: 1.5rem;
-        font-weight: bold;
-        color: var(--accent);
+    /* 3. Add spacing for RESULTS heading */
+    .results-heading {
+        margin-top: 30px;
         margin-bottom: 10px;
-        text-shadow: var(--glow);
+        color: var(--accent);
     }
 
-    /* Fix 4: Table Scroll */
+    /* 4. Make results table scrollable horizontally */
     #providerResults {
-        width: 100%;
         overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
     }
+
     #providerResults table {
+        min-width: 600px;
+    }
+}
