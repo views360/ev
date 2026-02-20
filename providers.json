@@ -6,7 +6,8 @@
       "subscription": {
         "hasSubscription": true,
         "monthlyCost": 4.99,
-        "url": "https://be-ev.co.uk/charging/subscribe-save/"
+        "url": "https://be-ev.co.uk/charging/subscribe-save/",
+        "comments": ""
       },
       "rates": {
         "default": 49
@@ -18,7 +19,8 @@
       "subscription": {
         "hasSubscription": true,
         "monthlyCost": 9.99,
-        "url": "https://be-ev.co.uk/charging/subscribe-save/"
+        "url": "https://be-ev.co.uk/charging/subscribe-save/",
+        "comments": ""
       },
       "rates": {
         "default": 39
@@ -30,7 +32,8 @@
       "subscription": {
         "hasSubscription": true,
         "monthlyCost": 7.85,
-        "url": "https://www.bppulse.com/en-gb/public-ev-charging/download-app"
+        "url": "https://www.bppulse.com/en-gb/public-ev-charging/download-app",
+        "comments": ""
       },
       "rates": {
         "7": 52,
@@ -44,7 +47,8 @@
       "subscription": {
         "hasSubscription": true,
         "monthlyCost": 9.98,
-        "url": "https://www.fastnedcharging.com/en/charging/tariffs"
+        "url": "https://www.fastnedcharging.com/en/charging/tariffs",
+        "comments": ""
       },
       "rates": {
         "default": 55
@@ -56,7 +60,8 @@
       "subscription": {
         "hasSubscription": true,
         "monthlyCost": 7.99,
-        "url": "https://gridservecampaigns.com/membership/"
+        "url": "https://gridservecampaigns.com/membership/",
+        "comments": ""
       },
       "rates": {
         "50": 37,
@@ -69,7 +74,8 @@
       "subscription": {
         "hasSubscription": true,
         "monthlyCost": 5.49,
-        "url": "https://www.ionity.eu/subscriptions"
+        "url": "https://www.ionity.eu/subscriptions",
+        "comments": ""
       },
       "rates": {
         "default": 58
@@ -81,7 +87,8 @@
       "subscription": {
         "hasSubscription": true,
         "monthlyCost": 10.50,
-        "url": "https://www.ionity.eu/subscriptions"
+        "url": "https://www.ionity.eu/subscriptions",
+        "comments": ""
       },
       "rates": {
         "default": 46
@@ -93,7 +100,8 @@
       "subscription": {
         "hasSubscription": true,
         "monthlyCost": 9.99,
-        "url": "https://www.tesla.com/en_gb/support/charging/supercharging-other-evs"
+        "url": "https://www.tesla.com/en_gb/support/charging/supercharging-other-evs",
+        "comments": "Off-peak discounted rates also available"
       },
       "rates": {
         "default": 47

@@ -30,7 +30,7 @@ function calculate() {
     document.getElementById("homeRangeLine").innerHTML = `Range from start charge: <strong>${initialRange.toFixed(0)} miles</strong>`;
     document.getElementById("publicMilesLine").innerHTML = `Public charging miles needed: <strong>${publicMiles.toFixed(0)} miles</strong>`;
     document.getElementById("publicKwhLine").innerHTML = `Public charging energy needed: <strong>${publicKwh.toFixed(1)} kWh</strong>`;
-    document.getElementById("adhocCostLine").innerHTML = `Total cost (standard PAYG @ ${adhocRate}p): <strong>£${totalAdhocCost.toFixed(2)}</strong>`;
+    document.getElementById("adhocCostLine").innerHTML = `Total cost (Standard PAYG @ ${adhocRate}p): <strong>£${totalAdhocCost.toFixed(2)}</strong>`;
 
     const core = {
         journeyMiles: miles,
@@ -64,14 +64,15 @@ function calculate() {
         const totalJourneyCost = subCost + startChargeCost + journeyCost;
         const savings = totalAdhocCost - totalJourneyCost;
 
-        // Find preset for URL
+        // Find preset for URL and Comments
         const presetName = document.getElementById(`preset${id}`).value;
         const pData = PRESETS.find(p => p.name === presetName);
         const url = pData && pData.subscription ? pData.subscription.url : null;
+        const comments = pData && pData.subscription ? pData.subscription.comments : "";
 
         providers.push({ 
             id, name, subCost, rate, totalJourneyCost, savings, 
-            breakEvenPublicMiles, breakEvenTotalMiles, url 
+            breakEvenPublicMiles, breakEvenTotalMiles, url, comments 
         });
     });
 
@@ -84,7 +85,12 @@ function calculate() {
     let html = `<table><thead><tr><th>Provider (click for sub. info.)</th><th>Sub. Fee</th><th>Rate</th><th>Trip Cost</th><th>vs. PAYG</th><th>Break-even (public/total)</th></tr></thead><tbody>`;
     providers.forEach(p => {
         const rowClass = p.savings > 0 ? "good" : (p.savings < 0 ? "bad" : "");
-        const displayName = p.url ? `<a href="${p.url}" target="_blank" style="color:inherit; text-decoration:underline;">${p.name}</a>` : p.name;
+        let displayName = p.url ? `<a href="${p.url}" target="_blank" style="color:inherit; text-decoration:underline;">${p.name}</a>` : p.name;
+        
+        // Append comments if available
+        if (p.comments && p.comments.trim() !== "") {
+            displayName += `<div style="font-size: 0.75rem; opacity: 0.8; margin-top: 4px; font-style: italic;">${p.comments}</div>`;
+        }
         
         let breakEvenText = "N/A";
         if (p.breakEvenPublicMiles !== null) {
@@ -142,7 +148,4 @@ function calculate() {
 
     conclusionsBox.innerHTML = conclusionHTML;
     drawGraph(core, providers);
-
 }
-
-
