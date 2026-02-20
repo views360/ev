@@ -48,28 +48,31 @@ function calculate() {
         const name = document.getElementById(`name${id}`).value || "Unnamed";
         const subCost = parseFloat(document.getElementById(`subCost${id}`).value) || 0;
         const rate = parseFloat(document.getElementById(`rate${id}`).value) || 0;
-
-        // Find URL from presets for hyperlinking
-        const presetName = document.getElementById(`preset${id}`).value;
-        const presetData = PRESETS.find(p => p.name === presetName);
-        const url = presetData?.subscription?.url || null;
+        
+        // Break-even logic
+        let breakEvenPublicMiles = null;
+        let breakEvenTotalMiles = null;
+        
+        if (rate < adhocRate) {
+            const savingsPerKwh = (adhocRate - rate) / 100;
+            const kwhNeededToBreakEven = subCost / savingsPerKwh;
+            breakEvenPublicMiles = kwhNeededToBreakEven * efficiency;
+            breakEvenTotalMiles = breakEvenPublicMiles + initialRange;
+        }
 
         const journeyCost = publicKwh * (rate / 100);
         const totalJourneyCost = subCost + startChargeCost + journeyCost;
         const savings = totalAdhocCost - totalJourneyCost;
 
-        // Calculate break-even point
-        let breakEvenStats = "";
-        if (subCost > 0 && adhocRate > rate) {
-            const penceSavedPerKwh = adhocRate - rate;
-            const kwhToBreakeven = (subCost * 100) / penceSavedPerKwh;
-            const milesFromPublicStart = kwhToBreakeven * efficiency;
-            const milesFromTripStart = milesFromPublicStart + initialRange;
+        // Find preset for URL
+        const presetName = document.getElementById(`preset${id}`).value;
+        const pData = PRESETS.find(p => p.name === presetName);
+        const url = pData && pData.subscription ? pData.subscription.url : null;
 
-            breakEvenStats = `<div style="font-size:0.8rem; color:var(--muted); margin-top:4px; font-weight:normal;">The breakeven point is <strong>${milesFromPublicStart.toFixed(0)} miles</strong> from public start / <strong>${milesFromTripStart.toFixed(0)} miles</strong> from trip start.</div>`;
-        }
-
-        providers.push({ id, name, url, subCost, rate, totalJourneyCost, savings, breakEvenStats });
+        providers.push({ 
+            id, name, subCost, rate, totalJourneyCost, savings, 
+            breakEvenPublicMiles, breakEvenTotalMiles, url 
+        });
     });
 
     const sortVal = document.getElementById("sortResults").value;
@@ -78,17 +81,23 @@ function calculate() {
     else if (sortVal === "za") providers.sort((a, b) => b.name.localeCompare(a.name));
 
     const resultsContainer = document.getElementById("providerResults");
-    let html = `<table><thead><tr><th>Provider</th><th>Sub. Fee</th><th>Rate</th><th>Trip Cost</th><th>vs. PAYG</th></tr></thead><tbody>`;
+    let html = `<table><thead><tr><th>Provider</th><th>Sub. Fee</th><th>Rate</th><th>Trip Cost</th><th>vs. PAYG</th><th>Break-even (Public/Total)</th></tr></thead><tbody>`;
     providers.forEach(p => {
         const rowClass = p.savings > 0 ? "good" : (p.savings < 0 ? "bad" : "");
-        const displayName = p.url ? `<a href="${p.url}" target="_blank" class="provider-result-link">${p.name}</a>` : `<strong>${p.name}</strong>`;
+        const displayName = p.url ? `<a href="${p.url}" target="_blank" style="color:inherit; text-decoration:underline;">${p.name}</a>` : p.name;
         
+        let breakEvenText = "N/A";
+        if (p.breakEvenPublicMiles !== null) {
+            breakEvenText = `${p.breakEvenPublicMiles.toFixed(0)} / ${p.breakEvenTotalMiles.toFixed(0)} mi`;
+        }
+
         html += `<tr class="${rowClass}">
-                    <td>${displayName}${p.breakEvenStats}</td>
+                    <td>${displayName}</td>
                     <td>£${p.subCost.toFixed(2)}</td>
                     <td>${p.rate.toFixed(1)}p</td>
                     <td>£${p.totalJourneyCost.toFixed(2)}</td>
                     <td>${p.savings > 0 ? 'Save £' : 'Cost £'}${Math.abs(p.savings).toFixed(2)}</td>
+                    <td style="font-size: 0.85rem;">${breakEvenText}</td>
                  </tr>`;
     });
     html += `</tbody></table>`;
@@ -122,13 +131,13 @@ function calculate() {
                 </tbody>
             </table>
         </div>`;
-    const locationDisclaimer = `<p style="font-size:1rem; margin-top:12px; opacity:0.8;"><strong>Important</strong><ul><li>You must ensure that your chosen provider has charging stations in your planned area of travel.</li><li>Suggested timings are illustrative only.</li></ul></p>`;
+    const locationDisclaimer = `<p style="font-size:1rem; margin-top:12px; opacity:0.8;"><strong>Important</strong><ul><li>You must ensure that your chosen provider has charging stations in your planned area of travel.</li><li>Suggested timings are illustrative only. If your motor's maximum charging power is lower than the selected charger, timing charges will be affected accordingly. Also, timings exclude the "80-100%" charging slowdown.</li></ul></p>`;
     
     let conclusionHTML = "";
     if (bestProvider.savings > 0) {
-        conclusionHTML += `<div class="conclusion-card good"><p class="main-result"><strong>${bestProvider.name}</strong> is cheapest at <strong>${minSpeedLabel}</strong> (saving <strong>£${bestProvider.savings.toFixed(2)}</strong>).</p>${timeLine}${speedTableHtml}${locationDisclaimer}</div>`;
+        conclusionHTML += `<div class="conclusion-card good"><p class="main-result"><strong>${bestProvider.name}</strong> is cheapest at the selected minimum charging rate of <strong>${minSpeedLabel}</strong> (saving <strong>£${bestProvider.savings.toFixed(2)}</strong>).</p>${timeLine}${speedTableHtml}${locationDisclaimer}</div>`;
     } else {
-        conclusionHTML += `<div class="conclusion-card bad"><p class="main-result"><strong>PAYG charging</strong> is cheapest at <strong>${minSpeedLabel}</strong>.</p>${timeLine}${speedTableHtml}${locationDisclaimer}</div>`;
+        conclusionHTML += `<div class="conclusion-card bad"><p class="main-result"><strong>PAYG charging</strong> is cheapest at the selected minimum charging rate of <strong>${minSpeedLabel}</strong>.</p>${timeLine}${speedTableHtml}${locationDisclaimer}</div>`;
     }
 
     conclusionsBox.innerHTML = conclusionHTML;
