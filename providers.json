@@ -7,7 +7,7 @@
         "hasSubscription": true,
         "monthlyCost": 4.99,
         "url": "https://be-ev.co.uk/charging/subscribe-save/",
-        "comments": "150k+ charging."
+        "comments": "150k+ chargers."
       },
       "rates": {
         "default": 49
@@ -20,7 +20,7 @@
         "hasSubscription": true,
         "monthlyCost": 9.99,
         "url": "https://be-ev.co.uk/charging/subscribe-save/",
-        "comments": "150k+ charging."
+        "comments": "150k+ chargers."
       },
       "rates": {
         "default": 39
@@ -76,7 +76,7 @@
         "hasSubscription": true,
         "monthlyCost": 5.49,
         "url": "https://www.ionity.eu/subscriptions",
-        "comments": "350kW chargers. Website: pricing may vary — check the app."
+        "comments": "350kW chargers. Website: pricing may vary — check the app. Monthly subscriptions available from the app."
       },
       "rates": {
         "default": 58
