@@ -298,6 +298,7 @@ tr.bad td { color: var(--danger); }
 
     .top-buttons {
         margin-top: 12px;
+        margin-bottom: 12px;
         display: flex;
         flex-direction: column;
         gap: 10px;
@@ -325,5 +326,6 @@ tr.bad td { color: var(--danger); }
         min-width: 600px;
     }
 }
+
 
 
