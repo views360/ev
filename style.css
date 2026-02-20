@@ -293,17 +293,6 @@ tr.bad td { color: var(--danger); }
     -webkit-overflow-scrolling: touch;
 }
 
-#providerResults::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 40px;
-    height: 100%;
-    pointer-events: none;
-    background: linear-gradient(to left, var(--panel), transparent);
-    z-index: 10;
-}
 /* ============================================================
    MOBILE FIXES REQUESTED BY USER (APPLY BELOW 700px ONLY)
    ============================================================ */
@@ -358,6 +347,15 @@ tr.bad td { color: var(--danger); }
         position: relative;
     }
     
+    .results-scroll {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    #providerResults {
+        position: relative;
+    }
+    
     #providerResults::after {
         content: "";
         position: absolute;
@@ -366,10 +364,12 @@ tr.bad td { color: var(--danger); }
         width: 40px;
         height: 100%;
         pointer-events: none;
-        background: linear-gradient(to left, var(--bg), transparent);
-        z-index: 5;
+        background: linear-gradient(to left, var(--panel), transparent);
+        z-index: 10;
     }
+
 }
+
 
 
 
