@@ -199,18 +199,4 @@ function duplicateLastProvider() {
     createProviderBox();
     const newId = providerCount;
 
-    document.getElementById(`name${newId}`).value = document.getElementById(`name${lastId}`).value;
-    document.getElementById(`preset${newId}`).value = document.getElementById(`preset${lastId}`).value;
-    document.getElementById(`subCost${newId}`).value = document.getElementById(`subCost${lastId}`).value;
-    document.getElementById(`rate${newId}`).value = document.getElementById(`rate${lastId}`).value;
-    
-    const lastSpeed = document.getElementById(`speed${lastId}`);
-    if (lastSpeed && lastSpeed.offsetParent !== null) {
-        const newSpeed = document.getElementById(`speed${newId}`);
-        document.getElementById(`speedRow${newId}`).style.display = "flex";
-        newSpeed.innerHTML = lastSpeed.innerHTML;
-        newSpeed.value = lastSpeed.value;
-    }
-
-    calculate();
-}
+    document.getElementById(

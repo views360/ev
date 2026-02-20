@@ -5,7 +5,8 @@
       "name": "Be.EV (The Mini)",
       "subscription": {
         "hasSubscription": true,
-        "monthlyCost": 4.99
+        "monthlyCost": 4.99,
+        "url": "https://be-ev.co.uk/charging/subscribe-save/"
       },
       "rates": {
         "default": 49
@@ -17,6 +18,7 @@
       "subscription": {
         "hasSubscription": true,
         "monthlyCost": 9.99
+        "url": "https://be-ev.co.uk/charging/subscribe-save/"
       },
       "rates": {
         "default": 39
@@ -27,7 +29,8 @@
       "name": "BP Pulse",
       "subscription": {
         "hasSubscription": true,
-        "monthlyCost": 7.85
+        "monthlyCost": 7.85,
+        "url": "https://www.bppulse.com/en-gb/public-ev-charging/download-app"
       },
       "rates": {
         "7": 52,
@@ -40,7 +43,8 @@
       "name": "Fastned (Gold)",
       "subscription": {
         "hasSubscription": true,
-        "monthlyCost": 9.98
+        "monthlyCost": 9.98,
+        "url": "https://www.fastnedcharging.com/en/charging/tariffs"
       },
       "rates": {
         "default": 55
@@ -51,7 +55,8 @@
       "name": "GRIDSERVE Plus",
       "subscription": {
         "hasSubscription": true,
-        "monthlyCost": 7.99
+        "monthlyCost": 7.99,
+        "url":"https://gridservecampaigns.com/membership/"
       },
       "rates": {
         "50": 37,
@@ -63,7 +68,8 @@
       "name": "IONITY (Passport Motion)",
       "subscription": {
         "hasSubscription": true,
-        "monthlyCost": 5.49
+        "monthlyCost": 5.49,
+        "url": "https://www.ionity.eu/subscriptions"
       },
       "rates": {
         "default": 58
@@ -74,7 +80,8 @@
       "name": "IONITY (Passport Power)",
       "subscription": {
         "hasSubscription": true,
-        "monthlyCost": 10.50
+        "monthlyCost": 10.50,
+        "url": "https://www.ionity.eu/subscriptions"
       },
       "rates": {
         "default": 46
@@ -85,7 +92,8 @@
       "name": "Tesla (Non-Tesla Member)",
       "subscription": {
         "hasSubscription": true,
-        "monthlyCost": 9.99
+        "monthlyCost": 9.99,
+        "url": "https://www.tesla.com/en_gb/support/charging/supercharging-other-evs"
       },
       "rates": {
         "default": 47

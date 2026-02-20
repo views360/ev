@@ -49,6 +49,11 @@ function calculate() {
         const subCost = parseFloat(document.getElementById(`subCost${id}`).value) || 0;
         const rate = parseFloat(document.getElementById(`rate${id}`).value) || 0;
 
+        // Find URL from presets for hyperlinking
+        const presetName = document.getElementById(`preset${id}`).value;
+        const presetData = PRESETS.find(p => p.name === presetName);
+        const url = presetData?.subscription?.url || null;
+
         const journeyCost = publicKwh * (rate / 100);
         const totalJourneyCost = subCost + startChargeCost + journeyCost;
         const savings = totalAdhocCost - totalJourneyCost;
@@ -61,10 +66,10 @@ function calculate() {
             const milesFromPublicStart = kwhToBreakeven * efficiency;
             const milesFromTripStart = milesFromPublicStart + initialRange;
 
-            breakEvenStats = `<div style="font-size:0.8rem; color:var(--muted); margin-top:4px; font-weight:normal;">The breakeven point (where the subscription pays for itself) is <strong>${milesFromPublicStart.toFixed(0)} miles</strong> from the start of public charging and <strong>${milesFromTripStart.toFixed(0)} miles</strong> from trip start.</div>`;
+            breakEvenStats = `<div style="font-size:0.8rem; color:var(--muted); margin-top:4px; font-weight:normal;">The breakeven point is <strong>${milesFromPublicStart.toFixed(0)} miles</strong> from public start / <strong>${milesFromTripStart.toFixed(0)} miles</strong> from trip start.</div>`;
         }
 
-        providers.push({ id, name, subCost, rate, totalJourneyCost, savings, breakEvenStats });
+        providers.push({ id, name, url, subCost, rate, totalJourneyCost, savings, breakEvenStats });
     });
 
     const sortVal = document.getElementById("sortResults").value;
@@ -76,8 +81,10 @@ function calculate() {
     let html = `<table><thead><tr><th>Provider</th><th>Sub. Fee</th><th>Rate</th><th>Trip Cost</th><th>vs. PAYG</th></tr></thead><tbody>`;
     providers.forEach(p => {
         const rowClass = p.savings > 0 ? "good" : (p.savings < 0 ? "bad" : "");
+        const displayName = p.url ? `<a href="${p.url}" target="_blank" class="provider-result-link">${p.name}</a>` : `<strong>${p.name}</strong>`;
+        
         html += `<tr class="${rowClass}">
-                    <td><strong>${p.name}</strong>${p.breakEvenStats}</td>
+                    <td>${displayName}${p.breakEvenStats}</td>
                     <td>£${p.subCost.toFixed(2)}</td>
                     <td>${p.rate.toFixed(1)}p</td>
                     <td>£${p.totalJourneyCost.toFixed(2)}</td>
@@ -115,13 +122,13 @@ function calculate() {
                 </tbody>
             </table>
         </div>`;
-    const locationDisclaimer = `<p style="font-size:1rem; margin-top:12px; opacity:0.8;"><strong>Important</strong><ul><li>You must ensure that your chosen provider has charging stations in your planned area of travel.</li><li>Suggested timings are illustrative only. If your motor's maximum charging power is lower than the selected charger, timing charges will be affected accordingly. Also, timings exclude the "80-100%" charging slowdown.</li></ul></p>`;
+    const locationDisclaimer = `<p style="font-size:1rem; margin-top:12px; opacity:0.8;"><strong>Important</strong><ul><li>You must ensure that your chosen provider has charging stations in your planned area of travel.</li><li>Suggested timings are illustrative only.</li></ul></p>`;
     
     let conclusionHTML = "";
     if (bestProvider.savings > 0) {
-        conclusionHTML += `<div class="conclusion-card good"><p class="main-result"><strong>${bestProvider.name}</strong> is cheapest at the selected minimum charging rate of <strong>${minSpeedLabel}</strong> (saving <strong>£${bestProvider.savings.toFixed(2)}</strong>).</p>${timeLine}${speedTableHtml}${locationDisclaimer}</div>`;
+        conclusionHTML += `<div class="conclusion-card good"><p class="main-result"><strong>${bestProvider.name}</strong> is cheapest at <strong>${minSpeedLabel}</strong> (saving <strong>£${bestProvider.savings.toFixed(2)}</strong>).</p>${timeLine}${speedTableHtml}${locationDisclaimer}</div>`;
     } else {
-        conclusionHTML += `<div class="conclusion-card bad"><p class="main-result"><strong>PAYG charging</strong> is cheapest at the selected minimum charging rate of <strong>${minSpeedLabel}</strong>.</p>${timeLine}${speedTableHtml}${locationDisclaimer}</div>`;
+        conclusionHTML += `<div class="conclusion-card bad"><p class="main-result"><strong>PAYG charging</strong> is cheapest at <strong>${minSpeedLabel}</strong>.</p>${timeLine}${speedTableHtml}${locationDisclaimer}</div>`;
     }
 
     conclusionsBox.innerHTML = conclusionHTML;
