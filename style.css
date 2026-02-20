@@ -1,4 +1,28 @@
 /* ===========================
+   ROOT VARIABLES & THEME
+   =========================== */
+
+:root {
+  --bg: #f5f5f5;
+  --fg: #222;
+  --panel-bg: #fff;
+  --panel-border: #ddd;
+  --accent: #0078d4;
+  --accent-hover: #006bbf;
+  --shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1e1e1e;
+    --fg: #e6e6e6;
+    --panel-bg: #2a2a2a;
+    --panel-border: #444;
+    --shadow: 0 2px 6px rgba(0,0,0,0.4);
+  }
+}
+
+/* ===========================
    GLOBAL RESET & BASE STYLES
    =========================== */
 
@@ -12,15 +36,11 @@ html, body {
   width: 100%;
   height: 100%;
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-  background: #f5f5f5;
-  color: #222;
+  background: var(--bg);
+  color: var(--fg);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
 }
-
-/* ===========================
-   PAGE WRAPPER
-   =========================== */
 
 .page-wrapper {
   max-width: 900px;
@@ -35,6 +55,7 @@ html, body {
 h1, h2, h3 {
   font-weight: 600;
   margin-bottom: 0.75rem;
+  color: var(--fg);
 }
 
 h1 {
@@ -48,41 +69,27 @@ h2 {
 }
 
 /* ===========================
-   FLEX LAYOUT HELPERS
+   FLEX HELPERS
    =========================== */
 
-.flex {
-  display: flex;
-  gap: 1rem;
-}
-
-.flex-col {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.flex-between {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
+.flex { display: flex; gap: 1rem; }
+.flex-col { display: flex; flex-direction: column; gap: 1rem; }
+.flex-between { display: flex; justify-content: space-between; align-items: center; }
 
 /* ===========================
-   CARD / PANEL CONTAINERS
+   PANELS / CARDS
    =========================== */
 
 .panel {
-  background: #fff;
+  background: var(--panel-bg);
   padding: 1.25rem;
   border-radius: 10px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  border: 1px solid var(--panel-border);
+  box-shadow: var(--shadow);
   margin-bottom: 1.25rem;
 }
 
-.panel h2 {
-  margin-bottom: 1rem;
-}
+.panel h2 { margin-bottom: 1rem; }
 
 /* ===========================
    FORM ELEMENTS
@@ -97,15 +104,16 @@ label {
 input, select {
   width: 100%;
   padding: 0.55rem 0.75rem;
-  border: 1px solid #ccc;
+  border: 1px solid var(--panel-border);
   border-radius: 6px;
   font-size: 1rem;
-  background: #fff;
+  background: var(--panel-bg);
+  color: var(--fg);
 }
 
 input:focus, select:focus {
   outline: none;
-  border-color: #0078d4;
+  border-color: var(--accent);
   box-shadow: 0 0 0 2px rgba(0,120,212,0.25);
 }
 
@@ -123,27 +131,20 @@ button {
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  background: #0078d4;
+  background: var(--accent);
   color: #fff;
   transition: background 0.2s ease, transform 0.1s ease;
 }
 
-button:hover {
-  background: #006bbf;
-}
-
-button:active {
-  transform: scale(0.97);
-}
+button:hover { background: var(--accent-hover); }
+button:active { transform: scale(0.97); }
 
 button.secondary {
   background: #e5e5e5;
   color: #222;
 }
 
-button.secondary:hover {
-  background: #d8d8d8;
-}
+button.secondary:hover { background: #d8d8d8; }
 
 /* ===========================
    GRID LAYOUTS
@@ -162,10 +163,7 @@ button.secondary:hover {
 }
 
 @media (max-width: 700px) {
-  .grid-2,
-  .grid-3 {
-    grid-template-columns: 1fr;
-  }
+  .grid-2, .grid-3 { grid-template-columns: 1fr; }
 }
 
 /* ===========================
@@ -173,8 +171,8 @@ button.secondary:hover {
    =========================== */
 
 .provider-block {
-  background: #fafafa;
-  border: 1px solid #ddd;
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
   padding: 1rem;
   border-radius: 8px;
   margin-bottom: 1rem;
@@ -192,73 +190,32 @@ button.secondary:hover {
   display: flex;
   justify-content: space-between;
   padding: 0.45rem 0;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--panel-border);
 }
 
-.provider-row:last-child {
-  border-bottom: none;
-}
-
-.provider-row span {
-  font-size: 0.95rem;
-}
+.provider-row:last-child { border-bottom: none; }
 
 /* ===========================
    RESULTS SUMMARY
    =========================== */
 
 .results-box {
-  background: #fff;
+  background: var(--panel-bg);
   padding: 1.25rem;
   border-radius: 10px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  border: 1px solid var(--panel-border);
+  box-shadow: var(--shadow);
   margin-top: 1.5rem;
-}
-
-.results-box h2 {
-  margin-bottom: 1rem;
 }
 
 .result-line {
   display: flex;
   justify-content: space-between;
   padding: 0.55rem 0;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--panel-border);
 }
 
-.result-line:last-child {
-  border-bottom: none;
-}
-
-.result-line strong {
-  font-weight: 600;
-}
-
-/* ===========================
-   RESPONSIVE REFINEMENTS
-   =========================== */
-
-@media (max-width: 500px) {
-  .panel {
-    padding: 1rem;
-  }
-
-  button {
-    width: 100%;
-  }
-
-  .provider-row {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.25rem;
-  }
-
-  .result-line {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.25rem;
-  }
-}
+.result-line:last-child { border-bottom: none; }
 
 /* ===========================
    SPEED TIER STYLING
@@ -272,11 +229,6 @@ button.secondary:hover {
   margin-bottom: 1rem;
 }
 
-.speed-tier h3 {
-  margin-bottom: 0.5rem;
-  font-size: 1.15rem;
-}
-
 .speed-tier .tier-row {
   display: flex;
   justify-content: space-between;
@@ -284,74 +236,66 @@ button.secondary:hover {
   border-bottom: 1px solid #e6f1ff;
 }
 
-.speed-tier .tier-row:last-child {
-  border-bottom: none;
-}
-
-.speed-tier .tier-row span {
-  font-size: 0.95rem;
-}
+.speed-tier .tier-row:last-child { border-bottom: none; }
 
 /* ===========================
    COST BREAKDOWN
    =========================== */
 
 .cost-breakdown {
-  background: #fff;
-  border: 1px solid #ddd;
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
   padding: 1rem;
   border-radius: 8px;
   margin-top: 1rem;
-}
-
-.cost-breakdown h3 {
-  margin-bottom: 0.75rem;
 }
 
 .cost-line {
   display: flex;
   justify-content: space-between;
   padding: 0.45rem 0;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--panel-border);
 }
 
-.cost-line:last-child {
-  border-bottom: none;
+.cost-line:last-child { border-bottom: none; }
+
+/* ===========================
+   CALCULATOR LAYOUT
+   =========================== */
+
+.calculator-section { margin-top: 1.5rem; }
+
+.calculator-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
 }
 
-.cost-line strong {
-  font-weight: 600;
+@media (max-width: 700px) {
+  .calculator-grid { grid-template-columns: 1fr; }
 }
 
 /* ===========================
-   ADVANCED RESPONSIVE RULES
+   RESPONSIVE REFINEMENTS
    =========================== */
 
-@media (max-width: 600px) {
-  .speed-tier .tier-row,
+@media (max-width: 500px) {
+  .panel { padding: 1rem; }
+  button { width: 100%; }
+
+  .provider-row,
+  .result-line,
+  .tier-row,
   .cost-line {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.25rem;
   }
-
-  .speed-tier {
-    padding: 0.85rem;
-  }
-
-  .cost-breakdown {
-    padding: 0.85rem;
-  }
 }
 
 @media (max-width: 420px) {
-  h1 {
-    font-size: 1.55rem;
-  }
-
-  h2 {
-    font-size: 1.25rem;
-  }
+  h1 { font-size: 1.55rem; }
+  h2 { font-size: 1.25rem; }
 
   input, select {
     font-size: 0.95rem;
@@ -365,40 +309,10 @@ button.secondary:hover {
 }
 
 /* ===========================
-   CALCULATOR LAYOUT
+   UTILITIES
    =========================== */
 
-.calculator-section {
-  margin-top: 1.5rem;
-}
-
-.calculator-section h2 {
-  margin-bottom: 0.75rem;
-}
-
-.calculator-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-}
-
-@media (max-width: 700px) {
-  .calculator-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-.calculator-output {
-  margin-top: 1.5rem;
-}
-
-/* ===========================
-   UTILITY CLASSES
-   =========================== */
-
-.text-center {
-  text-align: center;
-}
+.text-center { text-align: center; }
 
 .mt-1 { margin-top: 0.5rem; }
 .mt-2 { margin-top: 1rem; }
@@ -408,6 +322,4 @@ button.secondary:hover {
 .mb-2 { margin-bottom: 1rem; }
 .mb-3 { margin-bottom: 1.5rem; }
 
-.hidden {
-  display: none !important;
-}
+.hidden { display: none !important; }
