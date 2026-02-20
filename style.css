@@ -76,6 +76,7 @@ h1 {
     border: 1px solid var(--border);
 }
 
+/* Container for Subscriptions buttons */
 .providers-header-row {
     display: flex;
     justify-content: space-between;
@@ -145,6 +146,8 @@ input:focus, select:focus {
     align-items: center;
     justify-content: center;
     line-height: 1; 
+    background: var(--accent);
+    color: var(--bg);
 }
 
 .btn.secondary {
@@ -296,10 +299,68 @@ tr.bad td { color: var(--danger); }
     height: 350px;
 }
 
-/* Responsive Overrides (Mobile < 700px) */
+/* MOBILE OVERRIDES (Viewport < 700px) */
 @media (max-width: 700px) {
     body { padding: 10px; }
     .app { padding: 15px; border-radius: 0; }
     h1 { font-size: 1.4rem; }
 
-    /* (1
+    /* (1) Move top buttons below the page title heading */
+    /* Target the header flex container directly */
+    .app > div[style*="justify-content:space-between"] {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 15px !important;
+    }
+    /* Target the button group within that container */
+    .app > div[style*="justify-content:space-between"] > div[style*="gap:10px"] {
+        flex-direction: column;
+        width: 100%;
+        gap: 8px !important;
+    }
+
+    /* (2) Trip & Vehicle fields: Full width, one per line */
+    .grid { grid-template-columns: 1fr; }
+    .input-row { flex-direction: column; gap: 0; }
+
+    /* Preserving and stacking buttons in the Subscriptions card */
+    .providers-header-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    .providers-header-row > div {
+        flex-direction: column;
+        width: 100%;
+        gap: 8px !important;
+    }
+
+    /* Set all buttons to full width on mobile */
+    .btn { 
+        width: 100% !important; 
+        display: inline-flex !important; 
+    }
+
+    /* (3) Add "RESULTS" heading above "Copy shareable link" button */
+    .btn-row::before {
+        content: "RESULTS";
+        display: block;
+        width: 100%;
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: var(--accent);
+        margin-bottom: 10px;
+        text-shadow: var(--glow);
+    }
+
+    /* (4) Fit the table to screen via horizontal scroll */
+    #providerResults {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    #providerResults table {
+        min-width: 600px;
+        font-size: 0.85rem;
+    }
+}
