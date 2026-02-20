@@ -76,6 +76,15 @@ h1 {
     border: 1px solid var(--border);
 }
 
+.providers-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
 .input-row {
     display: flex;
     gap: 15px;
@@ -124,8 +133,8 @@ input:focus, select:focus {
 }
 
 .btn {
-    box-sizing: border-box; 
-    height: 40px; 
+    box-sizing: border-box;
+    height: 40px;
     padding: 0 20px;
     border-radius: 8px;
     font-weight: 600;
@@ -137,7 +146,9 @@ input:focus, select:focus {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    line-height: 1; 
+    line-height: 1;
+    background: var(--accent);
+    color: var(--bg);
 }
 
 .btn.secondary {
@@ -289,42 +300,33 @@ tr.bad td { color: var(--danger); }
     height: 350px;
 }
 
-/* Responsive Overrides */
+/* Responsive Overrides (Under 700px) */
 @media (max-width: 700px) {
     body { padding: 10px; }
-    
-    .app { 
-        padding: 15px; 
-        border-radius: 0; 
-    }
-
+    .app { padding: 15px; border-radius: 0; }
     h1 { font-size: 1.4rem; }
 
-    /* (1) Move buttons below page title heading */
-    div[style*="display:flex; justify-content:space-between"] {
+    /* (1) Move top buttons below the page title heading */
+    div[style*="justify-content:space-between"] {
         flex-direction: column !important;
         align-items: flex-start !important;
         gap: 15px;
     }
 
-    div[style*="display:flex; gap:10px"] {
+    div[style*="gap:10px"] {
         flex-wrap: wrap;
         width: 100%;
     }
 
     /* (2) Trip & Vehicle fields full width, one per line */
+    .grid { grid-template-columns: 1fr; }
+    .input-row { flex-direction: column; gap: 0; }
+
+    /* Ensure all buttons (including Add/Reset) remain visible and fit */
     .btn { width: 100%; }
+    .providers-header-row div { width: 100%; flex-direction: column; }
 
-    .grid {
-        grid-template-columns: 1fr;
-    }
-
-    .input-row {
-        flex-direction: column;
-        gap: 0;
-    }
-
-    /* (3) Add "RESULTS" heading above copy shareable link button */
+    /* (3) Add "RESULTS" heading above the Copy shareable link button */
     .btn-row::before {
         content: "RESULTS";
         display: block;
@@ -336,7 +338,7 @@ tr.bad td { color: var(--danger); }
         text-shadow: var(--glow);
     }
 
-    /* (4) Make the table fit the screen via horizontal scroll */
+    /* (4) Make the table fit via horizontal scroll */
     #providerResults {
         width: 100%;
         overflow-x: auto;
@@ -344,11 +346,11 @@ tr.bad td { color: var(--danger); }
     }
 
     #providerResults table {
-        min-width: 600px; /* Prevents text squashing in table */
+        min-width: 650px; /* Forces scroll instead of squashing content */
         font-size: 0.85rem;
     }
 
-    /* Ensure chart and mini tables also fit */
+    /* Also handle chart/mini-table containers */
     .chart-wrapper, .speed-comparison-container {
         overflow-x: auto;
     }
