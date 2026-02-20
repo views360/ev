@@ -33,7 +33,7 @@
         "hasSubscription": true,
         "monthlyCost": 7.85,
         "url": "https://www.bppulse.com/en-gb/public-ev-charging/download-app",
-        "comments": "Website: pricing may vary — check the app."
+        "comments": "Website disclaimer: pricing may vary — check the app."
       },
       "rates": {
         "7": 52,
@@ -76,7 +76,7 @@
         "hasSubscription": true,
         "monthlyCost": 5.49,
         "url": "https://www.ionity.eu/subscriptions",
-        "comments": "350kW chargers. Website: pricing may vary — check the app. Monthly subscriptions available from the app."
+        "comments": "350kW chargers. Website disclaimer: pricing may vary — check the app. Monthly subscriptions available from the app."
       },
       "rates": {
         "default": 58
@@ -89,7 +89,7 @@
         "hasSubscription": true,
         "monthlyCost": 10.50,
         "url": "https://www.ionity.eu/subscriptions",
-        "comments": "350kW chargers. Website: pricing may vary — check the app."
+        "comments": "350kW chargers. Website disclaimer: pricing may vary — check the app."
       },
       "rates": {
         "default": 46
