@@ -82,7 +82,7 @@ function calculate() {
     else if (sortVal === "za") providers.sort((a, b) => b.name.localeCompare(a.name));
 
     const resultsContainer = document.getElementById("providerResults");
-    let html = `<span style='font-size:0.8em'>In mobile view, slide right to view hidden columns.</span><table><thead><tr><th>Provider (click provider link for sub. info.)</th><th>Sub. Fee</th><th>Rate</th><th>Trip Cost</th><th>vs. PAYG</th><th>Break-even (public/total)</th></tr></thead><tbody>`;
+    let html = `<span style='font-size:0.7em'>[In mobile view, slide right to view hidden table columns, below.]</span><table><thead><tr><th>Provider (click provider link for sub. info.)</th><th>Sub. Fee</th><th>Rate</th><th>Trip Cost</th><th>vs. PAYG</th><th>Break-even (public/total)</th></tr></thead><tbody>`;
     providers.forEach(p => {
         const rowClass = p.savings > 0 ? "good" : (p.savings < 0 ? "bad" : "");
         let displayName = p.url ? `<a href="${p.url}" target="_blank" style="color:inherit; text-decoration:underline;">${p.name}</a>` : p.name;
