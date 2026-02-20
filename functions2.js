@@ -48,20 +48,23 @@ function calculate() {
         const name = document.getElementById(`name${id}`).value || "Unnamed";
         const subCost = parseFloat(document.getElementById(`subCost${id}`).value) || 0;
         const rate = parseFloat(document.getElementById(`rate${id}`).value) || 0;
-        const discount = parseFloat(document.getElementById(`discount${id}`).value) || 0;
 
-        // Apply percentage discount to rate
-        let effectiveRate = rate;
-        if (!isNaN(discount) && discount > 0) {
-            effectiveRate = rate * (1 - (discount / 100));
-            if (effectiveRate < 0) effectiveRate = 0;
-        }
-
-        const journeyCost = publicKwh * (effectiveRate / 100);
+        const journeyCost = publicKwh * (rate / 100);
         const totalJourneyCost = subCost + startChargeCost + journeyCost;
         const savings = totalAdhocCost - totalJourneyCost;
 
-        providers.push({ id, name, subCost, rate: effectiveRate, displayRate: rate, discount, totalJourneyCost, savings });
+        // Calculate break-even point
+        let breakEvenStats = "";
+        if (subCost > 0 && adhocRate > rate) {
+            const penceSavedPerKwh = adhocRate - rate;
+            const kwhToBreakeven = (subCost * 100) / penceSavedPerKwh;
+            const milesFromPublicStart = kwhToBreakeven * efficiency;
+            const milesFromTripStart = milesFromPublicStart + initialRange;
+
+            breakEvenStats = `<div style="font-size:0.8rem; color:var(--muted); margin-top:4px; font-weight:normal;">The breakeven point (where the subscription pays for itself) is <strong>${milesFromPublicStart.toFixed(0)} miles</strong> from the start of public charging and <strong>${milesFromTripStart.toFixed(0)} miles</strong> from trip start.</div>`;
+        }
+
+        providers.push({ id, name, subCost, rate, totalJourneyCost, savings, breakEvenStats });
     });
 
     const sortVal = document.getElementById("sortResults").value;
@@ -73,13 +76,10 @@ function calculate() {
     let html = `<table><thead><tr><th>Provider</th><th>Sub. Fee</th><th>Rate</th><th>Trip Cost</th><th>vs. PAYG</th></tr></thead><tbody>`;
     providers.forEach(p => {
         const rowClass = p.savings > 0 ? "good" : (p.savings < 0 ? "bad" : "");
-        const rateLabel = p.discount > 0
-            ? `${p.displayRate}p → ${p.rate.toFixed(1)}p`
-            : `${p.rate.toFixed(1)}p`;
         html += `<tr class="${rowClass}">
-                    <td>${p.name}</td>
+                    <td><strong>${p.name}</strong>${p.breakEvenStats}</td>
                     <td>£${p.subCost.toFixed(2)}</td>
-                    <td>${rateLabel}</td>
+                    <td>${p.rate.toFixed(1)}p</td>
                     <td>£${p.totalJourneyCost.toFixed(2)}</td>
                     <td>${p.savings > 0 ? 'Save £' : 'Cost £'}${Math.abs(p.savings).toFixed(2)}</td>
                  </tr>`;

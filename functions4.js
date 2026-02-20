@@ -29,9 +29,6 @@ function loadFromLocalStorage() {
     calculate();
 }
 
-/* ============================================
-   LOAD FROM URL (SHAREABLE LINK RESTORE)
-   ============================================ */
 function loadFromUrl() {
     const params = new URLSearchParams(window.location.search);
 
@@ -79,16 +76,10 @@ function shareLink() {
     navigator.clipboard.writeText(url).then(() => alert("Link copied! You may paste it elsewhere."));
 }
 
-/* ============================================
-   PDF EXPORT — OFF-SCREEN CLONE (NO FLASH)
-   PURE B&W + MARGINS + FIT TO A4
-   GRAPH REMOVED, SORT REMOVED, HEADER ADDED
-   ============================================ */
 function exportPdf() {
     const results = document.getElementById("results");
     if (!results) return;
 
-    // Create off-screen clone wrapper with random id
     const cloneWrapper = document.createElement("div");
     const cloneId = "pdfClone_" + Math.floor(Math.random() * 1000000);
     cloneWrapper.id = cloneId;
@@ -97,12 +88,10 @@ function exportPdf() {
     cloneWrapper.style.top = "0";
     cloneWrapper.style.width = results.offsetWidth + "px";
 
-    // Clone results into wrapper
     const clone = results.cloneNode(true);
     cloneWrapper.appendChild(clone);
     document.body.appendChild(cloneWrapper);
 
-    // Remove the "Sort results" input-group inside the clone
     const groups = cloneWrapper.querySelectorAll(".input-group");
     groups.forEach(group => {
         const label = group.querySelector("label");
@@ -111,11 +100,9 @@ function exportPdf() {
         }
     });
 
-    // Remove graph inside the clone
     const charts = cloneWrapper.querySelectorAll(".chart-wrapper");
     charts.forEach(el => el.remove());
 
-    // Apply print-safe override ONLY to the clone
     const override = document.createElement("style");
     override.innerHTML = `
         #${cloneId}, #${cloneId} * {
@@ -127,74 +114,40 @@ function exportPdf() {
     `;
     document.head.appendChild(override);
 
-    // Wait for layout, then capture the clone
     requestAnimationFrame(() => {
         html2canvas(cloneWrapper).then(canvas => {
-
-            // Clean up clone + override
             cloneWrapper.remove();
             override.remove();
 
-            // Convert to pure black & white
             const bwCanvas = document.createElement("canvas");
             const bctx = bwCanvas.getContext("2d");
 
             bwCanvas.width = canvas.width;
             bwCanvas.height = canvas.height;
-
             bctx.drawImage(canvas, 0, 0);
 
             const imgData = bctx.getImageData(0, 0, bwCanvas.width, bwCanvas.height);
             const pixels = imgData.data;
-
             const threshold = 160;
             for (let i = 0; i < pixels.length; i += 4) {
-                const r = pixels[i];
-                const g = pixels[i + 1];
-                const b = pixels[i + 2];
-
-                const grey = 0.299 * r + 0.587 * g + 0.114 * b;
+                const grey = 0.299 * pixels[i] + 0.587 * pixels[i+1] + 0.114 * pixels[i+2];
                 const bw = grey < threshold ? 0 : 255;
-
-                pixels[i] = bw;
-                pixels[i + 1] = bw;
-                pixels[i + 2] = bw;
+                pixels[i] = pixels[i+1] = pixels[i+2] = bw;
             }
-
             bctx.putImageData(imgData, 0, 0);
 
             const bwImg = bwCanvas.toDataURL("image/png");
-
             const { jsPDF } = window.jspdf;
             const pdf = new jsPDF("p", "mm", "a4");
 
             const pageWidth = pdf.internal.pageSize.getWidth();
-            const pageHeight = pdf.internal.pageSize.getHeight();
-
             const margin = 10;
             const usableWidth = pageWidth - margin * 2;
-            const usableHeight = pageHeight - margin * 2;
-
             const imgAspect = bwCanvas.width / bwCanvas.height;
-            const pageAspect = usableWidth / usableHeight;
 
-            let renderWidth, renderHeight;
-
-            if (imgAspect > pageAspect) {
-                renderWidth = usableWidth;
-                renderHeight = usableWidth / imgAspect;
-            } else {
-                renderHeight = usableHeight;
-                renderWidth = usableHeight * imgAspect;
-            }
-
-            // Header
             pdf.setFontSize(18);
             pdf.text("EV Public Charging Comparison", pageWidth / 2, margin, { align: "center" });
-
-            // Image
-            pdf.addImage(bwImg, "PNG", margin, margin + 10, renderWidth, renderHeight);
-
+            pdf.addImage(bwImg, "PNG", margin, margin + 10, usableWidth, usableWidth / imgAspect);
             pdf.save("ev-comparison.pdf");
         });
     });
@@ -210,11 +163,13 @@ function resetAll() {
     "adhoc", "startChargeRate", "minSpeed"
 ].forEach(id => {
     const el = document.getElementById(id);
-    el.addEventListener("input", () => {
-        if (id === "minSpeed") enforceSpeedRules();
-        calculate();
-        saveToLocalStorage();
-    });
+    if(el) {
+        el.addEventListener("input", () => {
+            if (id === "minSpeed") enforceSpeedRules();
+            calculate();
+            saveToLocalStorage();
+        });
+    }
 });
 
 fetch("providers.json")

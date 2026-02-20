@@ -11,7 +11,7 @@ function toggleTheme() {
     const body = document.body;
     const btn = document.getElementById("themeToggle");
     body.classList.toggle("light-mode");
-    btn.textContent = body.classList.contains("light-mode") ? "Switch to Dark View" : "Switch to Light View";
+    btn.textContent = body.classList.contains("light-mode") ? "Switch to Light View" : "Switch to Dark View";
 }
 
 function createProviderBox(preset) {
@@ -23,8 +23,6 @@ function createProviderBox(preset) {
 
     const minSpeed = parseFloat(document.getElementById("minSpeed").value) || 0;
     
-    // Filter: Show provider if it has a default rate (assumed ultra-fast) 
-    // OR if it has at least one specific speed >= minSpeed
     const filteredPresets = PRESETS.filter(p => {
         if (p.rates && p.rates.default) return true;
         const speeds = Object.keys(p.rates).map(Number);
@@ -60,10 +58,6 @@ function createProviderBox(preset) {
                 <label>Rate (p/kWh)</label>
                 <input type="number" id="rate${id}" step="0.1" value="0" oninput="calculate()">
             </div>
-        </div>
-        <div class="input-group">
-            <label>% Discount (e.g., Electroverse 8%)</label>
-            <input type="number" id="discount${id}" step="0.1" value="0" oninput="calculate()">
         </div>
         <div class="input-group" id="speedRow${id}" style="display:none">
             <label>Charging Speed</label>
@@ -139,7 +133,6 @@ function enforceSpeedRules() {
         const presetSelect = document.getElementById(`preset${id}`);
         const currentPreset = presetSelect.value;
 
-        // Re-generate the preset dropdown options based on the new minSpeed
         const filteredPresets = PRESETS.filter(p => {
             if (p.rates && p.rates.default) return true;
             const speeds = Object.keys(p.rates).map(Number);
@@ -159,11 +152,9 @@ function enforceSpeedRules() {
         
         presetSelect.innerHTML = presetOptions;
 
-        // If the previously selected provider is no longer valid, revert to Custom
         const stillValid = sortedPresets.some(p => p.name === currentPreset) || currentPreset === 'Custom';
         if (stillValid) {
             presetSelect.value = currentPreset;
-            // Also refresh the speed options for the currently selected provider
             if (currentPreset !== 'Custom') {
                 updateProviderFields(id);
             }
@@ -212,7 +203,6 @@ function duplicateLastProvider() {
     document.getElementById(`preset${newId}`).value = document.getElementById(`preset${lastId}`).value;
     document.getElementById(`subCost${newId}`).value = document.getElementById(`subCost${lastId}`).value;
     document.getElementById(`rate${newId}`).value = document.getElementById(`rate${lastId}`).value;
-    document.getElementById(`discount${newId}`).value = document.getElementById(`discount${lastId}`).value;
     
     const lastSpeed = document.getElementById(`speed${lastId}`);
     if (lastSpeed && lastSpeed.offsetParent !== null) {
