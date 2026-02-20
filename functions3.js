@@ -20,7 +20,7 @@ function drawGraph(core, providers) {
     }
 
     const datasets = [{
-        label: "Ad‑hoc Total (£)",
+        label: "Ad-hoc Total (£)",
         data: adhocData,
         borderColor: "#f97316",
         backgroundColor: "rgba(249,115,22,0.15)",
@@ -64,12 +64,10 @@ function drawGraph(core, providers) {
 }
 
 function getProviderColor(name) {
-    const colors = {
-        "Be.EV": "#00d1ff",
-        "Tesla": "#e81010",
-        "BP Pulse": "#00a14b",
-        "Shell Recharge": "#ffda00",
-        "Osprey": "#f97316"
-    };
-    return colors[name] || `#${Math.floor(Math.random()*16777215).toString(16)}`;
+    const colors = ["#38bdf8", "#22c55e", "#a855f7", "#ec4899", "#eab308", "#06b6d4"];
+    let hash = 0;
+    for (let i = 0; i < name.length; i++) {
+        hash = name.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    return colors[Math.abs(hash) % colors.length];
 }
