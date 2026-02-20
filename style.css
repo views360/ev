@@ -334,6 +334,23 @@ tr.bad td { color: var(--danger); }
     #providerResults table {
         min-width: 600px;
     }
-
+    
+    /* Fixed right-edge gradient fade */
+    #providerResults {
+        position: relative;
+    }
+    
+    #providerResults::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 40px;
+        height: 100%;
+        pointer-events: none;
+        background: linear-gradient(to left, var(--bg), transparent);
+        z-index: 5;
+    }
 }
+
 
