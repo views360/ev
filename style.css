@@ -37,7 +37,6 @@ body {
     transition: background-color 0.3s, color 0.3s;
 }
 
-/* Main Container */
 .app {
     max-width: 1000px;
     margin: 0 auto;
@@ -61,7 +60,6 @@ h1 {
     font-size: 0.95rem;
 }
 
-/* Input Grid Layout */
 .grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -76,7 +74,6 @@ h1 {
     border: 1px solid var(--border);
 }
 
-/* Container for Subscriptions buttons */
 .providers-header-row {
     display: flex;
     justify-content: space-between;
@@ -123,7 +120,6 @@ input:focus, select:focus {
     box-shadow: 0 0 0 3px var(--accent-soft);
 }
 
-/* Consistent Buttons */
 .btn-row {
     display: flex;
     gap: 12px;
@@ -161,7 +157,6 @@ input:focus, select:focus {
     color: var(--bg);
 }
 
-/* Provider Boxes */
 .provider-box {
     background: var(--bg);
     padding: 20px;
@@ -186,14 +181,12 @@ input:focus, select:focus {
     cursor: pointer;
 }
 
-/* Results Section */
 .results {
     margin-top: 40px;
     padding-top: 30px;
     border-top: 2px dashed var(--border);
 }
 
-/* Main Provider Results Table */
 #providerResults table {
     width: 100%;
     border-collapse: collapse;
@@ -216,7 +209,6 @@ input:focus, select:focus {
     border-bottom: 1px solid var(--border);
 }
 
-/* Alternating Column Shading */
 #providerResults td:nth-child(even),
 #providerResults th:nth-child(even) {
     background-color: rgba(255, 255, 255, 0.03);
@@ -236,7 +228,6 @@ body.light-mode #providerResults th:nth-child(even) {
     margin-bottom: 8px;
 }
 
-/* Conclusion Cards */
 .conclusion-card {
     padding: 24px;
     border-radius: 12px;
@@ -259,7 +250,6 @@ body.light-mode #providerResults th:nth-child(even) {
     margin-bottom: 10px;
 }
 
-/* Mini Table for Comparisons */
 .speed-comparison-container {
     margin-top: 20px;
     max-width: 500px;
@@ -289,7 +279,6 @@ body.light-mode #providerResults th:nth-child(even) {
 tr.good td { color: var(--good); }
 tr.bad td { color: var(--danger); }
 
-/* Chart Styling */
 .chart-wrapper {
     margin-top: 30px;
     background: var(--panel-alt);
@@ -299,21 +288,19 @@ tr.bad td { color: var(--danger); }
     height: 350px;
 }
 
-/* MOBILE OVERRIDES (Viewport < 700px) */
+/* --- MOBILE OVERRIDES (< 700px) --- */
 @media (max-width: 700px) {
     body { padding: 10px; }
     .app { padding: 15px; border-radius: 0; }
     h1 { font-size: 1.4rem; }
 
-    /* (1) Move top buttons below the page title heading */
-    /* Target the header flex container directly */
-    .app > div[style*="justify-content:space-between"] {
+    /* (1) Move top buttons below the heading */
+    .app > div[style*="flex"]:first-of-type {
         flex-direction: column !important;
         align-items: flex-start !important;
         gap: 15px !important;
     }
-    /* Target the button group within that container */
-    .app > div[style*="justify-content:space-between"] > div[style*="gap:10px"] {
+    .app > div[style*="flex"]:first-of-type > div[style*="flex"] {
         flex-direction: column;
         width: 100%;
         gap: 8px !important;
@@ -323,25 +310,23 @@ tr.bad td { color: var(--danger); }
     .grid { grid-template-columns: 1fr; }
     .input-row { flex-direction: column; gap: 0; }
 
-    /* Preserving and stacking buttons in the Subscriptions card */
+    /* Fix: Explicitly ensure "Add Provider" / "Add All" buttons remain visible */
     .providers-header-row {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 10px !important;
     }
-    .providers-header-row > div {
-        flex-direction: column;
-        width: 100%;
+    .providers-header-row > div:last-child {
+        display: flex !important;
+        flex-direction: column !important;
+        width: 100% !important;
         gap: 8px !important;
     }
 
-    /* Set all buttons to full width on mobile */
-    .btn { 
-        width: 100% !important; 
-        display: inline-flex !important; 
-    }
+    /* All buttons full width */
+    .btn { width: 100% !important; }
 
-    /* (3) Add "RESULTS" heading above "Copy shareable link" button */
+    /* (3) Add "RESULTS" heading */
     .btn-row::before {
         content: "RESULTS";
         display: block;
@@ -350,10 +335,9 @@ tr.bad td { color: var(--danger); }
         font-weight: bold;
         color: var(--accent);
         margin-bottom: 10px;
-        text-shadow: var(--glow);
     }
 
-    /* (4) Fit the table to screen via horizontal scroll */
+    /* (4) Responsive table */
     #providerResults {
         width: 100%;
         overflow-x: auto;
@@ -361,6 +345,5 @@ tr.bad td { color: var(--danger); }
     }
     #providerResults table {
         min-width: 600px;
-        font-size: 0.85rem;
     }
 }
