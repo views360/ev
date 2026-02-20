@@ -279,13 +279,31 @@ tr.bad td { color: var(--danger); }
     height: 350px;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 700px) {
     body { padding: 10px; }
     .app { padding: 15px; border-radius: 0; }
     h1 { font-size: 1.4rem; }
     .btn { width: 100%; }
 }
 
+/* Fixed right-edge gradient fade for scroll hint */
+#providerResults {
+    position: relative; /* anchor the fade */
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+#providerResults::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 40px;
+    height: 100%;
+    pointer-events: none;
+    background: linear-gradient(to left, var(--panel), transparent);
+    z-index: 10;
+}
 /* ============================================================
    MOBILE FIXES REQUESTED BY USER (APPLY BELOW 700px ONLY)
    ============================================================ */
@@ -352,5 +370,6 @@ tr.bad td { color: var(--danger); }
         z-index: 5;
     }
 }
+
 
 
