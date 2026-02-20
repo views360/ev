@@ -81,7 +81,7 @@ function calculate() {
     else if (sortVal === "za") providers.sort((a, b) => b.name.localeCompare(a.name));
 
     const resultsContainer = document.getElementById("providerResults");
-    let html = `<table><thead><tr><th>Provider (click for sub. info.)</th><th>Sub. Fee</th><th>Rate</th><th>Trip Cost</th><th>vs. PAYG</th><th>Break-even (Public/Total)</th></tr></thead><tbody>`;
+    let html = `<table><thead><tr><th>Provider (click for sub. info.)</th><th>Sub. Fee</th><th>Rate</th><th>Trip Cost</th><th>vs. PAYG</th><th>Break-even (public/total)</th></tr></thead><tbody>`;
     providers.forEach(p => {
         const rowClass = p.savings > 0 ? "good" : (p.savings < 0 ? "bad" : "");
         const displayName = p.url ? `<a href="${p.url}" target="_blank" style="color:inherit; text-decoration:underline;">${p.name}</a>` : p.name;
@@ -144,3 +144,4 @@ function calculate() {
     drawGraph(core, providers);
 
 }
+
