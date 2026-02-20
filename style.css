@@ -342,20 +342,18 @@ tr.bad td { color: var(--danger); }
         min-width: 600px;
     }
     
-    /* Fixed right-edge gradient fade */
+    /* Outer container: holds the fade */
     #providerResults {
         position: relative;
     }
     
+    /* Inner container: scrolls horizontally */
     .results-scroll {
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
     }
     
-    #providerResults {
-        position: relative;
-    }
-    
+    /* Fixed right-edge fade */
     #providerResults::after {
         content: "";
         position: absolute;
@@ -369,6 +367,7 @@ tr.bad td { color: var(--danger); }
     }
 
 }
+
 
 
 
