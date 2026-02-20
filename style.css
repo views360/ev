@@ -289,7 +289,9 @@ tr.bad td { color: var(--danger); }
 /* ============================================================
    MOBILE FIXES REQUESTED BY USER (APPLY BELOW 700px ONLY)
    ============================================================ */
-   /* Freeze first column */
+@media (max-width: 700px) {
+
+    /* Freeze first column */
    #providerResults td:first-child,
    #providerResults th:first-child {
        position: sticky;
@@ -298,23 +300,6 @@ tr.bad td { color: var(--danger); }
        background: var(--panel-alt);
        backdrop-filter: blur(4px);
    }
-   /* Right-edge gradient fade to indicate scroll */
-   #providerResults {
-       position: relative;
-   }
-   
-   #providerResults::after {
-       content: "";
-       position: absolute;
-       top: 0;
-       right: 0;
-       width: 40px;
-       height: 100%;
-       pointer-events: none;
-       background: linear-gradient(to left, var(--bg), transparent);
-   }
-
-@media (max-width: 700px) {
 
     /* 1. Move buttons below heading */
     .header-row {
@@ -351,3 +336,4 @@ tr.bad td { color: var(--danger); }
     }
 
 }
+
