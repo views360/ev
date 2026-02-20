@@ -55,7 +55,7 @@ h1 {
 
 .subtitle {
     color: var(--muted);
-    margin-top: 10px;
+    margin-top: 20px;
     margin-bottom: 25px;
     font-size: 0.95rem;
 }
@@ -325,4 +325,5 @@ tr.bad td { color: var(--danger); }
         min-width: 600px;
     }
 }
+
 
