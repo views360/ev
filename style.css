@@ -29,15 +29,18 @@ h3 {
   bottom: 125%;
   left: 50%;
   transform: translateX(-50%);
-  /* Use your theme variables instead of hardcoded #333 */
-  background-color: var(--panel-alt); 
-  color: var(--text);
+  /* Matches your panel color and text for theme consistency */
+  background-color: var(--panel-alt); [cite: 18]
+  color: var(--text); [cite: 13]
   padding: 8px;
-  border-radius: 4px;
+  border-radius: 4px; [cite: 6]
   width: 150px;
   text-align: center;
-  z-index: 10;
-  border: 1px solid var(--border); /* Adds definition in dark mode */
+  z-index: 10; [cite: 6]
+  
+  /* The "Glow" update */
+  border: 1px solid var(--accent); 
+  box-shadow: var(--glow); [cite: 2]
 }
 
 .tooltip-box::after {
@@ -48,9 +51,9 @@ h3 {
   margin-left: -5px;
   border-width: 5px;
   border-style: solid;
-  /* This now pulls the color from your theme automatically */
-  border-color: var(--panel-alt) transparent transparent transparent;
-  z-index: 11;
+  /* Points to the icon with the same theme color */
+  border-color: var(--panel-alt) transparent transparent transparent; [cite: 8]
+  z-index: 11; [cite: 7]
 }
 
 /* Show on Desktop Hover */
@@ -419,6 +422,7 @@ tr.bad td { color: var(--danger); }
     }
 
 }
+
 
 
 
