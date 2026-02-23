@@ -57,7 +57,24 @@ function drawGraph(core, providers) {
                 y: { title: { display: true, text: "Total Cost (£)", color: "#9ca3af" }, ticks: { color: "#9ca3af" } }
             },
             plugins: {
-                legend: { labels: { color: getComputedStyle(document.body).getPropertyValue("--text").trim() } }
+                legend: { 
+                    display: true, // Ensures the toggle legend is visible
+                    labels: { 
+                        color: getComputedStyle(document.body).getPropertyValue("--text").trim() 
+                    },
+                    // Chart.js default onClick handles the toggling of lines
+                    onClick: function(e, legendItem, legend) {
+                        const index = legendItem.datasetIndex;
+                        const ci = legend.chart;
+                        if (ci.isDatasetVisible(index)) {
+                            ci.hide(index);
+                            legendItem.hidden = true;
+                        } else {
+                            ci.show(index);
+                            legendItem.hidden = false;
+                        }
+                    }
+                }
             }
         }
     });
@@ -72,4 +89,5 @@ function getProviderColor(name) {
         "Osprey": "#f97316"
     };
     return colors[name] || `#${Math.floor(Math.random()*16777215).toString(16)}`;
+
 }
