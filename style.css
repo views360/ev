@@ -301,26 +301,34 @@ input:focus, select:focus {
     border-top: 2px dashed var(--border);
 }
 
+/* Ensure the table allows sticky positioning */
 #providerResults table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 20px 0;
-    border-radius: 8px;
-    overflow: hidden;
+    min-width: 600px;
+    border-collapse: separate; /* Required for sticky columns */
+    border-spacing: 0;
 }
 
-#providerResults th {
-    background: var(--panel-alt);
-    text-align: left;
-    padding: 14px 12px;
-    font-size: 0.9rem;
-    color: var(--muted);
-    border-bottom: 2px solid var(--border);
+/* Make the first column header (TH) sticky */
+#providerResults th:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 10;
+    background: var(--panel); /* Match your theme's header background */
+    box-shadow: 2px 0 5px rgba(0,0,0,0.3); /* Optional: add a small shadow to separate it */
 }
 
-#providerResults td {
-    padding: 14px 12px;
-    border-bottom: 1px solid var(--border);
+/* Make the first column data cells (TD) sticky */
+#providerResults td:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 5;
+    background: var(--panel-alt); /* Match your row background */
+    border-right: 1px solid var(--border);
+}
+
+/* Ensure alternating row colors don't break the sticky background */
+#providerResults tr:nth-child(even) td:first-child {
+    background: var(--panel); /* Or whatever your alternate row color is */
 }
 
 #providerResults td:nth-child(even),
@@ -491,5 +499,6 @@ tr.bad td { color: var(--danger); }
 
 
 }
+
 
 
