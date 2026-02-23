@@ -103,6 +103,21 @@ h3 {
     box-shadow: var(--glow-strong) !important;
 }
 
+#provider-warning {
+    border: 1px solid var(--danger);
+    box-shadow: 0 0 10px rgba(239, 68, 68, 0.4);
+    color: var(--danger);
+    font-weight: 600;
+    text-align: center;
+    /* Reuse your pulse logic but with red for danger */
+    animation: warningPulse 2s infinite ease-in-out;
+}
+
+@keyframes warningPulse {
+    0%, 100% { box-shadow: 0 0 10px rgba(239, 68, 68, 0.4); }
+    50% { box-shadow: 0 0 20px rgba(239, 68, 68, 0.6); }
+}
+
 /* Pulse Keyframes using your variables [cite: 2, 3] */
 @keyframes tooltipPulse {
   0%, 100% { box-shadow: var(--glow); }
@@ -481,3 +496,4 @@ tr.bad td { color: var(--danger); }
     }
 
 }
+
