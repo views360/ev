@@ -15,17 +15,29 @@ function toggleTheme() {
 }
 
 function toggleTooltip(element) {
-  // Toggle the 'active' class on the parent container
-  const container = element.parentElement;
-  container.classList.toggle('active');
+    // Prevent the click from immediately bubbling to the document listener
+    event.stopPropagation();
+    
+    const container = element.parentElement;
+    
+    // Close any other open tooltips first
+    document.querySelectorAll('.tooltip-container.active').forEach(open => {
+        if (open !== container) open.classList.remove('active');
+    });
 
-  // Optional: Close tooltip if user clicks anywhere else
-  document.addEventListener('click', function closeTooltip(e) {
-    if (!container.contains(e.target)) {
-      container.classList.remove('active');
-      document.removeEventListener('click', closeTooltip);
+    // Toggle current tooltip
+    container.classList.toggle('active');
+
+    // Listener to close tooltip when clicking elsewhere
+    if (container.classList.contains('active')) {
+        const closeTooltip = (e) => {
+            if (!container.contains(e.target)) {
+                container.classList.remove('active');
+                document.removeEventListener('click', closeTooltip);
+            }
+        };
+        document.addEventListener('click', closeTooltip);
     }
-  }, { capture: true });
 }
 
 function createProviderBox(preset) {
@@ -232,5 +244,6 @@ function duplicateLastProvider() {
     }
 
     calculate();
+
 
 }
