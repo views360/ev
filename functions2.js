@@ -196,4 +196,7 @@ function calculate() {
 
 }
 
+window.onload = calculate;
+
+
 
