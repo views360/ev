@@ -35,10 +35,10 @@
             <div class="input-row">
                 <div class="input-group">
                     <label for "journeyMiles">Trip distance (miles)
-                        <span class="tooltip" tabindex="0">
-                          💡
-                          <span class="tooltiptext">How far do you plan to travel? You can adjust this, and the results will auto-update.</span>
-                        </span>
+                        <div class="tooltip-container">
+                          <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
+                          <div class="tooltip-box">How far do you plan to travel? You can adjust this, and the results will auto-update.</div>
+                        </div>
                     </label>
                     <input type="number" id="journeyMiles" placeholder="e.g., 250">
                 </div>
@@ -173,6 +173,7 @@
 </body>
 
 </html>
+
 
 
 
