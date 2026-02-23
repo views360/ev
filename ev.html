@@ -43,7 +43,7 @@
                     <input type="number" id="journeyMiles" placeholder="e.g., 250">
                 </div>
                 <div class="input-group">
-                    <label for "batteryKwh">Battery size (kWh)
+                    <label fpr "batteryKwh">Battery size (kWh)
                          <div class="tooltip-container">
                             <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
                           <div class="tooltip-box">What is the useable size of your vehicle's battery?</div>
@@ -64,7 +64,7 @@
                     <input type="number" id="soc" placeholder="e.g., 90">
                 </div>
                 <div class="input-group">
-                    <label for "efficiency">Vehicle efficiency (miles per kWh)
+                    <label for ">Vehicle efficiency (miles per kWh)
                         <div class="tooltip-container">
                             <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
                         <div class="tooltip-box">This is likely to be between 2.5 and 5, depending on the time of year and your driving style and habits. You can either estimate it for the time of year when you will travel, or you can reset your trip counter and calculate it if your trip is imminent.</div>
@@ -75,7 +75,7 @@
             </div>
 
             <div class="input-group">
-                <label for "minSpeed">
+                <label for="minSpeed">
                     Minimum desired charging speed
                     <div class="tooltip-container">
                         <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
@@ -93,7 +93,7 @@
 
             <div class="input-row">
                 <div class="input-group">
-                    <label for "startChargeType">Starting charge type
+                    <label>Starting charge type
                         <div class="tooltip-container">
                             <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
                           <div class="tooltip-box">Before you begin your trip, will you have charged your battery at home or using public charging?</div>
@@ -105,7 +105,7 @@
                     </select>
                 </div>
                 <div class="input-group">
-                    <label for "startChargeRate">Starting rate (pence per kWh)
+                    <label>Starting rate (pence per kWh)
                         <div class="tooltip-container">
                             <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
                           <div class="tooltip-box">When you charge your battery before the trip, how much will the rate be?</div>
@@ -116,20 +116,20 @@
             </div>
 
             <div class="input-group">
-                <label for "adhoc">Typical average PAYG public rate you pay (pence per kWh)
+                <label>Typical average PAYG public rate you pay (pence per kWh)
                     <div class="tooltip-container">
                         <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
                       <div class="tooltip-box">This is the average amount you would ordinarily expect to pay during your trip while using public chargers. If you already get a discount (e.g., 8% from Electroverse), input the discounted rate. This will be the baseline for calculating whether it is possible to make your trip cheaper.</div>
                     </div>                    
                 </label>
-                <input type="number" id="adhoc" placeholder="e.g., 62 (62p is the 50kW Lidl+ app price)">
+                <input type="number" id="adhoc" placeholder="e.g., 62 (where 62p is the 50kW Lidl+ app price)">
             </div>
         </div>
 
         <div class="card">
             <div class="providers-header-row">
                 <h3>Subscriptions & Discounts</h3>
-                <p style="font-size: 0.8em; margin-bottom: 15px">Select one or more (or all) <strong>subscription provider presets</strong> below to view how they compare with the baseline for your planned trip distance (results at the bottom of the page). You may add, remove, or edit (if details are outdated) individual providers — or select them all.</p>
+                <p style="font-size: 0.8em; margin-bottom: 15px">Select one or more (or all) subscription providers to view how they compare with the baseline for your planned trip distance (results at the bottom of the page). You may add, remove, or edit (if details are outdated) individual providers — or select them all.</p>
                 <div style="display:flex; gap:6px; margin-bottom: 20px">
                     <button type="button" class="btn" onclick="addProvider()">Add provider</button>
                     <button type="button" class="btn" onclick="addAllProviders()">Add all providers</button>
@@ -143,9 +143,6 @@
 
     <!-- NEW RESULTS HEADING -->
     <h2 class="results-heading">RESULTS</h2>
-    <div id="provider-warning" class="conclusion-card bad" style="display: none; margin-bottom: 20px;">
-        Please select at least one provider preset to view comparison results.
-    </div>
 
     <div class="btn-row">
         <button type="button" class="btn secondary" onclick="shareLink()">Copy shareable link</button>
