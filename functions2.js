@@ -4,6 +4,8 @@
 // ===============================
 
 function calculate() {
+    const providerBoxes = document.querySelectorAll(".provider-box");
+    const preConclusionsText = document.getElementById("preConclusionsText");
     const miles = parseFloat(document.getElementById("journeyMiles").value);
     const battery = parseFloat(document.getElementById("batteryKwh").value);
     const soc = parseFloat(document.getElementById("soc").value);
@@ -14,6 +16,13 @@ function calculate() {
     if (isNaN(miles) || isNaN(battery) || isNaN(soc) || isNaN(efficiency) || isNaN(adhocRate)) {
         document.getElementById("results").style.display = "none";
         return;
+    }
+
+    // Logic to hide/show preConclusionsText based on provider count
+    if (providerBoxes.length > 0) {
+        if (preConclusionsText) preConclusionsText.style.display = "none";
+    } else {
+        if (preConclusionsText) preConclusionsText.style.display = "block";
     }
 
     const startChargeKwh = (soc / 100) * battery;
@@ -148,5 +157,6 @@ function calculate() {
 
     conclusionsBox.innerHTML = conclusionHTML;
     drawGraph(core, providers);
+
 
 }
