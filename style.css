@@ -35,7 +35,7 @@ h3 {
   /* Matches your panel color and text for theme consistency */
   background-color: var(--panel-alt); [cite: 18]
   color: var(--text); [cite: 13]
-  padding: 8px;
+  padding: 15px;
   border-radius: 4px; [cite: 6]
   width: 150px;
   text-align: center;
@@ -425,6 +425,7 @@ tr.bad td { color: var(--danger); }
     }
 
 }
+
 
 
 
