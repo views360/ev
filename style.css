@@ -488,6 +488,19 @@ tr.bad td { color: var(--danger); }
         background: linear-gradient(to left, var(--panel), transparent);
         z-index: 10;
     }
-
-
+    
+    /* Make the first column sticky in the results table */
+    #providerResults table th:first-child,
+    #providerResults table td:first-child {
+        position: sticky;
+        left: 0;
+        z-index: 10;
+        background-color: var(--panel-alt); /* Matches your existing panel color to prevent transparency */
+        border-right: 1px solid var(--border); /* Keeps the column separation visible */
+    }
+    
+    /* Ensure the header stays above the sticky cells */
+    #providerResults table th:first-child {
+        z-index: 11;
+    }
 }
