@@ -63,7 +63,7 @@ function createProviderBox(preset) {
         </div>
         <div class="input-group">
             <label>Preset</label>
-            <select id="preset${id}" class="preset-select" onchange="updateProviderFields(${id})">${presetOptions}</select>
+            <select id="preset${id}" onchange="updateProviderFields(${id})">${presetOptions}</select>
         </div>
         <div class="input-row">
             <div class="input-group">
@@ -234,4 +234,3 @@ function duplicateLastProvider() {
     calculate();
 
 }
-
