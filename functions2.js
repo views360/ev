@@ -7,7 +7,14 @@ function calculate() {
     const warning = document.getElementById("provider-warning");
     const resultsSection = document.getElementById("results");
 
-    // 1. First, check if the core fields (miles, battery, etc.) are valid
+    // 1. Toggle the warning based ONLY on provider count
+    if (providerBoxes.length === 0) {
+        warning.style.display = "block";
+    } else {
+        warning.style.display = "none";
+    }
+
+    // 2. Existing validation logic for the rest of the results
     const miles = parseFloat(document.getElementById("journeyMiles").value);
     const battery = parseFloat(document.getElementById("batteryKwh").value);
     const soc = parseFloat(document.getElementById("soc").value);
@@ -16,8 +23,14 @@ function calculate() {
 
     if (isNaN(miles) || isNaN(battery) || isNaN(soc) || isNaN(efficiency) || isNaN(adhocRate)) {
         resultsSection.style.display = "none";
-        warning.style.display = "none";
-        return;
+        return; 
+    }
+
+    // If inputs are valid and we have providers, show the results
+    if (providerBoxes.length > 0) {
+        resultsSection.style.display = "block";
+    } else {
+        resultsSection.style.display = "none";
     }
 
     // 2. If fields are valid, show the results section container
@@ -182,4 +195,5 @@ function calculate() {
     drawGraph(core, providers);
 
 }
+
 
