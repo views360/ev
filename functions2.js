@@ -6,6 +6,7 @@
 function calculate() {
     const providerBoxes = document.querySelectorAll(".provider-box");
     const preConclusionsText = document.getElementById("preConclusionsText");
+    const pdfBtn = document.getElementById("pdfBtn"); // Get the PDF button
     const miles = parseFloat(document.getElementById("journeyMiles").value);
     const battery = parseFloat(document.getElementById("batteryKwh").value);
     const soc = parseFloat(document.getElementById("soc").value);
@@ -23,6 +24,15 @@ function calculate() {
         if (preConclusionsText) preConclusionsText.style.display = "none";
     } else {
         if (preConclusionsText) preConclusionsText.style.display = "block";
+    }
+
+    // Logic to toggle PDF button visibility
+    if (providerBoxes.length > 0) {
+        if (preConclusionsText) preConclusionsText.style.display = "none";
+        if (pdfBtn) pdfBtn.style.display = "inline-block"; // Show the button
+    } else {
+        if (preConclusionsText) preConclusionsText.style.display = "block";
+        if (pdfBtn) pdfBtn.style.display = "none"; // Hide the button
     }
 
     const startChargeKwh = (soc / 100) * battery;
@@ -160,3 +170,4 @@ function calculate() {
 
 
 }
+
