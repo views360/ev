@@ -24,106 +24,18 @@ h3 {
 }
 
 .tooltip-box {
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  display: none; /* Hidden by default */
   position: absolute;
-  width: max-content;
-  max-width: 250px;
-  min-width: 120px;
   bottom: 125%;
   left: 50%;
-  transform: translateX(-50%) translateY(10px);
-  
-  background-color: var(--panel-alt);
-  color: var(--text);
+  transform: translateX(-50%);
+  background-color: #333;
+  color: #fff;
   padding: 8px;
   border-radius: 4px;
+  width: 150px;
+  text-align: center;
   z-index: 10;
-  border: 1px solid var(--accent); 
-  
-  /* Applying the pulse animation [cite: 2, 3] */
-  animation: tooltipPulse 2s infinite ease-in-out;
-}
-  
-  /* Theme and Glow [cite: 7, 8] */
-  background-color: var(--panel-alt);
-  color: var(--text);
-  padding: 8px;
-  border-radius: 4px;
-  z-index: 10;
-  border: 1px solid var(--accent); 
-  box-shadow: var(--glow);
-}
-
-/* 1. The visible triangle matching the box background */
-.tooltip-box::after {
-  content: "";
-  position: absolute;
-  top: 100%; 
-  left: 50%;
-  margin-top: 0px;
-  margin-left: -8px;
-  border-width: 8px;
-  border-style: solid;
-  border-color: var(--panel-alt) transparent transparent transparent;
-  z-index: 10;
-}
-
-/* 2. The "Outline & Glow" arrow */
-.tooltip-box::before {
-  content: "";
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  margin-top: 2px; /* Adjusted to align with the border edge [cite: 14] */
-  margin-left: -9px;
-  border-width: 9px;
-  border-style: solid;
-  border-color: var(--accent) transparent transparent transparent;
-  z-index: 11;
-  /* Applying pulse to the arrow glow  */
-  animation: arrowPulse 2s infinite ease-in-out;
-}
-
-/* Apply the neon style and the existing pulse animation */
-.preset-select {
-    border-color: var(--accent) !important;
-    background-color: var(--panel-alt);
-    color: var(--text);
-    /* Use the animation we created for the tooltips */
-    animation: tooltipPulse 2s infinite ease-in-out;
-    transition: border-color 0.3s ease;
-}
-
-/* Ensure it stays bright when focused */
-#provider-warning {
-    border: 1px solid var(--danger) !important;
-    background-color: var(--panel-alt);
-    color: var(--danger);
-    padding: 15px;
-    border-radius: 8px;
-    font-weight: bold;
-    text-align: center;
-    margin: 10px 0 20px 0;
-    /* Add the throb */
-    animation: warningPulse 2s infinite ease-in-out;
-}
-
-@keyframes warningPulse {
-    0%, 100% { box-shadow: 0 0 10px rgba(239, 68, 68, 0.3); }
-    50% { box-shadow: 0 0 20px rgba(239, 68, 68, 0.6); }
-}
-
-/* Pulse Keyframes using your variables [cite: 2, 3] */
-@keyframes tooltipPulse {
-  0%, 100% { box-shadow: var(--glow); }
-  50% { box-shadow: var(--glow-strong); }
-}
-
-@keyframes arrowPulse {
-  0%, 100% { filter: drop-shadow(var(--glow)); }
-  50% { filter: drop-shadow(var(--glow-strong)); }
 }
 
 /* Show on Desktop Hover */
@@ -133,10 +45,9 @@ h3 {
   }
 }
 
+/* Show when Active (for Mobile Tap) */
 .tooltip-container.active .tooltip-box {
-  opacity: 1;
-  visibility: visible;
-  transform: translateX(-50%) translateY(0);
+  display: block;
 }
 
 body.light-mode {
@@ -493,5 +404,3 @@ tr.bad td { color: var(--danger); }
     }
 
 }
-
-
