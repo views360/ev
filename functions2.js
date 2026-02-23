@@ -2,11 +2,6 @@
 // functions2.js
 // Core Calculation Engine
 // ===============================
-
-function calculate() {
-
-
-
 function calculate() {
     const providerBoxes = document.querySelectorAll(".provider-box");
     const warning = document.getElementById("provider-warning");
