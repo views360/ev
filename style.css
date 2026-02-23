@@ -17,37 +17,77 @@ h3 {
     margin: 0px 0px 10px 0px;
 }
 
+/* Tooltip Container */
 .tooltip-container {
-  position: relative;
-  display: inline-block;
-  cursor: pointer;
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    margin-left: 4px;
 }
 
+/* Tooltip Box Styling */
 .tooltip-box {
-  display: none; /* Hidden by default */
-  position: absolute;
-  bottom: 125%;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: #333;
-  color: #fff;
-  padding: 8px;
-  border-radius: 4px;
-  width: 150px;
-  text-align: center;
-  z-index: 10;
-}
-
-/* Show on Desktop Hover */
-@media (hover: hover) {
-  .tooltip-container:hover .tooltip-box {
     display: block;
-  }
+    position: absolute;
+    bottom: 140%; /* Space for the arrow */
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    background-color: var(--panel-alt);
+    color: var(--text);
+    padding: 10px 14px;
+    border-radius: 8px;
+    width: 200px;
+    text-align: center;
+    z-index: 100;
+    font-size: 0.85rem;
+    font-weight: normal;
+    text-transform: none;
+    line-height: 1.4;
+    border: 1px solid var(--accent);
+    
+    /* Animation & Visibility */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+    
+    /* Glowing Pulsating Effect */
+    box-shadow: 0 0 15px var(--accent-soft);
+    animation: pulseGlow 2s infinite ease-in-out;
 }
 
-/* Show when Active (for Mobile Tap) */
+/* The Arrow */
+.tooltip-box::after {
+    content: "";
+    position: absolute;
+    top: 100%; /* Bottom of the box */
+    left: 50%;
+    margin-left: -6px;
+    border-width: 6px;
+    border-style: solid;
+    border-color: var(--accent) transparent transparent transparent;
+}
+
+/* Pulsating Animation */
+@keyframes pulseGlow {
+    0% { box-shadow: 0 0 5px var(--accent-soft); }
+    50% { box-shadow: 0 0 18px var(--accent); }
+    100% { box-shadow: 0 0 5px var(--accent-soft); }
+}
+
+/* Show State (Fade In) */
 .tooltip-container.active .tooltip-box {
-  display: block;
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* Desktop Hover Support */
+@media (hover: hover) {
+    .tooltip-container:hover .tooltip-box {
+        opacity: 1;
+        visibility: visible;
+        transform: translateX(-50%) translateY(0);
+    }
 }
 
 body.light-mode {
@@ -402,5 +442,6 @@ tr.bad td { color: var(--danger); }
         background: linear-gradient(to left, var(--panel), transparent);
         z-index: 10;
     }
+
 
 }
