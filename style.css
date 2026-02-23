@@ -26,6 +26,9 @@ h3 {
 .tooltip-box {
   display: none;
   position: absolute;
+  width: max-content;   /* Shrinks/grows to fit text */
+  max-width: 250px;     /* Prevents it from getting too wide */
+  min-width: 120px;     /* Keeps it from being too tiny */
   bottom: 125%;
   left: 50%;
   transform: translateX(-50%);
@@ -422,6 +425,7 @@ tr.bad td { color: var(--danger); }
     }
 
 }
+
 
 
 
