@@ -31,28 +31,33 @@
     <div class="grid">
         <div class="card">
             <h2>Trip & Vehicle</h2>
-            Hover over the💡icon for an explanation.
+            Hover over💡 for explanation.
             <div class="input-row">
                 <div class="input-group">
-                    <label for "journeyMiles">Trip distance (miles)</label>
-                    <span title="How far do you plan to travel? You can adjust this, and the results with auto-update." 
+                    <label for "journeyMiles">Trip distance (miles)</label><span title="How far do you plan to travel? You can adjust this, and the results with auto-update." 
                           style="cursor: help; font-size: 1.1rem; vertical-align: middle;" 
                           tabindex="0">💡</span>
                     <input type="number" id="journeyMiles" placeholder="e.g., 250">
                 </div>
                 <div class="input-group">
-                    <label>Battery size (kWh)</label>
+                    <label>Battery size (kWh)</label><span title="What is the useable size of your vehicle's battery?" 
+                          style="cursor: help; font-size: 1.1rem; vertical-align: middle;" 
+                          tabindex="0">💡</span>
                     <input type="number" id="batteryKwh" placeholder="e.g., 61">
                 </div>
             </div>
 
             <div class="input-row">
                 <div class="input-group">
-                    <label>Starting state of charge (%)</label>
+                    <label>Starting state of charge (%)</label><span title="How much charge will your EV have when you set depart on your trip?" 
+                          style="cursor: help; font-size: 1.1rem; vertical-align: middle;" 
+                          tabindex="0">💡</span>
                     <input type="number" id="soc" placeholder="e.g., 90">
                 </div>
                 <div class="input-group">
-                    <label>Vehicle efficiency (miles per kWh)</label>
+                    <label>Vehicle efficiency (miles per kWh)</label><span title="This statistic is seasonal. You can either estimate it, or you can reset your trip counter and calculate it." 
+                          style="cursor: help; font-size: 1.1rem; vertical-align: middle;" 
+                          tabindex="0">💡</span>
                     <input type="number" id="efficiency" placeholder="e.g., 3.5">
                 </div>
             </div>
@@ -74,20 +79,25 @@
 
             <div class="input-row">
                 <div class="input-group">
-                    <label>Starting charge type</label>
+                    <label>Starting charge type</label><span title="When you set off, will your battery have been charged at home or using public charging?" 
+                          style="cursor: help; font-size: 1.1rem; vertical-align: middle;" 
+                          tabindex="0">💡</span>
                     <select id="startChargeType">
                         <option value="home">Cheap home charging</option>
                         <option value="public">Public charging</option>
                     </select>
                 </div>
                 <div class="input-group">
-                    <label>Starting rate (pence per kWh)</label>
+                    <label>Starting rate (pence per kWh)</label><span title="What was the charging price used to charge your battery before the trip?" 
+                          style="cursor: help; font-size: 1.1rem; vertical-align: middle;" 
+                          tabindex="0">💡</span>
                     <input type="number" id="startChargeRate" placeholder="e.g., 7.5">
                 </div>
             </div>
 
             <div class="input-group">
-                <label>Typical average PAYG public rate you pay (pence per kWh)</label>
+                <label>Typical average PAYG public rate you pay (pence per kWh)</label><span title="This is the average amount you expect to pay during your trip while using public chargers. If you already have a discount (e.g., 8% from Electroverse), input the discounted rate. This will be the baseline for calculating whether it is possible to make your trip cheaper than the baseline rate."                          style="cursor: help; font-size: 1.1rem; vertical-align: middle;" 
+                          tabindex="0">💡</span>
                 <input type="number" id="adhoc" placeholder="e.g., 62 (where 62p is the 50kW Lidl+ app price)">
             </div>
         </div>
@@ -153,6 +163,7 @@
 </body>
 
 </html>
+
 
 
 
