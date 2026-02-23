@@ -62,7 +62,7 @@ h3 {
   position: absolute;
   top: 100%; 
   left: 50%;
-  margin-top: 1px; /* Moved down 2px from your previous -1px [cite: 11] */
+  margin-top: 0px;
   margin-left: -8px;
   border-width: 8px;
   border-style: solid;
@@ -464,6 +464,7 @@ tr.bad td { color: var(--danger); }
     }
 
 }
+
 
 
 
