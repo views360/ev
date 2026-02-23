@@ -58,26 +58,21 @@ function drawGraph(core, providers) {
             },
             plugins: {
                 legend: { 
-                    display: true, // Ensures the toggle legend is visible
-                    labels: { 
-                        color: getComputedStyle(document.body).getPropertyValue("--text").trim() 
-                    },
-                    // Chart.js default onClick handles the toggling of lines
-                    onClick: function(e, legendItem, legend) {
-                        const index = legendItem.datasetIndex;
-                        const ci = legend.chart;
-                        if (ci.isDatasetVisible(index)) {
-                            ci.hide(index);
-                            legendItem.hidden = true;
-                        } else {
-                            ci.show(index);
-                            legendItem.hidden = false;
-                        }
-                    }
+                    display: true,
+                    labels: { color: getComputedStyle(document.body).getPropertyValue("--text").trim() } 
                 }
             }
         }
     });
+}
+
+// New function to handle the "Clear All" action
+function clearAllGraphLines() {
+    if (!chart) return;
+    chart.data.datasets.forEach((dataset, index) => {
+        chart.setDatasetVisibility(index, false); // Hide every line
+    });
+    chart.update();
 }
 
 function getProviderColor(name) {
@@ -89,5 +84,4 @@ function getProviderColor(name) {
         "Osprey": "#f97316"
     };
     return colors[name] || `#${Math.floor(Math.random()*16777215).toString(16)}`;
-
 }
