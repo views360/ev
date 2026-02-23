@@ -2,53 +2,8 @@
 // functions2.js
 // Core Calculation Engine
 // ===============================
+
 function calculate() {
-    const providerBoxes = document.querySelectorAll(".provider-box");
-    const warning = document.getElementById("provider-warning");
-    const resultsSection = document.getElementById("results");
-
-    // 1. Toggle the warning based ONLY on provider count
-    if (providerBoxes.length === 0) {
-        warning.style.display = "block";
-    } else {
-        warning.style.display = "none";
-    }
-
-    // 2. Existing validation logic for the rest of the results
-    const miles = parseFloat(document.getElementById("journeyMiles").value);
-    const battery = parseFloat(document.getElementById("batteryKwh").value);
-    const soc = parseFloat(document.getElementById("soc").value);
-    const efficiency = parseFloat(document.getElementById("efficiency").value);
-    const adhocRate = parseFloat(document.getElementById("adhoc").value);
-
-    if (isNaN(miles) || isNaN(battery) || isNaN(soc) || isNaN(efficiency) || isNaN(adhocRate)) {
-        resultsSection.style.display = "none";
-        return; 
-    }
-
-    // If inputs are valid and we have providers, show the results
-    if (providerBoxes.length > 0) {
-        resultsSection.style.display = "block";
-    } else {
-        resultsSection.style.display = "none";
-    }
-
-    // 2. If fields are valid, show the results section container
-    resultsSection.style.display = "block";
-
-    // 3. Now check if there are any provider boxes
-    if (providerBoxes.length === 0) {
-        warning.style.display = "block";
-        document.getElementById("providerResults").style.display = "none";
-        document.getElementById("costChart").style.display = "none";
-        document.getElementById("conclusionsBox").style.display = "none";
-        return; 
-    } else {
-        warning.style.display = "none";
-        document.getElementById("providerResults").style.display = "block";
-        document.getElementById("costChart").style.display = "block";
-        document.getElementById("conclusionsBox").style.display = "block";
-    }
     const miles = parseFloat(document.getElementById("journeyMiles").value);
     const battery = parseFloat(document.getElementById("batteryKwh").value);
     const soc = parseFloat(document.getElementById("soc").value);
@@ -195,8 +150,3 @@ function calculate() {
     drawGraph(core, providers);
 
 }
-
-window.onload = calculate;
-
-
-
