@@ -106,6 +106,36 @@ h3 {
     }
 }
 
+/* Red Pulsating Effect for Warning Text */
+#preConclusionsText {
+    color: var(--danger);
+    font-weight: bold;
+    text-align: center;
+    margin: 20px 0;
+    padding: 15px;
+    border: 1px solid var(--danger);
+    border-radius: 8px;
+    background-color: rgba(239, 68, 68, 0.1); /* Light red tint */
+    
+    /* Animation */
+    animation: alertPulse 1.5s infinite ease-in-out;
+}
+
+@keyframes alertPulse {
+    0% { 
+        box-shadow: 0 0 5px rgba(239, 68, 68, 0.4); 
+        transform: scale(1);
+    }
+    50% { 
+        box-shadow: 0 0 20px rgba(239, 68, 68, 0.6); 
+        transform: scale(1.01);
+    }
+    100% { 
+        box-shadow: 0 0 5px rgba(239, 68, 68, 0.4); 
+        transform: scale(1);
+    }
+}
+
 body.light-mode {
     --bg: #f8fafc;
     --panel: #ffffff;
@@ -461,4 +491,5 @@ tr.bad td { color: var(--danger); }
 
 
 }
+
 
