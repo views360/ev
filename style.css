@@ -38,19 +38,34 @@ h3 {
   z-index: 10;
 }
 
-/* This creates the little arrow pointing down */
+.tooltip-box {
+  display: none;
+  position: absolute;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+  /* Use your theme variables instead of hardcoded #333 */
+  background-color: var(--panel-alt); 
+  color: var(--text);
+  padding: 8px;
+  border-radius: 4px;
+  width: 150px;
+  text-align: center;
+  z-index: 10;
+  border: 1px solid var(--border); /* Adds definition in dark mode */
+}
+
 .tooltip-box::after {
   content: "";
-  position: absolute; [cite: 7]
-  top: 100%; /* At the bottom of the tooltip box */
+  position: absolute;
+  top: 100%; 
   left: 50%;
   margin-left: -5px;
   border-width: 5px;
-  border-style: solid; [cite: 8]
-  /* CHANGE: Using a brighter color or your theme variable */
-  border-color: #333 transparent transparent transparent; 
-  /* ADD: Ensure the arrow is on top of the background panel */
-  z-index: 11; 
+  border-style: solid;
+  /* This now pulls the color from your theme automatically */
+  border-color: var(--panel-alt) transparent transparent transparent;
+  z-index: 11;
 }
 
 /* Show on Desktop Hover */
@@ -419,6 +434,7 @@ tr.bad td { color: var(--danger); }
     }
 
 }
+
 
 
 
