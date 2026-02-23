@@ -7,6 +7,7 @@ function calculate() {
     const providerBoxes = document.querySelectorAll(".provider-box");
     const preConclusionsText = document.getElementById("preConclusionsText");
     const pdfBtn = document.getElementById("pdfBtn"); // Get the PDF button
+    const sortGroup = document.getElementById("sortGroup");
     const miles = parseFloat(document.getElementById("journeyMiles").value);
     const battery = parseFloat(document.getElementById("batteryKwh").value);
     const soc = parseFloat(document.getElementById("soc").value);
@@ -19,11 +20,15 @@ function calculate() {
         return;
     }
 
-    // Logic to hide/show preConclusionsText based on provider count
+    // Logic to hide/show preConclusionsText and results sort based on provider count
     if (providerBoxes.length > 0) {
         if (preConclusionsText) preConclusionsText.style.display = "none";
+        if (pdfBtn) pdfBtn.style.display = "inline-block";
+        if (sortGroup) sortGroup.style.display = "block"; // Show Sort dropdown
     } else {
         if (preConclusionsText) preConclusionsText.style.display = "block";
+        if (pdfBtn) pdfBtn.style.display = "none";
+        if (sortGroup) sortGroup.style.display = "none"; // Hide Sort dropdown
     }
 
     // Logic to toggle PDF button visibility
@@ -170,4 +175,5 @@ function calculate() {
 
 
 }
+
 
