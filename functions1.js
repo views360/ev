@@ -14,6 +14,20 @@ function toggleTheme() {
     btn.textContent = body.classList.contains("light-mode") ? "Switch to Light View" : "Switch to Light View";
 }
 
+function toggleTooltip(element) {
+  // Toggle the 'active' class on the parent container
+  const container = element.parentElement;
+  container.classList.toggle('active');
+
+  // Optional: Close tooltip if user clicks anywhere else
+  document.addEventListener('click', function closeTooltip(e) {
+    if (!container.contains(e.target)) {
+      container.classList.remove('active');
+      document.removeEventListener('click', closeTooltip);
+    }
+  }, { capture: true });
+}
+
 function createProviderBox(preset) {
     providerCount++;
     const id = providerCount;
@@ -218,4 +232,5 @@ function duplicateLastProvider() {
     }
 
     calculate();
+
 }
