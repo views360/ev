@@ -97,24 +97,21 @@ h3 {
 }
 
 /* Ensure it stays bright when focused */
-.preset-select:focus {
-    outline: none;
-    border-color: var(--accent) !important;
-    box-shadow: var(--glow-strong) !important;
-}
-
 #provider-warning {
-    border: 1px solid var(--danger);
-    box-shadow: 0 0 10px rgba(239, 68, 68, 0.4);
+    border: 1px solid var(--danger) !important;
+    background-color: var(--panel-alt);
     color: var(--danger);
-    font-weight: 600;
+    padding: 15px;
+    border-radius: 8px;
+    font-weight: bold;
     text-align: center;
-    /* Reuse your pulse logic but with red for danger */
+    margin: 10px 0 20px 0;
+    /* Add the throb */
     animation: warningPulse 2s infinite ease-in-out;
 }
 
 @keyframes warningPulse {
-    0%, 100% { box-shadow: 0 0 10px rgba(239, 68, 68, 0.4); }
+    0%, 100% { box-shadow: 0 0 10px rgba(239, 68, 68, 0.3); }
     50% { box-shadow: 0 0 20px rgba(239, 68, 68, 0.6); }
 }
 
@@ -496,4 +493,5 @@ tr.bad td { color: var(--danger); }
     }
 
 }
+
 
