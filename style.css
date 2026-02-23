@@ -24,26 +24,25 @@ h3 {
 }
 
 .tooltip-box {
-  display: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, transform 0.3s ease;
   position: absolute;
   width: max-content;   /* Shrinks/grows to fit text */
   max-width: 250px;     /* Prevents it from getting too wide */
   min-width: 120px;     /* Keeps it from being too tiny */
   bottom: 125%;
   left: 50%;
-  transform: translateX(-50%);
-  /* Matches your panel color and text for theme consistency */
-  background-color: var(--panel-alt); [cite: 18]
-  color: var(--text); [cite: 13]
-  padding: 15px;
-  border-radius: 4px; [cite: 6]
-  width: 150px;
-  text-align: center;
-  z-index: 10; [cite: 6]
+  transform: translateX(-50%) translateY(10px); /* Starts slightly lower for a "slide up" effect */
   
-  /* The "Glow" update */
+  /* Theme and Glow [cite: 7, 8] */
+  background-color: var(--panel-alt);
+  color: var(--text);
+  padding: 8px;
+  border-radius: 4px;
+  z-index: 10;
   border: 1px solid var(--accent); 
-  box-shadow: var(--glow); [cite: 2]
+  box-shadow: var(--glow);
 }
 
 .tooltip-box::after {
@@ -66,9 +65,10 @@ h3 {
   }
 }
 
-/* Show when Active (for Mobile Tap) */
 .tooltip-container.active .tooltip-box {
-  display: block;
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
 }
 
 body.light-mode {
@@ -425,6 +425,7 @@ tr.bad td { color: var(--danger); }
     }
 
 }
+
 
 
 
