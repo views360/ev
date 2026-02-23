@@ -45,17 +45,33 @@ h3 {
   box-shadow: var(--glow);
 }
 
+/* 1. The visible triangle matching the box background */
 .tooltip-box::after {
   content: "";
   position: absolute;
   top: 100%; 
   left: 50%;
-  margin-left: -5px;
-  border-width: 5px;
+  margin-top: -1px; /* Overlap slightly to hide the box border line */
+  margin-left: -8px;
+  border-width: 8px;
   border-style: solid;
-  /* Points to the icon with the same theme color */
-  border-color: var(--panel-alt) transparent transparent transparent; [cite: 8]
-  z-index: 11; [cite: 7]
+  border-color: var(--panel-alt) transparent transparent transparent; [cite: 9]
+  z-index: 12; /* Sits above the "outline" arrow */
+}
+
+/* 2. The "Outline & Glow" arrow */
+.tooltip-box::before {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-top: -1px;
+  margin-left: -9px; /* Slightly wider to act as a border */
+  border-width: 9px;
+  border-style: solid;
+  border-color: var(--accent) transparent transparent transparent; [cite: 7]
+  filter: drop-shadow(var(--glow)); /* Applies your neon glow to the arrow shape */ 
+  z-index: 11;
 }
 
 /* Show on Desktop Hover */
@@ -425,6 +441,7 @@ tr.bad td { color: var(--danger); }
     }
 
 }
+
 
 
 
