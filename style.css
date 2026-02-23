@@ -38,6 +38,18 @@ h3 {
   z-index: 10;
 }
 
+/* This creates the little arrow pointing down */
+.tooltip-box::after {
+  content: "";
+  position: absolute;
+  top: 100%; /* At the bottom of the tooltip box */
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #333 transparent transparent transparent; /* Match your tooltip-box background color */
+}
+
 /* Show on Desktop Hover */
 @media (hover: hover) {
   .tooltip-container:hover .tooltip-box {
@@ -404,6 +416,7 @@ tr.bad td { color: var(--danger); }
     }
 
 }
+
 
 
 
