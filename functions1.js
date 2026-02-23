@@ -11,7 +11,7 @@ function toggleTheme() {
     const body = document.body;
     const btn = document.getElementById("themeToggle");
     body.classList.toggle("light-mode");
-    btn.textContent = body.classList.contains("light-mode") ? "Switch to Light Mode" : "Switch to Light Mode";
+    btn.textContent = body.classList.contains("light-mode") ? "Toggle Light/Dark Mode" : "Toggle Light/Dark Mode";
 }
 
 function toggleTooltip(element) {
@@ -244,8 +244,4 @@ function duplicateLastProvider() {
     }
 
     calculate();
-
-
 }
-
-
