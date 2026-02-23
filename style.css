@@ -67,6 +67,22 @@ h3 {
     border-color: var(--accent) transparent transparent transparent;
 }
 
+/* Neon Pulsing for Select Dropdowns */
+.preset-select-pulse {
+    border: 1px solid var(--accent) !important;
+    background-color: var(--panel-alt);
+    color: var(--text);
+    /* Using the existing pulse animation from the tooltips [cite: 55, 63] */
+    animation: tooltipPulse 2s infinite ease-in-out;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Ensure the animation keyframes exist [cite: 69, 70] */
+@keyframes tooltipPulse {
+  0%, 100% { box-shadow: var(--glow); }
+  50% { box-shadow: var(--glow-strong); }
+}
+
 /* Pulsating Animation */
 @keyframes pulseGlow {
     0% { box-shadow: 0 0 5px var(--accent-soft); }
@@ -445,3 +461,4 @@ tr.bad td { color: var(--danger); }
 
 
 }
+
