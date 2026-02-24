@@ -15,20 +15,41 @@ function calculate() {
     const adhocRate = parseFloat(document.getElementById("adhoc").value);
     const startRate = parseFloat(document.getElementById("startChargeRate").value);
 
-    if (isNaN(miles) || isNaN(battery) || isNaN(soc) || isNaN(efficiency) || isNaN(adhocRate)) {
+    // 1. PRIORITY: Trip & Vehicle not complete
+    const tripIncomplete =
+        isNaN(miles) ||
+        isNaN(battery) ||
+        isNaN(soc) ||
+        isNaN(efficiency) ||
+        isNaN(adhocRate);
+
+    if (tripIncomplete) {
+        if (preConclusionsText) {
+            preConclusionsText.textContent =
+                "Please complete all fields in the Trip & Vehicle section.";
+            preConclusionsText.style.display = "block";
+        }
+        if (pdfBtn) pdfBtn.style.display = "none";
+        if (sortGroup) sortGroup.style.display = "none";
         document.getElementById("results").style.display = "none";
         return;
     }
 
-    // Logic to hide/show preConclusionsText and results sort based on provider count
-    if (providerBoxes.length > 0) {
+    // 2. Trip complete – now we can safely show/hide provider error
+    document.getElementById("results").style.display = "block";
+
+    if (providerBoxes.length === 0) {
+        if (preConclusionsText) {
+            preConclusionsText.textContent =
+                "Before you may view a comparison, you must select at least one provider from the list of providers (above).";
+            preConclusionsText.style.display = "block";
+        }
+        if (pdfBtn) pdfBtn.style.display = "none";
+        if (sortGroup) sortGroup.style.display = "none";
+    } else {
         if (preConclusionsText) preConclusionsText.style.display = "none";
         if (pdfBtn) pdfBtn.style.display = "inline-block";
-        if (sortGroup) sortGroup.style.display = "block"; // Show Sort dropdown
-    } else {
-        if (preConclusionsText) preConclusionsText.style.display = "block";
-        if (pdfBtn) pdfBtn.style.display = "none";
-        if (sortGroup) sortGroup.style.display = "none"; // Hide Sort dropdown
+        if (sortGroup) sortGroup.style.display = "block";
     }
 
     // Logic to toggle PDF button visibility
@@ -175,5 +196,3 @@ function calculate() {
 
 
 }
-
-
