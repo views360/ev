@@ -194,5 +194,6 @@ function calculate() {
     conclusionsBox.innerHTML = conclusionHTML;
     drawGraph(core, providers);
 
-
 }
+
+calculate();
