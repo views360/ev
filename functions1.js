@@ -242,6 +242,7 @@ function duplicateLastProvider() {
         newSpeed.innerHTML = lastSpeed.innerHTML;
         newSpeed.value = lastSpeed.value;
     }
+}
 
 function toggleProviderVisibility() {
     const container = document.getElementById("collapsibleProviders");
@@ -260,6 +261,4 @@ function toggleProviderVisibility() {
 }
 
 calculate();
-
-
 }
