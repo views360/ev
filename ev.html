@@ -45,8 +45,8 @@
   		</div>
             </div>
         </div>       
-
-	<div class="card trip-input-card">
+<div id="settings-container">
+	<div id="trip-settings-card" class="card trip-input-card mode-card">
             <h3>Trip & Vehicle</h3>
             <p style="font-size: 0.8em; margin-bottom: 20px">Click💡for explanation.</p>
             <div class="input-row">
@@ -142,6 +142,16 @@
                 <input type="number" id="adhoc" placeholder="e.g., 62 (62p is the 50kW Lidl+ app price)">
             </div>
         </div>
+
+<div id="efficiency-only-card" class="card mode-card" style="display: none;">
+    <h3>Vehicle Efficiency</h3>
+    <p class="helper-text">To calculate how many miles you need to drive to break even, enter your average efficiency.</p>
+    <div class="input-group">
+      <label for="vehicle-efficiency-be">Efficiency (mi/kWh)</label>
+      <input type="number" id="vehicle-efficiency-be" value="3.5" step="0.1">
+    </div>
+  </div>
+</div>
 
         <div class="card">
             <div class="providers-header-row">
