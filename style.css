@@ -411,7 +411,6 @@ tr.bad td { color: var(--danger); }
     .app { padding: 15px; border-radius: 0; }
     h1 { font-size: 1.4rem; }
     .btn { width: 100%; }
-    }
 
     /* Fixed right-edge gradient fade for scroll hint */
     #providerResults {
