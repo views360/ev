@@ -306,7 +306,7 @@ input:focus, select:focus {
     border-collapse: collapse;
     margin: 20px 0;
     border-radius: 8px;
-    overflow: hidden;
+    /* overflow: hidden; */
 }
 
 #providerResults th {
