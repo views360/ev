@@ -416,6 +416,62 @@ tr.bad td { color: var(--danger); }
     letter-spacing: 0.5px;
 }
 
+.comparison-type {
+  text-align: center;
+  padding: 20px;
+}
+
+.toggle-container {
+  display: flex;
+  position: relative;
+  background: #f0f0f0;
+  border-radius: 50px;
+  padding: 4px;
+  width: fit-content;
+  margin: 0 auto;
+  border: 1px solid #ddd;
+}
+
+.toggle-container input {
+  display: none; /* Hide the actual radio dots */
+}
+
+.toggle-container label {
+  position: relative;
+  z-index: 2;
+  padding: 10px 25px;
+  cursor: pointer;
+  font-weight: 600;
+  color: #555;
+  transition: color 0.3s ease;
+}
+
+.toggle-slider {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  height: calc(100% - 8px);
+  width: calc(50% - 4px); /* Half width of container */
+  background: #007bff; /* Primary brand color */
+  border-radius: 50px;
+  transition: transform 0.3s ease;
+  z-index: 1;
+}
+
+/* Logic to move the slider and change text color */
+#break-even:checked ~ .toggle-slider {
+  transform: translateX(0);
+}
+
+#trip-savings:checked ~ .toggle-slider {
+  transform: translateX(100%);
+}
+
+#break-even:checked ~ label[for="break-even"],
+#trip-savings:checked ~ label[for="trip-savings"] {
+  color: white;
+}
+
 /* ============================================================
    MOBILE FIXES REQUESTED BY USER (APPLY BELOW 700px ONLY)
    ============================================================ */
