@@ -402,24 +402,22 @@ tr.bad td { color: var(--danger); }
     height: 350px;
 }
 
-@media (max-width: 700px) {
-    body { padding: 10px; }
-    .app { padding: 15px; border-radius: 0; }
-    h1 { font-size: 1.4rem; }
-    .btn { width: 100%; }
-}
-
-/* Fixed right-edge gradient fade for scroll hint */
-#providerResults {
-    position: relative; /* anchor the fade */
-    /* overflow-x: auto; */
-    -webkit-overflow-scrolling: touch;
-}
-
 /* ============================================================
    MOBILE FIXES REQUESTED BY USER (APPLY BELOW 700px ONLY)
    ============================================================ */
 @media (max-width: 700px) {
+
+    body { padding: 10px; }
+    .app { padding: 15px; border-radius: 0; }
+    h1 { font-size: 1.4rem; }
+    .btn { width: 100%; }
+    }
+
+    /* Fixed right-edge gradient fade for scroll hint */
+    #providerResults {
+        position: relative; /* anchor the fade */
+        -webkit-overflow-scrolling: touch;
+    }
 
     /* Freeze first column */
     .results-scroll td:first-child,
@@ -457,7 +455,6 @@ tr.bad td { color: var(--danger); }
 
     /* 4. Make results table scrollable horizontally */
     #providerResults {
-        overflow-x: auto;
         -webkit-overflow-scrolling: touch;
     }
 
