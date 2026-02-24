@@ -513,6 +513,18 @@ tr.bad td { color: var(--danger); }
     margin: 0 auto;
 }
 
+.helper-text {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-bottom: 15px;
+  line-height: 1.4;
+}
+
+/* Ensure cards transition smoothly */
+.mode-card {
+  transition: opacity 0.3s ease;
+}
+
 /* ============================================================
    MOBILE FIXES REQUESTED BY USER (APPLY BELOW 700px ONLY)
    ============================================================ */
