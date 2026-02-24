@@ -416,49 +416,54 @@ tr.bad td { color: var(--danger); }
     letter-spacing: 0.5px;
 }
 
+
+/* Updated Mini Toggle for Comparison Type */
 .comparison-type {
   text-align: center;
-  padding: 20px;
+  padding: 10px 0; /* Reduced padding */
 }
 
 .toggle-container {
-  display: flex;
+  display: inline-flex; /* Shrink-wraps the container */
   position: relative;
-  background: #f0f0f0;
-  border-radius: 50px;
-  padding: 4px;
-  width: fit-content;
-  margin: 0 auto;
-  border: 1px solid #ddd;
+  background: var(--bg); /* Uses your dark background variable */
+  border-radius: 30px;
+  padding: 2px;
+  border: 1px solid var(--border);
+  margin-top: 5px;
 }
 
 .toggle-container input {
-  display: none; /* Hide the actual radio dots */
+  display: none;
 }
 
 .toggle-container label {
   position: relative;
   z-index: 2;
-  padding: 10px 25px;
+  padding: 6px 15px; /* Narrower buttons */
   cursor: pointer;
+  font-size: 0.8rem; /* Smaller font */
   font-weight: 600;
-  color: #555;
-  transition: color 0.3s ease;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  transition: color 0.2s ease;
 }
 
 .toggle-slider {
   position: absolute;
-  top: 4px;
-  left: 4px;
-  height: calc(100% - 8px);
-  width: calc(50% - 4px); /* Half width of container */
-  background: #007bff; /* Primary brand color */
-  border-radius: 50px;
-  transition: transform 0.3s ease;
+  top: 2px;
+  left: 2px;
+  height: calc(100% - 4px);
+  width: 50%;
+  background: var(--accent); /* Uses your neon blue accent */
+  border-radius: 30px;
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 1;
+  box-shadow: var(--glow); /* Adds your neon glow effect */
 }
 
-/* Logic to move the slider and change text color */
+/* Slide and Text Logic */
 #break-even:checked ~ .toggle-slider {
   transform: translateX(0);
 }
@@ -469,7 +474,7 @@ tr.bad td { color: var(--danger); }
 
 #break-even:checked ~ label[for="break-even"],
 #trip-savings:checked ~ label[for="trip-savings"] {
-  color: white;
+  color: var(--bg); /* Dark text on bright accent background */
 }
 
 /* ============================================================
