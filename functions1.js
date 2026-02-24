@@ -11,7 +11,7 @@ function toggleTheme() {
     const body = document.body;
     const btn = document.getElementById("themeToggle");
     body.classList.toggle("light-mode");
-    btn.textContent = body.classList.contains("light-mode") ? "Toggle Light/Dark Mode" : "Toggle Light/Dark Mode";
+    btn.textContent = body.classList.contains("light-mode") ? "Switch to Light View" : "Switch to Light View";
 }
 
 function toggleTooltip(element) {
@@ -243,5 +243,23 @@ function duplicateLastProvider() {
         newSpeed.value = lastSpeed.value;
     }
 
-    calculate();
+function toggleProviderVisibility() {
+    const container = document.getElementById("collapsibleProviders");
+    const controls = document.getElementById("providerControls");
+    const btn = document.getElementById("toggleProvidersBtn");
+
+    if (container.style.display === "none") {
+        container.style.display = "block";
+        controls.style.display = "block";
+        btn.textContent = "Collapse Providers List";
+    } else {
+        container.style.display = "none";
+        controls.style.display = "none";
+        btn.textContent = "Expand Providers List";
+    }
+}
+
+calculate();
+
+
 }

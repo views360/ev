@@ -410,6 +410,12 @@ tr.bad td { color: var(--danger); }
     height: 350px;
 }
 
+#toggleProvidersBtn {
+    transition: all 0.3s ease;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+}
+
 /* ============================================================
    MOBILE FIXES REQUESTED BY USER (APPLY BELOW 700px ONLY)
    ============================================================ */
