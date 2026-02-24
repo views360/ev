@@ -80,32 +80,13 @@ function drawGraph(core, providers) {
     });
 }
 
-/**
- * Generates a deterministic color based on the provider name.
- * This replaces the manual color list with a hash-based generator.
- */
 function getProviderColor(name) {
-    // Manual overrides for specific well-known brands
-    const brandColors = {
+    const colors = {
         "Be.EV": "#00d1ff",
         "Tesla": "#e81010",
         "BP Pulse": "#00a14b",
         "Shell Recharge": "#ffda00",
         "Osprey": "#f97316"
     };
-
-    if (brandColors[name]) return brandColors[name];
-
-    // Deterministic hash for any other provider name
-    let hash = 0;
-    for (let i = 0; i < name.length; i++) {
-        hash = name.charCodeAt(i) + ((hash << 5) - hash);
-    }
-
-    // Convert hash to HSL for better control over aesthetics (vibrant but readable)
-    const h = Math.abs(hash % 360);
-    const s = 70 + (Math.abs(hash % 20)); // Saturation between 70-90%
-    const l = 50 + (Math.abs(hash % 10)); // Lightness between 50-60%
-    
-    return `hsl(${h}, ${s}%, ${l}%)`;
+    return colors[name] || `#${Math.floor(Math.random()*16777215).toString(16)}`;
 }

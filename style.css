@@ -416,115 +416,6 @@ tr.bad td { color: var(--danger); }
     letter-spacing: 0.5px;
 }
 
-
-/* Updated Mini Toggle for Comparison Type */
-.comparison-type {
-  text-align: center;
-  padding: 10px 0; /* Reduced padding */
-}
-
-.toggle-container input {
-  display: none;
-}
-
-.toggle-container {
-  display: flex !important;
-  flex-direction: row !important; /* Force side-by-side */
-  position: relative;
-  background: var(--bg);
-  border-radius: 30px;
-  padding: 2px;
-  border: 1px solid var(--border);
-  margin: 10px auto;
-  width: 100%;
-  max-width: 400px;
-  height: 40px; /* Explicit height helps centering */
-  cursor: pointer;
-  overflow: hidden;
-}
-
-.toggle-container label {
-  flex: 1 1 50%; /* Grow and shrink equally to 50% */
-  display: flex !important;
-  align-items: center;
-  justify-content: center;
-  
-  position: relative;
-  z-index: 2;
-  height: 100%;
-  margin: 0 !important;
-  padding: 0 !important;
-  
-  cursor: pointer;
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--muted);
-  text-transform: uppercase;
-  text-align: center;
-  white-space: nowrap; /* Prevents text from wrapping/stacking */
-  transition: color 0.2s ease;
-}
-
-.toggle-slider {
-  position: absolute;
-  top: 2px;
-  left: 2px;
-  height: calc(100% - 4px);
-  width: calc(50% - 2px);
-  background: var(--accent);
-  border-radius: 30px;
-  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  z-index: 1;
-  box-shadow: var(--glow);
-}
-
-/* Slide logic */
-#break-even:checked ~ .toggle-slider {
-  transform: translateX(0);
-}
-
-#trip-savings:checked ~ .toggle-slider {
-  transform: translateX(100%);
-}
-
-/* Slide and Text Logic */
-#break-even:checked ~ .toggle-slider {
-  transform: translateX(0);
-}
-
-#trip-savings:checked ~ .toggle-slider {
-  transform: translateX(100%);
-}
-
-#break-even:checked ~ label[for="break-even"],
-#trip-savings:checked ~ label[for="trip-savings"] {
-  color: var(--bg); /* Dark text on bright accent background */
-}
-
-/* Helper to hide elements when in Break-Even mode */
-.hide-for-break-even {
-    display: none !important;
-}
-
-/* Adjust the results grid to center the single column in Break-Even mode */
-.break-even-layout #results-list {
-    grid-template-columns: 1fr; /* Force single column */
-    max-width: 500px;
-    margin: 0 auto;
-}
-
-.helper-text {
-  font-size: 0.85rem;
-  color: var(--muted);
-  margin-bottom: 15px;
-  line-height: 1.4;
-}
-
-/* Ensure cards transition smoothly */
-.mode-card {
-  transition: opacity 0.3s ease;
-}
-
 /* ============================================================
    MOBILE FIXES REQUESTED BY USER (APPLY BELOW 700px ONLY)
    ============================================================ */
@@ -554,7 +445,6 @@ tr.bad td { color: var(--danger); }
     /* 1. Move buttons below heading */
     .header-row {
         display: block;
-	margin-bottom: 10px;
     }
 
     .top-buttons {

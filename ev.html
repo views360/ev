@@ -24,29 +24,12 @@
         </div>
     </div>
 
-    <!--div class="subtitle">
-        The purpose of this tool is to help you reduce EV charging costs while away on a planned trip (e.g., a weekend break or multi-day holiday). Switch between break-even mode (to find out the number of miles at which available subscriptions recoup the subscription cost and start to save you money) and trip-savings mode (when you enter your planned trip details to find out how much your trip will cost and how much you can save with each subscription provider). 
-	</div-->
+    <div class="subtitle">
+        The purpose of this tool is to help you reduce EV charging costs while away on a planned trip (e.g., a weekend break or multi-day holiday). Will it be cheaper to use PAYG charging, or should you pay for a one-month subscription to access discounted rates? Complete the <stong>Trip & Vehicle</strong> fields below, and select one or more (or all) subscription providers to compare.
+    </div>
 
     <div class="grid">
-
-         <div class="card">
-            <div class="comparison-type">
-                <h3>Comparison Mode</h3>
-		What’s your goal? Is it to see how many miles it takes for a subscription to pay for itself (break even), or is it to find the lowest cost for a planned trip (trip savings)?
-		<div style="margin-top:15px; display:block" class="toggle-container">
-    			<input type="radio" id="break-even" name="mode" value="break-even" checked>
-    			<label for="break-even">Break Even</label>
-
-    			<input type="radio" id="trip-savings" name="mode" value="trip-savings">
-    			<label for="trip-savings">Trip Savings</label>
-    
-    			<div class="toggle-slider"></div>
-  		</div>
-            </div>
-        </div>       
-<div id="settings-container">
-	<div id="trip-settings-card" class="card trip-input-card mode-card">
+        <div class="card">
             <h3>Trip & Vehicle</h3>
             <p style="font-size: 0.8em; margin-bottom: 20px">Click💡for explanation.</p>
             <div class="input-row">
@@ -60,7 +43,7 @@
                     <input type="number" id="journeyMiles" placeholder="e.g., 250">
                 </div>
                 <div class="input-group">
-                    <label for "batteryKwh">Battery size (kWh)
+                    <label fpr "batteryKwh">Battery size (kWh)
                          <div class="tooltip-container">
                             <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
                           <div class="tooltip-box">What is the useable size of your vehicle's battery?</div>
@@ -87,7 +70,7 @@
                         <div class="tooltip-box">This is likely to be between 2.5 and 5, depending on the time of year and your driving style and habits. You can either estimate it for the time of year when you will travel, or you can reset your trip counter and calculate it if your trip is imminent.</div>
                         </div>
                     </label>
-                    <input type="number" id="vehicle-efficiency-trip" placeholder="e.g., 3.5">
+                    <input type="number" id="efficiency" placeholder="e.g., 3.5">
                 </div>
             </div>
 
@@ -143,29 +126,14 @@
             </div>
         </div>
 
-<div id="efficiency-only-card" class="card mode-card" style="display: none;">
-    <h3>Vehicle Efficiency</h3>
-    <p class="helper-text">To calculate how many miles you need to drive to break even, enter your average efficiency.</p>
-                    <div class="input-group">
-                    <label for ">Vehicle efficiency (miles per kWh)
-                        <div class="tooltip-container">
-                            <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
-                        <div class="tooltip-box">This is likely to be between 2.5 and 5, depending on the time of year and your driving style and habits. You can either estimate it for the time of year when you will travel, or you can reset your trip counter and calculate it if your trip is imminent.</div>
-                        </div>
-                    </label>
-                    <input type="number" id="vehicle-efficiency-be" placeholder="e.g., 3.5">
-                </div>
-  </div>
-</div>
-
         <div class="card">
             <div class="providers-header-row">
-                <h3>Available Subscriptions</h3>
+                <h3>Subscriptions & Discounts</h3>
                 <button type="button" class="btn secondary" id="toggleProvidersBtn" onclick="toggleProviderVisibility()" style="margin-bottom: 10px; width: 100%;">
                   Collapse Providers list
                 </button>
                 <div id="providerControls">
-                    <p style="font-size: 0.8em; margin-bottom: 15px">For the best comparison, select <strong>all</strong> subscription providers. You may also add, remove, or edit (if details are outdated) individual providers.</p>
+                    <p style="font-size: 0.8em; margin-bottom: 15px">Initially, you should select <strong>all</strong> subscription providers so you can identify which will be the cheapest for your planned route compared with the baseline for ad-hoc public charging. Scroll down for the results. You may also add, remove, or edit (if details are outdated) individual providers.</p>
                     <div style="display:flex; gap:6px; margin-bottom: 20px">
                         <button type="button" class="btn btn-glow" onclick="addAllProviders()">Add all providers</button>
                         <button type="button" class="btn secondary" onclick="addProvider()">Add provider</button>
