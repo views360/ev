@@ -412,7 +412,7 @@ tr.bad td { color: var(--danger); }
 /* Fixed right-edge gradient fade for scroll hint */
 #providerResults {
     position: relative; /* anchor the fade */
-    overflow-x: auto;
+    /* overflow-x: auto; */
     -webkit-overflow-scrolling: touch;
 }
 
@@ -488,6 +488,4 @@ tr.bad td { color: var(--danger); }
         background: linear-gradient(to left, var(--panel), transparent);
         z-index: 10;
     }
-
-
 }
