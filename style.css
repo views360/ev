@@ -423,7 +423,7 @@ tr.bad td { color: var(--danger); }
     .results-scroll th:first-child {
        position: sticky;
        left: 0;
-       z-index: 3;
+       z-index: 20;
        background: var(--panel-alt);
        backdrop-filter: blur(4px);
    }
