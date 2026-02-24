@@ -518,6 +518,7 @@ tr.bad td { color: var(--danger); }
     /* 1. Move buttons below heading */
     .header-row {
         display: block;
+	margin-bottom: 10px;
     }
 
     .top-buttons {
