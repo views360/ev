@@ -290,4 +290,37 @@ document.querySelectorAll('input[name="mode"]').forEach(radio => {
     });
 });
 
+const toggleBreakEven = document.getElementById('break-even');
+const toggleTripSavings = document.getElementById('trip-savings');
+
+const tripCard = document.getElementById('trip-settings-card');
+const efficiencyCard = document.getElementById('efficiency-only-card');
+
+const inputTripEff = document.getElementById('vehicle-efficiency-trip');
+const inputBeEff = document.getElementById('vehicle-efficiency-be');
+
+function updateModeVisibility() {
+    if (toggleBreakEven.checked) {
+        tripCard.style.display = 'none';
+        efficiencyCard.style.display = 'block';
+        // Sync values
+        inputBeEff.value = inputTripEff.value;
+    } else {
+        tripCard.style.display = 'block';
+        efficiencyCard.style.display = 'none';
+        // Sync values
+        inputTripEff.value = inputBeEff.value;
+    }
+    // Call your existing calculation function
+    if (typeof calculateResults === 'function') calculateResults();
+}
+
+// Add listeners to both radio buttons
+[toggleBreakEven, toggleTripSavings].forEach(radio => {
+    radio.addEventListener('change', updateModeVisibility);
+});
+
+// Run once on load to set initial state
+window.addEventListener('DOMContentLoaded', updateModeVisibility);
+
 calculate();
