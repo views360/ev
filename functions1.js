@@ -260,30 +260,33 @@ function toggleProviderVisibility() {
     }
 }
 
+function initializeViewMode() {
+    const isBreakEven = document.getElementById('break-even').checked;
+    const tripCards = document.querySelectorAll('.trip-input-card');
+    const resultsContainer = document.getElementById('results-container');
+
+    if (isBreakEven) {
+        tripCards.forEach(card => card.style.display = 'none');
+        resultsContainer.classList.add('break-even-layout');
+    }
+}
+
+// Run on page load
+window.addEventListener('DOMContentLoaded', initializeViewMode);
+
+// Your existing listener (simplified for brevity)
 document.querySelectorAll('input[name="mode"]').forEach(radio => {
     radio.addEventListener('change', (e) => {
-        const isBreakEven = e.target.value === 'break-even';
         const tripCards = document.querySelectorAll('.trip-input-card');
         const resultsContainer = document.getElementById('results-container');
-
-        if (isBreakEven) {
-            // 1. Hide the Trip/Charge input cards
-            tripCards.forEach(card => card.classList.add('hide-for-break-even'));
-            
-            // 2. Add a class to results for special styling
+        
+        if (e.target.value === 'break-even') {
+            tripCards.forEach(card => card.style.display = 'none');
             resultsContainer.classList.add('break-even-layout');
-
-            // 3. Optional: Hide specific columns inside your result items
-            // You can add logic here to hide "Total Cost" and "Total Savings"
-            // leaving only the "Break Even" data visible.
         } else {
-            // Show everything for Trip Savings mode
-            tripCards.forEach(card => card.classList.remove('hide-for-break-even'));
+            tripCards.forEach(card => card.style.display = 'block');
             resultsContainer.classList.remove('break-even-layout');
         }
-        
-        // Trigger a recalculation to refresh the view
-        if(typeof calculateResults === "function") calculateResults();
     });
 });
 
