@@ -261,4 +261,3 @@ function toggleProviderVisibility() {
 }
 
 calculate();
-}
