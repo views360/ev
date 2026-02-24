@@ -132,14 +132,18 @@
                 <button type="button" class="btn secondary" id="toggleProvidersBtn" onclick="toggleProviderVisibility()" style="margin-bottom: 10px; width: 100%;">
                   Collapse Providers list
                 </button>
-                <p style="font-size: 0.8em; margin-bottom: 15px">Initially, you should select <strong>all</strong> subscription providers so you can identify which will be the cheapest for your planned route compared with the baseline for ad-hoc public charging. Scroll down for the results. You may also add, remove, or edit (if details are outdated) individual providers.</p>
-                <div style="display:flex; gap:6px; margin-bottom: 20px">
-                    <button type="button" class="btn btn-glow" onclick="addAllProviders()">Add all providers</button>
-                    <button type="button" class="btn secondary" onclick="addProvider()">Add provider</button>
-                    <button type="button" class="btn secondary" onclick="duplicateLastProvider()">Duplicate last</button>
+                <div id="providerControls">
+                    <p style="font-size: 0.8em; margin-bottom: 15px">Initially, you should select <strong>all</strong> subscription providers so you can identify which will be the cheapest for your planned route compared with the baseline for ad-hoc public charging. Scroll down for the results. You may also add, remove, or edit (if details are outdated) individual providers.</p>
+                    <div style="display:flex; gap:6px; margin-bottom: 20px">
+                        <button type="button" class="btn btn-glow" onclick="addAllProviders()">Add all providers</button>
+                        <button type="button" class="btn secondary" onclick="addProvider()">Add provider</button>
+                        <button type="button" class="btn secondary" onclick="duplicateLastProvider()">Duplicate last</button>
+                    </div>
                 </div>
             </div>
-            <div id="providers"></div>
+            <div id="collapsibleProviders">
+                <div id="providers"></div>
+            </div>
         </div>
     </div>
 
