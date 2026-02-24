@@ -428,7 +428,8 @@ tr.bad td { color: var(--danger); }
 }
 
 .toggle-container {
-  display: flex; /* Changed from inline-flex to flex */
+  display: flex !important;
+  flex-direction: row !important; /* Force side-by-side */
   position: relative;
   background: var(--bg);
   border-radius: 30px;
@@ -436,29 +437,32 @@ tr.bad td { color: var(--danger); }
   border: 1px solid var(--border);
   margin: 10px auto;
   width: 100%;
-  max-width: 400px; /* Set a max width so it doesn't stretch too far */
+  max-width: 400px;
+  height: 40px; /* Explicit height helps centering */
   cursor: pointer;
   overflow: hidden;
 }
 
 .toggle-container label {
-  /* This is the crucial part for centering */
-  flex: 1; 
-  display: flex;
+  flex: 1 1 50%; /* Grow and shrink equally to 50% */
+  display: flex !important;
   align-items: center;
   justify-content: center;
   
   position: relative;
   z-index: 2;
-  height: 32px; /* Fixed height for consistency */
+  height: 100%;
+  margin: 0 !important;
+  padding: 0 !important;
+  
   cursor: pointer;
-  font-size: 0.75rem; /* Small and sharp */
+  font-size: 0.75rem;
   font-weight: 600;
   color: var(--muted);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  text-align: center;
+  white-space: nowrap; /* Prevents text from wrapping/stacking */
   transition: color 0.2s ease;
-  margin: 0; /* Remove any default margins */
 }
 
 .toggle-slider {
@@ -466,12 +470,21 @@ tr.bad td { color: var(--danger); }
   top: 2px;
   left: 2px;
   height: calc(100% - 4px);
-  width: calc(50% - 2px); /* Exactly half minus the padding */
+  width: calc(50% - 2px);
   background: var(--accent);
   border-radius: 30px;
   transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 1;
   box-shadow: var(--glow);
+}
+
+/* Slide logic */
+#break-even:checked ~ .toggle-slider {
+  transform: translateX(0);
+}
+
+#trip-savings:checked ~ .toggle-slider {
+  transform: translateX(100%);
 }
 
 /* Slide and Text Logic */
