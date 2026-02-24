@@ -18,7 +18,7 @@
 
         <!-- BUTTON GROUP MOVED BELOW HEADING ON MOBILE -->
         <div class="top-buttons">
-            <button class="btn secondary" id="themeToggle" onclick="toggleTheme()">Toggle Light/Dark Mode</button>
+            <button class="btn secondary" id="themeToggle" onclick="toggleTheme()">Light/Dark View</button>
             <button class="btn secondary" onclick="resetAll()">Reset All</button>
             <a href="https://www.facebook.com/kelvin.a.hill" target="_blank" class="btn secondary">Contact Author</a>
         </div>
@@ -129,10 +129,10 @@
         <div class="card">
             <div class="providers-header-row">
                 <h3>Subscriptions & Discounts</h3>
-                <p style="font-size: 0.8em; margin-bottom: 15px">Select one or more (or all) subscription providers to view how they compare with the baseline for your planned trip distance (results at the bottom of the page). You may add, remove, or edit (if details are outdated) individual providers — or select them all.</p>
+                <p style="font-size: 0.8em; margin-bottom: 15px">Initially, you should select <strong>all</strong> subscription providers so you can identify which will be the cheapest for your planned route compared with the baseline for ad-hoc public charging. Scroll down for the results. You may also add, remove, or edit (if details are outdated) individual providers.</p>
                 <div style="display:flex; gap:6px; margin-bottom: 20px">
+                    <button type="button" class="btn btn-glow" onclick="addAllProviders()">Add all providers</button>
                     <button type="button" class="btn" onclick="addProvider()">Add provider</button>
-                    <button type="button" class="btn" onclick="addAllProviders()">Add all providers</button>
                     <button type="button" class="btn" onclick="duplicateLastProvider()">Duplicate last</button>
                 </div>
             </div>
@@ -151,7 +151,7 @@
 
     <div id="results" class="results">
 
-        <div id="sortGroup" class="input-group" style="max-width:200px; display:none;">
+        <div class="input-group" style="max-width:200px;">
             <label>Sort results</label>
             <select id="sortResults" onchange="calculate()">
                 <option value="cheapest">Cheapest first</option>
@@ -187,5 +187,3 @@
 
 </body>
 </html>
-
-
