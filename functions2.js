@@ -6,6 +6,7 @@
 function calculate() {
     const providerBoxes = document.querySelectorAll(".provider-box");
     const preConclusionsText = document.getElementById("preConclusionsText");
+    const shareBtn = document.getElementById("shareBtn"); // Get the share button
     const pdfBtn = document.getElementById("pdfBtn"); // Get the PDF button
     const sortGroup = document.getElementById("sortGroup");
     const miles = parseFloat(document.getElementById("journeyMiles").value);
@@ -29,7 +30,8 @@ function calculate() {
                 "Please complete all fields in the Trip & Vehicle section.";
             preConclusionsText.style.display = "block";
         }
-        if (pdfBtn) pdfBtn.style.display = "none";
+        if (shareBtn) shareBtn.style.display = "none";
+	if (pdfBtn) pdfBtn.style.display = "none";
         if (sortGroup) sortGroup.style.display = "none";
         document.getElementById("results").style.display = "none";
         return;
@@ -44,21 +46,25 @@ function calculate() {
                 "Before you may view a comparison, you must select at least one provider from the list of providers (above).";
             preConclusionsText.style.display = "block";
         }
-        if (pdfBtn) pdfBtn.style.display = "none";
+        if (shareBtn) shareBtn.style.display = "none";
+	if (pdfBtn) pdfBtn.style.display = "none";
         if (sortGroup) sortGroup.style.display = "none";
     } else {
         if (preConclusionsText) preConclusionsText.style.display = "none";
-        if (pdfBtn) pdfBtn.style.display = "inline-block";
+        if (shareBtn) shareBtn.style.display = "inline-block";
+	if (pdfBtn) pdfBtn.style.display = "inline-block";
         if (sortGroup) sortGroup.style.display = "block";
     }
 
     // Logic to toggle PDF button visibility
     if (providerBoxes.length > 0) {
         if (preConclusionsText) preConclusionsText.style.display = "none";
-        if (pdfBtn) pdfBtn.style.display = "inline-block"; // Show the button
+	if (shareBtn) shareBtn.style.display = "inline-block"; // Show the button
+	if (pdfBtn) pdfBtn.style.display = "inline-block"; // Show the button
     } else {
         if (preConclusionsText) preConclusionsText.style.display = "block";
-        if (pdfBtn) pdfBtn.style.display = "none"; // Hide the button
+        if (shareBtn) shareBtn.style.display = "none";
+	if (pdfBtn) pdfBtn.style.display = "none"; // Hide the button
     }
 
     const startChargeKwh = (soc / 100) * battery;
@@ -193,4 +199,5 @@ function calculate() {
 
     conclusionsBox.innerHTML = conclusionHTML;
     drawGraph(core, providers);
+
 }
