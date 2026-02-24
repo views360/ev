@@ -224,3 +224,5 @@ fetch("providers.json")
         if (window.location.search) loadFromUrl();
         else loadFromLocalStorage();
     });
+
+window.addEventListener("DOMContentLoaded", calculate);
