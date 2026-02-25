@@ -276,6 +276,7 @@ function setToggle(mode) {
 function setToggle(mode, btn) {
     const slider = document.getElementById('pill-slider');
     const buttons = document.querySelectorAll('.pill-btn');
+    const breakEvenView = document.getElementById('breakEvenView');
     
     // Remove active class from all buttons
     buttons.forEach(b => b.classList.remove('active'));
@@ -284,9 +285,13 @@ function setToggle(mode, btn) {
     // Slide the pill background
     if (mode === 'break-even') {
         slider.style.transform = 'translateX(0)';
+        if (breakEvenView) breakEvenView.style.display = 'block'; // Ensure card shows
     } else {
         slider.style.transform = 'translateX(100%)';
+        if (breakEvenView) breakEvenView.style.display = 'none';  // Ensure card hides
     }
+
+    // This triggers the calculate() function which handles hiding the rest of the form
     calculate();
 }
 
