@@ -273,4 +273,24 @@ function setToggle(mode) {
     }
 }
 
+function setToggle(mode, btn) {
+    const slider = document.getElementById('pill-slider');
+    const buttons = document.querySelectorAll('.pill-btn');
+    
+    // Remove active class from all buttons
+    buttons.forEach(b => b.classList.remove('active'));
+    
+    // Add active class to clicked button
+    btn.classList.add('active');
+    
+    // Slide the pill background
+    if (mode === 'break-even') {
+        slider.style.transform = 'translateX(0)';
+    } else {
+        // Moves the pill to the second half
+        slider.style.transform = 'translateX(100%)';
+    }
+}
+
 calculate();
+
