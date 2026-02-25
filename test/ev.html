@@ -29,9 +29,10 @@
     </div>
 
 <div class="toggle-container-block">
-    <div class="toggle-wrapper">
-        <button id="toggleBreakEven" class="btn secondary active-toggle" onclick="setToggle('break-even')">Break Even</button>
-        <button id="toggleTripSavings" class="btn secondary" onclick="setToggle('trip-savings')">Trip Savings</button>
+    <div class="pill-toggle">
+        <div id="pill-slider" class="pill-slider"></div>
+        <button type="button" class="pill-btn active" onclick="setToggle('break-even', this)">Break Even</button>
+        <button type="button" class="pill-btn" onclick="setToggle('trip-savings', this)">Trip Savings</button>
     </div>
 </div>
 
@@ -200,3 +201,4 @@
 
 </body>
 </html>
+
