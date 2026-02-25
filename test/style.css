@@ -105,15 +105,6 @@ h3 {
     transform: translateX(-50%) translateY(0);
 }
 
-/* Desktop Hover Support */
-@media (hover: hover) {
-    .tooltip-container:hover .tooltip-box {
-        opacity: 1;
-        visibility: visible;
-        transform: translateX(-50%) translateY(0);
-    }
-}
-
 /* Red Pulsating Effect for Warning Text */
 #preConclusionsText {
     color: var(--danger);
@@ -514,10 +505,28 @@ tr.bad td { color: var(--danger); }
     color: var(--bg);
 }
 
-/* Mobile full-width override */
-@media (max-width: 700px) {
-    .pill-toggle {
-        max-width: 100%;
+.header-row {
+    display: flex;
+    flex-direction: column; /* Stack heading and buttons */
+    align-items: center;    /* Center horizontally */
+    text-align: center;
+    gap: 15px;
+    margin-bottom: 10px;
+}
+
+.top-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap; /* Allows wrapping on smaller screens */
+}
+
+/* Desktop Hover Support */
+@media (hover: hover) {
+    .tooltip-container:hover .tooltip-box {
+        opacity: 1;
+        visibility: visible;
+        transform: translateX(-50%) translateY(0);
     }
 }
 
@@ -525,6 +534,10 @@ tr.bad td { color: var(--danger); }
    MOBILE FIXES REQUESTED BY USER (APPLY BELOW 700px ONLY)
    ============================================================ */
 @media (max-width: 700px) {
+
+    .pill-toggle {
+        max-width: 100%;
+    }
 
     body { padding: 10px; }
     .app { padding: 15px; border-radius: 0; }
@@ -546,22 +559,6 @@ tr.bad td { color: var(--danger); }
        background: var(--panel-alt);
        backdrop-filter: blur(4px);
    }
-
-    .header-row {
-        display: flex;
-        flex-direction: column; /* Stack heading and buttons */
-        align-items: center;    /* Center horizontally */
-        text-align: center;
-        gap: 15px;
-        margin-bottom: 10px;
-    }
-
-    .top-buttons {
-        display: flex;
-        justify-content: center;
-        gap: 10px;
-        flex-wrap: wrap; /* Allows wrapping on smaller screens */
-    }
 
     /* 2. Trip & Vehicle fields full width, one per line */
     .input-row {
@@ -608,5 +605,6 @@ tr.bad td { color: var(--danger); }
         z-index: 10;
     }
 }
+
 
 
