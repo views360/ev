@@ -4,12 +4,7 @@
 // ===============================
 
 function calculate() {
-    const grid = document.querySelector(".grid");
-	const resultsHeading = document.querySelector(".results-heading");
-	const btnRow = document.querySelector(".btn-row");
-	const resultsDiv = document.getElementById("results");
-	const tripSavingsBtn = document.getElementById("toggleTripSavings");
-	const providerBoxes = document.querySelectorAll(".provider-box");
+    const providerBoxes = document.querySelectorAll(".provider-box");
     const preConclusionsText = document.getElementById("preConclusionsText");
     const shareBtn = document.getElementById("shareBtn"); // Get the share button
     const pdfBtn = document.getElementById("pdfBtn"); // Get the PDF button
@@ -20,31 +15,36 @@ function calculate() {
     const efficiency = parseFloat(document.getElementById("efficiency").value);
     const adhocRate = parseFloat(document.getElementById("adhoc").value);
     const startRate = parseFloat(document.getElementById("startChargeRate").value);
+	const grid = document.querySelector(".grid");
+    const resultsHeading = document.querySelector(".results-heading");
+    const btnRow = document.querySelector(".btn-row");
+    const resultsDiv = document.getElementById("results");
+    const preConclusionsText = document.getElementById("preConclusionsText");
+    const breakEvenView = document.getElementById('breakEvenView');
+    const providersContainer = document.getElementById("collapsibleProviders");
     const isTripSavingsActive = document.querySelector('.pill-btn.active').textContent === "Trip Savings";
-	const breakEvenView = document.getElementById('breakEvenView');
 
-    // If Break Even is active, hide everything below the toggle
 	if (!isTripSavingsActive) {
-        // Break Even Mode
+        // BREAK EVEN MODE
         if (grid) grid.style.display = "none";
         if (resultsHeading) resultsHeading.style.display = "none";
         if (btnRow) btnRow.style.display = "none";
         if (resultsDiv) resultsDiv.style.display = "none";
         if (preConclusionsText) preConclusionsText.style.display = "none";
-		if (breakEvenView) breakEvenView.style.display = "block";
-        return; // Stop processing further logic
-    } else {
-        // Trip Savings Mode
-	if (grid) grid.style.display = "grid"; 
-    if (resultsHeading) resultsHeading.style.display = "block";
-    if (btnRow) btnRow.style.display = "flex";
-    if (breakEvenView) breakEvenView.style.display = "none"; // Hide card in Trip mode
+        
+        // Show both the efficiency card and the providers card
+        if (breakEvenView) breakEvenView.style.display = "block";
+        if (providersContainer) providersContainer.style.display = "block";
+        
+        return; 
     }
-
-    // Otherwise, show the main input grid and proceed with calculations
+	// TRIP SAVINGS MODE
     if (grid) grid.style.display = "grid"; 
     if (resultsHeading) resultsHeading.style.display = "block";
     if (btnRow) btnRow.style.display = "flex";
+    if (breakEvenView) breakEvenView.style.display = "none";
+    // Providers container visibility in Trip mode is usually handled by the "Expand" button
+    // or kept as block if it was already open.
 	
     // 1. PRIORITY: Trip & Vehicle not complete
     const tripIncomplete =
@@ -53,18 +53,6 @@ function calculate() {
         isNaN(soc) ||
         isNaN(efficiency) ||
         isNaN(adhocRate);
-	
-	if (tripSavingsBtn && !tripSavingsBtn.classList.contains('active')) {
-        if (resultsDiv) resultsDiv.style.display = "none";
-        if (preConclusionsText) preConclusionsText.style.display = "none";
-        // Also hide the share/PDF buttons if they exist
-        const shareBtn = document.getElementById("shareBtn");
-        const pdfBtn = document.getElementById("pdfBtn");
-        if (shareBtn) shareBtn.style.display = "none";
-        if (pdfBtn) pdfBtn.style.display = "none";
-        
-        return; // Exit early
-    }
 
     if (tripIncomplete) {
         if (preConclusionsText) {
@@ -243,6 +231,3 @@ function calculate() {
     drawGraph(core, providers);
 
 }
-
-
-
