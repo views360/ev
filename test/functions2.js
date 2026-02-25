@@ -27,9 +27,11 @@ function calculate() {
 	if (!isTripSavingsActive) {
         // Break Even Mode
         if (grid) grid.style.display = "none";
+        if (resultsHeading) resultsHeading.style.display = "none";
+        if (btnRow) btnRow.style.display = "none";
         if (resultsDiv) resultsDiv.style.display = "none";
-        if (breakEvenView) breakEvenView.style.display = "block"; 
-        return; 
+        if (preConclusionsText) preConclusionsText.style.display = "none";
+        return; // Stop processing further logic
     } else {
         // Trip Savings Mode
         if (grid) grid.style.display = "grid";
@@ -238,4 +240,5 @@ function calculate() {
     drawGraph(core, providers);
 
 }
+
 
