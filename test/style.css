@@ -416,6 +416,46 @@ tr.bad td { color: var(--danger); }
     letter-spacing: 0.5px;
 }
 
+/* Container for the switch - no border, full width */
+.toggle-container-block {
+    width: 100%;
+    margin: 20px 0;
+    display: flex;
+    justify-content: center;
+}
+
+/* The 'sliding' wrapper */
+.toggle-wrapper {
+    display: flex;
+    gap: 0; 
+    width: 100%;
+    max-width: 400px; /* Limits width on desktop */
+}
+
+/* Remove rounded corners where buttons meet to look like one unit */
+.toggle-wrapper .btn {
+    flex: 1;
+    border-radius: 0;
+}
+
+.toggle-wrapper .btn:first-child {
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+}
+
+.toggle-wrapper .btn:last-child {
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    border-left: none; /* Prevents double border in the middle */
+}
+
+/* Highlighting the selected side using your accent color */
+.active-toggle {
+    background: var(--accent) !important;
+    color: var(--bg) !important;
+    box-shadow: var(--glow);
+}
+
 /* ============================================================
    MOBILE FIXES REQUESTED BY USER (APPLY BELOW 700px ONLY)
    ============================================================ */
