@@ -281,6 +281,12 @@ function setToggle(mode, btn) {
     const providersContainer = document.getElementById("collapsibleProviders");
     const providerControls = document.getElementById("providerControls");
     const providersBtn = document.getElementById("toggleProvidersBtn");
+
+	// Target the specific cards and results
+    const tripVehicleCard = document.getElementById('tripVehicleCard');
+    const breakEvenCard = document.getElementById('breakEvenView');
+    const resultsArea = document.getElementById('results');
+    const providersList = document.getElementById('collapsibleProviders');
     
     // Remove active class from all buttons
     buttons.forEach(b => b.classList.remove('active'));
@@ -291,15 +297,21 @@ function setToggle(mode, btn) {
         // Hide Trip card, show Efficiency and Providers
         if (grid) grid.style.display = 'none';
         if (breakEvenView) breakEvenView.style.display = 'block';
+		if (breakEvenCard) breakEvenCard.style.display = 'block';
+        if (providersList) providersList.style.display = 'block';
         if (providersContainer) providersContainer.style.display = 'block';
         if (providerControls) providerControls.style.display = 'block';
         if (providersBtn) providersBtn.textContent = "Collapse Providers List";
-	if (results) results.style.display = 'none';
-	if (preConclusionsText) preConclusionsText.style.display = 'none';
+		if (results) results.style.display = 'none';
+		if (preConclusionsText) preConclusionsText.style.display = 'none';
+		if (tripVehicleCard) tripVehicleCard.style.display = 'none';
+        if (resultsArea) resultsArea.style.display = 'none';
     } else {
         slider.style.transform = 'translateX(100%)';
         // Show Trip card, hide Efficiency duplicate
         if (grid) grid.style.display = 'grid';
+		if (tripVehicleCard) tripVehicleCard.style.display = 'block';
+        if (resultsArea) resultsArea.style.display = 'block';
         if (breakEvenView) breakEvenView.style.display = 'none';
     }
 
@@ -327,3 +339,4 @@ function setToggle(mode, btn) {
 }
 
 calculate();
+
