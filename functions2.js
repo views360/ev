@@ -15,37 +15,7 @@ function calculate() {
     const efficiency = parseFloat(document.getElementById("efficiency").value);
     const adhocRate = parseFloat(document.getElementById("adhoc").value);
     const startRate = parseFloat(document.getElementById("startChargeRate").value);
-	const grid = document.querySelector(".grid");
-    const resultsHeading = document.querySelector(".results-heading");
-    const btnRow = document.querySelector(".btn-row");
-    const resultsDiv = document.getElementById("results");
-    const preConclusionsText = document.getElementById("preConclusionsText");
-    const breakEvenView = document.getElementById('breakEvenView');
-    const providersContainer = document.getElementById("collapsibleProviders");
-    const isTripSavingsActive = document.querySelector('.pill-btn.active').textContent === "Trip Savings";
 
-	if (!isTripSavingsActive) {
-        // BREAK EVEN MODE
-        if (grid) grid.style.display = "none";
-        if (resultsHeading) resultsHeading.style.display = "none";
-        if (btnRow) btnRow.style.display = "none";
-        if (resultsDiv) resultsDiv.style.display = "none";
-        if (preConclusionsText) preConclusionsText.style.display = "none";
-        
-        // Show both the efficiency card and the providers card
-        if (breakEvenView) breakEvenView.style.display = "block";
-        if (providersContainer) providersContainer.style.display = "block";
-        
-        return; 
-    }
-	// TRIP SAVINGS MODE
-    if (grid) grid.style.display = "grid"; 
-    if (resultsHeading) resultsHeading.style.display = "block";
-    if (btnRow) btnRow.style.display = "flex";
-    if (breakEvenView) breakEvenView.style.display = "none";
-    // Providers container visibility in Trip mode is usually handled by the "Expand" button
-    // or kept as block if it was already open.
-	
     // 1. PRIORITY: Trip & Vehicle not complete
     const tripIncomplete =
         isNaN(miles) ||
