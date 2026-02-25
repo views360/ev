@@ -31,11 +31,14 @@ function calculate() {
         if (btnRow) btnRow.style.display = "none";
         if (resultsDiv) resultsDiv.style.display = "none";
         if (preConclusionsText) preConclusionsText.style.display = "none";
+		if (breakEvenView) breakEvenView.style.display = "block";
         return; // Stop processing further logic
     } else {
         // Trip Savings Mode
-        if (grid) grid.style.display = "grid";
-        if (breakEvenView) breakEvenView.style.display = "none";
+	if (grid) grid.style.display = "grid"; 
+    if (resultsHeading) resultsHeading.style.display = "block";
+    if (btnRow) btnRow.style.display = "flex";
+    if (breakEvenView) breakEvenView.style.display = "none"; // Hide card in Trip mode
     }
 
     // Otherwise, show the main input grid and proceed with calculations
@@ -240,5 +243,6 @@ function calculate() {
     drawGraph(core, providers);
 
 }
+
 
 
