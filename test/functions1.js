@@ -294,6 +294,8 @@ function setToggle(mode, btn) {
         if (providersContainer) providersContainer.style.display = 'block';
         if (providerControls) providerControls.style.display = 'block';
         if (providersBtn) providersBtn.textContent = "Collapse Providers List";
+	if (results) results.style.display = 'none';
+	if (preConclusionsText) preConclusionsText.style.display = 'none';
     } else {
         slider.style.transform = 'translateX(100%)';
         // Show Trip card, hide Efficiency duplicate
