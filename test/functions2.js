@@ -22,6 +22,7 @@ function calculate() {
     const preConclusionsText = document.getElementById("preConclusionsText");
     const breakEvenView = document.getElementById('breakEvenView');
     const providersContainer = document.getElementById("collapsibleProviders");
+	const providerControls = document.getElementById("providerControls");
     const isTripSavingsActive = document.querySelector('.pill-btn.active').textContent === "Trip Savings";
 
 	if (!isTripSavingsActive) {
@@ -33,8 +34,9 @@ function calculate() {
         if (preConclusionsText) preConclusionsText.style.display = "none";
         
         // Show both the efficiency card and the providers card
-        if (breakEvenView) breakEvenView.style.display = "block";
+		if (breakEvenView) breakEvenView.style.display = "block";
         if (providersContainer) providersContainer.style.display = "block";
+        if (providerControls) providerControls.style.display = "block";
         
         return; 
     }
