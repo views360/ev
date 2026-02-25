@@ -20,18 +20,20 @@ function calculate() {
     const efficiency = parseFloat(document.getElementById("efficiency").value);
     const adhocRate = parseFloat(document.getElementById("adhoc").value);
     const startRate = parseFloat(document.getElementById("startChargeRate").value);
-
-	// Check which toggle is active
     const isTripSavingsActive = document.querySelector('.pill-btn.active').textContent === "Trip Savings";
+	const breakEvenView = document.getElementById('breakEvenView');
 
     // If Break Even is active, hide everything below the toggle
-    if (!isTripSavingsActive) {
+	if (!isTripSavingsActive) {
+        // Break Even Mode
         if (grid) grid.style.display = "none";
-        if (resultsHeading) resultsHeading.style.display = "none";
-        if (btnRow) btnRow.style.display = "none";
         if (resultsDiv) resultsDiv.style.display = "none";
-        if (preConclusionsText) preConclusionsText.style.display = "none";
-        return; // Stop processing further logic
+        if (breakEvenView) breakEvenView.style.display = "block"; 
+        return; 
+    } else {
+        // Trip Savings Mode
+        if (grid) grid.style.display = "grid";
+        if (breakEvenView) breakEvenView.style.display = "none";
     }
 
     // Otherwise, show the main input grid and proceed with calculations
