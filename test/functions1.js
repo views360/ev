@@ -260,4 +260,17 @@ function toggleProviderVisibility() {
     }
 }
 
+function setToggle(mode) {
+    const beBtn = document.getElementById('toggleBreakEven');
+    const tsBtn = document.getElementById('toggleTripSavings');
+    
+    if (mode === 'break-even') {
+        beBtn.classList.add('active-toggle');
+        tsBtn.classList.remove('active-toggle');
+    } else {
+        tsBtn.classList.add('active-toggle');
+        beBtn.classList.remove('active-toggle');
+    }
+}
+
 calculate();
