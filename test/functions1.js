@@ -287,7 +287,7 @@ function setToggle(mode, btn) {
     } else {
         slider.style.transform = 'translateX(100%)';
     }
+    calculate();
 }
 
 calculate();
-
