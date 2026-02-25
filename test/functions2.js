@@ -4,7 +4,10 @@
 // ===============================
 
 function calculate() {
-    const resultsDiv = document.getElementById("results");
+    const grid = document.querySelector(".grid");
+	const resultsHeading = document.querySelector(".results-heading");
+	const btnRow = document.querySelector(".btn-row");
+	const resultsDiv = document.getElementById("results");
 	const tripSavingsBtn = document.getElementById("toggleTripSavings");
 	const providerBoxes = document.querySelectorAll(".provider-box");
     const preConclusionsText = document.getElementById("preConclusionsText");
@@ -18,6 +21,24 @@ function calculate() {
     const adhocRate = parseFloat(document.getElementById("adhoc").value);
     const startRate = parseFloat(document.getElementById("startChargeRate").value);
 
+	// Check which toggle is active
+    const isTripSavingsActive = document.querySelector('.pill-btn.active').textContent === "Trip Savings";
+
+    // If Break Even is active, hide everything below the toggle
+    if (!isTripSavingsActive) {
+        if (grid) grid.style.display = "none";
+        if (resultsHeading) resultsHeading.style.display = "none";
+        if (btnRow) btnRow.style.display = "none";
+        if (resultsDiv) resultsDiv.style.display = "none";
+        if (preConclusionsText) preConclusionsText.style.display = "none";
+        return; // Stop processing further logic
+    }
+
+    // Otherwise, show the main input grid and proceed with calculations
+    if (grid) grid.style.display = "grid"; 
+    if (resultsHeading) resultsHeading.style.display = "block";
+    if (btnRow) btnRow.style.display = "flex";
+	
     // 1. PRIORITY: Trip & Vehicle not complete
     const tripIncomplete =
         isNaN(miles) ||
@@ -215,3 +236,4 @@ function calculate() {
     drawGraph(core, providers);
 
 }
+
