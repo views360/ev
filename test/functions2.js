@@ -4,7 +4,9 @@
 // ===============================
 
 function calculate() {
-    const providerBoxes = document.querySelectorAll(".provider-box");
+    const resultsDiv = document.getElementById("results");
+	const tripSavingsBtn = document.getElementById("toggleTripSavings");
+	const providerBoxes = document.querySelectorAll(".provider-box");
     const preConclusionsText = document.getElementById("preConclusionsText");
     const shareBtn = document.getElementById("shareBtn"); // Get the share button
     const pdfBtn = document.getElementById("pdfBtn"); // Get the PDF button
@@ -23,6 +25,18 @@ function calculate() {
         isNaN(soc) ||
         isNaN(efficiency) ||
         isNaN(adhocRate);
+	
+	if (tripSavingsBtn && !tripSavingsBtn.classList.contains('active')) {
+        if (resultsDiv) resultsDiv.style.display = "none";
+        if (preConclusionsText) preConclusionsText.style.display = "none";
+        // Also hide the share/PDF buttons if they exist
+        const shareBtn = document.getElementById("shareBtn");
+        const pdfBtn = document.getElementById("pdfBtn");
+        if (shareBtn) shareBtn.style.display = "none";
+        if (pdfBtn) pdfBtn.style.display = "none";
+        
+        return; // Exit early
+    }
 
     if (tripIncomplete) {
         if (preConclusionsText) {
