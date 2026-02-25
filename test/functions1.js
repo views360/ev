@@ -290,4 +290,23 @@ function setToggle(mode, btn) {
     calculate();
 }
 
+function setToggle(mode, btn) {
+    const slider = document.getElementById('pill-slider');
+    const buttons = document.querySelectorAll('.pill-btn');
+    const breakEvenView = document.getElementById('breakEvenView');
+    
+    buttons.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    
+    if (mode === 'break-even') {
+        slider.style.transform = 'translateX(0)';
+        if (breakEvenView) breakEvenView.style.display = 'block'; // Show duplicate card
+    } else {
+        slider.style.transform = 'translateX(100%)';
+        if (breakEvenView) breakEvenView.style.display = 'none';  // Hide duplicate card
+    }
+
+    calculate(); // Trigger visibility logic in functions2.js
+}
+
 calculate();
