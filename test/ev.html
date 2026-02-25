@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>EV Subscription Charging Comparison</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+<div class="app">
+
+    <div class="header-row">
+        <h1>EV Subscription Charging Comparison</h1>
+
+        <!-- BUTTON GROUP MOVED BELOW HEADING ON MOBILE -->
+        <div class="top-buttons">
+            <button class="btn secondary" id="themeToggle" onclick="toggleTheme()">Light/Dark View</button>
+            <button class="btn secondary" onclick="resetAll()">Reset All</button>
+            <a href="https://www.facebook.com/kelvin.a.hill" target="_blank" class="btn secondary">Contact Author</a>
+        </div>
+    </div>
+
+    <div class="subtitle">
+        The purpose of this tool is to help you reduce EV charging costs while away on a planned trip (e.g., a weekend break or multi-day holiday). Will it be cheaper to use PAYG charging, or should you pay for a one-month subscription to access discounted rates? Complete the <stong>Trip & Vehicle</strong> fields below, and select one or more (or all) subscription providers to compare.
+    </div>
+
+    <div class="grid">
+        <div class="card">
+            <h3>Trip & Vehicle</h3>
+            <p style="font-size: 0.8em; margin-bottom: 20px">Click💡for explanation.</p>
+            <div class="input-row">
+                <div class="input-group">
+                    <label for "journeyMiles">Trip distance (miles)
+                        <div class="tooltip-container">
+                          <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
+                              <div class="tooltip-box">How far do you plan to travel? Adjust this value, and the results (at the bottom of the page) will auto-update.</div>
+                        </div>
+                    </label>
+                    <input type="number" id="journeyMiles" placeholder="e.g., 250">
+                </div>
+                <div class="input-group">
+                    <label fpr "batteryKwh">Battery size (kWh)
+                         <div class="tooltip-container">
+                            <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
+                          <div class="tooltip-box">What is the useable size of your vehicle's battery?</div>
+                        </div>
+                    </label>
+                    <input type="number" id="batteryKwh" placeholder="e.g., 61">
+                </div>
+            </div>
+
+            <div class="input-row">
+                <div class="input-group">
+                    <label for "soc">Starting state of charge (%)
+                        <div class="tooltip-container">
+                            <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
+                          <div class="tooltip-box">How much charge will your EV have when you begin your trip?</div>
+                        </div>
+                    </label>
+                    <input type="number" id="soc" placeholder="e.g., 90">
+                </div>
+                <div class="input-group">
+                    <label for ">Vehicle efficiency (miles per kWh)
+                        <div class="tooltip-container">
+                            <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
+                        <div class="tooltip-box">This is likely to be between 2.5 and 5, depending on the time of year and your driving style and habits. You can either estimate it for the time of year when you will travel, or you can reset your trip counter and calculate it if your trip is imminent.</div>
+                        </div>
+                    </label>
+                    <input type="number" id="efficiency" placeholder="e.g., 3.5">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="minSpeed">
+                    Minimum desired charging speed
+                    <div class="tooltip-container">
+                        <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
+                        <div class="tooltip-box">Filter out slower charging speeds from the results if you don't plan to use them during your trip, else they will skew the results because they are cheaper (e.g., setting the value to 50kW will filter out 7kW and 22kW).</div>
+                    </div>
+                </label>
+                <select id="minSpeed">
+                    <option value="7">7kW AC (fast)</option>
+                    <option value="22">22kW AC (accelerated)</option>
+                    <option value="50" selected>50kW DC (rapid)</option>
+                    <option value="75">75kW DC(ultra rapid)</option>
+                    <option value="150">150kW DC (high power)</option>
+                </select>
+            </div>
+
+            <div class="input-row">
+                <div class="input-group">
+                    <label>Starting charge type
+                        <div class="tooltip-container">
+                            <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
+                          <div class="tooltip-box">Before you begin your trip, will you have charged your battery at home or using public charging?</div>
+                        </div>                        
+                    </label>
+                    <select id="startChargeType">
+                        <option value="home">Cheap home charging</option>
+                        <option value="public">Public charging</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Starting rate (pence per kWh)
+                        <div class="tooltip-container">
+                            <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
+                          <div class="tooltip-box">When you charge your battery before the trip, how much will the rate be?</div>
+                        </div>                        
+                    </label>
+                    <input type="number" id="startChargeRate" placeholder="e.g., 7.5">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>Typical average PAYG public rate you pay (pence per kWh)
+                    <div class="tooltip-container">
+                        <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
+                      <div class="tooltip-box">This is the average amount you would ordinarily expect to pay during your trip while using public chargers. If you already get a discount (e.g., 8% from Electroverse), input the discounted rate. This will be the baseline for calculating whether it is possible to make your trip cheaper.</div>
+                    </div>                    
+                </label>
+                <input type="number" id="adhoc" placeholder="e.g., 62 (62p is the 50kW Lidl+ app price)">
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="providers-header-row">
+                <h3>Subscriptions & Discounts</h3>
+                <button type="button" class="btn secondary" id="toggleProvidersBtn" onclick="toggleProviderVisibility()" style="margin-bottom: 10px; width: 100%;">
+                  Collapse Providers list
+                </button>
+                <div id="providerControls">
+                    <p style="font-size: 0.8em; margin-bottom: 15px">Initially, you should select <strong>all</strong> subscription providers so you can identify which will be the cheapest for your planned route compared with the baseline for ad-hoc public charging. Scroll down for the results. You may also add, remove, or edit (if details are outdated) individual providers.</p>
+                    <div style="display:flex; gap:6px; margin-bottom: 20px">
+                        <button type="button" class="btn btn-glow" onclick="addAllProviders()">Add all providers</button>
+                        <button type="button" class="btn secondary" onclick="addProvider()">Add provider</button>
+                        <button type="button" class="btn secondary" onclick="duplicateLastProvider()">Duplicate last</button>
+                    </div>
+                </div>
+            </div>
+            <div id="collapsibleProviders">
+                <div id="providers"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- NEW RESULTS HEADING -->
+    <h2 class="results-heading">RESULTS</h2>
+
+    <div class="btn-row">
+        <button type="button" class="btn secondary" id="shareBtn" onclick="shareLink()">Copy shareable link</button>
+        <button type="button" class="btn secondary" id="pdfBtn" onclick="exportPdf()">Export as PDF</button>
+    </div>
+
+    <div id="preConclusionsText">Please complete all fields in the <strong>Trip & Vehicle</strong> section</div>
+    <div id="results" class="results">
+
+        <div class="input-group" style="max-width:200px;">
+            <label>Sort results</label>
+            <select id="sortResults" onchange="calculate()">
+                <option value="cheapest">Cheapest first</option>
+                <option value="az">A → Z</option>
+                <option value="za">Z → A</option>
+            </select>
+        </div>
+
+        <div class="calc-lines">
+            <div id="preChargeLine"></div>
+            <div id="homeRangeLine"></div>
+            <div id="publicMilesLine"></div>
+            <div id="publicKwhLine"></div>
+            <div id="adhocCostLine"></div>
+        </div>
+
+        <div id="providerResults"></div>
+        <div id="conclusionsBox"></div>
+        <div id="summaryBox" class="summary"></div>
+
+        <div class="chart-wrapper">
+            Click a header legend to show/hide line
+            <canvas id="costChart" height="220"></canvas>
+        </div>
+    </div>
+</div>
+
+<script src="functions1.js"></script>
+<script src="functions2.js"></script>
+<script src="functions3.js"></script>
+<script src="functions4.js"></script>
+
+</body>
+</html>
