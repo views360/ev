@@ -185,10 +185,13 @@ h1 {
 }
 
 .subtitle {
+    text-align: center;
+    max-width: 800px; /* Optional: keeps text readable by limiting width */
+    margin-left: auto;
+    margin-right: auto;
     color: var(--muted);
-    margin-top: 20px;
+    margin-top: 10px;
     margin-bottom: 25px;
-    font-size: 0.95rem;
 }
 
 .grid {
@@ -544,16 +547,20 @@ tr.bad td { color: var(--danger); }
        backdrop-filter: blur(4px);
    }
 
-    /* 1. Move buttons below heading */
     .header-row {
-        display: block;
+        display: flex;
+        flex-direction: column; /* Stack heading and buttons */
+        align-items: center;    /* Center horizontally */
+        text-align: center;
+        gap: 15px;
+        margin-bottom: 10px;
     }
 
     .top-buttons {
-        margin-top: 12px;
         display: flex;
-        flex-direction: column;
+        justify-content: center;
         gap: 10px;
+        flex-wrap: wrap; /* Allows wrapping on smaller screens */
     }
 
     /* 2. Trip & Vehicle fields full width, one per line */
@@ -601,4 +608,5 @@ tr.bad td { color: var(--danger); }
         z-index: 10;
     }
 }
+
 
