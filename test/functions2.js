@@ -23,28 +23,42 @@ function calculate() {
     const breakEvenView = document.getElementById('breakEvenView');
     const providersContainer = document.getElementById("collapsibleProviders");
 	const providerControls = document.getElementById("providerControls");
+	const tripVehicleCard = document.getElementById('tripVehicleCard');
+    const breakEvenCard = document.getElementById('breakEvenView');
+    const resultsArea = document.getElementById('results');
+    const providersList = document.getElementById('collapsibleProviders');
     const isTripSavingsActive = document.querySelector('.pill-btn.active').textContent === "Trip Savings";
 
-	if (!isTripSavingsActive) {
-        // BREAK EVEN MODE
-        if (grid) grid.style.display = "none";
-        if (resultsHeading) resultsHeading.style.display = "none";
-        if (btnRow) btnRow.style.display = "none";
-        if (resultsDiv) resultsDiv.style.display = "none";
-        if (preConclusionsText) preConclusionsText.style.display = "none";
-        
-        // Show both the efficiency card and the providers card
+	if (isTripSavingsActive) {
+        // TRIP SAVINGS MODE
+		if (grid) grid.style.display = "grid";
+   		if (resultsHeading) resultsHeading.style.display = "block";
+        if (tripVehicleCard) tripVehicleCard.style.display = "block";
+		if (resultsHeading) resultsHeading.style.display = "block";
+		if (resultsDiv) resultsDiv.style.display = "block";
+    	if (resultsArea) resultsArea.style.display = "block";
+		if (preConclusionsText) preConclusionsText.style.display = "block";
+    	if (breakEvenCard) breakEvenCard.style.display = "none";
+		if (breakEvenView) breakEvenView.style.display = "none";
+        return;
+    } else {
+	// BREAK EVEN MODE
+		if (breakEvenCard) breakEvenCard.style.display = "block";
 		if (breakEvenView) breakEvenView.style.display = "block";
-        if (providersContainer) providersContainer.style.display = "block";
-        if (providerControls) providerControls.style.display = "block";
-        
-        return; 
-    }
-	// TRIP SAVINGS MODE
-    if (grid) grid.style.display = "grid"; 
-    if (resultsHeading) resultsHeading.style.display = "block";
-    if (btnRow) btnRow.style.display = "flex";
-    if (breakEvenView) breakEvenView.style.display = "none";
+		if (grid) grid.style.display = "none";
+		if (resultsHeading) resultsHeading.style.display = "none";
+		if (resultsDiv) resultsDiv.style.display = "none";
+	    if (resultsArea) resultsArea.style.display = "none";
+		if (preConclusionsText) preConclusionsText.style.display = "none";
+		if (tripVehicleCard) tripVehicleCard.style.display = "none";
+		if (resultsArea) resultsArea.style.display = "none";
+		return;
+	}
+	if (providersContainer) providersContainer.style.display = "block";
+    if (providerControls) providerControls.style.display = "block";
+	if (providersList) providersList.style.display = "block";
+	if (btnRow) btnRow.style.display = "flex";
+	
     // Providers container visibility in Trip mode is usually handled by the "Expand" button
     // or kept as block if it was already open.
 	
@@ -233,3 +247,4 @@ function calculate() {
     drawGraph(core, providers);
 
 }
+
