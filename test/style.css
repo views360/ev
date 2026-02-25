@@ -456,6 +456,68 @@ tr.bad td { color: var(--danger); }
     box-shadow: var(--glow);
 }
 
+.toggle-container-block {
+    width: 100%;
+    margin: 20px 0;
+    display: flex;
+    justify-content: center;
+}
+
+/* The main track */
+.pill-toggle {
+    position: relative;
+    display: flex;
+    width: 100%;
+    max-width: 400px;
+    background: var(--panel-alt);
+    border: 1px solid var(--border);
+    border-radius: 50px; /* Pill shape */
+    padding: 4px;
+    overflow: hidden;
+}
+
+/* The sliding background pill */
+.pill-slider {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: calc(50% - 4px);
+    height: calc(100% - 8px);
+    background: var(--accent);
+    border-radius: 50px;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: var(--glow);
+    z-index: 1;
+}
+
+/* The buttons sitting on top */
+.pill-btn {
+    position: relative;
+    flex: 1;
+    background: none;
+    border: none;
+    color: var(--text);
+    padding: 10px 0;
+    font-weight: 600;
+    cursor: pointer;
+    z-index: 2;
+    transition: color 0.3s ease;
+    font-family: inherit;
+    font-size: 0.9rem;
+}
+
+/* Change text color when active */
+.pill-btn.active {
+    color: var(--bg);
+}
+
+/* Mobile full-width override */
+@media (max-width: 700px) {
+    .pill-toggle {
+        max-width: 100%;
+    }
+}
+
 /* ============================================================
    MOBILE FIXES REQUESTED BY USER (APPLY BELOW 700px ONLY)
    ============================================================ */
@@ -539,3 +601,4 @@ tr.bad td { color: var(--danger); }
         z-index: 10;
     }
 }
+
