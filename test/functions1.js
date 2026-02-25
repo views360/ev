@@ -276,19 +276,29 @@ function setToggle(mode) {
 function setToggle(mode, btn) {
     const slider = document.getElementById('pill-slider');
     const buttons = document.querySelectorAll('.pill-btn');
+    const grid = document.querySelector(".grid");
     const breakEvenView = document.getElementById('breakEvenView');
+    const providersContainer = document.getElementById("collapsibleProviders");
+    const providerControls = document.getElementById("providerControls");
+    const providersBtn = document.getElementById("toggleProvidersBtn");
     
     // Remove active class from all buttons
     buttons.forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     
-    // Slide the pill background
     if (mode === 'break-even') {
         slider.style.transform = 'translateX(0)';
-        if (breakEvenView) breakEvenView.style.display = 'block'; // Ensure card shows
+        // Hide Trip card, show Efficiency and Providers
+        if (grid) grid.style.display = 'none';
+        if (breakEvenView) breakEvenView.style.display = 'block';
+        if (providersContainer) providersContainer.style.display = 'block';
+        if (providerControls) providerControls.style.display = 'block';
+        if (providersBtn) providersBtn.textContent = "Collapse Providers List";
     } else {
         slider.style.transform = 'translateX(100%)';
-        if (breakEvenView) breakEvenView.style.display = 'none';  // Ensure card hides
+        // Show Trip card, hide Efficiency duplicate
+        if (grid) grid.style.display = 'grid';
+        if (breakEvenView) breakEvenView.style.display = 'none';
     }
 
     // This triggers the calculate() function which handles hiding the rest of the form
