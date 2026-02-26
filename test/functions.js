@@ -21,7 +21,7 @@ const getInputs = () => ({
 
 function resetAll() {
     localStorage.removeItem("ev_calc_settings");
-    window.location.href = window.location.pathname + "?mode=trip-savings";
+    window.location.href = window.location.pathname;
 }
 
 function toggleTheme() {
@@ -146,46 +146,56 @@ function enforceSpeedRules() {
 
 function calculate() {
     const activePill = document.querySelector('.pill-btn.active');
-    const isTripMode = activePill && activePill.textContent === "Trip Savings";
+    const isTripMode = activePill && activePill.textContent.trim() === "Trip Savings";
     
     // UI visibility based on mode
-    document.querySelector(".grid").style.display = isTripMode ? "grid" : "none";
-    document.querySelector(".results-heading").style.display = isTripMode ? "block" : "none";
-    document.querySelector(".btn-row").style.display = isTripMode ? "flex" : "none";
+    const tripGrid = document.querySelector(".grid");
+    const resultsHeading = document.querySelector(".results-heading");
+    const btnRow = document.querySelector(".btn-row");
+    const uiResults = document.getElementById("results");
+    const uiPreText = document.getElementById("preConclusionsText");
 
-    if (!isTripMode) return;
+    if (tripGrid) tripGrid.style.display = isTripMode ? "grid" : "none";
+    if (resultsHeading) resultsHeading.style.display = isTripMode ? "block" : "none";
+    if (btnRow) btnRow.style.display = isTripMode ? "flex" : "none";
+
+    // If not in Trip Savings mode, ensure Trip-specific messages and results are hidden
+    if (!isTripMode) {
+        if (uiPreText) uiPreText.style.display = "none";
+        if (uiResults) uiResults.style.display = "none";
+        return;
+    }
 
     const inputs = getInputs();
-    const ui = {
-        results: document.getElementById("results"),
-        preText: document.getElementById("preConclusionsText"),
-        share: document.getElementById("shareBtn"),
-        pdf: document.getElementById("pdfBtn")
-    };
+    const uiShare = document.getElementById("shareBtn");
+    const uiPdf = document.getElementById("pdfBtn");
 
     const tripIncomplete = Object.values(inputs).some(val => isNaN(val));
     const providerBoxes = document.querySelectorAll(".provider-box");
 
-    // Sequential Validation Logic
+    // Sequential Validation Logic for Trip Mode
     if (tripIncomplete) {
-        ui.preText.innerHTML = "Please complete all fields in the <strong>Trip & Vehicle</strong> section.";
-        ui.preText.style.display = "block";
-        ui.results.style.display = "none";
-        [ui.share, ui.pdf].forEach(el => el.style.display = "none");
+        uiPreText.innerHTML = "Please complete all fields in the <strong>Trip & Vehicle</strong> section.";
+        uiPreText.style.display = "block";
+        uiResults.style.display = "none";
+        if (uiShare) uiShare.style.display = "none";
+        if (uiPdf) uiPdf.style.display = "none";
         return;
     } 
     
     if (providerBoxes.length === 0) {
-        ui.preText.innerHTML = "Before you may view a comparison, you must select at least one provider from the list of providers (above).";
-        ui.preText.style.display = "block";
-        ui.results.style.display = "none";
-        [ui.share, ui.pdf].forEach(el => el.style.display = "none");
+        uiPreText.innerHTML = "Before you may view a comparison, you must select at least one provider from the list of providers (above).";
+        uiPreText.style.display = "block";
+        uiResults.style.display = "none";
+        if (uiShare) uiShare.style.display = "none";
+        if (uiPdf) uiPdf.style.display = "none";
         return;
     }
 
-    ui.preText.style.display = "none";
-    ui.results.style.display = "block";
-    [ui.share, ui.pdf].forEach(el => el.style.display = "");
+    uiPreText.style.display = "none";
+    uiResults.style.display = "block";
+    if (uiShare) uiShare.style.display = "";
+    if (uiPdf) uiPdf.style.display = "";
 
     const startChargeKwh = (inputs.soc / 100) * inputs.battery;
     const startChargeCost = startChargeKwh * (inputs.startRate / 100);
@@ -307,18 +317,27 @@ function init() {
     fetch("providers.json").then(r => r.json()).then(data => {
         PRESETS = data.providers;
         const urlParams = new URLSearchParams(window.location.search);
+        
+        // Handle explicit mode from URL
         if (urlParams.get("mode") === "trip-savings") {
-            const btn = Array.from(document.querySelectorAll('.pill-btn')).find(b => b.textContent === "Trip Savings");
+            const btn = Array.from(document.querySelectorAll('.pill-btn')).find(b => b.textContent.trim() === "Trip Savings");
             if (btn) setToggle('trip-savings', btn);
+        } else {
+            // Default to Break Even if no specific mode or incognito
+            const btn = Array.from(document.querySelectorAll('.pill-btn')).find(b => b.textContent.trim() === "Break Even");
+            if (btn) setToggle('break-even', btn);
         }
         calculate();
     });
 
     ["journeyMiles", "batteryKwh", "soc", "efficiency", "adhoc", "startChargeRate", "minSpeed"].forEach(id => {
-        document.getElementById(id).addEventListener("input", () => {
-            if (id === "minSpeed") enforceSpeedRules();
-            calculate();
-        });
+        const el = document.getElementById(id);
+        if (el) {
+            el.addEventListener("input", () => {
+                if (id === "minSpeed") enforceSpeedRules();
+                calculate();
+            });
+        }
     });
 }
 
