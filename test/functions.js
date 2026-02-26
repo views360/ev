@@ -345,25 +345,32 @@ function init() {
 }
 
 async function exportPdf() {
-    const { jsPDF } = window.jspdf;
     const btn = document.getElementById("pdfBtn");
     const originalText = btn.textContent;
+    const body = document.body;
     
+    // Check if we are currently in dark mode
+    const wasDarkMode = !body.classList.contains("light-mode");
+
     try {
-        // Visual feedback
         btn.textContent = "Generating...";
         btn.disabled = true;
 
-        // Target the main app container
-        const element = document.querySelector(".app");
+        // 1. Force Light Mode for the export
+        if (wasDarkMode) body.classList.add("light-mode");
+
+        // 2. Target only the results section (excluding buttons)
+        const element = document.getElementById("results");
         
         const canvas = await html2canvas(element, {
-            scale: 2, // Improves text clarity
+            scale: 2,
             useCORS: true,
-            backgroundColor: getComputedStyle(document.body).backgroundColor
+            // Ensure the background of the PDF is white for light mode
+            backgroundColor: "#ffffff" 
         });
 
         const imgData = canvas.toDataURL("image/png");
+        const { jsPDF } = window.jspdf;
         const pdf = new jsPDF("p", "mm", "a4");
         
         const pdfWidth = pdf.internal.pageSize.getWidth();
@@ -371,16 +378,18 @@ async function exportPdf() {
         const imgHeight = (imgProps.height * pdfWidth) / imgProps.width;
 
         pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, imgHeight);
-        pdf.save("EV-Comparison-Report.pdf");
+        pdf.save("EV-Trip-Results.pdf");
 
     } catch (error) {
-        console.error("PDF Export Error:", error);
-        alert("Failed to generate PDF. Check the console for details.");
+        console.error("PDF Export failed:", error);
+        alert("Could not generate PDF.");
     } finally {
+        // 3. Revert back to the user's original theme
+        if (wasDarkMode) body.classList.remove("light-mode");
+        
         btn.textContent = originalText;
         btn.disabled = false;
     }
 }
 
 window.addEventListener("DOMContentLoaded", init);
-
