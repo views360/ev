@@ -274,7 +274,7 @@ function calculate() {
     });
 
     // Note: Style inheritance for links is handled in the table HTML using inline color:inherit
-    let html = `<div class="results-scroll"><table><thead><tr><th>Provider</th><th>Sub. Fee</th><th>Rate</th><th>Trip Cost</th><th>vs. PAYG</th><th>Break-even</th></tr></thead><tbody>`;
+    let html = `<div class="results-scroll"><table><thead><tr><th>Provider (click a provider hyperlink to view subscription details)</th><th>Sub. Fee</th><th>Rate</th><th>Trip Cost</th><th>vs. PAYG</th><th>Break-even</th></tr></thead><tbody>`;
     providers.forEach(p => {
         const rowClass = p.savings > 0 ? "good" : (p.savings < 0 ? "bad" : "");
         const displayName = p.url ? `<a href="${p.url}" target="_blank" style="color:inherit; text-decoration:underline;">${p.name}</a>` : p.name;
