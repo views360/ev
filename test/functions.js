@@ -344,52 +344,124 @@ function init() {
     });
 }
 
-async function exportPdf() {
-    const btn = document.getElementById("pdfBtn");
-    const originalText = btn.textContent;
-    const body = document.body;
-    
-    // Check if we are currently in dark mode
-    const wasDarkMode = !body.classList.contains("light-mode");
+/* ============================================
+   PDF EXPORT — OFF-SCREEN CLONE (NO FLASH)
+   PURE B&W + MARGINS + FIT TO A4
+   GRAPH REMOVED, SORT REMOVED, HEADER ADDED
+   ============================================ */
+function exportPdf() {
+    const results = document.getElementById("results");
+    if (!results) return;
 
-    try {
-        btn.textContent = "Generating...";
-        btn.disabled = true;
+    // Create off-screen clone wrapper with random id
+    const cloneWrapper = document.createElement("div");
+    const cloneId = "pdfClone_" + Math.floor(Math.random() * 1000000);
+    cloneWrapper.id = cloneId;
+    cloneWrapper.style.position = "absolute";
+    cloneWrapper.style.left = "-99999px";
+    cloneWrapper.style.top = "0";
+    cloneWrapper.style.width = results.offsetWidth + "px";
 
-        // 1. Force Light Mode for the export
-        if (wasDarkMode) body.classList.add("light-mode");
+    // Clone results into wrapper
+    const clone = results.cloneNode(true);
+    cloneWrapper.appendChild(clone);
+    document.body.appendChild(cloneWrapper);
 
-        // 2. Target only the results section (excluding buttons)
-        const element = document.getElementById("results");
-        
-        const canvas = await html2canvas(element, {
-            scale: 2,
-            useCORS: true,
-            // Ensure the background of the PDF is white for light mode
-            backgroundColor: "#ffffff" 
+    // Remove the "Sort results" input-group inside the clone
+    const groups = cloneWrapper.querySelectorAll(".input-group");
+    groups.forEach(group => {
+        const label = group.querySelector("label");
+        if (label && label.textContent.trim() === "Sort results") {
+            group.remove();
+        }
+    });
+
+    // Remove graph inside the clone
+    const charts = cloneWrapper.querySelectorAll(".chart-wrapper");
+    charts.forEach(el => el.remove());
+
+    // Apply print-safe override ONLY to the clone
+    const override = document.createElement("style");
+    override.innerHTML = `
+        #${cloneId}, #${cloneId} * {
+            background: #ffffff !important;
+            color: #000000 !important;
+            border-color: #000000 !important;
+            box-shadow: none !important;
+        }
+    `;
+    document.head.appendChild(override);
+
+    // Wait for layout, then capture the clone
+    requestAnimationFrame(() => {
+        html2canvas(cloneWrapper).then(canvas => {
+
+            // Clean up clone + override
+            cloneWrapper.remove();
+            override.remove();
+
+            // Convert to pure black & white
+            const bwCanvas = document.createElement("canvas");
+            const bctx = bwCanvas.getContext("2d");
+
+            bwCanvas.width = canvas.width;
+            bwCanvas.height = canvas.height;
+
+            bctx.drawImage(canvas, 0, 0);
+
+            const imgData = bctx.getImageData(0, 0, bwCanvas.width, bwCanvas.height);
+            const pixels = imgData.data;
+
+            const threshold = 160;
+            for (let i = 0; i < pixels.length; i += 4) {
+                const r = pixels[i];
+                const g = pixels[i + 1];
+                const b = pixels[i + 2];
+
+                const grey = 0.299 * r + 0.587 * g + 0.114 * b;
+                const bw = grey < threshold ? 0 : 255;
+
+                pixels[i] = bw;
+                pixels[i + 1] = bw;
+                pixels[i + 2] = bw;
+            }
+
+            bctx.putImageData(imgData, 0, 0);
+
+            const bwImg = bwCanvas.toDataURL("image/png");
+
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF("p", "mm", "a4");
+
+            const pageWidth = pdf.internal.pageSize.getWidth();
+            const pageHeight = pdf.internal.pageSize.getHeight();
+
+            const margin = 10;
+            const usableWidth = pageWidth - margin * 2;
+            const usableHeight = pageHeight - margin * 2;
+
+            const imgAspect = bwCanvas.width / bwCanvas.height;
+            const pageAspect = usableWidth / usableHeight;
+
+            let renderWidth, renderHeight;
+
+            if (imgAspect > pageAspect) {
+                renderWidth = usableWidth;
+                renderHeight = usableWidth / imgAspect;
+            } else {
+                renderHeight = usableHeight;
+                renderWidth = usableHeight * imgAspect;
+            }
+
+            // Header
+            pdf.setFontSize(18);
+            pdf.text("EV Public Charging Comparison", pageWidth / 2, margin, { align: "center" });
+
+            // Image
+            pdf.addImage(bwImg, "PNG", margin, margin + 10, renderWidth, renderHeight);
+
+            pdf.save("ev-comparison.pdf");
         });
-
-        const imgData = canvas.toDataURL("image/png");
-        const { jsPDF } = window.jspdf;
-        const pdf = new jsPDF("p", "mm", "a4");
-        
-        const pdfWidth = pdf.internal.pageSize.getWidth();
-        const imgProps = pdf.getImageProperties(imgData);
-        const imgHeight = (imgProps.height * pdfWidth) / imgProps.width;
-
-        pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, imgHeight);
-        pdf.save("EV-Trip-Results.pdf");
-
-    } catch (error) {
-        console.error("PDF Export failed:", error);
-        alert("Could not generate PDF.");
-    } finally {
-        // 3. Revert back to the user's original theme
-        if (wasDarkMode) body.classList.remove("light-mode");
-        
-        btn.textContent = originalText;
-        btn.disabled = false;
-    }
+    });
 }
-
 window.addEventListener("DOMContentLoaded", init);
