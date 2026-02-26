@@ -20,11 +20,18 @@ const getInputs = () => ({
 // UI & Provider Management
 // ===============================
 
+/** * Restores the missing Reset All functionality
+ */
+function resetAll() {
+    localStorage.removeItem("ev_calc_settings");
+    window.location.href = window.location.pathname;
+}
+
 function toggleTheme() {
     const body = document.body;
     const btn = document.getElementById("themeToggle");
     body.classList.toggle("light-mode");
-    btn.textContent = "Switch to Light View"; // Simplified logic
+    btn.textContent = "Switch to Light View"; 
 }
 
 function toggleTooltip(element) {
@@ -202,9 +209,9 @@ function calculate() {
     };
 
     const inputs = getInputs();
-    const isActive = document.querySelector('.pill-btn.active').textContent === "Trip Savings";
+    const activePill = document.querySelector('.pill-btn.active');
+    const isActive = activePill && activePill.textContent === "Trip Savings";
 
-    // Toggle display logic
     [ui.grid, ui.resultsHeading, ui.btnRow, ui.resultsDiv, ui.preText].forEach(el => {
         if(el) el.style.display = isActive ? "" : "none";
     });
@@ -227,7 +234,6 @@ function calculate() {
     const publicKwh = publicMiles / inputs.efficiency;
     const totalAdhocCost = startChargeCost + (publicKwh * (inputs.adhocRate / 100));
 
-    // Update UI Lines
     document.getElementById("preChargeLine").innerHTML = `Pre-journey charge: <strong>${startChargeKwh.toFixed(1)} kWh</strong> (£${startChargeCost.toFixed(2)})`;
     document.getElementById("homeRangeLine").innerHTML = `Range from start charge: <strong>${initialRange.toFixed(0)} miles</strong>`;
     document.getElementById("publicMilesLine").innerHTML = `Public charging miles needed: <strong>${publicMiles.toFixed(0)} miles</strong>`;
@@ -260,7 +266,6 @@ function calculate() {
         });
     });
 
-    // Sort and Render
     const sortVal = document.getElementById("sortResults").value;
     providers.sort((a, b) => {
         if (sortVal === "cheapest") return a.totalJourneyCost - b.totalJourneyCost;
@@ -284,7 +289,6 @@ function calculate() {
     });
     document.getElementById("providerResults").innerHTML = html + `</tbody></table></div>`;
 
-    // Conclusion Logic
     const conclusionsBox = document.getElementById("conclusionsBox");
     if (providers.length > 0) {
         const best = providers[0];
@@ -300,7 +304,7 @@ function calculate() {
 }
 
 // ===============================
-// Graphing & Helpers (Condensed)
+// Graphing & Helpers
 // ===============================
 
 function drawGraph(core, providers) {
@@ -340,6 +344,72 @@ function getProviderColor(name) {
 }
 
 // ===============================
+// Sharing & PDF Logic
+// ===============================
+
+function shareLink() {
+    const params = new URLSearchParams();
+    ["journeyMiles", "batteryKwh", "soc", "efficiency", "adhoc", "startChargeRate", "minSpeed"].forEach(id => {
+        params.set(id, document.getElementById(id).value);
+    });
+
+    const providers = [];
+    document.querySelectorAll(".provider-box").forEach(box => {
+        const id = box.dataset.id;
+        providers.push({
+            preset: document.getElementById(`preset${id}`).value,
+            name: document.getElementById(`name${id}`).value,
+            sub: document.getElementById(`subCost${id}`).value,
+            rate: document.getElementById(`rate${id}`).value,
+            speed: document.getElementById(`speed${id}`)?.value || ""
+        });
+    });
+    params.set("providers", JSON.stringify(providers));
+
+    const url = `${window.location.origin}${window.location.pathname}?${params.toString()}`;
+    navigator.clipboard.writeText(url).then(() => alert("Shareable link copied to clipboard!"));
+}
+
+async function exportPdf() {
+    const { jsPDF } = window.jspdf;
+    const app = document.querySelector(".app");
+
+    html2canvas(app, { scale: 2, useCORS: true }).then(canvas => {
+        const ctx = canvas.getContext("2d");
+        const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const data = imgData.data;
+
+        for (let i = 0; i < data.length; i += 4) {
+            const avg = (data[i] + data[i + 1] + data[i + 2]) / 3;
+            data[i] = data[i + 1] = data[i + 2] = avg;
+        }
+        ctx.putImageData(imgData, 0, 0);
+
+        const bwImg = canvas.toDataURL("image/png");
+        const pdf = new jsPDF("p", "mm", "a4");
+        const pageWidth = pdf.internal.pageSize.getWidth();
+        const pageHeight = pdf.internal.pageSize.getHeight();
+        const margin = 10;
+        const usableWidth = pageWidth - (margin * 2);
+        const usableHeight = pageHeight - (margin * 3);
+
+        const imgAspect = canvas.width / canvas.height;
+        const pageAspect = usableWidth / usableHeight;
+
+        let rWidth = usableWidth, rHeight = usableWidth / imgAspect;
+        if (imgAspect < pageAspect) {
+            rHeight = usableHeight;
+            rWidth = usableHeight * imgAspect;
+        }
+
+        pdf.setFontSize(18);
+        pdf.text("EV Public Charging Comparison", pageWidth / 2, margin + 5, { align: "center" });
+        pdf.addImage(bwImg, "PNG", margin, margin + 15, rWidth, rHeight);
+        pdf.save("ev-comparison.pdf");
+    });
+}
+
+// ===============================
 // Persistence & Initialization
 // ===============================
 
@@ -364,10 +434,32 @@ function init() {
         .then(r => r.json())
         .then(data => {
             PRESETS = data.providers;
+            
+            const urlParams = new URLSearchParams(window.location.search);
             const saved = localStorage.getItem("ev_calc_settings");
-            if (saved) {
+
+            if (urlParams.has("journeyMiles")) {
+                urlParams.forEach((val, key) => {
+                    const el = document.getElementById(key);
+                    if (el && key !== "providers") el.value = val;
+                });
+                const providers = JSON.parse(urlParams.get("providers") || "[]");
+                providers.forEach(p => {
+                    createProviderBox();
+                    const id = providerCount;
+                    document.getElementById(`preset${id}`).value = p.preset;
+                    updateProviderFields(id);
+                    document.getElementById(`name${id}`).value = p.name;
+                    document.getElementById(`subCost${id}`).value = p.sub;
+                    document.getElementById(`rate${id}`).value = p.rate;
+                    if (p.speed) document.getElementById(`speed${id}`).value = p.speed;
+                });
+            } else if (saved) {
                 const parsed = JSON.parse(saved);
-                Object.keys(parsed).forEach(id => document.getElementById(id) && (document.getElementById(id).value = parsed[id]));
+                Object.keys(parsed).forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.value = parsed[id];
+                });
             }
             calculate();
         });
