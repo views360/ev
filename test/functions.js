@@ -100,7 +100,7 @@ function createProviderBox(preset) {
         document.getElementById(`preset${id}`).value = preset.name;
         updateProviderFields(id);
     }
-    calculate(); // Force recalculate to update error message state
+    calculate();
 }
 
 function updateProviderFields(id) {
@@ -199,14 +199,13 @@ function calculate() {
     const activePill = document.querySelector('.pill-btn.active');
     const isActive = activePill && activePill.textContent === "Trip Savings";
 
-    // Basic visibility based on mode
     [ui.grid, ui.resultsHeading, ui.btnRow, ui.resultsDiv, ui.preText, ui.reset].forEach(el => {
         if(el) el.style.display = isActive ? "" : "none";
     });
 
     if (!isActive) return;
 
-    // 1. Check for valid Trip & Vehicle data
+    // Check 1: Are vehicle fields complete?
     const tripIncomplete = Object.values(inputs).some(val => isNaN(val)) || isNaN(inputs.adhocRate);
     const providerBoxes = document.querySelectorAll(".provider-box");
 
@@ -217,7 +216,7 @@ function calculate() {
         return;
     } 
     
-    // 2. Data is complete, check if at least one provider is added
+    // Check 2: If vehicle complete, are there providers?
     if (providerBoxes.length === 0) {
         ui.preText.innerHTML = "Before you may view a comparison, you must select at least one provider from the list of providers (above).";
         ui.preText.style.display = "block";
@@ -225,7 +224,7 @@ function calculate() {
         return;
     }
 
-    // 3. Both data and providers present - Show results
+    // Both passed - proceed to calc
     ui.preText.style.display = "none";
     [ui.share, ui.pdf, ui.sort, ui.resultsDiv].forEach(el => el && (el.style.display = ""));
 
@@ -274,10 +273,11 @@ function calculate() {
         return sortVal === "az" ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name);
     });
 
+    // Note: Style inheritance for links is handled in the table HTML using inline color:inherit
     let html = `<div class="results-scroll"><table><thead><tr><th>Provider</th><th>Sub. Fee</th><th>Rate</th><th>Trip Cost</th><th>vs. PAYG</th><th>Break-even</th></tr></thead><tbody>`;
     providers.forEach(p => {
         const rowClass = p.savings > 0 ? "good" : (p.savings < 0 ? "bad" : "");
-        const displayName = p.url ? `<a href="${p.url}" target="_blank" style="text-decoration:underline;">${p.name}</a>` : p.name;
+        const displayName = p.url ? `<a href="${p.url}" target="_blank" style="color:inherit; text-decoration:underline;">${p.name}</a>` : p.name;
         const breakEvenText = p.breakEvenPublicMiles !== null ? `${p.breakEvenPublicMiles.toFixed(0)} / ${p.breakEvenTotalMiles.toFixed(0)} mi` : "N/A";
 
         html += `<tr class="${rowClass}">
@@ -306,7 +306,7 @@ function calculate() {
 }
 
 // ===============================
-// Graphing & Persistence (Unchanged)
+// Graphing, Sharing & PDF
 // ===============================
 
 function drawGraph(core, providers) {
