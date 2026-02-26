@@ -20,11 +20,12 @@ const getInputs = () => ({
 // UI & Provider Management
 // ===============================
 
-/** * Restores the missing Reset All functionality
+/** * Clears form and forces reload into Trip Savings mode
  */
 function resetAll() {
     localStorage.removeItem("ev_calc_settings");
-    window.location.href = window.location.pathname;
+    // Append parameter to ensure we return to Trip Savings mode after refresh
+    window.location.href = window.location.pathname + "?mode=trip-savings";
 }
 
 function toggleTheme() {
@@ -205,6 +206,7 @@ function calculate() {
         preText: document.getElementById("preConclusionsText"),
         share: document.getElementById("shareBtn"),
         pdf: document.getElementById("pdfBtn"),
+        reset: document.getElementById("resetAll"), // Access Reset button
         sort: document.getElementById("sortGroup")
     };
 
@@ -212,7 +214,8 @@ function calculate() {
     const activePill = document.querySelector('.pill-btn.active');
     const isActive = activePill && activePill.textContent === "Trip Savings";
 
-    [ui.grid, ui.resultsHeading, ui.btnRow, ui.resultsDiv, ui.preText].forEach(el => {
+    // Toggle main sections and Reset button based on mode
+    [ui.grid, ui.resultsHeading, ui.btnRow, ui.resultsDiv, ui.preText, ui.reset].forEach(el => {
         if(el) el.style.display = isActive ? "" : "none";
     });
 
@@ -438,10 +441,16 @@ function init() {
             const urlParams = new URLSearchParams(window.location.search);
             const saved = localStorage.getItem("ev_calc_settings");
 
+            // Check if we specifically requested trip-savings mode after a reset
+            if (urlParams.get("mode") === "trip-savings") {
+                const tripBtn = Array.from(document.querySelectorAll('.pill-btn')).find(b => b.textContent === "Trip Savings");
+                if (tripBtn) setToggle('trip-savings', tripBtn);
+            }
+
             if (urlParams.has("journeyMiles")) {
                 urlParams.forEach((val, key) => {
                     const el = document.getElementById(key);
-                    if (el && key !== "providers") el.value = val;
+                    if (el && key !== "providers" && key !== "mode") el.value = val;
                 });
                 const providers = JSON.parse(urlParams.get("providers") || "[]");
                 providers.forEach(p => {
