@@ -166,6 +166,9 @@ function calculate() {
         return;
     }
 
+    if (uiPreText) uiPreText.style.display = "block";
+    if (uiResults) uiResults.style.display = "block";
+
     const inputs = getInputs();
     const uiShare = document.getElementById("shareBtn");
     const uiPdf = document.getElementById("pdfBtn");
