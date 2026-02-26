@@ -5,7 +5,6 @@ let PRESETS = [];
 let providerCount = 0;
 let chart = null;
 
-// Helper to grab all main trip inputs at once
 const getInputs = () => ({
     miles: parseFloat(document.getElementById("journeyMiles").value),
     battery: parseFloat(document.getElementById("batteryKwh").value),
@@ -20,11 +19,8 @@ const getInputs = () => ({
 // UI & Provider Management
 // ===============================
 
-/** * Clears form and forces reload into Trip Savings mode
- */
 function resetAll() {
     localStorage.removeItem("ev_calc_settings");
-    // Append parameter to ensure we return to Trip Savings mode after refresh
     window.location.href = window.location.pathname + "?mode=trip-savings";
 }
 
@@ -38,13 +34,10 @@ function toggleTheme() {
 function toggleTooltip(element) {
     event.stopPropagation();
     const container = element.parentElement;
-    
     document.querySelectorAll('.tooltip-container.active').forEach(open => {
         if (open !== container) open.classList.remove('active');
     });
-
     container.classList.toggle('active');
-
     if (container.classList.contains('active')) {
         const closeTooltip = (e) => {
             if (!container.contains(e.target)) {
@@ -72,7 +65,6 @@ function createProviderBox(preset) {
     const id = providerCount;
     const { minSpeed } = getInputs();
     const sortedPresets = getSortedPresets(minSpeed);
-
     const presetOptions = ['Custom', ...sortedPresets.map(p => p.name)]
         .map(name => `<option value="${name}">${name}</option>`).join("");
 
@@ -103,13 +95,12 @@ function createProviderBox(preset) {
             <select id="speed${id}" onchange="updateRateFromSpeed(${id})"></select>
         </div>
     `;
-
     document.getElementById("providers").appendChild(box);
-    
     if (preset) {
         document.getElementById(`preset${id}`).value = preset.name;
         updateProviderFields(id);
     }
+    calculate(); // Force recalculate to update error message state
 }
 
 function updateProviderFields(id) {
@@ -128,13 +119,10 @@ function updateProviderFields(id) {
         calculate();
         return;
     }
-
     const p = PRESETS.find(x => x.name === presetName);
     if (!p) return;
-
     nameInput.value = p.name;
     subCostInput.value = p.subscription.monthlyCost;
-
     if (p.rates && !p.rates.default) {
         const { minSpeed } = getInputs();
         const speeds = Object.keys(p.rates).filter(s => parseFloat(s) >= minSpeed);
@@ -161,15 +149,12 @@ function enforceSpeedRules() {
     const sortedPresets = getSortedPresets(minSpeed);
     const presetOptions = ['Custom', ...sortedPresets.map(p => p.name)]
         .map(name => `<option value="${name}">${name}</option>`).join("");
-
     document.querySelectorAll(".provider-box").forEach(box => {
         const id = box.dataset.id;
         const presetSelect = document.getElementById(`preset${id}`);
         const currentPreset = presetSelect.value;
-
         presetSelect.innerHTML = presetOptions;
         const stillValid = sortedPresets.some(p => p.name === currentPreset) || currentPreset === 'Custom';
-        
         presetSelect.value = stillValid ? currentPreset : 'Custom';
         updateProviderFields(id);
     });
@@ -206,7 +191,7 @@ function calculate() {
         preText: document.getElementById("preConclusionsText"),
         share: document.getElementById("shareBtn"),
         pdf: document.getElementById("pdfBtn"),
-        reset: document.getElementById("resetAll"), // Access Reset button
+        reset: document.getElementById("resetAll"),
         sort: document.getElementById("sortGroup")
     };
 
@@ -214,21 +199,35 @@ function calculate() {
     const activePill = document.querySelector('.pill-btn.active');
     const isActive = activePill && activePill.textContent === "Trip Savings";
 
-    // Toggle main sections and Reset button based on mode
+    // Basic visibility based on mode
     [ui.grid, ui.resultsHeading, ui.btnRow, ui.resultsDiv, ui.preText, ui.reset].forEach(el => {
         if(el) el.style.display = isActive ? "" : "none";
     });
 
     if (!isActive) return;
 
+    // 1. Check for valid Trip & Vehicle data
     const tripIncomplete = Object.values(inputs).some(val => isNaN(val)) || isNaN(inputs.adhocRate);
-    
+    const providerBoxes = document.querySelectorAll(".provider-box");
+
     if (tripIncomplete) {
-        ui.preText.textContent = "Please complete all fields in the Trip & Vehicle section.";
+        ui.preText.innerHTML = "Please complete all fields in the <strong>Trip & Vehicle</strong> section.";
+        ui.preText.style.display = "block";
+        [ui.share, ui.pdf, ui.sort, ui.resultsDiv].forEach(el => el && (el.style.display = "none"));
+        return;
+    } 
+    
+    // 2. Data is complete, check if at least one provider is added
+    if (providerBoxes.length === 0) {
+        ui.preText.innerHTML = "Before you may view a comparison, you must select at least one provider from the list of providers (above).";
         ui.preText.style.display = "block";
         [ui.share, ui.pdf, ui.sort, ui.resultsDiv].forEach(el => el && (el.style.display = "none"));
         return;
     }
+
+    // 3. Both data and providers present - Show results
+    ui.preText.style.display = "none";
+    [ui.share, ui.pdf, ui.sort, ui.resultsDiv].forEach(el => el && (el.style.display = ""));
 
     const startChargeKwh = (inputs.soc / 100) * inputs.battery;
     const startChargeCost = startChargeKwh * (inputs.startRate / 100);
@@ -244,7 +243,7 @@ function calculate() {
     document.getElementById("adhocCostLine").innerHTML = `Total cost (Standard PAYG @ ${inputs.adhocRate}p): <strong>£${totalAdhocCost.toFixed(2)}</strong>`;
 
     const providers = [];
-    document.querySelectorAll(".provider-box").forEach(box => {
+    providerBoxes.forEach(box => {
         const id = box.dataset.id;
         const name = document.getElementById(`name${id}`).value || "Unnamed";
         const subCost = parseFloat(document.getElementById(`subCost${id}`).value) || 0;
@@ -307,24 +306,21 @@ function calculate() {
 }
 
 // ===============================
-// Graphing & Helpers
+// Graphing & Persistence (Unchanged)
 // ===============================
 
 function drawGraph(core, providers) {
     const ctx = document.getElementById("costChart");
     if (chart) chart.destroy();
-
     const maxMiles = Math.max(core.miles, 500);
     const steps = 20;
     const labels = Array.from({length: steps + 1}, (_, i) => ((maxMiles * i) / steps).toFixed(0));
-
     const datasets = [{
         label: "Ad‑hoc Total (£)",
         data: labels.map(m => core.startChargeCost + (Math.max(0, m - (core.soc/100*core.battery*core.efficiency)) / core.efficiency * core.adhocRate / 100)),
         borderColor: "#f97316",
         tension: 0.2
     }];
-
     providers.forEach(p => {
         datasets.push({
             label: `${p.name} (£)`,
@@ -333,7 +329,6 @@ function drawGraph(core, providers) {
             tension: 0.2
         });
     });
-
     chart = new Chart(ctx, {
         type: "line",
         data: { labels, datasets },
@@ -346,16 +341,11 @@ function getProviderColor(name) {
     return colors[name] || `#${Math.floor(Math.random()*16777215).toString(16)}`;
 }
 
-// ===============================
-// Sharing & PDF Logic
-// ===============================
-
 function shareLink() {
     const params = new URLSearchParams();
     ["journeyMiles", "batteryKwh", "soc", "efficiency", "adhoc", "startChargeRate", "minSpeed"].forEach(id => {
         params.set(id, document.getElementById(id).value);
     });
-
     const providers = [];
     document.querySelectorAll(".provider-box").forEach(box => {
         const id = box.dataset.id;
@@ -368,7 +358,6 @@ function shareLink() {
         });
     });
     params.set("providers", JSON.stringify(providers));
-
     const url = `${window.location.origin}${window.location.pathname}?${params.toString()}`;
     navigator.clipboard.writeText(url).then(() => alert("Shareable link copied to clipboard!"));
 }
@@ -376,18 +365,15 @@ function shareLink() {
 async function exportPdf() {
     const { jsPDF } = window.jspdf;
     const app = document.querySelector(".app");
-
     html2canvas(app, { scale: 2, useCORS: true }).then(canvas => {
         const ctx = canvas.getContext("2d");
         const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
         const data = imgData.data;
-
         for (let i = 0; i < data.length; i += 4) {
             const avg = (data[i] + data[i + 1] + data[i + 2]) / 3;
             data[i] = data[i + 1] = data[i + 2] = avg;
         }
         ctx.putImageData(imgData, 0, 0);
-
         const bwImg = canvas.toDataURL("image/png");
         const pdf = new jsPDF("p", "mm", "a4");
         const pageWidth = pdf.internal.pageSize.getWidth();
@@ -395,26 +381,19 @@ async function exportPdf() {
         const margin = 10;
         const usableWidth = pageWidth - (margin * 2);
         const usableHeight = pageHeight - (margin * 3);
-
         const imgAspect = canvas.width / canvas.height;
         const pageAspect = usableWidth / usableHeight;
-
         let rWidth = usableWidth, rHeight = usableWidth / imgAspect;
         if (imgAspect < pageAspect) {
             rHeight = usableHeight;
             rWidth = usableHeight * imgAspect;
         }
-
         pdf.setFontSize(18);
         pdf.text("EV Public Charging Comparison", pageWidth / 2, margin + 5, { align: "center" });
         pdf.addImage(bwImg, "PNG", margin, margin + 15, rWidth, rHeight);
         pdf.save("ev-comparison.pdf");
     });
 }
-
-// ===============================
-// Persistence & Initialization
-// ===============================
 
 function saveToLocalStorage() {
     const data = {};
@@ -437,11 +416,9 @@ function init() {
         .then(r => r.json())
         .then(data => {
             PRESETS = data.providers;
-            
             const urlParams = new URLSearchParams(window.location.search);
             const saved = localStorage.getItem("ev_calc_settings");
 
-            // Check if we specifically requested trip-savings mode after a reset
             if (urlParams.get("mode") === "trip-savings") {
                 const tripBtn = Array.from(document.querySelectorAll('.pill-btn')).find(b => b.textContent === "Trip Savings");
                 if (tripBtn) setToggle('trip-savings', tripBtn);
@@ -450,7 +427,7 @@ function init() {
             if (urlParams.has("journeyMiles")) {
                 urlParams.forEach((val, key) => {
                     const el = document.getElementById(key);
-                    if (el && key !== "providers" && key !== "mode") el.value = val;
+                    if (el && !["providers", "mode"].includes(key)) el.value = val;
                 });
                 const providers = JSON.parse(urlParams.get("providers") || "[]");
                 providers.forEach(p => {
