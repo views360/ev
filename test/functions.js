@@ -351,7 +351,12 @@ function init() {
    ============================================ */
 function exportPdf() {
     const results = document.getElementById("results");
-    if (!results) return;
+    const pdfBtn = document.getElementById("pdfBtn"); // Get the button element
+    if (!results || !pdfBtn) return;
+    const originalText = pdfBtn.textContent;
+    pdfBtn.textContent = "Generating...";
+    pdfBtn.style.pointerEvents = "none"; 
+    pdfBtn.style.opacity = "0.7";
 
     // Create off-screen clone wrapper with random id
     const cloneWrapper = document.createElement("div");
@@ -465,3 +470,4 @@ function exportPdf() {
     });
 }
 window.addEventListener("DOMContentLoaded", init);
+
