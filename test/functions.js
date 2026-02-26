@@ -25,8 +25,7 @@ function resetAll() {
 }
 
 function toggleTheme() {
-    const body = document.body;
-    body.classList.toggle("light-mode");
+    document.body.classList.toggle("light-mode");
 }
 
 function createProviderBox(preset) {
@@ -70,6 +69,15 @@ function createProviderBox(preset) {
         updateProviderFields(id);
     }
     calculate();
+}
+
+function addAllProviders() {
+    const { minSpeed } = getInputs();
+    document.getElementById("providers").innerHTML = "";
+    PRESETS.forEach(p => {
+        const canSupport = p.rates.default || Object.keys(p.rates).some(s => Number(s) >= minSpeed);
+        if (canSupport) createProviderBox(p);
+    });
 }
 
 function updateProviderFields(id) {
@@ -122,14 +130,12 @@ function getSortedPresets(minSpeed) {
 function enforceSpeedRules() {
     const { minSpeed } = getInputs();
     const sortedPresets = getSortedPresets(minSpeed);
-    const presetOptions = ['Custom', ...sortedPresets.map(p => p.name)]
-        .map(name => `<option value="${name}">${name}</option>`).join("");
     document.querySelectorAll(".provider-box").forEach(box => {
         const id = box.dataset.id;
         const presetSelect = document.getElementById(`preset${id}`);
-        const currentPreset = presetSelect.value;
-        presetSelect.innerHTML = presetOptions;
-        presetSelect.value = (sortedPresets.some(p => p.name === currentPreset) || currentPreset === 'Custom') ? currentPreset : 'Custom';
+        const current = presetSelect.value;
+        presetSelect.innerHTML = ['Custom', ...sortedPresets.map(p => p.name)].map(n => `<option value="${n}">${n}</option>`).join("");
+        presetSelect.value = (sortedPresets.some(p => p.name === current) || current === 'Custom') ? current : 'Custom';
         updateProviderFields(id);
     });
 }
@@ -139,40 +145,47 @@ function enforceSpeedRules() {
 // ===============================
 
 function calculate() {
-    const ui = {
-        grid: document.querySelector(".grid"),
-        resultsHeading: document.querySelector(".results-heading"),
-        btnRow: document.querySelector(".btn-row"),
-        resultsDiv: document.getElementById("results"),
-        preText: document.getElementById("preConclusionsText"),
-        share: document.getElementById("shareBtn"),
-        pdf: document.getElementById("pdfBtn"),
-        sort: document.getElementById("sortGroup")
-    };
-
-    const inputs = getInputs();
     const activePill = document.querySelector('.pill-btn.active');
     const isTripMode = activePill && activePill.textContent === "Trip Savings";
+    
+    // UI visibility based on mode
+    document.querySelector(".grid").style.display = isTripMode ? "grid" : "none";
+    document.querySelector(".results-heading").style.display = isTripMode ? "block" : "none";
+    document.querySelector(".btn-row").style.display = isTripMode ? "flex" : "none";
 
     if (!isTripMode) return;
+
+    const inputs = getInputs();
+    const ui = {
+        results: document.getElementById("results"),
+        preText: document.getElementById("preConclusionsText"),
+        share: document.getElementById("shareBtn"),
+        pdf: document.getElementById("pdfBtn")
+    };
 
     const tripIncomplete = Object.values(inputs).some(val => isNaN(val));
     const providerBoxes = document.querySelectorAll(".provider-box");
 
+    // Sequential Validation Logic
     if (tripIncomplete) {
         ui.preText.innerHTML = "Please complete all fields in the <strong>Trip & Vehicle</strong> section.";
-        [ui.share, ui.pdf, ui.resultsDiv].forEach(el => el && (el.style.display = "none"));
+        ui.preText.style.display = "block";
+        ui.results.style.display = "none";
+        [ui.share, ui.pdf].forEach(el => el.style.display = "none");
         return;
     } 
     
     if (providerBoxes.length === 0) {
         ui.preText.innerHTML = "Before you may view a comparison, you must select at least one provider from the list of providers (above).";
-        [ui.share, ui.pdf, ui.resultsDiv].forEach(el => el && (el.style.display = "none"));
+        ui.preText.style.display = "block";
+        ui.results.style.display = "none";
+        [ui.share, ui.pdf].forEach(el => el.style.display = "none");
         return;
     }
 
     ui.preText.style.display = "none";
-    [ui.share, ui.pdf, ui.resultsDiv].forEach(el => el && (el.style.display = ""));
+    ui.results.style.display = "block";
+    [ui.share, ui.pdf].forEach(el => el.style.display = "");
 
     const startChargeKwh = (inputs.soc / 100) * inputs.battery;
     const startChargeCost = startChargeKwh * (inputs.startRate / 100);
@@ -200,15 +213,14 @@ function calculate() {
             name, subCost, rate, totalJourneyCost, 
             savings: totalAdhocCost - totalJourneyCost,
             url: pData?.subscription?.url,
-            comments: pData?.subscription?.comments || "",
-            initialRange
+            comments: pData?.subscription?.comments || ""
         });
     });
 
     const sortVal = document.getElementById("sortResults").value;
     providers.sort((a, b) => sortVal === "cheapest" ? a.totalJourneyCost - b.totalJourneyCost : a.name.localeCompare(b.name));
 
-    let html = `<table><thead><tr><th>Provider</th><th>Sub. Fee</th><th>Rate</th><th>Trip Cost</th><th>vs. PAYG</th></tr></thead><tbody>`;
+    let html = `<div class="results-scroll"><table><thead><tr><th>Provider</th><th>Sub. Fee</th><th>Rate</th><th>Trip Cost</th><th>vs. PAYG</th></tr></thead><tbody>`;
     providers.forEach(p => {
         const rowClass = p.savings > 0 ? "good" : (p.savings < 0 ? "bad" : "");
         const displayName = p.url ? `<a href="${p.url}" target="_blank" style="color:inherit; text-decoration:underline;">${p.name}</a>` : p.name;
@@ -220,7 +232,7 @@ function calculate() {
             <td>${p.savings > 0 ? 'Save £' : 'Cost £'}${Math.abs(p.savings).toFixed(2)}</td>
         </tr>`;
     });
-    document.getElementById("providerResults").innerHTML = html + `</tbody></table>`;
+    document.getElementById("providerResults").innerHTML = html + `</tbody></table></div>`;
 
     drawGraph(inputs, providers);
 }
@@ -232,7 +244,6 @@ function drawGraph(core, providers) {
     const maxMiles = Math.max(core.miles * 1.2, 300);
     const labels = Array.from({length: 11}, (_, i) => Math.round((maxMiles * i) / 10));
     
-    // Ad-hoc Dataset
     const adhocData = labels.map(m => {
         const pKwh = Math.max(0, m - (core.soc/100 * core.battery * core.efficiency)) / core.efficiency;
         return (core.soc/100 * core.battery * core.startRate/100) + (pKwh * core.adhocRate/100);
@@ -272,9 +283,7 @@ function drawGraph(core, providers) {
                 y: { title: { display: true, text: 'Total Trip Cost (£)' } },
                 x: { title: { display: true, text: 'Distance (Miles)' } }
             },
-            plugins: {
-                legend: { position: 'bottom', labels: { boxWidth: 12 } }
-            }
+            plugins: { legend: { position: 'bottom', labels: { boxWidth: 12 } } }
         }
     });
 }
@@ -284,39 +293,6 @@ function getProviderColor(name, index) {
     if (colors[name]) return colors[name];
     const palette = ["#38bdf8", "#22c55e", "#a855f7", "#ec4899", "#eab308"];
     return palette[index % palette.length];
-}
-
-// ===============================
-// Export & Initialization
-// ===============================
-
-function shareLink() {
-    const params = new URLSearchParams();
-    ["journeyMiles", "batteryKwh", "soc", "efficiency", "adhoc", "startChargeRate", "minSpeed"].forEach(id => {
-        params.set(id, document.getElementById(id).value);
-    });
-    const provs = [];
-    document.querySelectorAll(".provider-box").forEach(box => {
-        const id = box.dataset.id;
-        provs.push({
-            preset: document.getElementById(`preset${id}`).value,
-            name: document.getElementById(`name${id}`).value,
-            sub: document.getElementById(`subCost${id}`).value,
-            rate: document.getElementById(`rate${id}`).value,
-            speed: document.getElementById(`speed${id}`)?.value || ""
-        });
-    });
-    params.set("providers", JSON.stringify(provs));
-    navigator.clipboard.writeText(`${window.location.origin}${window.location.pathname}?${params.toString()}`).then(() => alert("Link copied!"));
-}
-
-async function exportPdf() {
-    const { jsPDF } = window.jspdf;
-    html2canvas(document.querySelector(".app")).then(canvas => {
-        const pdf = new jsPDF("p", "mm", "a4");
-        pdf.addImage(canvas.toDataURL("image/png"), "PNG", 10, 10, 190, 0);
-        pdf.save("ev-trip-comparison.pdf");
-    });
 }
 
 function setToggle(mode, btn) {
@@ -339,7 +315,10 @@ function init() {
     });
 
     ["journeyMiles", "batteryKwh", "soc", "efficiency", "adhoc", "startChargeRate", "minSpeed"].forEach(id => {
-        document.getElementById(id).addEventListener("input", calculate);
+        document.getElementById(id).addEventListener("input", () => {
+            if (id === "minSpeed") enforceSpeedRules();
+            calculate();
+        });
     });
 }
 
