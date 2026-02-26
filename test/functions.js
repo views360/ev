@@ -344,4 +344,43 @@ function init() {
     });
 }
 
+async function exportPdf() {
+    const { jsPDF } = window.jspdf;
+    const btn = document.getElementById("pdfBtn");
+    const originalText = btn.textContent;
+    
+    try {
+        // Visual feedback
+        btn.textContent = "Generating...";
+        btn.disabled = true;
+
+        // Target the main app container
+        const element = document.querySelector(".app");
+        
+        const canvas = await html2canvas(element, {
+            scale: 2, // Improves text clarity
+            useCORS: true,
+            backgroundColor: getComputedStyle(document.body).backgroundColor
+        });
+
+        const imgData = canvas.toDataURL("image/png");
+        const pdf = new jsPDF("p", "mm", "a4");
+        
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const imgProps = pdf.getImageProperties(imgData);
+        const imgHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+        pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, imgHeight);
+        pdf.save("EV-Comparison-Report.pdf");
+
+    } catch (error) {
+        console.error("PDF Export Error:", error);
+        alert("Failed to generate PDF. Check the console for details.");
+    } finally {
+        btn.textContent = originalText;
+        btn.disabled = false;
+    }
+}
+
 window.addEventListener("DOMContentLoaded", init);
+
