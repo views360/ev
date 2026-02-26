@@ -4,7 +4,12 @@
 // ===============================
 
 function calculate() {
-    const providerBoxes = document.querySelectorAll(".provider-box");
+    const grid = document.querySelector(".grid");
+	const resultsHeading = document.querySelector(".results-heading");
+	const btnRow = document.querySelector(".btn-row");
+	const resultsDiv = document.getElementById("results");
+	const tripSavingsBtn = document.getElementById("toggleTripSavings");
+	const providerBoxes = document.querySelectorAll(".provider-box");
     const preConclusionsText = document.getElementById("preConclusionsText");
     const shareBtn = document.getElementById("shareBtn"); // Get the share button
     const pdfBtn = document.getElementById("pdfBtn"); // Get the PDF button
@@ -15,52 +20,24 @@ function calculate() {
     const efficiency = parseFloat(document.getElementById("efficiency").value);
     const adhocRate = parseFloat(document.getElementById("adhoc").value);
     const startRate = parseFloat(document.getElementById("startChargeRate").value);
-	const grid = document.querySelector(".grid");
-    const resultsHeading = document.querySelector(".results-heading");
-    const btnRow = document.querySelector(".btn-row");
-    const resultsDiv = document.getElementById("results");
-    const preConclusionsText = document.getElementById("preConclusionsText");
-    const breakEvenView = document.getElementById('breakEvenView');
-    const providersContainer = document.getElementById("collapsibleProviders");
-	const providerControls = document.getElementById("providerControls");
-	const tripVehicleCard = document.getElementById('tripVehicleCard');
-    const breakEvenCard = document.getElementById('breakEvenView');
-    const resultsArea = document.getElementById('results');
-    const providersList = document.getElementById('collapsibleProviders');
+
+	// Check which toggle is active
     const isTripSavingsActive = document.querySelector('.pill-btn.active').textContent === "Trip Savings";
 
-	if (isTripSavingsActive) {
-        // TRIP SAVINGS MODE
-		if (grid) grid.style.display = "grid";
-   		if (resultsHeading) resultsHeading.style.display = "block";
-        if (tripVehicleCard) tripVehicleCard.style.display = "block";
-		if (resultsHeading) resultsHeading.style.display = "block";
-		if (resultsDiv) resultsDiv.style.display = "block";
-    	if (resultsArea) resultsArea.style.display = "block";
-		if (preConclusionsText) preConclusionsText.style.display = "block";
-    	if (breakEvenCard) breakEvenCard.style.display = "none";
-		if (breakEvenView) breakEvenView.style.display = "none";
-        return;
-    } else {
-	// BREAK EVEN MODE
-		if (breakEvenCard) breakEvenCard.style.display = "block";
-		if (breakEvenView) breakEvenView.style.display = "block";
-		if (grid) grid.style.display = "none";
-		if (resultsHeading) resultsHeading.style.display = "none";
-		if (resultsDiv) resultsDiv.style.display = "none";
-	    if (resultsArea) resultsArea.style.display = "none";
-		if (preConclusionsText) preConclusionsText.style.display = "none";
-		if (tripVehicleCard) tripVehicleCard.style.display = "none";
-		if (resultsArea) resultsArea.style.display = "none";
-		return;
-	}
-	if (providersContainer) providersContainer.style.display = "block";
-    if (providerControls) providerControls.style.display = "block";
-	if (providersList) providersList.style.display = "block";
-	if (btnRow) btnRow.style.display = "flex";
-	
-    // Providers container visibility in Trip mode is usually handled by the "Expand" button
-    // or kept as block if it was already open.
+    // If Break Even is active, hide everything below the toggle
+    if (!isTripSavingsActive) {
+        if (grid) grid.style.display = "none";
+        if (resultsHeading) resultsHeading.style.display = "none";
+        if (btnRow) btnRow.style.display = "none";
+        if (resultsDiv) resultsDiv.style.display = "none";
+        if (preConclusionsText) preConclusionsText.style.display = "none";
+        return; // Stop processing further logic
+    }
+
+    // Otherwise, show the main input grid and proceed with calculations
+    if (grid) grid.style.display = "grid"; 
+    if (resultsHeading) resultsHeading.style.display = "block";
+    if (btnRow) btnRow.style.display = "flex";
 	
     // 1. PRIORITY: Trip & Vehicle not complete
     const tripIncomplete =
@@ -69,6 +46,18 @@ function calculate() {
         isNaN(soc) ||
         isNaN(efficiency) ||
         isNaN(adhocRate);
+	
+	if (tripSavingsBtn && !tripSavingsBtn.classList.contains('active')) {
+        if (resultsDiv) resultsDiv.style.display = "none";
+        if (preConclusionsText) preConclusionsText.style.display = "none";
+        // Also hide the share/PDF buttons if they exist
+        const shareBtn = document.getElementById("shareBtn");
+        const pdfBtn = document.getElementById("pdfBtn");
+        if (shareBtn) shareBtn.style.display = "none";
+        if (pdfBtn) pdfBtn.style.display = "none";
+        
+        return; // Exit early
+    }
 
     if (tripIncomplete) {
         if (preConclusionsText) {
@@ -247,4 +236,3 @@ function calculate() {
     drawGraph(core, providers);
 
 }
-

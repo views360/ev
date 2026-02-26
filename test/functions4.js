@@ -29,23 +29,6 @@ function loadFromLocalStorage() {
     calculate();
 }
 
-// Keep the two efficiency fields synchronized
-const efficiencyMain = document.getElementById("efficiency");
-const efficiencyDup = document.getElementById("efficiencyDuplicate");
-
-if (efficiencyMain && efficiencyDup) {
-    efficiencyMain.addEventListener("input", () => {
-        efficiencyDup.value = efficiencyMain.value;
-    });
-
-    efficiencyDup.addEventListener("input", () => {
-        efficiencyMain.value = efficiencyDup.value;
-        // Trigger calculation when the duplicate field changes
-        calculate();
-        saveToLocalStorage();
-    });
-}
-
 /* ============================================
    LOAD FROM URL (SHAREABLE LINK RESTORE)
    ============================================ */
@@ -241,6 +224,5 @@ fetch("providers.json")
         if (window.location.search) loadFromUrl();
         else loadFromLocalStorage();
     });
-
 
 window.addEventListener("DOMContentLoaded", calculate);
