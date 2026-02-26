@@ -28,7 +28,7 @@ function toggleTheme() {
     const body = document.body;
     const btn = document.getElementById("themeToggle");
     body.classList.toggle("light-mode");
-    btn.textContent = "Switch to Light View"; 
+    btn.textContent = "Light/Dark Mode"; 
 }
 
 function toggleTooltip(element) {
