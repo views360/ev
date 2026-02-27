@@ -52,6 +52,7 @@ function resetAll() {
 
 function shareLink() {
     const params = new URLSearchParams();
+    params.set("mode", "trip-savings");
 
     // The specific IDs used in the Trip & Vehicle section
     const tripIds = ["journeyMiles", "batteryKwh", "soc", "efficiency", "adhoc", "startChargeRate", "minSpeed"];
@@ -441,16 +442,22 @@ function init() {
             el.addEventListener('input', calculate);
         });
 
-        // Set the initial UI state based on which button is "active" in the HTML
-        const activePill = document.querySelector('.pill-btn.active');
-        const mode = activePill.textContent.trim() === "Trip Savings" ? 'trip-savings' : 'break-even';
-        
-        // This force-triggers the visibility logic
-        setToggle(mode, activePill);
+        const modeParam = urlParams.get("mode");
+        if (modeParam === "trip-savings") {
+            // Find the Trip Savings button and activate it
+            const tripBtn = document.querySelector('.pill-btn:nth-child(3)'); // The second button
+            if (tripBtn) setToggle('trip-savings', tripBtn);
+        } else {
+            // Default behavior: logic to ensure card visibility matches Break Even
+            const activePill = document.querySelector('.pill-btn.active');
+            const currentMode = activePill.textContent.trim() === "Trip Savings" ? 'trip-savings' : 'break-even';
+            setToggle(currentMode, activePill);
+        }
 
-        // Restore Provider dropdown
-        if (savedValues && savedValues.provider) {
-            document.getElementById("provider").value = savedValues.provider;
+        // Restore Provider dropdown (ensure this ID exists or remove if not used)
+        const provEl = document.getElementById("provider");
+        if (provEl && savedValues && savedValues.provider) {
+            provEl.value = savedValues.provider;
         }
 
         updateProviderInfo();
