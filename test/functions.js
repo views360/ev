@@ -24,6 +24,46 @@ function resetAll() {
     window.location.href = window.location.pathname;
 }
 
+function shareLink() {
+    const inputs = getInputs();
+    const params = new URLSearchParams();
+
+    // 1. Add Vehicle & Trip Inputs
+    Object.keys(inputs).forEach(key => params.set(key, inputs[key]));
+
+    // 2. Add App Mode
+    const activePill = document.querySelector('.pill-btn.active');
+    const mode = activePill && activePill.textContent.trim() === "Trip Savings" ? "trip-savings" : "break-even";
+    params.set("mode", mode);
+
+    // 3. Add Selected Providers
+    const providers = [];
+    document.querySelectorAll(".provider-box").forEach(box => {
+        const id = box.dataset.id;
+        providers.push({
+            name: document.getElementById(`name${id}`).value,
+            sub: document.getElementById(`subCost${id}`).value,
+            rate: document.getElementById(`rate${id}`).value,
+            preset: document.getElementById(`preset${id}`).value
+        });
+    });
+    params.set("p", JSON.stringify(providers));
+
+    // 4. Generate URL and Copy
+    const newUrl = `${window.location.origin}${window.location.pathname}?${params.toString()}`;
+    
+    navigator.clipboard.writeText(newUrl).then(() => {
+        const btn = document.getElementById("shareBtn");
+        const originalText = btn.textContent;
+        btn.textContent = "Copied!";
+        btn.classList.add("good");
+        setTimeout(() => {
+            btn.textContent = originalText;
+            btn.classList.remove("good");
+        }, 2000);
+    });
+}
+
 function toggleTheme() {
     document.body.classList.toggle("light-mode");
 }
@@ -496,4 +536,5 @@ function exportPdf() {
     });
 }
 window.addEventListener("DOMContentLoaded", init);
+
 
