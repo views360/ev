@@ -28,16 +28,17 @@ let PRESETS = [];
 let providerCount = 0;
 let chart = null;
 
-const getInputs = () => ({
-    journeyMiles: parseFloat(document.getElementById("journeyMiles").value) || 0,
-    batteryKwh: parseFloat(document.getElementById("batteryKwh").value) || 0,
-    soc: parseFloat(document.getElementById("soc").value) || 0,
-    efficiency: parseFloat(document.getElementById("efficiency").value) || 0,
-    adhoc: parseFloat(document.getElementById("adhoc").value) || 0,
-    startChargeRate: parseFloat(document.getElementById("startChargeRate").value) || 0,
-    minSpeed: parseFloat(document.getElementById("minSpeed").value) || 0,
-    provider: document.getElementById("provider").value
-});
+function getInputs() {
+    return {
+        journeyMiles: parseFloat(document.getElementById("journeyMiles").value) || 0,
+        batteryKwh: parseFloat(document.getElementById("batteryKwh").value) || 0,
+        soc: parseFloat(document.getElementById("soc").value) || 0,
+        efficiency: parseFloat(document.getElementById("efficiency").value) || 0,
+        adhoc: parseFloat(document.getElementById("adhoc").value) || 0,
+        startChargeRate: parseFloat(document.getElementById("startChargeRate").value) || 0,
+        minSpeed: parseFloat(document.getElementById("minSpeed").value) || 0
+    };
+}
 
 // ===============================
 // UI & Provider Management
@@ -549,4 +550,5 @@ function exportPdf() {
     });
 }
 window.addEventListener("DOMContentLoaded", init);
+
 
