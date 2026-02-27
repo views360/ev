@@ -547,8 +547,3 @@ function exportPdf() {
     });
 }
 window.addEventListener("DOMContentLoaded", init);
-
-
-
-
-
