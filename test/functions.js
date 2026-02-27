@@ -29,12 +29,12 @@ function shareLink() {
     const params = new URLSearchParams();
 
     // 1. Add Vehicle & Trip Inputs
-    Object.keys(inputs).forEach(key => params.set(key, inputs[key]));
+    Object.keys(inputs).forEach(key => {
+        if (!isNaN(inputs[key])) params.set(key, inputs[key]);
+    });
 
-    // 2. Add App Mode
-    const activePill = document.querySelector('.pill-btn.active');
-    const mode = activePill && activePill.textContent.trim() === "Trip Savings" ? "trip-savings" : "break-even";
-    params.set("mode", mode);
+    // 2. Force Trip Mode (since button is only available here)
+    params.set("mode", "trip-savings");
 
     // 3. Add Selected Providers
     const providers = [];
@@ -387,34 +387,45 @@ function init() {
         PRESETS = data.providers;
         const urlParams = new URLSearchParams(window.location.search);
 
-        // --- NEW: Load inputs from URL if they exist ---
+        // --- FIXED: Load inputs from URL and trigger updates ---
         const inputIds = ["journeyMiles", "batteryKwh", "soc", "efficiency", "adhoc", "startChargeRate", "minSpeed"];
         inputIds.forEach(id => {
-            if (urlParams.has(id)) document.getElementById(id).value = urlParams.get(id);
+            if (urlParams.has(id)) {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.value = urlParams.get(id);
+                    // Force the browser to recognize the change
+                    el.dispatchEvent(new Event('input'));
+                }
+            }
         });
         
-       // Handle explicit mode from URL
-    const mode = urlParams.get("mode");
-    const modeText = mode === "trip-savings" ? "Trip Savings" : "Break Even";
-    const btn = Array.from(document.querySelectorAll('.pill-btn')).find(b => b.textContent.trim() === modeText);
-    if (btn) setToggle(mode === "trip-savings" ? 'trip-savings' : 'break-even', btn);
+        // Handle explicit mode from URL
+        const mode = urlParams.get("mode");
+        if (mode === "trip-savings") {
+            const tripBtn = Array.from(document.querySelectorAll('.pill-btn'))
+                                 .find(b => b.textContent.trim() === "Trip Savings");
+            if (tripBtn) setToggle('trip-savings', tripBtn);
+        }
 
-    // --- NEW: Load providers from URL ---
-    if (urlParams.has("p")) {
-        try {
-            const sharedProviders = JSON.parse(urlParams.get("p"));
-            sharedProviders.forEach(p => {
-                // We use a custom version of createProviderBox logic here to restore exact values
-                createProviderBox(); 
-                const id = providerCount;
-                document.getElementById(`preset${id}`).value = p.preset;
-                document.getElementById(`name${id}`).value = p.name;
-                document.getElementById(`subCost${id}`).value = p.sub;
-                document.getElementById(`rate${id}`).value = p.rate;
-            });
-        } catch (e) { console.error("Failed to parse shared providers", e); }
-    }
-    calculate();
+        // --- Load providers from URL ---
+        if (urlParams.has("p")) {
+            try {
+                const sharedProviders = JSON.parse(urlParams.get("p"));
+                document.getElementById("providers").innerHTML = ""; // Clear defaults
+                sharedProviders.forEach(p => {
+                    createProviderBox(); 
+                    const id = providerCount;
+                    document.getElementById(`preset${id}`).value = p.preset;
+                    document.getElementById(`name${id}`).value = p.name;
+                    document.getElementById(`subCost${id}`).value = p.sub;
+                    document.getElementById(`rate${id}`).value = p.rate;
+                });
+            } catch (e) { console.error("Failed to parse shared providers", e); }
+        }
+        
+        // Final calculation to render everything
+        calculate();
     });
 
     ["journeyMiles", "batteryKwh", "soc", "efficiency", "adhoc", "startChargeRate", "minSpeed"].forEach(id => {
@@ -528,6 +539,7 @@ function exportPdf() {
     });
 }
 window.addEventListener("DOMContentLoaded", init);
+
 
 
 
