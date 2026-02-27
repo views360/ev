@@ -555,6 +555,43 @@ tr.bad td { color: var(--danger); }
     align-items: center;
 }
 
+/* Jump Arrow Styling */
+.jump-btn-pulse {
+    text-decoration: none;
+    color: var(--accent);
+    font-size: 1.4rem;
+    font-weight: bold;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 1px solid var(--accent);
+    background: var(--panel-alt);
+    transition: transform 0.2s ease;
+    
+    /* Pulsating Glow Effect */
+    animation: jumpPulse 2s infinite ease-in-out;
+}
+
+.jump-btn-pulse:hover {
+    transform: translateY(3px);
+    background: var(--accent-soft);
+}
+
+@keyframes jumpPulse {
+    0%, 100% { 
+        box-shadow: 0 0 5px var(--accent-soft);
+        border-color: var(--accent);
+    }
+    50% { 
+        box-shadow: 0 0 15px var(--accent);
+        border-color: #fff;
+    }
+}
+
 /* ============================================================
    MOBILE FIXES REQUESTED BY USER (APPLY BELOW 700px ONLY)
    ============================================================ */
