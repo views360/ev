@@ -235,8 +235,8 @@ if (!isTripMode) {
         const efficiency = parseFloat(document.getElementById("efficiencyBE").value);
         const adhocRate = parseFloat(document.getElementById("adhoc").value) || 0;
 
-        if (isNaN(efficiency) || efficiency <= 0) {
-            uiPreText.innerHTML = "Please enter a valid <strong>Vehicle Efficiency</strong> to see Break Even results.";
+        if (isNaN(efficiency) || efficiency <= 0 || isNaN(adhocRate) || adhocRate <= 0) {
+            uiPreText.innerHTML = "Please enter valid <strong>Efficiency</strong> and <strong>PAYG Rate</strong> values.";
             uiPreText.style.display = "block";
             uiResults.style.display = "none";
             return;
@@ -508,22 +508,29 @@ function init() {
 
         const effTrip = document.getElementById("efficiency");
         const effBE = document.getElementById("efficiencyBE");
+        const adhocTrip = document.getElementById("adhoc");
+        const adhocBE = document.getElementById("adhocBE");
+        
+        // Helper to sync and trigger calculation
+        const syncFields = (source, target) => {
+            source.addEventListener('input', () => {
+                target.value = source.value;
+                calculate();
+            });
+        };
         
         if (effTrip && effBE) {
-            // Set initial value for the new field from saved data/URL
-            effBE.value = effTrip.value;
+            // Initial sync from saved/URL values
+            effBE.value = effTrip.value || 3.5; 
+            syncFields(effTrip, effBE);
+            syncFields(effBE, effTrip);
+        }
         
-            // Sync Trip -> Break Even
-            effTrip.addEventListener('input', () => {
-                effBE.value = effTrip.value;
-                calculate();
-            });
-        
-            // Sync Break Even -> Trip
-            effBE.addEventListener('input', () => {
-                effTrip.value = effBE.value;
-                calculate();
-            });
+        if (adhocTrip && adhocBE) {
+            // Initial sync from saved/URL values
+            adhocBE.value = adhocTrip.value || 79;
+            syncFields(adhocTrip, adhocBE);
+            syncFields(adhocBE, adhocTrip);
         }
 
         if (urlParams.has("p")) {
@@ -673,4 +680,5 @@ function exportPdf() {
         });
     });
 }
+
 window.addEventListener("DOMContentLoaded", init);
