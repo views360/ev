@@ -594,17 +594,18 @@ tr.bad td { color: var(--danger); }
 
 /* Container to align the Results heading and the Up Arrow */
 .results-header-container {
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: center;
     gap: 15px;
-    margin-top: 30px;
+    margin-top: 40px;
     margin-bottom: 10px;
 }
 
 /* Ensure the results heading margin doesn't offset the alignment */
 .results-heading {
     margin: 0 !important;
+    color: var(--accent);
 }
 
 /* Optional: If you want the up-arrow to nudge upwards on hover (inverse of the down-arrow) */
