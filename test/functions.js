@@ -291,8 +291,12 @@ function calculate() {
         </tr></thead><tbody>`;
     providers.forEach(p => {
         const rowClass = p.savings > 0 ? "good" : (p.savings < 0 ? "bad" : "");
-        const displayName = p.url ? `<a href="${p.url}" target="_blank" style="color:inherit; text-decoration:underline;">${p.name}</a>` : p.name;
-        // Determine display text for providers more expensive than PAYG
+        // Add a 'jump to results' arrow and the provider link
+        const jumpArrow = `<a href="#results" title="Jump to results" style="text-decoration:none; margin-right:8px; color:var(--accent); font-size:1.1rem;">↓</a>`;
+        const providerLink = p.url 
+            ? `<a href="${p.url}" target="_blank" style="color:inherit; text-decoration:underline;">${p.name}</a>` 
+            : p.name;
+        const displayName = `${jumpArrow}${providerLink}`;        // Determine display text for providers more expensive than PAYG
         const breakEvenText = p.rate < inputs.adhocRate 
             ? `${p.breakEvenMiles.toFixed(0)} miles` 
             : "Never";
