@@ -35,15 +35,24 @@
 </div>
 
 <div id="breakEvenCard" class="card" style="margin-bottom: 20px; max-width: 400px; margin-left: auto; margin-right: auto;">
-    <h3>Vehicle Efficiency</h3>
+    <h3>Trip & Vehicle</h3>
     <div class="input-group">
         <label for="efficiencyBE">Vehicle efficiency (miles per kWh)
             <div class="tooltip-container">
                 <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
-                <div class="tooltip-box">This value is used to calculate how many miles you need to drive to break even on a subscription.</div>
+                <div class="tooltip-box">Used to calculate how many miles you need to drive to break even.</div>
             </div>
         </label>
         <input type="number" id="efficiencyBE" placeholder="e.g., 3.5" step="0.1">
+    </div>
+    <div class="input-group">
+        <label for="adhocBE">Standard PAYG rate (pence per kWh)
+            <div class="tooltip-container">
+                <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
+                <div class="tooltip-box">The rate you would pay without a subscription (e.g., 79p).</div>
+            </div>
+        </label>
+        <input type="number" id="adhocBE" placeholder="e.g., 79" step="0.1">
     </div>
 </div>
 
@@ -208,6 +217,5 @@
 </div>
 
 <script src="functions.js"></script>
-
 </body>
 </html>
