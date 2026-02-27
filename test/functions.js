@@ -215,6 +215,9 @@ function enforceSpeedRules() {
 function calculate() {
     const activePill = document.querySelector('.pill-btn.active');
     const isTripMode = activePill && activePill.textContent.trim() === "Trip Savings";
+
+    const beCard = document.getElementById("breakEvenCard");
+    if (beCard) beCard.style.display = isTripMode ? "none" : "block";
     
     // UI visibility based on mode
     const tripGrid = document.querySelector(".grid");
@@ -440,6 +443,26 @@ function init() {
             }
             el.addEventListener('input', calculate);
         });
+
+        const effTrip = document.getElementById("efficiency");
+        const effBE = document.getElementById("efficiencyBE");
+        
+        if (effTrip && effBE) {
+            // Set initial value for the new field from saved data/URL
+            effBE.value = effTrip.value;
+        
+            // Sync Trip -> Break Even
+            effTrip.addEventListener('input', () => {
+                effBE.value = effTrip.value;
+                calculate();
+            });
+        
+            // Sync Break Even -> Trip
+            effBE.addEventListener('input', () => {
+                effTrip.value = effBE.value;
+                calculate();
+            });
+        }
 
         if (urlParams.has("p")) {
             try {
