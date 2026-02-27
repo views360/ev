@@ -81,7 +81,7 @@ function createProviderBox(preset) {
         <div class="provider-header">
             <input type="text" id="name${id}" placeholder="Provider Name" oninput="calculate()">
             <div style="display: flex; align-items: center; gap: 12px; margin-left: 8px;">
-                <a href="#results" class="jump-btn-pulse" title="Jump to results">↓</a>
+                <a href="#resultsHeader" class="jump-btn-pulse" title="Jump to results">↓</a>
                 <button class="remove-btn" onclick="this.parentElement.parentElement.parentElement.remove(); calculate();">×</button>
             </div>
         </div>
@@ -295,7 +295,7 @@ function calculate() {
     providers.forEach(p => {
         const rowClass = p.savings > 0 ? "good" : (p.savings < 0 ? "bad" : "");
         // Add a 'jump to results' arrow and the provider link
-        const jumpArrow = `<a href="#results" title="Jump to results" style="text-decoration:none; margin-right:8px; color:var(--accent); font-size:1.1rem;">↓</a>`;
+        const jumpArrow = `<a href="#resultsHeader" title="Jump to results" style="text-decoration:none; margin-right:8px; color:var(--accent); font-size:1.1rem;">↓</a>`;
         const providerLink = p.url 
             ? `<a href="${p.url}" target="_blank" style="color:inherit; text-decoration:underline;">${p.name}</a>` 
             : p.name;
