@@ -281,7 +281,7 @@ function calculate() {
     providers.sort((a, b) => sortVal === "cheapest" ? a.totalJourneyCost - b.totalJourneyCost : a.name.localeCompare(b.name));
 
     let html = `<div class="results-scroll"><table><thead><tr>
-        <th>Provider</th>
+        <th>Provider (click hyperlink to view subscription info)</th>
         <th>Sub. Fee</th>
         <th>Rate</th>
         <th>Trip Cost</th>
