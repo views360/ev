@@ -191,13 +191,13 @@ function calculate() {
     
     // UI visibility based on mode
     const tripGrid = document.querySelector(".grid");
-    const resultsHeading = document.querySelector(".results-heading");
+    const resultsHeader = document.getElementById("resultsHeader");
     const btnRow = document.querySelector(".btn-row");
     const uiResults = document.getElementById("results");
     const uiPreText = document.getElementById("preConclusionsText");
 
     if (tripGrid) tripGrid.style.display = isTripMode ? "grid" : "none";
-    if (resultsHeading) resultsHeading.style.display = isTripMode ? "block" : "none";
+    if (resultsHeader) resultsHeader.style.display = isTripMode ? "flex" : "none"; // Use 'flex' to keep arrow alignment
     if (btnRow) btnRow.style.display = isTripMode ? "flex" : "none";
 
     // If not in Trip Savings mode, ensure Trip-specific messages and results are hidden
