@@ -1,18 +1,18 @@
-// Helper to set a cookie that expires in 30 days
 const setCookie = (name, value) => {
     const date = new Date();
     date.setTime(date.getTime() + (30 * 24 * 60 * 60 * 1000));
-    document.cookie = `${name}=${JSON.stringify(value)};expires=${date.toUTCString()};path=/`;
+    const cookieValue = encodeURIComponent(JSON.stringify(value));
+    document.cookie = `${name}=${cookieValue};expires=${date.toUTCString()};path=/;SameSite=Lax`;
 };
 
-// Helper to get a cookie by name
 const getCookie = (name) => {
     const nameEQ = name + "=";
     const ca = document.cookie.split(';');
     for (let i = 0; i < ca.length; i++) {
-        let c = ca[i];
-        while (c.charAt(0) === ' ') c = c.substring(1, c.length);
-        if (c.indexOf(nameEQ) === 0) return JSON.parse(c.substring(nameEQ.length, c.length));
+        let c = ca[i].trim();
+        if (c.indexOf(nameEQ) === 0) {
+            return JSON.parse(decodeURIComponent(c.substring(nameEQ.length)));
+        }
     }
     return null;
 };
@@ -340,8 +340,11 @@ function calculate() {
 
     drawGraph(inputs, providers);
 
-    const currentInputs = getInputs();
-    setCookie("ev_trip_values", currentInputs);
+    // At the end of function calculate()
+    const dataToSave = getInputs();
+    // Add the provider dropdown value specifically
+    dataToSave.provider = document.getElementById("provider").value;
+    setCookie("ev_trip_values", dataToSave);
 }
 
 function drawGraph(core, providers) {
@@ -411,61 +414,39 @@ function setToggle(mode, btn) {
 }
 
 function init() {
-    fetch("providers.json").then(r => r.json()).then(data => {
-        PRESETS = data.providers;
-        const urlParams = new URLSearchParams(window.location.search);
-        const savedValues = getCookie("ev_trip_values");
+    // 1. Check for saved cookies immediately
+    const savedValues = getCookie("ev_trip_values");
+    const urlParams = new URLSearchParams(window.location.search);
 
-       // 1. Check if we should switch to Trip Savings mode
-        if (urlParams.has("journeyMiles")) {
-            const tripBtn = Array.from(document.querySelectorAll('.pill-btn'))
-                                 .find(btn => btn.textContent.trim() === "Trip Savings");
-            if (tripBtn) {
-                setToggle('trip-savings', tripBtn); 
-            }
-        }
-        
-        // 2. Load Trip & Vehicle Values
-        const tripIds = ["journeyMiles", "batteryKwh", "soc", "efficiency", "adhoc", "startChargeRate", "minSpeed"];        
-        tripIds.forEach(id => {
-            const el = document.getElementById(id);
-            if (!el) return;
-            // Priority: 1. URL Params, 2. Cookies, 3. Default
+    // 2. Define the IDs we want to persist
+    const tripIds = ["journeyMiles", "batteryKwh", "soc", "efficiency", "adhoc", "startChargeRate", "minSpeed"];
+
+    // 3. Apply values (URL takes priority, then Cookie)
+    tripIds.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
             if (urlParams.has(id)) {
                 el.value = urlParams.get(id);
             } else if (savedValues && savedValues[id] !== undefined) {
                 el.value = savedValues[id];
             }
-        });
-        
-        // 3. Load Providers
-        if (urlParams.has("p")) {
-            try {
-                const sharedProviders = JSON.parse(urlParams.get("p"));
-                document.getElementById("providers").innerHTML = ""; 
-                sharedProviders.forEach(p => {
-                    createProviderBox(); 
-                    const id = providerCount;
-                    document.getElementById(`preset${id}`).value = p.preset;
-                    document.getElementById(`name${id}`).value = p.name;
-                    document.getElementById(`subCost${id}`).value = p.sub;
-                    document.getElementById(`rate${id}`).value = p.rate;
-                });
-            } catch (e) { console.error("Link parse error", e); }
         }
-        
-        // 4. Force calculation to refresh UI
-        calculate();
     });
 
-    ["journeyMiles", "batteryKwh", "soc", "efficiency", "adhoc", "startChargeRate", "minSpeed"].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) {
-            el.addEventListener("input", () => {
-                if (id === "minSpeed") enforceSpeedRules();
-                calculate();
-            });
+    // 4. Fetch providers and finish setup
+    fetch("providers.json").then(r => r.json()).then(data => {
+        PRESETS = data.providers;
+        
+        // Handle the provider dropdown if a value was saved
+        if (savedValues && savedValues.provider) {
+            const pSelect = document.getElementById("provider");
+            pSelect.value = savedValues.provider;
         }
+
+        calculate();
+    }).catch(err => {
+        console.error("Failed to load providers:", err);
+        calculate(); // Calculate anyway with defaults
     });
 }
 
