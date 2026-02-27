@@ -219,11 +219,20 @@ function calculate() {
         const name = document.getElementById(`name${id}`).value || "Unnamed";
         const subCost = parseFloat(document.getElementById(`subCost${id}`).value) || 0;
         const rate = parseFloat(document.getElementById(`rate${id}`).value) || 0;
+       
+        const savingPerKwh = (inputs.adhocRate - rate) / 100;
+        let breakEvenMiles = 0;
+        if (savingPerKwh > 0) {
+            const kwhNeeded = subCost / savingPerKwh;
+            breakEvenMiles = kwhNeeded * inputs.efficiency;
+        }
         const totalJourneyCost = subCost + startChargeCost + (publicKwh * (rate / 100));
         const pData = PRESETS.find(p => p.name === document.getElementById(`preset${id}`).value);
 
         providers.push({ 
             name, subCost, rate, totalJourneyCost, 
+            breakEvenMiles,
+            totalWithBattery: breakEvenMiles + initialRange,
             savings: totalAdhocCost - totalJourneyCost,
             url: pData?.subscription?.url,
             comments: pData?.subscription?.comments || ""
@@ -233,16 +242,33 @@ function calculate() {
     const sortVal = document.getElementById("sortResults").value;
     providers.sort((a, b) => sortVal === "cheapest" ? a.totalJourneyCost - b.totalJourneyCost : a.name.localeCompare(b.name));
 
-    let html = `<div class="results-scroll"><table><thead><tr><th>Provider</th><th>Sub. Fee</th><th>Rate</th><th>Trip Cost</th><th>vs. PAYG</th></tr></thead><tbody>`;
+    let html = `<div class="results-scroll"><table><thead><tr>
+        <th>Provider</th>
+        <th>Sub. Fee</th>
+        <th>Rate</th>
+        <th>Trip Cost</th>
+        <th>vs. PAYG</th>
+        <th>Break Even (Public)</th>
+        <th>Total Miles (Inc. Battery)</th>
+        </tr></thead><tbody>`;
     providers.forEach(p => {
         const rowClass = p.savings > 0 ? "good" : (p.savings < 0 ? "bad" : "");
         const displayName = p.url ? `<a href="${p.url}" target="_blank" style="color:inherit; text-decoration:underline;">${p.name}</a>` : p.name;
+        // Determine display text for providers more expensive than PAYG
+        const breakEvenText = p.rate < inputs.adhocRate 
+            ? `${p.breakEvenMiles.toFixed(0)} miles` 
+            : "Never";
+        const totalMilesText = p.rate < inputs.adhocRate 
+            ? `${p.totalWithBattery.toFixed(0)} miles` 
+            : "N/A";
         html += `<tr class="${rowClass}">
             <td>${displayName}<div style="font-size: 0.75rem; opacity:0.8;">${p.comments}</div></td>
             <td>£${p.subCost.toFixed(2)}</td>
             <td>${p.rate.toFixed(1)}p</td>
             <td>£${p.totalJourneyCost.toFixed(2)}</td>
             <td>${p.savings > 0 ? 'Save £' : 'Cost £'}${Math.abs(p.savings).toFixed(2)}</td>
+            <td><strong>${breakEvenText}</strong></td>
+            <td><strong>${totalMilesText}</strong></td>
         </tr>`;
     });
     document.getElementById("providerResults").innerHTML = html + `</tbody></table></div>`;
