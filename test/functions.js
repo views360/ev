@@ -412,8 +412,7 @@ if (!isTripMode) {
         });
     });
 
-    const sortVal = document.getElementById("sortResults").value;
-    providers.sort((a, b) => sortVal === "cheapest" ? a.totalJourneyCost - b.totalJourneyCost : a.name.localeCompare(b.name));
+    providers.sort((a, b) => a.totalJourneyCost - b.totalJourneyCost);
 
     let html = `<div class="results-scroll"><table><thead><tr>
         <th>Provider (click hyperlink to view subscription info)</th>
@@ -674,8 +673,6 @@ function exportPdf() {
     // Remove UI elements not needed in PDF
     const uiElements = cloneWrapper.querySelectorAll(".input-group, .chart-wrapper, .btn-row");
     uiElements.forEach(el => {
-        const label = el.querySelector("label");
-        if (label && label.textContent.trim() === "Sort results") el.remove();
         if (el.classList.contains("chart-wrapper")) el.remove();
     });
 
