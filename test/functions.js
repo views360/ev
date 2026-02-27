@@ -1,3 +1,22 @@
+// Helper to set a cookie that expires in 30 days
+const setCookie = (name, value) => {
+    const date = new Date();
+    date.setTime(date.getTime() + (30 * 24 * 60 * 60 * 1000));
+    document.cookie = `${name}=${JSON.stringify(value)};expires=${date.toUTCString()};path=/`;
+};
+
+// Helper to get a cookie by name
+const getCookie = (name) => {
+    const nameEQ = name + "=";
+    const ca = document.cookie.split(';');
+    for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) === 0) return JSON.parse(c.substring(nameEQ.length, c.length));
+    }
+    return null;
+};
+
 // ===============================
 // Global State
 // ===============================
@@ -21,6 +40,7 @@ const getInputs = () => ({
 
 function resetAll() {
     localStorage.removeItem("ev_calc_settings");
+    document.cookie = "ev_trip_values=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     window.location.href = window.location.pathname;
 }
 
@@ -319,6 +339,9 @@ function calculate() {
     document.getElementById("providerResults").innerHTML = html + `</tbody></table></div>`;
 
     drawGraph(inputs, providers);
+
+    const currentInputs = getInputs();
+    setCookie("ev_trip_values", currentInputs);
 }
 
 function drawGraph(core, providers) {
@@ -391,6 +414,7 @@ function init() {
     fetch("providers.json").then(r => r.json()).then(data => {
         PRESETS = data.providers;
         const urlParams = new URLSearchParams(window.location.search);
+        const savedValues = getCookie("ev_trip_values");
 
        // 1. Check if we should switch to Trip Savings mode
         if (urlParams.has("journeyMiles")) {
@@ -402,11 +426,15 @@ function init() {
         }
         
         // 2. Load Trip & Vehicle Values
-        const tripIds = ["journeyMiles", "batteryKwh", "soc", "efficiency", "adhoc", "startChargeRate", "minSpeed"];
+        const tripIds = ["journeyMiles", "batteryKwh", "soc", "efficiency", "adhoc", "startChargeRate", "minSpeed"];        
         tripIds.forEach(id => {
+            const el = document.getElementById(id);
+            if (!el) return;
+            // Priority: 1. URL Params, 2. Cookies, 3. Default
             if (urlParams.has(id)) {
-                const el = document.getElementById(id);
-                if (el) el.value = urlParams.get(id);
+                el.value = urlParams.get(id);
+            } else if (savedValues && savedValues[id] !== undefined) {
+                el.value = savedValues[id];
             }
         });
         
