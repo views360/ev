@@ -230,6 +230,11 @@ function calculate() {
     if (resultsHeader) resultsHeader.style.display = isTripMode ? "flex" : "none"; // Use 'flex' to keep arrow alignment
     if (btnRow) btnRow.style.display = isTripMode ? "flex" : "none";
 
+    // Show/Hide Sort Results based on mode
+    if (sortResultsGroup) {
+        sortResultsGroup.style.display = isTripMode ? "block" : "none";
+    }
+
     // If not in Trip Savings mode, ensure Trip-specific messages and results are hidden
 if (!isTripMode) {
         const efficiency = parseFloat(document.getElementById("efficiencyBE").value);
