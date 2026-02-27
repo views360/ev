@@ -1,6 +1,6 @@
 const setCookie = (name, value) => {
     const date = new Date();
-    date.setTime(date.getTime() + (30 * 24 * 60 * 60 * 1000));
+    date.setTime(date.getTime() + (30 * 24 * 60 * 60 * 1000)); // 30 days
     const cookieValue = encodeURIComponent(JSON.stringify(value));
     document.cookie = `${name}=${cookieValue};expires=${date.toUTCString()};path=/;SameSite=Lax`;
 };
@@ -11,7 +11,11 @@ const getCookie = (name) => {
     for (let i = 0; i < ca.length; i++) {
         let c = ca[i].trim();
         if (c.indexOf(nameEQ) === 0) {
-            return JSON.parse(decodeURIComponent(c.substring(nameEQ.length)));
+            try {
+                return JSON.parse(decodeURIComponent(c.substring(nameEQ.length)));
+            } catch (e) {
+                return null;
+            }
         }
     }
     return null;
@@ -25,13 +29,14 @@ let providerCount = 0;
 let chart = null;
 
 const getInputs = () => ({
-    miles: parseFloat(document.getElementById("journeyMiles").value),
-    battery: parseFloat(document.getElementById("batteryKwh").value),
-    soc: parseFloat(document.getElementById("soc").value),
-    efficiency: parseFloat(document.getElementById("efficiency").value),
-    adhocRate: parseFloat(document.getElementById("adhoc").value),
-    startRate: parseFloat(document.getElementById("startChargeRate").value),
-    minSpeed: parseFloat(document.getElementById("minSpeed").value) || 0
+    journeyMiles: parseFloat(document.getElementById("journeyMiles").value) || 0,
+    batteryKwh: parseFloat(document.getElementById("batteryKwh").value) || 0,
+    soc: parseFloat(document.getElementById("soc").value) || 0,
+    efficiency: parseFloat(document.getElementById("efficiency").value) || 0,
+    adhoc: parseFloat(document.getElementById("adhoc").value) || 0,
+    startChargeRate: parseFloat(document.getElementById("startChargeRate").value) || 0,
+    minSpeed: parseFloat(document.getElementById("minSpeed").value) || 0,
+    provider: document.getElementById("provider").value
 });
 
 // ===============================
@@ -414,39 +419,33 @@ function setToggle(mode, btn) {
 }
 
 function init() {
-    // 1. Check for saved cookies immediately
     const savedValues = getCookie("ev_trip_values");
     const urlParams = new URLSearchParams(window.location.search);
 
-    // 2. Define the IDs we want to persist
-    const tripIds = ["journeyMiles", "batteryKwh", "soc", "efficiency", "adhoc", "startChargeRate", "minSpeed"];
+    fetch("providers.json").then(r => r.json()).then(data => {
+        PRESETS = data.providers;
 
-    // 3. Apply values (URL takes priority, then Cookie)
-    tripIds.forEach(id => {
-        const el = document.getElementById(id);
-        if (el) {
+        // List of all IDs to restore
+        const tripIds = ["journeyMiles", "batteryKwh", "soc", "efficiency", "adhoc", "startChargeRate", "minSpeed"];
+        
+        tripIds.forEach(id => {
+            const el = document.getElementById(id);
+            if (!el) return;
+
             if (urlParams.has(id)) {
                 el.value = urlParams.get(id);
             } else if (savedValues && savedValues[id] !== undefined) {
                 el.value = savedValues[id];
             }
-        }
-    });
+        });
 
-    // 4. Fetch providers and finish setup
-    fetch("providers.json").then(r => r.json()).then(data => {
-        PRESETS = data.providers;
-        
-        // Handle the provider dropdown if a value was saved
+        // Restore Provider dropdown
         if (savedValues && savedValues.provider) {
-            const pSelect = document.getElementById("provider");
-            pSelect.value = savedValues.provider;
+            document.getElementById("provider").value = savedValues.provider;
         }
 
+        updateProviderInfo();
         calculate();
-    }).catch(err => {
-        console.error("Failed to load providers:", err);
-        calculate(); // Calculate anyway with defaults
     });
 }
 
@@ -550,3 +549,4 @@ function exportPdf() {
     });
 }
 window.addEventListener("DOMContentLoaded", init);
+
