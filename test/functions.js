@@ -518,6 +518,24 @@ function setToggle(mode, btn) {
 function init() {
     const savedValues = getCookie("ev_trip_values");
     const urlParams = new URLSearchParams(window.location.search);
+    
+    // 1. Identify both dropdowns
+    const speedTrip = document.getElementById("minSpeed");
+    const speedBE = document.getElementById("minSpeedBE");
+
+    // 2. Define the sync and recalculate function
+    const syncAndCalc = (e) => {
+        const newValue = e.target.value;
+        speedTrip.value = newValue;
+        speedBE.value = newValue;
+        calculate(); // Refresh the tables/logic for the current mode
+    };
+
+    // 3. Attach listeners
+    if (speedTrip && speedBE) {
+        speedTrip.addEventListener('change', syncAndCalc);
+        speedBE.addEventListener('change', syncAndCalc);
+    }
 
     fetch("providers.json").then(r => r.json()).then(data => {
         PRESETS = data.providers;
