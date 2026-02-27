@@ -605,3 +605,28 @@ tr.bad td { color: var(--danger); }
         z-index: 10;
     }
 }
+
+/* Mobile adjustments for the Results Table */
+@media (max-width: 600px) {
+    /* Adjust the grid proportions: 
+       Give the provider name a fixed narrow width (e.g., 80px) 
+       and let the numeric columns share the rest. */
+    .results-header, .result-row {
+        grid-template-columns: 85px 1fr 1fr 1fr !important;
+        gap: 5px;
+        font-size: 0.85rem; /* Slightly smaller text to fit data */
+    }
+
+    /* Prevent long provider names from breaking the layout */
+    .result-row div:first-child {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        padding-right: 5px;
+    }
+
+    /* Optional: Reduce padding in cells to save horizontal space */
+    .result-row div {
+        padding: 8px 2px;
+    }
+}
