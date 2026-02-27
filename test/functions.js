@@ -311,7 +311,11 @@ if (!isTripMode) {
     });
 
     // 3. Build the HTML Table from sorted data
-    let html = `<h3>Subscription Break-Even Analysis</h3>
+    let html = `<h2>Break-Even Analysis</h2>
+                <p>The break-even value is calculated as the number of miles you must drive at your stated vehicle efficiency 
+                rate after paying for a subscription such that the difference between your average PAYG rate and the subscription discount 
+                rate pays off the subscription amount for one month — at which point you will begin to save money 
+                compared with the PAYG amount. Results are ordered best first. Adjust the field values to view how they affect the results.</p>
                 <div class="results-scroll">
                 <table>
                     <thead>
