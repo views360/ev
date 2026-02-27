@@ -27,20 +27,12 @@ function resetAll() {
 function shareLink() {
     const params = new URLSearchParams();
 
-    // Map internal keys to the actual HTML element IDs
-    const fieldMapping = {
-        journeyMiles: document.getElementById('journeyMiles').value,
-        batteryKwh: document.getElementById('batteryKwh').value,
-        soc: document.getElementById('soc').value,
-        efficiency: document.getElementById('efficiency').value,
-        adhoc: document.getElementById('adhoc').value,
-        startChargeRate: document.getElementById('startChargeRate').value,
-        minSpeed: document.getElementById('minSpeed').value
-    };
-
-    // Add Vehicle & Trip Inputs to URL
-    Object.keys(fieldMapping).forEach(id => {
-        params.set(id, fieldMapping[id]);
+    // The specific IDs used in the Trip & Vehicle section
+    const tripIds = ["journeyMiles", "batteryKwh", "soc", "efficiency", "adhoc", "startChargeRate", "minSpeed"];
+    
+    tripIds.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) params.set(id, el.value);
     });
 
     // Add Providers
@@ -393,46 +385,41 @@ function init() {
         PRESETS = data.providers;
         const urlParams = new URLSearchParams(window.location.search);
 
-        // 1. Load Vehicle & Trip Inputs
-        const inputIds = ["journeyMiles", "batteryKwh", "soc", "efficiency", "adhoc", "startChargeRate", "minSpeed"];
-        inputIds.forEach(id => {
+       // 1. Check if we should switch to Trip Savings mode
+        if (urlParams.has("journeyMiles")) {
+            const tripBtn = Array.from(document.querySelectorAll('.pill-btn'))
+                                 .find(btn => btn.textContent.trim() === "Trip Savings");
+            if (tripBtn) {
+                setToggle('trip-savings', tripBtn); 
+            }
+        }
+        
+        // 2. Load Trip & Vehicle Values
+        const tripIds = ["journeyMiles", "batteryKwh", "soc", "efficiency", "adhoc", "startChargeRate", "minSpeed"];
+        tripIds.forEach(id => {
             if (urlParams.has(id)) {
                 const el = document.getElementById(id);
-                if (el) {
-                    el.value = urlParams.get(id);
-                }
+                if (el) el.value = urlParams.get(id);
             }
         });
         
-        // Handle explicit mode from URL
-        const mode = urlParams.get("mode");
-        if (mode === "trip-savings") {
-            const tripBtn = Array.from(document.querySelectorAll('.pill-btn'))
-                                 .find(b => b.textContent.trim() === "Trip Savings");
-            if (tripBtn) setToggle('trip-savings', tripBtn);
-        }
-
-        // 2. Load Providers
+        // 3. Load Providers
         if (urlParams.has("p")) {
             try {
                 const sharedProviders = JSON.parse(urlParams.get("p"));
-                const container = document.getElementById("providers");
-                container.innerHTML = ""; // Clear default boxes
-                
+                document.getElementById("providers").innerHTML = ""; 
                 sharedProviders.forEach(p => {
-                    createProviderBox(); // This increments providerCount internally
+                    createProviderBox(); 
                     const id = providerCount;
                     document.getElementById(`preset${id}`).value = p.preset;
                     document.getElementById(`name${id}`).value = p.name;
                     document.getElementById(`subCost${id}`).value = p.sub;
                     document.getElementById(`rate${id}`).value = p.rate;
                 });
-            } catch (e) {
-                console.error("Error parsing shared providers", e);
-            }
+            } catch (e) { console.error("Link parse error", e); }
         }
         
-        // Final calculation to render everything
+        // 4. Force calculation to refresh UI
         calculate();
     });
 
