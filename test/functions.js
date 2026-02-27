@@ -80,7 +80,10 @@ function createProviderBox(preset) {
     box.innerHTML = `
         <div class="provider-header">
             <input type="text" id="name${id}" placeholder="Provider Name" oninput="calculate()">
-            <button class="remove-btn" onclick="this.parentElement.parentElement.remove(); calculate();">×</button>
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <a href="#results" class="jump-btn" title="Jump to results">↓</a>
+                <button class="remove-btn" onclick="this.parentElement.parentElement.remove(); calculate();">×</button>
+            </div>
         </div>
         <div class="input-group">
             <label>Preset</label>
@@ -538,3 +541,4 @@ function exportPdf() {
     });
 }
 window.addEventListener("DOMContentLoaded", init);
+
