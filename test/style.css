@@ -301,11 +301,11 @@ input:focus, select:focus {
     cursor: pointer;
 }
 
-.results {
+/*.results {
     margin-top: 40px;
     padding-top: 30px;
     border-top: 2px dashed var(--border);
-}
+}*/
 
 #providerResults table {
     width: 100%;
