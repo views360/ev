@@ -25,18 +25,25 @@ function resetAll() {
 }
 
 function shareLink() {
-    const inputs = getInputs();
     const params = new URLSearchParams();
 
-    // 1. Add Vehicle & Trip Inputs
-    Object.keys(inputs).forEach(key => {
-        if (!isNaN(inputs[key])) params.set(key, inputs[key]);
+    // Map internal keys to the actual HTML element IDs
+    const fieldMapping = {
+        journeyMiles: document.getElementById('journeyMiles').value,
+        batteryKwh: document.getElementById('batteryKwh').value,
+        soc: document.getElementById('soc').value,
+        efficiency: document.getElementById('efficiency').value,
+        adhoc: document.getElementById('adhoc').value,
+        startChargeRate: document.getElementById('startChargeRate').value,
+        minSpeed: document.getElementById('minSpeed').value
+    };
+
+    // Add Vehicle & Trip Inputs to URL
+    Object.keys(fieldMapping).forEach(id => {
+        params.set(id, fieldMapping[id]);
     });
 
-    // 2. Force Trip Mode (since button is only available here)
-    params.set("mode", "trip-savings");
-
-    // 3. Add Selected Providers
+    // Add Providers
     const providers = [];
     document.querySelectorAll(".provider-box").forEach(box => {
         const id = box.dataset.id;
@@ -49,7 +56,6 @@ function shareLink() {
     });
     params.set("p", JSON.stringify(providers));
 
-    // 4. Generate URL and Copy
     const newUrl = `${window.location.origin}${window.location.pathname}?${params.toString()}`;
     
     navigator.clipboard.writeText(newUrl).then(() => {
@@ -387,15 +393,13 @@ function init() {
         PRESETS = data.providers;
         const urlParams = new URLSearchParams(window.location.search);
 
-        // --- FIXED: Load inputs from URL and trigger updates ---
+        // 1. Load Vehicle & Trip Inputs
         const inputIds = ["journeyMiles", "batteryKwh", "soc", "efficiency", "adhoc", "startChargeRate", "minSpeed"];
         inputIds.forEach(id => {
             if (urlParams.has(id)) {
                 const el = document.getElementById(id);
                 if (el) {
                     el.value = urlParams.get(id);
-                    // Force the browser to recognize the change
-                    el.dispatchEvent(new Event('input'));
                 }
             }
         });
@@ -408,20 +412,24 @@ function init() {
             if (tripBtn) setToggle('trip-savings', tripBtn);
         }
 
-        // --- Load providers from URL ---
+        // 2. Load Providers
         if (urlParams.has("p")) {
             try {
                 const sharedProviders = JSON.parse(urlParams.get("p"));
-                document.getElementById("providers").innerHTML = ""; // Clear defaults
+                const container = document.getElementById("providers");
+                container.innerHTML = ""; // Clear default boxes
+                
                 sharedProviders.forEach(p => {
-                    createProviderBox(); 
+                    createProviderBox(); // This increments providerCount internally
                     const id = providerCount;
                     document.getElementById(`preset${id}`).value = p.preset;
                     document.getElementById(`name${id}`).value = p.name;
                     document.getElementById(`subCost${id}`).value = p.sub;
                     document.getElementById(`rate${id}`).value = p.rate;
                 });
-            } catch (e) { console.error("Failed to parse shared providers", e); }
+            } catch (e) {
+                console.error("Error parsing shared providers", e);
+            }
         }
         
         // Final calculation to render everything
@@ -539,6 +547,7 @@ function exportPdf() {
     });
 }
 window.addEventListener("DOMContentLoaded", init);
+
 
 
 
