@@ -80,9 +80,9 @@ function createProviderBox(preset) {
     box.innerHTML = `
         <div class="provider-header">
             <input type="text" id="name${id}" placeholder="Provider Name" oninput="calculate()">
-            <div style="display: flex; align-items: center; gap: 10px;">
-                <a href="#results" class="jump-btn" title="Jump to results">↓</a>
-                <button class="remove-btn" onclick="this.parentElement.parentElement.remove(); calculate();">×</button>
+            <div style="display: flex; align-items: center; gap: 12px; margin-left: 8px;">
+                <a href="#results" class="jump-btn-pulse" title="Jump to results">↓</a>
+                <button class="remove-btn" onclick="this.parentElement.parentElement.parentElement.remove(); calculate();">×</button>
             </div>
         </div>
         <div class="input-group">
@@ -299,7 +299,7 @@ function calculate() {
         const providerLink = p.url 
             ? `<a href="${p.url}" target="_blank" style="color:inherit; text-decoration:underline;">${p.name}</a>` 
             : p.name;
-        const displayName = `${jumpArrow}${providerLink}`;        // Determine display text for providers more expensive than PAYG
+        const displayName = `${providerLink}`;        // Determine display text for providers more expensive than PAYG
         const breakEvenText = p.rate < inputs.adhocRate 
             ? `${p.breakEvenMiles.toFixed(0)} miles` 
             : "Never";
@@ -541,4 +541,3 @@ function exportPdf() {
     });
 }
 window.addEventListener("DOMContentLoaded", init);
-
