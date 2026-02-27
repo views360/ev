@@ -267,12 +267,12 @@ function calculate() {
     if (uiShare) uiShare.style.display = "";
     if (uiPdf) uiPdf.style.display = "";
 
-    const startChargeKwh = (inputs.soc / 100) * inputs.battery;
-    const startChargeCost = startChargeKwh * (inputs.startRate / 100);
+    const startChargeKwh = (inputs.soc / 100) * inputs.batteryKwh;
+    const startChargeCost = startChargeKwh * (inputs.startChargeRate / 100);
     const initialRange = startChargeKwh * inputs.efficiency;
-    const publicMiles = Math.max(0, inputs.miles - initialRange);
+    const publicMiles = Math.max(0, inputs.journeyMiles - initialRange);
     const publicKwh = publicMiles / inputs.efficiency;
-    const totalAdhocCost = startChargeCost + (publicKwh * (inputs.adhocRate / 100));
+    const totalAdhocCost = startChargeCost + (publicKwh * (inputs.adhoc / 100));
 
     document.getElementById("preChargeLine").innerHTML = `Pre-journey charge: <strong>${startChargeKwh.toFixed(1)} kWh</strong> (£${startChargeCost.toFixed(2)})`;
     document.getElementById("homeRangeLine").innerHTML = `Range from start charge: <strong>${initialRange.toFixed(0)} miles</strong>`;
@@ -348,8 +348,6 @@ function calculate() {
 
     // At the end of function calculate()
     const dataToSave = getInputs();
-    // Add the provider dropdown value specifically
-    dataToSave.provider = document.getElementById("provider").value;
     setCookie("ev_trip_values", dataToSave);
 }
 
@@ -550,5 +548,3 @@ function exportPdf() {
     });
 }
 window.addEventListener("DOMContentLoaded", init);
-
-
