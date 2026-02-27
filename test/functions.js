@@ -413,7 +413,9 @@ function setToggle(mode, btn) {
     const slider = document.getElementById('pill-slider');
     document.querySelectorAll('.pill-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-    slider.style.transform = mode === 'break-even' ? 'translateX(0)' : 'translateX(100%)';
+    if(slider) {
+        slider.style.transform = mode === 'break-even' ? 'translateX(0)' : 'translateX(100%)';
+    }
     calculate();
 }
 
@@ -436,7 +438,15 @@ function init() {
             } else if (savedValues && savedValues[id] !== undefined) {
                 el.value = savedValues[id];
             }
+            el.addEventListener('input', calculate);
         });
+
+        // Set the initial UI state based on which button is "active" in the HTML
+        const activePill = document.querySelector('.pill-btn.active');
+        const mode = activePill.textContent.trim() === "Trip Savings" ? 'trip-savings' : 'break-even';
+        
+        // This force-triggers the visibility logic
+        setToggle(mode, activePill);
 
         // Restore Provider dropdown
         if (savedValues && savedValues.provider) {
