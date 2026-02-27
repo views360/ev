@@ -231,25 +231,25 @@ function calculate() {
     if (btnRow) btnRow.style.display = isTripMode ? "flex" : "none";
 
     // If not in Trip Savings mode, ensure Trip-specific messages and results are hidden
-    if (!isTripMode) {
+if (!isTripMode) {
         const efficiency = parseFloat(document.getElementById("efficiencyBE").value);
-    
+        const adhocRate = parseFloat(document.getElementById("adhoc").value) || 0;
+
         if (isNaN(efficiency) || efficiency <= 0) {
             uiPreText.innerHTML = "Please enter a valid <strong>Vehicle Efficiency</strong> to see Break Even results.";
             uiPreText.style.display = "block";
             uiResults.style.display = "none";
             return;
         }
-    
+
         uiPreText.style.display = "none";
         uiResults.style.display = "block";
         
         // Hide Trip-specific UI
         document.querySelector(".calc-lines").style.display = "none";
         document.querySelector(".chart-wrapper").style.display = "none";
-    
+
         let html = `<h3>Subscription Break-Even Analysis</h3>
-                    <p style="font-size: 0.9rem; margin-bottom: 15px;">Miles required at the discounted rate to equal the cost of the monthly subscription.</p>
                     <div class="results-scroll">
                     <table>
                         <thead>
@@ -262,26 +262,29 @@ function calculate() {
                             </tr>
                         </thead>
                         <tbody>`;
-    
+
         PRESETS.forEach(p => {
             const sub = p.subscription.monthlyCost;
             const rates = p.rates;
-    
-            Object.keys(rates).forEach(speed => {
+
+            // Handle multiple speeds or default
+            const speedKeys = Object.keys(rates);
+            
+            speedKeys.forEach(speed => {
                 const rate = rates[speed];
                 const speedDisplay = speed === 'default' ? "Max. available" : `${speed}kW`;
                 
                 let breakEvenMiles = "N/A";
-    
-                if (sub === 0) {
-                    breakEvenMiles = "0 (No Sub Fee)";
-                } else if (rate > 0) {
-                    // Cost per mile = (Rate in pence / 100) / efficiency
-                    const costPerMile = (rate / 100) / efficiency;
-                    // Miles to cover the sub cost = Sub Cost / Cost per mile
-                    breakEvenMiles = (sub / costPerMile).toFixed(0) + " miles";
+                if (rate < adhocRate) {
+                    const savingPerKwh = (adhocRate - rate) / 100;
+                    const kwhNeeded = sub / savingPerKwh;
+                    breakEvenMiles = (kwhNeeded * efficiency).toFixed(0) + " miles";
+                } else if (sub > 0) {
+                    breakEvenMiles = "Never (Rate ≥ PAYG)";
+                } else {
+                    breakEvenMiles = "0 (Free/No Sub)";
                 }
-    
+
                 html += `<tr>
                     <td>${p.name}</td>
                     <td>${speedDisplay}</td>
@@ -291,7 +294,7 @@ function calculate() {
                 </tr>`;
             });
         });
-    
+
         document.getElementById("providerResults").innerHTML = html + `</tbody></table></div>`;
         return; // Exit calculate for BE mode
     }
@@ -670,5 +673,4 @@ function exportPdf() {
         });
     });
 }
-
 window.addEventListener("DOMContentLoaded", init);
