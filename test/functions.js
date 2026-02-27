@@ -386,17 +386,35 @@ function init() {
     fetch("providers.json").then(r => r.json()).then(data => {
         PRESETS = data.providers;
         const urlParams = new URLSearchParams(window.location.search);
+
+        // --- NEW: Load inputs from URL if they exist ---
+        const inputIds = ["journeyMiles", "batteryKwh", "soc", "efficiency", "adhoc", "startChargeRate", "minSpeed"];
+        inputIds.forEach(id => {
+            if (urlParams.has(id)) document.getElementById(id).value = urlParams.get(id);
+        });
         
-        // Handle explicit mode from URL
-        if (urlParams.get("mode") === "trip-savings") {
-            const btn = Array.from(document.querySelectorAll('.pill-btn')).find(b => b.textContent.trim() === "Trip Savings");
-            if (btn) setToggle('trip-savings', btn);
-        } else {
-            // Default to Break Even if no specific mode or incognito
-            const btn = Array.from(document.querySelectorAll('.pill-btn')).find(b => b.textContent.trim() === "Break Even");
-            if (btn) setToggle('break-even', btn);
-        }
-        calculate();
+       // Handle explicit mode from URL
+    const mode = urlParams.get("mode");
+    const modeText = mode === "trip-savings" ? "Trip Savings" : "Break Even";
+    const btn = Array.from(document.querySelectorAll('.pill-btn')).find(b => b.textContent.trim() === modeText);
+    if (btn) setToggle(mode === "trip-savings" ? 'trip-savings' : 'break-even', btn);
+
+    // --- NEW: Load providers from URL ---
+    if (urlParams.has("p")) {
+        try {
+            const sharedProviders = JSON.parse(urlParams.get("p"));
+            sharedProviders.forEach(p => {
+                // We use a custom version of createProviderBox logic here to restore exact values
+                createProviderBox(); 
+                const id = providerCount;
+                document.getElementById(`preset${id}`).value = p.preset;
+                document.getElementById(`name${id}`).value = p.name;
+                document.getElementById(`subCost${id}`).value = p.sub;
+                document.getElementById(`rate${id}`).value = p.rate;
+            });
+        } catch (e) { console.error("Failed to parse shared providers", e); }
+    }
+    calculate();
     });
 
     ["journeyMiles", "batteryKwh", "soc", "efficiency", "adhoc", "startChargeRate", "minSpeed"].forEach(id => {
@@ -415,126 +433,101 @@ function init() {
    PURE B&W + MARGINS + FIT TO A4
    GRAPH REMOVED, SORT REMOVED, HEADER ADDED
    ============================================ */
+/* ============================================
+   PDF EXPORT — UPDATED FOR BREAK EVEN COLUMNS
+   ============================================ */
 function exportPdf() {
     const results = document.getElementById("results");
-    const pdfBtn = document.getElementById("pdfBtn"); // Get the button element
+    const pdfBtn = document.getElementById("pdfBtn");
     if (!results || !pdfBtn) return;
+    
     const originalText = pdfBtn.textContent;
     pdfBtn.textContent = "Generating...";
     pdfBtn.style.pointerEvents = "none"; 
     pdfBtn.style.opacity = "0.7";
 
-    // Create off-screen clone wrapper with random id
+    // Create off-screen clone
     const cloneWrapper = document.createElement("div");
     const cloneId = "pdfClone_" + Math.floor(Math.random() * 1000000);
     cloneWrapper.id = cloneId;
     cloneWrapper.style.position = "absolute";
-    cloneWrapper.style.left = "-99999px";
+    cloneWrapper.style.left = "-9999px";
     cloneWrapper.style.top = "0";
-    cloneWrapper.style.width = results.offsetWidth + "px";
+    // Increase width to ensure table doesn't wrap/squash the new columns
+    cloneWrapper.style.width = "1200px"; 
 
-    // Clone results into wrapper
     const clone = results.cloneNode(true);
     cloneWrapper.appendChild(clone);
     document.body.appendChild(cloneWrapper);
 
-    // Remove the "Sort results" input-group inside the clone
-    const groups = cloneWrapper.querySelectorAll(".input-group");
-    groups.forEach(group => {
-        const label = group.querySelector("label");
-        if (label && label.textContent.trim() === "Sort results") {
-            group.remove();
-        }
+    // Remove UI elements not needed in PDF
+    const uiElements = cloneWrapper.querySelectorAll(".input-group, .chart-wrapper, .btn-row");
+    uiElements.forEach(el => {
+        const label = el.querySelector("label");
+        if (label && label.textContent.trim() === "Sort results") el.remove();
+        if (el.classList.contains("chart-wrapper")) el.remove();
     });
 
-    // Remove graph inside the clone
-    const charts = cloneWrapper.querySelectorAll(".chart-wrapper");
-    charts.forEach(el => el.remove());
-
-    // Apply print-safe override ONLY to the clone
+    // Apply print-safe styles to the clone
     const override = document.createElement("style");
     override.innerHTML = `
-        #${cloneId}, #${cloneId} * {
+        #${cloneId} { padding: 20px; background: #fff; }
+        #${cloneId} * {
             background: #ffffff !important;
             color: #000000 !important;
             border-color: #000000 !important;
             box-shadow: none !important;
+            font-family: Arial, sans-serif !important;
         }
+        #${cloneId} table { width: 100%; border-collapse: collapse; font-size: 12px; }
+        #${cloneId} th, #${cloneId} td { border: 1px solid #000; padding: 6px; text-align: left; }
+        #${cloneId} .good, #${cloneId} .bad { background: #fff !important; font-weight: bold; }
     `;
     document.head.appendChild(override);
 
-    // Wait for layout, then capture the clone
     requestAnimationFrame(() => {
-        html2canvas(cloneWrapper).then(canvas => {
-
-            // Clean up clone + override
+        html2canvas(cloneWrapper, { scale: 2 }).then(canvas => {
             cloneWrapper.remove();
             override.remove();
 
-            // Convert to pure black & white
+            // Convert to B&W
             const bwCanvas = document.createElement("canvas");
             const bctx = bwCanvas.getContext("2d");
-
             bwCanvas.width = canvas.width;
             bwCanvas.height = canvas.height;
-
             bctx.drawImage(canvas, 0, 0);
 
             const imgData = bctx.getImageData(0, 0, bwCanvas.width, bwCanvas.height);
             const pixels = imgData.data;
-
-            const threshold = 160;
             for (let i = 0; i < pixels.length; i += 4) {
-                const r = pixels[i];
-                const g = pixels[i + 1];
-                const b = pixels[i + 2];
-
-                const grey = 0.299 * r + 0.587 * g + 0.114 * b;
-                const bw = grey < threshold ? 0 : 255;
-
-                pixels[i] = bw;
-                pixels[i + 1] = bw;
-                pixels[i + 2] = bw;
+                const grey = 0.299 * pixels[i] + 0.587 * pixels[i+1] + 0.114 * pixels[i+2];
+                const bw = grey < 180 ? 0 : 255;
+                pixels[i] = pixels[i+1] = pixels[i+2] = bw;
             }
-
             bctx.putImageData(imgData, 0, 0);
-
-            const bwImg = bwCanvas.toDataURL("image/png");
 
             const { jsPDF } = window.jspdf;
             const pdf = new jsPDF("p", "mm", "a4");
-
             const pageWidth = pdf.internal.pageSize.getWidth();
-            const pageHeight = pdf.internal.pageSize.getHeight();
-
             const margin = 10;
-            const usableWidth = pageWidth - margin * 2;
-            const usableHeight = pageHeight - margin * 2;
+            const usableWidth = pageWidth - (margin * 2);
+            const imgWidth = usableWidth;
+            const imgHeight = (bwCanvas.height * imgWidth) / bwCanvas.width;
 
-            const imgAspect = bwCanvas.width / bwCanvas.height;
-            const pageAspect = usableWidth / usableHeight;
-
-            let renderWidth, renderHeight;
-
-            if (imgAspect > pageAspect) {
-                renderWidth = usableWidth;
-                renderHeight = usableWidth / imgAspect;
-            } else {
-                renderHeight = usableHeight;
-                renderWidth = usableHeight * imgAspect;
-            }
-
-            // Header
-            pdf.setFontSize(18);
-            pdf.text("EV Public Charging Comparison", pageWidth / 2, margin, { align: "center" });
-
-            // Image
-            pdf.addImage(bwImg, "PNG", margin, margin + 10, renderWidth, renderHeight);
-
-            pdf.save("ev-comparison.pdf");
+            pdf.setFontSize(16);
+            pdf.text("EV Public Charging Comparison Report", pageWidth / 2, 15, { align: "center" });
+            pdf.addImage(bwCanvas.toDataURL("image/png"), "PNG", margin, 25, imgWidth, imgHeight);
+            
+            pdf.save("ev-charging-comparison.pdf");
+            
+            // Restore button
+            pdfBtn.textContent = originalText;
+            pdfBtn.style.pointerEvents = "auto";
+            pdfBtn.style.opacity = "1";
         });
     });
 }
 window.addEventListener("DOMContentLoaded", init);
+
 
 
