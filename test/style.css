@@ -534,6 +534,27 @@ tr.bad td { color: var(--danger); }
     }
 }
 
+/* Styling for the jump arrow in the provider box */
+.jump-btn {
+    text-decoration: none;
+    color: var(--accent);
+    font-size: 1.4rem;
+    font-weight: bold;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+    line-height: 1;
+}
+
+.jump-btn:hover {
+    transform: translateY(3px);
+    opacity: 0.8;
+}
+
+/* Ensure the header layout stays aligned */
+.provider-header div {
+    display: flex;
+    align-items: center;
+}
+
 /* ============================================================
    MOBILE FIXES REQUESTED BY USER (APPLY BELOW 700px ONLY)
    ============================================================ */
