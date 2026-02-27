@@ -230,30 +230,37 @@ function calculate() {
     if (resultsHeader) resultsHeader.style.display = isTripMode ? "flex" : "none"; // Use 'flex' to keep arrow alignment
     if (btnRow) btnRow.style.display = isTripMode ? "flex" : "none";
 
-// If not in Trip Savings mode, ensure Trip-specific messages and results are hidden
+    // If not in Trip Savings mode, ensure Trip-specific messages and results are hidden
 if (!isTripMode) {
     const efficiency = parseFloat(document.getElementById("efficiencyBE").value);
     const adhocRate = parseFloat(document.getElementById("adhocBE").value) || 0;
-    const minSpeedRequirement = parseInt(document.getElementById("minSpeedBE").value) || 0;
 
-    // ... validation checks ...
+    if (isNaN(efficiency) || efficiency <= 0 || isNaN(adhocRate) || adhocRate <= 0) {
+        uiPreText.innerHTML = "Please enter valid <strong>Efficiency</strong> and <strong>PAYG Rate</strong> values.";
+        uiPreText.style.display = "block";
+        uiResults.style.display = "none";
+        return;
+    }
+
+    uiPreText.style.display = "none";
+    uiResults.style.display = "block";
+    
+    document.querySelector(".calc-lines").style.display = "none";
+    document.querySelector(".chart-wrapper").style.display = "none";
 
     let beData = [];
 
+    // 1. Process all providers and their speeds into a flat array
     PRESETS.forEach(p => {
         const sub = p.subscription.monthlyCost;
         const rates = p.rates;
+        const speedKeys = Object.keys(rates);
         
-        Object.keys(rates).forEach(speed => {
+        speedKeys.forEach(speed => {
             const rate = rates[speed];
-            // Get numeric speed value for filtering (treat 'default' as a very high speed or specific value)
-            const speedValue = speed === 'default' ? 350 : parseInt(speed);
-
-            // NEW: Filtering logic
-            if (speedValue < minSpeedRequirement) return;
-
             const speedDisplay = speed === 'default' ? "Max. available" : `${speed}kW`;
-            let breakEvenMiles = null;
+            
+            let breakEvenMiles = null; // Use null for numeric sorting
             let displayMiles = "";
 
             if (rate < adhocRate) {
@@ -273,7 +280,7 @@ if (!isTripMode) {
                 speedDisplay: speedDisplay,
                 subCost: sub,
                 rate: rate,
-                miles: breakEvenMiles,
+                miles: breakEvenMiles, // Number or null
                 displayText: displayMiles
             });
         });
@@ -511,20 +518,6 @@ function setToggle(mode, btn) {
 function init() {
     const savedValues = getCookie("ev_trip_values");
     const urlParams = new URLSearchParams(window.location.search);
-    const speedTrip = document.getElementById("minSpeed");
-    const speedBE = document.getElementById("minSpeedBE");
-
-    const syncSelects = (source, target) => {
-        source.addEventListener('change', () => {
-            target.value = source.value;
-            calculate(); // Re-sort and re-filter immediately
-        });
-    };
-
-if (speedTrip && speedBE) {
-    syncSelects(speedTrip, speedBE);
-    syncSelects(speedBE, speedTrip);
-}
 
     fetch("providers.json").then(r => r.json()).then(data => {
         PRESETS = data.providers;
