@@ -274,12 +274,12 @@ function calculate() {
     const publicMiles = Math.max(0, inputs.journeyMiles - initialRange);
     const publicKwh = publicMiles / inputs.efficiency;
     const totalAdhocCost = startChargeCost + (publicKwh * (inputs.adhoc / 100));
-
+    
     document.getElementById("preChargeLine").innerHTML = `Pre-journey charge: <strong>${startChargeKwh.toFixed(1)} kWh</strong> (£${startChargeCost.toFixed(2)})`;
     document.getElementById("homeRangeLine").innerHTML = `Range from start charge: <strong>${initialRange.toFixed(0)} miles</strong>`;
     document.getElementById("publicMilesLine").innerHTML = `Public charging miles needed: <strong>${publicMiles.toFixed(0)} miles</strong>`;
     document.getElementById("publicKwhLine").innerHTML = `Public charging energy needed: <strong>${publicKwh.toFixed(1)} kWh</strong>`;
-    document.getElementById("adhocCostLine").innerHTML = `Total cost (Standard PAYG @ ${inputs.adhocRate}p): <strong>£${totalAdhocCost.toFixed(2)}</strong>`;
+    document.getElementById("adhocCostLine").innerHTML = `Total cost (Standard PAYG @ ${inputs.adhoc}p): <strong>£${totalAdhocCost.toFixed(2)}</strong>`;
 
     const providers = [];
     providerBoxes.forEach(box => {
@@ -288,7 +288,7 @@ function calculate() {
         const subCost = parseFloat(document.getElementById(`subCost${id}`).value) || 0;
         const rate = parseFloat(document.getElementById(`rate${id}`).value) || 0;
        
-        const savingPerKwh = (inputs.adhocRate - rate) / 100;
+        const savingPerKwh = (inputs.adhoc - rate) / 100;
         let breakEvenMiles = 0;
         if (savingPerKwh > 0) {
             const kwhNeeded = subCost / savingPerKwh;
@@ -356,12 +356,12 @@ function drawGraph(core, providers) {
     const ctx = document.getElementById("costChart");
     if (chart) chart.destroy();
 
-    const maxMiles = Math.max(core.miles * 1.2, 300);
+    const maxMiles = Math.max(core.journeyMiles * 1.2, 300); // Use .journeyMiles
     const labels = Array.from({length: 11}, (_, i) => Math.round((maxMiles * i) / 10));
     
     const adhocData = labels.map(m => {
-        const pKwh = Math.max(0, m - (core.soc/100 * core.battery * core.efficiency)) / core.efficiency;
-        return (core.soc/100 * core.battery * core.startRate/100) + (pKwh * core.adhocRate/100);
+        const pKwh = Math.max(0, m - (core.soc/100 * core.batteryKwh * core.efficiency)) / core.efficiency; // Use .batteryKwh
+        return (core.soc/100 * core.batteryKwh * core.startChargeRate/100) + (pKwh * core.adhoc/100); // Use .batteryKwh, .startChargeRate, .adhoc
     });
 
     const datasets = [{
@@ -375,8 +375,8 @@ function drawGraph(core, providers) {
 
     providers.forEach((p, idx) => {
         const data = labels.map(m => {
-            const pKwh = Math.max(0, m - (core.soc/100 * core.battery * core.efficiency)) / core.efficiency;
-            return p.subCost + (core.soc/100 * core.battery * core.startRate/100) + (pKwh * p.rate/100);
+        const pKwh = Math.max(0, m - (core.soc/100 * core.batteryKwh * core.efficiency)) / core.efficiency; // Use .batteryKwh
+        return p.subCost + (core.soc/100 * core.batteryKwh * core.startChargeRate/100) + (pKwh * p.rate/100); // Use .batteryKwh, .startChargeRate
         });
         datasets.push({
             label: p.name,
@@ -428,8 +428,7 @@ function init() {
         PRESETS = data.providers;
 
         // List of all IDs to restore
-        const tripIds = ["journeyMiles", "batteryKwh", "soc", "efficiency", "adhoc", "startChargeRate", "minSpeed"];
-        
+        const tripIds = ["journeyMiles", "batteryKwh", "soc", "efficiency", "adhoc", "startChargeRate", "minSpeed"];        
         tripIds.forEach(id => {
             const el = document.getElementById(id);
             if (!el) return;
@@ -441,6 +440,31 @@ function init() {
             }
             el.addEventListener('input', calculate);
         });
+
+        if (urlParams.has("p")) {
+            try {
+                const sharedProviders = JSON.parse(urlParams.get("p"));
+                document.getElementById("providers").innerHTML = ""; // Clear existing
+                sharedProviders.forEach(p => {
+                    // Recreate the box
+                    createProviderBox(); 
+                    const id = providerCount;
+                    // Fill the fields manually from the shared data
+                    document.getElementById(`name${id}`).value = p.name;
+                    document.getElementById(`subCost${id}`).value = p.sub;
+                    document.getElementById(`rate${id}`).value = p.rate;
+                    document.getElementById(`preset${id}`).value = p.preset;
+                    // Ensure the speed row/logic is updated if it was a preset
+                    if(p.preset !== 'Custom') {
+                        updateProviderFields(id);
+                        // Re-override with the specific shared rate in case it differed
+                        document.getElementById(`rate${id}`).value = p.rate;
+                    }
+                });
+            } catch (e) {
+                console.error("Error parsing shared providers:", e);
+            }
+        }
 
         const modeParam = urlParams.get("mode");
         if (modeParam === "trip-savings") {
