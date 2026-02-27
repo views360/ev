@@ -234,6 +234,8 @@ function calculate() {
 if (!isTripMode) {
     const efficiency = parseFloat(document.getElementById("efficiencyBE").value);
     const adhocRate = parseFloat(document.getElementById("adhocBE").value) || 0;
+    // Get the current minimum speed selection
+    const minSpeedSelection = parseFloat(document.getElementById("minSpeedBE").value) || 0;
 
     if (isNaN(efficiency) || efficiency <= 0 || isNaN(adhocRate) || adhocRate <= 0) {
         uiPreText.innerHTML = "Please enter valid <strong>Efficiency</strong> and <strong>PAYG Rate</strong> values.";
@@ -257,10 +259,18 @@ if (!isTripMode) {
         const speedKeys = Object.keys(rates);
         
         speedKeys.forEach(speed => {
+            const numericSpeed = speed === 'default' ? 0 : parseFloat(speed);
+            
+            // FIX: Skip this entry if it's slower than the user's minimum speed
+            // (We keep 'default' as it usually represents any available speed)
+            if (speed !== 'default' && numericSpeed < minSpeedSelection) {
+                return; 
+            }
+
             const rate = rates[speed];
             const speedDisplay = speed === 'default' ? "Max. available" : `${speed}kW`;
             
-            let breakEvenMiles = null; // Use null for numeric sorting
+            let breakEvenMiles = null; 
             let displayMiles = "";
 
             if (rate < adhocRate) {
@@ -280,7 +290,7 @@ if (!isTripMode) {
                 speedDisplay: speedDisplay,
                 subCost: sub,
                 rate: rate,
-                miles: breakEvenMiles, // Number or null
+                miles: breakEvenMiles,
                 displayText: displayMiles
             });
         });
