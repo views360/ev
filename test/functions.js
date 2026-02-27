@@ -232,72 +232,102 @@ function calculate() {
 
     // If not in Trip Savings mode, ensure Trip-specific messages and results are hidden
 if (!isTripMode) {
-        const efficiency = parseFloat(document.getElementById("efficiencyBE").value);
-        const adhocRate = parseFloat(document.getElementById("adhoc").value) || 0;
+    const efficiency = parseFloat(document.getElementById("efficiencyBE").value);
+    const adhocRate = parseFloat(document.getElementById("adhocBE").value) || 0;
 
-        if (isNaN(efficiency) || efficiency <= 0 || isNaN(adhocRate) || adhocRate <= 0) {
-            uiPreText.innerHTML = "Please enter valid <strong>Efficiency</strong> and <strong>PAYG Rate</strong> values.";
-            uiPreText.style.display = "block";
-            uiResults.style.display = "none";
-            return;
-        }
+    if (isNaN(efficiency) || efficiency <= 0 || isNaN(adhocRate) || adhocRate <= 0) {
+        uiPreText.innerHTML = "Please enter valid <strong>Efficiency</strong> and <strong>PAYG Rate</strong> values.";
+        uiPreText.style.display = "block";
+        uiResults.style.display = "none";
+        return;
+    }
 
-        uiPreText.style.display = "none";
-        uiResults.style.display = "block";
+    uiPreText.style.display = "none";
+    uiResults.style.display = "block";
+    
+    document.querySelector(".calc-lines").style.display = "none";
+    document.querySelector(".chart-wrapper").style.display = "none";
+
+    let beData = [];
+
+    // 1. Process all providers and their speeds into a flat array
+    PRESETS.forEach(p => {
+        const sub = p.subscription.monthlyCost;
+        const rates = p.rates;
+        const speedKeys = Object.keys(rates);
         
-        // Hide Trip-specific UI
-        document.querySelector(".calc-lines").style.display = "none";
-        document.querySelector(".chart-wrapper").style.display = "none";
-
-        let html = `<h3>Subscription Break-Even Analysis</h3>
-                    <div class="results-scroll">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Provider</th>
-                                <th>Speed</th>
-                                <th>Sub. Cost</th>
-                                <th>Disc. Rate</th>
-                                <th>Miles to Break Even</th>
-                            </tr>
-                        </thead>
-                        <tbody>`;
-
-        PRESETS.forEach(p => {
-            const sub = p.subscription.monthlyCost;
-            const rates = p.rates;
-
-            // Handle multiple speeds or default
-            const speedKeys = Object.keys(rates);
+        speedKeys.forEach(speed => {
+            const rate = rates[speed];
+            const speedDisplay = speed === 'default' ? "Max. available" : `${speed}kW`;
             
-            speedKeys.forEach(speed => {
-                const rate = rates[speed];
-                const speedDisplay = speed === 'default' ? "Max. available" : `${speed}kW`;
-                
-                let breakEvenMiles = "N/A";
-                if (rate < adhocRate) {
-                    const savingPerKwh = (adhocRate - rate) / 100;
-                    const kwhNeeded = sub / savingPerKwh;
-                    breakEvenMiles = (kwhNeeded * efficiency).toFixed(0) + " miles";
-                } else if (sub > 0) {
-                    breakEvenMiles = "Never (Rate ≥ PAYG)";
-                } else {
-                    breakEvenMiles = "0 (Free/No Sub)";
-                }
+            let breakEvenMiles = null; // Use null for numeric sorting
+            let displayMiles = "";
 
-                html += `<tr>
-                    <td>${p.name}</td>
-                    <td>${speedDisplay}</td>
-                    <td>£${sub.toFixed(2)}</td>
-                    <td>${rate.toFixed(1)}p</td>
-                    <td><strong>${breakEvenMiles}</strong></td>
-                </tr>`;
+            if (rate < adhocRate) {
+                const savingPerKwh = (adhocRate - rate) / 100;
+                const kwhNeeded = sub / savingPerKwh;
+                breakEvenMiles = Math.round(kwhNeeded * efficiency);
+                displayMiles = breakEvenMiles + " miles";
+            } else if (sub > 0) {
+                displayMiles = "Never (Rate ≥ PAYG)";
+            } else {
+                breakEvenMiles = 0;
+                displayMiles = "0 (Free/No Sub)";
+            }
+
+            beData.push({
+                name: p.name,
+                speedDisplay: speedDisplay,
+                subCost: sub,
+                rate: rate,
+                miles: breakEvenMiles, // Number or null
+                displayText: displayMiles
             });
         });
+    });
 
-        document.getElementById("providerResults").innerHTML = html + `</tbody></table></div>`;
-        return; // Exit calculate for BE mode
-    }
+    // 2. Sort the array
+    beData.sort((a, b) => {
+        // If both have numeric miles, sort by lowest first
+        if (a.miles !== null && b.miles !== null) {
+            return a.miles - b.miles;
+        }
+        // If one is numeric and the other is N/A (null), numeric comes first
+        if (a.miles !== null) return -1;
+        if (b.miles !== null) return 1;
+        
+        // If both are N/A ("Never"), sort alphabetically by provider name A-Z
+        return a.name.localeCompare(b.name);
+    });
+
+    // 3. Build the HTML Table from sorted data
+    let html = `<h3>Subscription Break-Even Analysis</h3>
+                <div class="results-scroll">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Provider</th>
+                            <th>Speed</th>
+                            <th>Sub. Cost</th>
+                            <th>Disc. Rate</th>
+                            <th>Miles to Break Even</th>
+                        </tr>
+                    </thead>
+                    <tbody>`;
+
+    beData.forEach(row => {
+        html += `<tr>
+            <td>${row.name}</td>
+            <td>${row.speedDisplay}</td>
+            <td>£${row.subCost.toFixed(2)}</td>
+            <td>${row.rate.toFixed(1)}p</td>
+            <td><strong>${row.displayText}</strong></td>
+        </tr>`;
+    });
+
+    document.getElementById("providerResults").innerHTML = html + `</tbody></table></div>`;
+    return; 
+}
 
     if (uiPreText) uiPreText.style.display = "block";
     if (uiResults) uiResults.style.display = "block";
