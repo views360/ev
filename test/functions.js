@@ -274,7 +274,7 @@ if (!isTripMode) {
             let displayMiles = "";
 
             if (rate < adhocRate) {
-                const savingPerKwh = (adhocRate - rate) / 100;
+                const savingPerKwh = (inputs.adhoc - rate) / 100;
                 const kwhNeeded = sub / savingPerKwh;
                 breakEvenMiles = Math.round(kwhNeeded * efficiency);
                 displayMiles = breakEvenMiles + " miles";
@@ -437,10 +437,10 @@ if (!isTripMode) {
             ? `<a href="${p.url}" target="_blank" style="color:inherit; text-decoration:underline;">${p.name}</a>` 
             : p.name;
         const displayName = `${providerLink}`;        // Determine display text for providers more expensive than PAYG
-        const breakEvenText = p.rate < inputs.adhocRate 
+        const breakEvenText = p.rate < inputs.adhoc 
             ? `${p.breakEvenMiles.toFixed(0)} miles` 
             : "Never";
-        const totalMilesText = p.rate < inputs.adhocRate 
+        const totalMilesText = p.rate < inputs.adhoc 
             ? `${p.totalWithBattery.toFixed(0)} miles` 
             : "N/A";
         html += `<tr class="${rowClass}">
