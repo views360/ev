@@ -274,7 +274,7 @@ if (!isTripMode) {
             let displayMiles = "";
 
             if (rate < adhocRate) {
-                const savingPerKwh = (inputs.adhoc - rate) / 100;
+                const savingPerKwh = (adhocRate - rate) / 100;
                 const kwhNeeded = sub / savingPerKwh;
                 breakEvenMiles = Math.round(kwhNeeded * efficiency);
                 displayMiles = breakEvenMiles + " miles";
@@ -311,13 +311,7 @@ if (!isTripMode) {
     });
 
     // 3. Build the HTML Table from sorted data
-    let html = `<h2>Break-Even Analysis</h2>
-                <p style='font-size: 0.8em'><strong>Short version</strong>: A lower miles value means the subscription is paid off faster.</p>
-                <p style='font-size: 0.8em'><strong>Accurate version</strong>: The break-even miles value is calculated as the number of miles you must drive at your stated vehicle efficiency 
-                 after paying for a subscription — such that the difference between your regular average PAYG rate and the subscription discount 
-                rate pays off the subscription amount for one month. After the break-even number of miles charging (and paying) at the 
-                discounted rate, you will begin to save money compared with the PAYG amount. Results are displayed in best-first order.</p>
-                <p style='font-size: 0.8em'>Adjust field values to view how they affect the results.</p>
+    let html = `<h3>Subscription Break-Even Analysis</h3>
                 <div class="results-scroll">
                 <table>
                     <thead>
@@ -418,7 +412,8 @@ if (!isTripMode) {
         });
     });
 
-    providers.sort((a, b) => a.totalJourneyCost - b.totalJourneyCost);
+    const sortVal = document.getElementById("sortResults").value;
+    providers.sort((a, b) => sortVal === "cheapest" ? a.totalJourneyCost - b.totalJourneyCost : a.name.localeCompare(b.name));
 
     let html = `<div class="results-scroll"><table><thead><tr>
         <th>Provider (click hyperlink to view subscription info)</th>
@@ -437,10 +432,10 @@ if (!isTripMode) {
             ? `<a href="${p.url}" target="_blank" style="color:inherit; text-decoration:underline;">${p.name}</a>` 
             : p.name;
         const displayName = `${providerLink}`;        // Determine display text for providers more expensive than PAYG
-        const breakEvenText = p.rate < inputs.adhoc 
+        const breakEvenText = p.rate < inputs.adhocRate 
             ? `${p.breakEvenMiles.toFixed(0)} miles` 
             : "Never";
-        const totalMilesText = p.rate < inputs.adhoc 
+        const totalMilesText = p.rate < inputs.adhocRate 
             ? `${p.totalWithBattery.toFixed(0)} miles` 
             : "N/A";
         html += `<tr class="${rowClass}">
@@ -679,6 +674,8 @@ function exportPdf() {
     // Remove UI elements not needed in PDF
     const uiElements = cloneWrapper.querySelectorAll(".input-group, .chart-wrapper, .btn-row");
     uiElements.forEach(el => {
+        const label = el.querySelector("label");
+        if (label && label.textContent.trim() === "Sort results") el.remove();
         if (el.classList.contains("chart-wrapper")) el.remove();
     });
 
