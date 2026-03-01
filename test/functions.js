@@ -225,7 +225,9 @@ function calculate() {
     const btnRow = document.querySelector(".btn-row");
     const uiResults = document.getElementById("results");
     const uiPreText = document.getElementById("preConclusionsText");
+    const sortContainer = document.getElementById("sortContainer");
 
+    if (sortContainer) sortContainer.style.display = isTripMode ? "block" : "none";
     if (tripGrid) tripGrid.style.display = isTripMode ? "grid" : "none";
     if (resultsHeader) resultsHeader.style.display = isTripMode ? "flex" : "none"; // Use 'flex' to keep arrow alignment
     if (uiResults) uiResults.style.display = isTripMode ? "flex" : "none";
