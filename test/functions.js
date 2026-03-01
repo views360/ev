@@ -419,14 +419,21 @@ if (!isTripMode) {
 
     const sortVal = document.getElementById("sortResults").value;
     providers.sort((a, b) => {
-    if (sortVal === "breakeven") {
-        // If a provider never breaks even (rate >= adhoc), move it to the end
-        const aNever = a.rate >= inputs.adhoc;
-        const bNever = b.rate >= inputs.adhoc;
-        
-        if (aNever && !bNever) return 1;
-        if (!aNever && bNever) return -1;
-        return a.breakEvenMiles - b.breakEvenMiles;
+        if (sortVal === "cheapest") {
+            return a.totalJourneyCost - b.totalJourneyCost;
+        } 
+        if (sortVal === "breakeven") {
+            // Move "Never" cases to the bottom
+            const aNever = a.rate >= inputs.adhoc;
+            const bNever = b.rate >= inputs.adhoc;
+            if (aNever && !bNever) return 1;
+            if (!aNever && bNever) return -1;
+            return a.breakEvenMiles - b.breakEvenMiles;
+        }
+        if (sortVal === "az") return a.name.localeCompare(b.name);
+        if (sortVal === "za") return b.name.localeCompare(a.name);
+        return 0;
+    });
     } else if (sortVal === "breakeven") {
             // Sort by breakEvenMiles (lowest first). 
             // Note: 'Never' cases usually have very high or null values; 
