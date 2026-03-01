@@ -434,16 +434,6 @@ if (!isTripMode) {
         if (sortVal === "za") return b.name.localeCompare(a.name);
         return 0;
     });
-    } else if (sortVal === "breakeven") {
-            // Sort by breakEvenMiles (lowest first). 
-            // Note: 'Never' cases usually have very high or null values; 
-            // if rate >= adhoc, breakEvenMiles is 0 in your current code logic.
-            return a.breakEvenMiles - b.breakEvenMiles;
-        } else {
-            // Alphabetical A-Z or Z-A
-            return sortVal === "az" ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name);
-        }
-    });
     let html = `<div class="results-scroll"><table><thead><tr>
         <th>Provider (click hyperlink to view subscription info)</th>
         <th>Sub. Fee</th>
@@ -769,3 +759,4 @@ function exportPdf() {
 }
 
 window.addEventListener("DOMContentLoaded", init);
+
