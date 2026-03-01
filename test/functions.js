@@ -314,7 +314,7 @@ if (!isTripMode) {
     });
 
     // 3. Build the HTML Table from sorted data
-    let html = `<h2 class="results-heading">BREAK-EVEN ANALYSIS</h2>
+    let html = `<h2 class="results-heading" style="text-align: center;">BREAK-EVEN ANALYSIS</h2>
                 <div class="results-scroll">
                 <table>
                     <thead>
