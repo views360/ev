@@ -203,10 +203,11 @@
     <div id="preConclusionsText">Please complete all fields in the <strong>Trip & Vehicle</strong> section</div>
     <div id="results" class="results">
 
-        <div class="input-group" style="max-width:200px;">
+        <div id="sortContainer" class="input-group" style="max-width:200px;">
             <label>Sort results</label>
             <select id="sortResults" onchange="calculate()">
                 <option value="cheapest">Cheapest first</option>
+                <option value="lowestBE">Break-even miles (low to high)</option>
                 <option value="az">A → Z</option>
                 <option value="za">Z → A</option>
             </select>
@@ -233,4 +234,5 @@
 
 <script src="functions.js"></script>
 </body>
+
 </html>
