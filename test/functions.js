@@ -372,6 +372,8 @@ if (!isTripMode) {
     uiResults.style.display = "block";
     if (uiShare) uiShare.style.display = "";
     if (uiPdf) uiPdf.style.display = "";
+    document.querySelector(".calc-lines").style.display = "block";
+    document.querySelector(".chart-wrapper").style.display = "block";
 
     const startChargeKwh = (inputs.soc / 100) * inputs.batteryKwh;
     const startChargeCost = startChargeKwh * (inputs.startChargeRate / 100);
@@ -738,5 +740,6 @@ function exportPdf() {
         });
     });
 }
+
 
 window.addEventListener("DOMContentLoaded", init);
