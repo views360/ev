@@ -228,6 +228,7 @@ function calculate() {
 
     if (tripGrid) tripGrid.style.display = isTripMode ? "grid" : "none";
     if (resultsHeader) resultsHeader.style.display = isTripMode ? "flex" : "none"; // Use 'flex' to keep arrow alignment
+    if (uiResults) uiResults.style.display = isTripMode ? "flex" : "none";
     if (btnRow) btnRow.style.display = isTripMode ? "flex" : "none";
 
     // If not in Trip Savings mode, ensure Trip-specific messages and results are hidden
@@ -742,4 +743,3 @@ function exportPdf() {
 }
 
 window.addEventListener("DOMContentLoaded", init);
-
