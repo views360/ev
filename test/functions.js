@@ -311,7 +311,7 @@ if (!isTripMode) {
     });
 
     // 3. Build the HTML Table from sorted data
-    let html = `<h3>Subscription Break-Even Analysis</h3>
+    let html = `<h2>Break-Even Analysis</h2>
                 <div class="results-scroll">
                 <table>
                     <thead>
@@ -742,3 +742,4 @@ function exportPdf() {
 }
 
 window.addEventListener("DOMContentLoaded", init);
+
