@@ -418,8 +418,25 @@ if (!isTripMode) {
     });
 
     const sortVal = document.getElementById("sortResults").value;
-    providers.sort((a, b) => sortVal === "cheapest" ? a.totalJourneyCost - b.totalJourneyCost : a.name.localeCompare(b.name));
-
+    providers.sort((a, b) => {
+    if (sortVal === "breakeven") {
+        // If a provider never breaks even (rate >= adhoc), move it to the end
+        const aNever = a.rate >= inputs.adhoc;
+        const bNever = b.rate >= inputs.adhoc;
+        
+        if (aNever && !bNever) return 1;
+        if (!aNever && bNever) return -1;
+        return a.breakEvenMiles - b.breakEvenMiles;
+    } else if (sortVal === "breakeven") {
+            // Sort by breakEvenMiles (lowest first). 
+            // Note: 'Never' cases usually have very high or null values; 
+            // if rate >= adhoc, breakEvenMiles is 0 in your current code logic.
+            return a.breakEvenMiles - b.breakEvenMiles;
+        } else {
+            // Alphabetical A-Z or Z-A
+            return sortVal === "az" ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name);
+        }
+    });
     let html = `<div class="results-scroll"><table><thead><tr>
         <th>Provider (click hyperlink to view subscription info)</th>
         <th>Sub. Fee</th>
