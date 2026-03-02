@@ -649,6 +649,66 @@ tr.bad td { color: var(--danger); }
     50% { box-shadow: var(--glow-strong); border-color: #fff; }
 }
 
+/* Help Panel Styles */
+.help-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    display: none; /* Hidden by default */
+    justify-content: flex-end;
+    overflow: hidden;
+}
+
+.help-panel {
+    width: 350px;
+    height: 100%;
+    background: var(--panel);
+    border-left: 4px solid #39FF14; /* Neon Green Boundary */
+    box-shadow: -10px 0 30px rgba(0,0,0,0.5);
+    padding: 40px 25px;
+    position: relative;
+    transform: translateX(100%); /* Start off-screen to the right */
+    transition: transform 0.4s ease-out;
+    display: flex;
+    flex-direction: column;
+}
+
+.help-panel.active {
+    transform: translateX(0);
+}
+
+.help-panel.slide-left {
+    transform: translateX(-120%);
+}
+
+.close-help {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    background: none;
+    border: none;
+    color: var(--text);
+    font-size: 2rem;
+    cursor: pointer;
+}
+
+.help-content {
+    flex-grow: 1;
+    margin-top: 20px;
+}
+
+.help-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+
 
 /* ============================================================
    MOBILE FIXES REQUESTED BY USER (APPLY BELOW 700px ONLY)
@@ -751,3 +811,4 @@ tr.bad td { color: var(--danger); }
     }
 
 }
+
