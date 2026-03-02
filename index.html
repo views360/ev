@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>EV Subscription Charging Comparison</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+<div id="helpOverlay" class="help-overlay">
+    <div class="help-modal">
+        <button class="close-x" onclick="closeHelp()">×</button>
+        
+        <div class="help-slides" id="helpSlides">
+            
+            <div class="help-slide">
+                <h2>Welcome to the EV Subscription Comparison Tool</h2>
+                <p>Going on a long trip and want to know if a one-month EV charging subscription will save you money over PAYG rates?</p>
+				<p>This tool will tell you!</p>
+				<p style="text-align: center; margin: 30px 0 25px 0"><img src="ev-mg.webp" label="EV" style="height: 50px" /></p>
+                <div class="help-footer">
+                    <button class="btn secondary" onclick="moveSlide(1)">Next&nbsp;&gt;</button>
+                </div>
+            </div>
+
+            <div class="help-slide">
+                <h2>Comparison Modes</h2>
+                <p>Switch between two modes: <ol><li><strong>BREAK EVEN</strong> (default)</li>
+		<li><strong>TRIP SAVINGS</strong>.</li></ul></p>
+                <div class="help-footer">
+                    <button class="btn" onclick="moveSlide(-1)">&lt;&nbsp;Back</button>
+                    <button class="btn secondary" onclick="moveSlide(1)">Next&nbsp;&gt;</button>
+                </div>
+            </div>
+
+            <div class="help-slide">
+                <h2>BREAK EVEN</h2>
+                <p><strong>Break Even</strong> (default mode) displays a break-even-miles value for all subscription providers. This tells you how many miles you must drive using a provider's discounted rate to recoup its subscription fee.</p>                
+                <div class="help-footer">
+                    <button class="btn" onclick="moveSlide(-1)">&lt;&nbsp;Back</button>
+                    <button class="btn secondary" onclick="moveSlide(1)">Next&nbsp;&gt;</button>
+                </div>
+            </div>
+
+            <div class="help-slide">
+                <h2>TRIP SAVINGS</h2>
+                <p><strong>Trip Savings</strong> mode calculates potential savings for a planned trip.</p>
+                <div class="help-footer">
+                    <button class="btn" onclick="moveSlide(-1)">&lt;&nbsp;Back</button>
+                    <button class="btn secondary" onclick="moveSlide(1)">Next&nbsp;&gt;</button>
+                </div>
+            </div>
+
+            <div class="help-slide">
+                <h2>Assessing Results</h2>
+                <p>After completing all fields (which you may edit on the fly), the results table at the bottom of the page will automatically update.</p><p>If you are unsure what a field is asking for, hover over (or click) the💡for more information.</p>
+<p>Don't forget that subscriptions last for an entire month.</p>
+                <div class="help-footer">
+                    <button class="btn" onclick="moveSlide(-1)">&lt;&nbsp;Back</button>
+                    <button class="btn secondary" onclick="closeHelp()">Get&nbsp;Started</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="app">
+
+    <div class="header-row">
+        <h1>EV Subscription Charging Comparison</h1>
+        <div class="top-buttons">
+            <button class="btn secondary" id="themeToggle" onclick="toggleTheme()">Light/Dark View</button>
+            <a href="https://www.facebook.com/kelvin.a.hill" target="_blank" class="btn secondary">Contact Author</a>
+            <button id="resetAll" class="btn secondary" onclick="resetAll()">Reset All</button>
+        </div>
+    </div>
+
+<div class="toggle-container-block">
+    <div class="comparison-mode-box">
+        <span class="comparison-label">Comparison Mode</span>
+        <div class="pill-toggle">
+            <div id="pill-slider" class="pill-slider"></div>
+            <button type="button" class="pill-btn active" onclick="setToggle('break-even', this)">Break Even</button>
+            <button type="button" class="pill-btn" onclick="setToggle('trip-savings', this)">Trip Savings</button>
+        </div>
+    </div>
+</div>
+
+<div id="breakEvenCard" class="card" style="margin-bottom: 20px; max-width: 400px; margin-left: auto; margin-right: auto;">
+    <h3>Trip & Vehicle</h3>
+    <div class="input-group">
+        <label for="efficiencyBE">Vehicle efficiency (miles per kWh)
+            <div class="tooltip-container">
+                <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
+                <div class="tooltip-box">Used to calculate how many miles you need to drive to break even.</div>
+            </div>
+        </label>
+        <input type="number" id="efficiencyBE" placeholder="e.g., 3.5" step="0.1">
+    </div>
+    <div class="input-group">
+        <label for="minSpeedBE">Minimum desired charging speed
+            <div class="tooltip-container">
+                <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
+                <div class="tooltip-box">Filter out slower charging speeds from the results if you don't ever use them, else they will skew the results because they are cheaper (e.g., setting the value to 50kW will filter out 7kW and 22kW).</div>
+            </div>
+        </label>
+        <select id="minSpeedBE">
+            <option value="7">7kW AC (fast)</option>
+            <option value="22">22kW AC (accelerated)</option>
+            <option value="50" selected>50kW DC (rapid)</option>
+            <option value="75">75kW DC(ultra rapid)</option>
+            <option value="150">150kW DC (high power)</option>
+        </select>
+    </div>
+    <div class="input-group">
+        <label for="adhocBE">Standard PAYG rate (pence per kWh)
+            <div class="tooltip-container">
+                <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
+                <div class="tooltip-box">This is the average amount you would ordinarily expect to pay during your trip while using PAYG chargers. If you already get a discount (e.g., 8% from Electroverse), input the discounted rate.</div>
+            </div>
+        </label>
+        <input type="number" id="adhocBE" placeholder="e.g., 62 (62p is the 50kW Lidl+ app price)" step="0.1">
+    </div>
+</div>
+
+    <div class="grid">
+        <div class="card">
+            <h3>Trip & Vehicle</h3>
+            <p style="font-size: 0.8em; margin-bottom: 20px">Click💡for explanation.</p>
+            <div class="input-row">
+                <div class="input-group">
+                    <label for "journeyMiles">Trip distance (miles)
+                        <div class="tooltip-container">
+                          <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
+                              <div class="tooltip-box">How far do you plan to travel? Adjust this value, and the results (at the bottom of the page) will auto-update.</div>
+                        </div>
+                    </label>
+                    <input type="number" id="journeyMiles" placeholder="e.g., 250">
+                </div>
+                <div class="input-group">
+                    <label for "batteryKwh">Battery size (kWh)
+                         <div class="tooltip-container">
+                            <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
+                          <div class="tooltip-box">What is the useable size of your vehicle's battery?</div>
+                        </div>
+                    </label>
+                    <input type="number" id="batteryKwh" placeholder="e.g., 61">
+                </div>
+            </div>
+
+            <div class="input-row">
+                <div class="input-group">
+                    <label for "soc">Starting state of charge (%)
+                        <div class="tooltip-container">
+                            <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
+                          <div class="tooltip-box">How much charge will your EV have when you begin your trip?</div>
+                        </div>
+                    </label>
+                    <input type="number" id="soc" placeholder="e.g., 90">
+                </div>
+                <div class="input-group">
+                    <label for ">Vehicle efficiency (miles per kWh)
+                        <div class="tooltip-container">
+                            <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
+                        <div class="tooltip-box">This is likely to be between 2.5 and 5, depending on the time of year and your driving style and habits. You can either estimate it for the time of year when you will travel, or you can reset your trip counter and calculate it if your trip is imminent.</div>
+                        </div>
+                    </label>
+                    <input type="number" id="efficiency" placeholder="e.g., 3.5">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="minSpeed">
+                    Minimum desired charging speed
+                    <div class="tooltip-container">
+                        <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
+                        <div class="tooltip-box">Filter out slower charging speeds from the results if you don't plan to use them during your trip, else they will skew the results because they are cheaper (e.g., setting the value to 50kW will filter out 7kW and 22kW).</div>
+                    </div>
+                </label>
+                <select id="minSpeed">
+                    <option value="7">7kW AC (fast)</option>
+                    <option value="22">22kW AC (accelerated)</option>
+                    <option value="50" selected>50kW DC (rapid)</option>
+                    <option value="75">75kW DC(ultra rapid)</option>
+                    <option value="150">150kW DC (high power)</option>
+                </select>
+            </div>
+
+            <div class="input-row">
+                <div class="input-group">
+                    <label>Starting charge type
+                        <div class="tooltip-container">
+                            <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
+                          <div class="tooltip-box">Before you begin your trip, will you have charged your battery at home or using PAYG charging?</div>
+                        </div>                        
+                    </label>
+                    <select id="startChargeType">
+                        <option value="home">Cheap home charging</option>
+                        <option value="public">PAYG Public charging</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Starting rate (pence per kWh)
+                        <div class="tooltip-container">
+                            <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
+                          <div class="tooltip-box">When you charge your battery before the trip, how much will the rate be?</div>
+                        </div>                        
+                    </label>
+                    <input type="number" id="startChargeRate" placeholder="e.g., 7.5">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>Typical average PAYG public rate you pay (pence per kWh)
+                    <div class="tooltip-container">
+                        <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
+                      <div class="tooltip-box">This is the average amount you would ordinarily expect to pay during your trip while using PAYG chargers. If you already get a discount (e.g., 8% from Electroverse), input the discounted rate. This will be the baseline for calculating whether it is possible to make your trip cheaper.</div>
+                    </div>                    
+                </label>
+                <input type="number" id="adhoc" placeholder="e.g., 62 (62p is the 50kW Lidl+ app price)">
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="providers-header-row">
+                <h3>Subscriptions & Discounts</h3>
+                <button type="button" class="btn secondary" id="toggleProvidersBtn" onclick="toggleProviderVisibility()" style="margin-bottom: 10px; width: 100%;">
+                  Collapse Providers list
+                </button>
+                <div id="providerControls">
+                    <p style="font-size: 0.8em; margin-bottom: 15px">Select <strong>all</strong> subscription providers to identify the cheapest for your planned route compared with the baseline for PAYG public charging. Scroll down for the results. You may also add, remove, and temporarily edit individual providers if details are outdated.</p>
+                    <div class="button-group" style="display:flex; gap:6px; margin-bottom: 20px">
+                        <button type="button" class="btn btn-glow" onclick="addAllProviders()">Add all providers</button>
+                        <button type="button" class="btn secondary" onclick="createProviderBox()">Add provider</button>
+                    </div>
+                </div>
+            </div>
+            <div id="collapsibleProviders">
+                <div id="providers"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- NEW RESULTS HEADING -->
+    <div id="resultsHeader" class="results-header-container">
+        <h2 class="results-heading">RESULTS</h2>
+        <a href="#" class="jump-btn-pulse" title="Back to top" style="text-decoration: none;">↑</a>
+
+    <div class="btn-row">
+        <button type="button" class="btn secondary" id="shareBtn" onclick="shareLink()">Copy shareable link</button>
+        <button type="button" class="btn secondary" id="pdfBtn" onclick="exportPdf()">Export as PDF</button>
+    </div>
+    </div>
+
+    <div id="preConclusionsText">Please complete all fields in the <strong>Trip & Vehicle</strong> section</div>
+    <div id="results" class="results">
+
+        <div id="sortContainer" class="input-group" style="max-width:200px;">
+            <label>Sort results</label>
+            <select id="sortResults" onchange="calculate()">
+                <option value="cheapest">Cheapest first</option>
+                <option value="breakeven">Break-even PAYG public charging miles (low to high)</option>
+                <option value="az">A → Z</option>
+                <option value="za">Z → A</option>
+            </select>
+        </div>
+
+        <div class="calc-lines">
+            <div id="preChargeLine"></div>
+            <div id="homeRangeLine"></div>
+            <div id="publicMilesLine"></div>
+            <div id="publicKwhLine"></div>
+            <div id="adhocCostLine"></div>
+        </div>
+
+        <div id="providerResults"></div>
+        <div id="conclusionsBox"></div>
+        <div id="summaryBox" class="summary"></div>
+
+        <div class="chart-wrapper">
+            Click a legend box/text to show/hide line
+            <canvas id="costChart" height="220"></canvas>
+        </div>
+    </div>
+</div>
+
+<script src="functions.js"></script>
+</body>
+</html>
