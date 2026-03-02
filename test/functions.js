@@ -761,3 +761,32 @@ function exportPdf() {
 }
 
 window.addEventListener("DOMContentLoaded", init);
+
+// ===============================
+// Help Modal Logic
+// ===============================
+let currentSlide = 0;
+
+function moveSlide(step) {
+    currentSlide += step;
+    const slidesContainer = document.getElementById('helpSlides');
+    // Slide right to left (negative translateX)
+    const offset = currentSlide * -33.333; 
+    slidesContainer.style.transform = `translateX(${offset}%)`;
+}
+
+function closeHelp() {
+    const overlay = document.getElementById('helpOverlay');
+    overlay.style.opacity = '0';
+    setTimeout(() => {
+        overlay.style.display = 'none';
+    }, 300);
+}
+
+// Automatically close if user clicks the dark backdrop (optional)
+window.onclick = function(event) {
+    const overlay = document.getElementById('helpOverlay');
+    if (event.target == overlay) {
+        closeHelp();
+    }
+}
