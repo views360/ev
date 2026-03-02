@@ -309,10 +309,12 @@ function calculate() {
                             <tr>
                                 <th>Provider (click hyperlink to view subscription info)</th>
                                 <th>Speed</th>
-                                <th>Sub. Cost</th>
+                                <th>Sub. Cost<div class="tooltip-container">
+                            <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
+                          <div class="tooltip-box">This is how much the provider's subscription fee, which gives you access to their discounted rate for ONE MONTH.</div></th>
                                 <th>Disc. Rate<div class="tooltip-container">
                             <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
-                          <div class="tooltip-box">This is the provider's discounted charge rate (per kWh) that you pay to charge after subscribing for one month. Remember, a subscription lasts for an entire month.</div></th>
+                          <div class="tooltip-box">This is the provider's discounted charge rate (per kWh) on offer after subscribing for one month. Remember, a subscription lasts for an entire month.</div></th>
                                 <th>Break Even Miles<div class="tooltip-container">
                             <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
                           <div class="tooltip-box">This is the number of miles you must drive on the provider's discounted rate to pay off the subscription fee. Remember, a subscription lasts for an entire month.</div></th>
