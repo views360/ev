@@ -760,12 +760,12 @@ function exportPdf() {
     });
 }
 
-// Help Panel Logic
+// Help Panel State & Content
 let currentHelpStep = 0;
 const helpScreens = [
-    { title: "Welcome!", text: "This app helps you compare EV charging subscription costs against standard PAYG rates." },
-    { title: "Trip & Vehicle", text: "Enter your trip details and vehicle efficiency to see tailored results for your journey." },
-    { title: "Providers", text: "Add different charging providers to see which subscription saves you the most money." }
+    { title: "Welcome!", text: "This app compares EV subscription costs against standard PAYG rates." },
+    { title: "Trip & Vehicle", text: "Enter your journey details to see customized charging results." },
+    { title: "Providers", text: "Select different providers to find the best subscription for your needs." }
 ];
 
 function initHelp() {
@@ -778,7 +778,9 @@ function initHelp() {
 function showHelp() {
     currentHelpStep = 0;
     updateHelpUI();
-    document.getElementById("helpOverlay").style.display = "flex";
+    const overlay = document.getElementById("helpOverlay");
+    overlay.style.display = "flex";
+    // Small timeout to allow browser to trigger the CSS transition
     setTimeout(() => {
         document.getElementById("helpPanel").classList.add("active");
     }, 10);
@@ -788,21 +790,30 @@ function updateHelpUI() {
     const content = document.getElementById("helpContent");
     const step = helpScreens[currentHelpStep];
     
+    // Inject content
     content.innerHTML = `<h3>${step.title}</h3><p>${step.text}</p>`;
     
-    document.getElementById("prevHelp").style.display = currentHelpStep > 0 ? "block" : "none";
-    document.getElementById("nextHelp").textContent = currentHelpStep === helpScreens.length - 1 ? "Finish" : "Next";
+    // Navigation Button Logic
+    const prevBtn = document.getElementById("prevHelp");
+    const nextBtn = document.getElementById("nextHelp");
+
+    // "Previous" button only on screen 2 and 3
+    prevBtn.style.display = currentHelpStep > 0 ? "flex" : "none";
+    
+    // "Next" becomes "Finish" on the last screen
+    nextBtn.textContent = currentHelpStep === helpScreens.length - 1 ? "Finish" : "Next";
 }
 
 function changeHelp(direction) {
     const panel = document.getElementById("helpPanel");
     
+    // If clicking "Finish" on last screen
     if (direction === 1 && currentHelpStep === helpScreens.length - 1) {
         finishHelp();
         return;
     }
 
-    // Slide transition effect
+    // Animation transition
     panel.classList.remove("active");
     if (direction === 1) panel.classList.add("slide-left");
 
@@ -814,6 +825,11 @@ function changeHelp(direction) {
     }, 400);
 }
 
+function finishHelp() {
+    setCookie("hasSeenHelp", true); // Remember choice
+    closeHelp();
+}
+
 function closeHelp() {
     const panel = document.getElementById("helpPanel");
     panel.classList.remove("active");
@@ -822,17 +838,14 @@ function closeHelp() {
     }, 400);
 }
 
-function finishHelp() {
-    setCookie("hasSeenHelp", true); // Remember the user has seen it
-    closeHelp();
-}
-
-// Modify existing resetAll to re-invoke help
-const originalResetAll = resetAll;
+// Modify the Reset All function to clear the cookie
+const baseResetAll = resetAll;
 resetAll = function() {
     document.cookie = "hasSeenHelp=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    originalResetAll();
+    baseResetAll();
 };
 
-// Auto-launch on window load
+// Initialize help on load
 window.addEventListener('load', initHelp);
+
+window.addEventListener("DOMContentLoaded", init);
