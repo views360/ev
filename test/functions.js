@@ -219,7 +219,6 @@ function calculate() {
     const beCard = document.getElementById("breakEvenCard");
     if (beCard) beCard.style.display = isTripMode ? "none" : "block";
     
-    // UI visibility based on mode
     const tripGrid = document.querySelector(".grid");
     const resultsHeader = document.getElementById("resultsHeader");
     const btnRow = document.querySelector(".btn-row");
@@ -229,118 +228,114 @@ function calculate() {
 
     if (sortContainer) sortContainer.style.display = isTripMode ? "block" : "none";
     if (tripGrid) tripGrid.style.display = isTripMode ? "grid" : "none";
-    if (resultsHeader) resultsHeader.style.display = isTripMode ? "flex" : "none"; // Use 'flex' to keep arrow alignment
+    if (resultsHeader) resultsHeader.style.display = isTripMode ? "flex" : "none";
     if (uiResults) uiResults.style.display = isTripMode ? "flex" : "none";
     if (btnRow) btnRow.style.display = isTripMode ? "flex" : "none";
 
-    // If not in Trip Savings mode, ensure Trip-specific messages and results are hidden
-if (!isTripMode) {
-    const efficiency = parseFloat(document.getElementById("efficiencyBE").value);
-    const adhocRate = parseFloat(document.getElementById("adhocBE").value) || 0;
-    // Get the current minimum speed selection
-    const minSpeedSelection = parseFloat(document.getElementById("minSpeedBE").value) || 0;
+    if (!isTripMode) {
+        const efficiency = parseFloat(document.getElementById("efficiencyBE").value);
+        const adhocRate = parseFloat(document.getElementById("adhocBE").value) || 0;
+        const minSpeedSelection = parseFloat(document.getElementById("minSpeedBE").value) || 0;
 
-    if (isNaN(efficiency) || efficiency <= 0 || isNaN(adhocRate) || adhocRate <= 0) {
-        uiPreText.innerHTML = "Please enter valid <strong>Efficiency</strong> and <strong>PAYG Rate</strong> values.";
-        uiPreText.style.display = "block";
-        uiResults.style.display = "none";
-        return;
-    }
+        if (isNaN(efficiency) || efficiency <= 0 || isNaN(adhocRate) || adhocRate <= 0) {
+            uiPreText.innerHTML = "Please enter valid <strong>Efficiency</strong> and <strong>PAYG Rate</strong> values.";
+            uiPreText.style.display = "block";
+            uiResults.style.display = "none";
+            return;
+        }
 
-    uiPreText.style.display = "none";
-    uiResults.style.display = "block";
-    
-    document.querySelector(".calc-lines").style.display = "none";
-    document.querySelector(".chart-wrapper").style.display = "none";
-
-    let beData = [];
-
-    // 1. Process all providers and their speeds into a flat array
-    PRESETS.forEach(p => {
-        const sub = p.subscription.monthlyCost;
-        const rates = p.rates;
-        const speedKeys = Object.keys(rates);
+        uiPreText.style.display = "none";
+        uiResults.style.display = "block";
         
-        speedKeys.forEach(speed => {
-            const numericSpeed = speed === 'default' ? 0 : parseFloat(speed);
+        document.querySelector(".calc-lines").style.display = "none";
+        document.querySelector(".chart-wrapper").style.display = "none";
+
+        let beData = [];
+
+        PRESETS.forEach(p => {
+            const sub = p.subscription.monthlyCost;
+            const rates = p.rates;
+            const speedKeys = Object.keys(rates);
             
-            // FIX: Skip this entry if it's slower than the user's minimum speed
-            // (We keep 'default' as it usually represents any available speed)
-            if (speed !== 'default' && numericSpeed < minSpeedSelection) {
-                return; 
-            }
+            speedKeys.forEach(speed => {
+                const numericSpeed = speed === 'default' ? 0 : parseFloat(speed);
+                
+                if (speed !== 'default' && numericSpeed < minSpeedSelection) {
+                    return; 
+                }
 
-            const rate = rates[speed];
-            const speedDisplay = speed === 'default' ? "Max. available" : `${speed}kW`;
-            
-            let breakEvenMiles = null; 
-            let displayMiles = "";
+                const rate = rates[speed];
+                const speedDisplay = speed === 'default' ? "Max. available" : `${speed}kW`;
+                
+                let breakEvenMiles = null; 
+                let displayMiles = "";
 
-            if (rate < adhocRate) {
-                const savingPerKwh = (adhocRate - rate) / 100;
-                const kwhNeeded = sub / savingPerKwh;
-                breakEvenMiles = Math.round(kwhNeeded * efficiency);
-                displayMiles = breakEvenMiles + " miles";
-            } else if (sub > 0) {
-                displayMiles = "Never (Rate ≥ PAYG)";
-            } else {
-                breakEvenMiles = 0;
-                displayMiles = "0 (Free/No Sub)";
-            }
+                if (rate < adhocRate) {
+                    const savingPerKwh = (adhocRate - rate) / 100;
+                    const kwhNeeded = sub / savingPerKwh;
+                    breakEvenMiles = Math.round(kwhNeeded * efficiency);
+                    displayMiles = breakEvenMiles + " miles";
+                } else if (sub > 0) {
+                    displayMiles = "Never (Rate ≥ PAYG)";
+                } else {
+                    breakEvenMiles = 0;
+                    displayMiles = "0 (Free/No Sub)";
+                }
 
-            beData.push({
-                name: p.name,
-                speedDisplay: speedDisplay,
-                subCost: sub,
-                rate: rate,
-                miles: breakEvenMiles,
-                displayText: displayMiles
+                beData.push({
+                    name: p.name,
+                    url: p.subscription?.url, // Store URL
+                    comments: p.subscription?.comments || "", // Store Comments
+                    speedDisplay: speedDisplay,
+                    subCost: sub,
+                    rate: rate,
+                    miles: breakEvenMiles,
+                    displayText: displayMiles
+                });
             });
         });
-    });
 
-    // 2. Sort the array
-    beData.sort((a, b) => {
-        // If both have numeric miles, sort by lowest first
-        if (a.miles !== null && b.miles !== null) {
-            return a.miles - b.miles;
-        }
-        // If one is numeric and the other is N/A (null), numeric comes first
-        if (a.miles !== null) return -1;
-        if (b.miles !== null) return 1;
-        
-        // If both are N/A ("Never"), sort alphabetically by provider name A-Z
-        return a.name.localeCompare(b.name);
-    });
+        beData.sort((a, b) => {
+            if (a.miles !== null && b.miles !== null) return a.miles - b.miles;
+            if (a.miles !== null) return -1;
+            if (b.miles !== null) return 1;
+            return a.name.localeCompare(b.name);
+        });
 
-    // 3. Build the HTML Table from sorted data
-    let html = `<h2 class="results-heading" style="text-align: center;">BREAK-EVEN ANALYSIS</h2>
-                <div class="results-scroll">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Provider</th>
-                            <th>Speed</th>
-                            <th>Sub. Cost</th>
-                            <th>Disc. Rate</th>
-                            <th>Miles to Break Even</th>
-                        </tr>
-                    </thead>
-                    <tbody>`;
+        let html = `<h2 class="results-heading" style="text-align: center;">BREAK-EVEN ANALYSIS</h2>
+                    <div class="results-scroll">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Provider (click for info)</th>
+                                <th>Speed</th>
+                                <th>Sub. Cost</th>
+                                <th>Disc. Rate</th>
+                                <th>Miles to Break Even</th>
+                            </tr>
+                        </thead>
+                        <tbody>`;
 
-    beData.forEach(row => {
-        html += `<tr>
-            <td>${row.name}</td>
-            <td>${row.speedDisplay}</td>
-            <td>£${row.subCost.toFixed(2)}</td>
-            <td>${row.rate.toFixed(1)}p</td>
-            <td><strong>${row.displayText}</strong></td>
-        </tr>`;
-    });
+        beData.forEach(row => {
+            const providerLink = row.url 
+                ? `<a href="${row.url}" target="_blank" style="color:inherit; text-decoration:underline;">${row.name}</a>` 
+                : row.name;
 
-    document.getElementById("providerResults").innerHTML = html + `</tbody></table></div>`;
-    return; 
-}
+            html += `<tr>
+                <td>
+                    ${providerLink}
+                    <div style="font-size: 0.75rem; opacity:0.8;">${row.comments}</div>
+                </td>
+                <td>${row.speedDisplay}</td>
+                <td>£${row.subCost.toFixed(2)}</td>
+                <td>${row.rate.toFixed(1)}p</td>
+                <td><strong>${row.displayText}</strong></td>
+            </tr>`;
+        });
+
+        document.getElementById("providerResults").innerHTML = html + `</tbody></table></div>`;
+        return; 
+    }
 
     if (uiPreText) uiPreText.style.display = "block";
     if (uiResults) uiResults.style.display = "block";
@@ -759,4 +754,3 @@ function exportPdf() {
 }
 
 window.addEventListener("DOMContentLoaded", init);
-
