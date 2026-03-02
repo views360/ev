@@ -689,12 +689,12 @@ tr.bad td { color: var(--danger); }
 
 .help-slides {
     display: flex;
-    width: 300%; /* 3 slides */
+    width: 500%; /* 5 slides */
     transition: transform 0.4s ease-in-out;
 }
 
 .help-slide {
-    width: 33.333%;
+    width: 20%;
     padding: 40px;
     box-sizing: border-box;
     text-align: center;
