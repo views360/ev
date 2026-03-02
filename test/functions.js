@@ -313,7 +313,7 @@ function calculate() {
                                 <th>Disc. Rate</th>
                                 <th>Miles to Break Even<div class="tooltip-container">
                             <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
-                          <div class="tooltip-box">The number of miles you must drive after subscribing to pay off the subscription fee.</div></th>
+                          <div class="tooltip-box">The number of miles you must drive (on the discounted rate) after subscribing to pay off the subscription fee.</div></th>
                             </tr>
                         </thead>
                         <tbody>`;
