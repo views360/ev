@@ -789,16 +789,18 @@ function showHelp() {
 function updateHelpUI() {
     const step = helpScreens[currentHelpStep];
     const content = document.getElementById("helpContent");
-    const nextBtn = document.getElementById("nextHelp");
-    const prevBtn = document.getElementById("prevHelp");
+    const nextBtn = document.getElementById("nextHelp"); // Add this
+    const prevBtn = document.getElementById("prevHelp"); // Add this
 
     content.innerHTML = `<h3>${step.title}</h3><p>${step.text}</p>`;
     
-    // Explicitly manage button visibility
+    // This line is already in your code:
     prevBtn.style.display = currentHelpStep > 0 ? "block" : "none";
-    nextBtn.style.display = "block"; // Fix: Ensure Next is always visible
+
+    // ADD THIS LINE BELOW:
+    // This ensures that even if the footer or button was hidden, it becomes visible now.
+    nextBtn.style.display = "block"; 
     
-    // Update button text
     nextBtn.textContent = currentHelpStep === helpScreens.length - 1 ? "Finish" : "Next";
 }
 
