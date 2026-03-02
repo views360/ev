@@ -595,14 +595,14 @@ function init() {
         
         if (effTrip && effBE) {
             // Initial sync from saved/URL values
-            effBE.value = effTrip.value || 3.5; 
+            effBE.value = effTrip.value; 
             syncFields(effTrip, effBE);
             syncFields(effBE, effTrip);
         }
         
         if (adhocTrip && adhocBE) {
             // Initial sync from saved/URL values
-            adhocBE.value = adhocTrip.value || 79;
+            adhocBE.value = adhocTrip.value;
             syncFields(adhocTrip, adhocBE);
             syncFields(adhocBE, adhocTrip);
         }
