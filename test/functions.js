@@ -787,17 +787,19 @@ function showHelp() {
 }
 
 function updateHelpUI() {
+    const step = helpScreens[currentHelpStep];
     const content = document.getElementById("helpContent");
-    const prevBtn = document.getElementById("prevHelp");
-    const nextBtn = document.getElementById("nextHelp"); // Changed from nextBtn to nextHelp
+    const nextBtn = document.getElementById("nextHelp"); // Correct ID from HTML
+    const prevBtn = document.getElementById("prevHelp"); // Correct ID from HTML
 
-    content.innerHTML = helpScreens[currentHelpStep];
-
-    // Update button visibility
-    prevBtn.style.visibility = currentHelpStep === 0 ? "hidden" : "visible";
+    // Fix 1: Properly access the .title and .text properties of the object
+    content.innerHTML = `<h3>${step.title}</h3><p>${step.text}</p>`;
     
-    // Use "nextHelp" consistently
-    nextBtn.style.display = "block"; 
+    // Fix 2: Ensure navigation buttons are visible
+    prevBtn.style.display = currentHelpStep > 0 ? "inline-block" : "none";
+    nextBtn.style.display = "inline-block"; 
+    
+    // Fix 3: Update the button text based on the current step
     nextBtn.textContent = currentHelpStep === helpScreens.length - 1 ? "Finish" : "Next";
 }
 
