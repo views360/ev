@@ -656,9 +656,9 @@ tr.bad td { color: var(--danger); }
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 1000;
-    display: none; /* Hidden by default */
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 2000;
+    display: flex;
     justify-content: flex-end;
     overflow: hidden;
 }
@@ -667,12 +667,13 @@ tr.bad td { color: var(--danger); }
     width: 350px;
     height: 100%;
     background: var(--panel);
-    border-left: 4px solid #39FF14; /* Neon Green Boundary */
+    /* Neon Green Boundary Box */
+    border-left: 5px solid #39FF14; 
     box-shadow: -10px 0 30px rgba(0,0,0,0.5);
     padding: 40px 25px;
     position: relative;
-    transform: translateX(100%); /* Start off-screen to the right */
-    transition: transform 0.4s ease-out;
+    transform: translateX(100%);
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
     flex-direction: column;
 }
@@ -692,19 +693,20 @@ tr.bad td { color: var(--danger); }
     background: none;
     border: none;
     color: var(--text);
-    font-size: 2rem;
+    font-size: 2.5rem;
     cursor: pointer;
+    line-height: 1;
 }
 
 .help-content {
     flex-grow: 1;
-    margin-top: 20px;
+    margin-top: 30px;
 }
 
 .help-footer {
     display: flex;
-    justify-content: flex-end;
-    gap: 10px;
+    justify-content: flex-end; /* Aligns buttons to the bottom right */
+    gap: 12px;
     margin-top: 20px;
 }
 
@@ -811,4 +813,3 @@ tr.bad td { color: var(--danger); }
     }
 
 }
-
