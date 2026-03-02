@@ -772,20 +772,31 @@ function moveSlide(step) {
     const slides = document.querySelectorAll('.help-slide');
     const totalSlides = slides.length;
     
-    // Update current index
     currentSlide += step;
+
+    // Boundary checks to prevent sliding into empty space
+    if (currentSlide < 0) currentSlide = 0;
+    if (currentSlide >= totalSlides) currentSlide = totalSlides - 1;
     
-    // Calculate the percentage based on actual slide count
+    // Calculate percentage based on actual number of slides
     const slideWidthPercent = 100 / totalSlides;
     const offset = currentSlide * -slideWidthPercent;
     
     container.style.transform = `translateX(${offset}%)`;
 }
 
-// Automatically close if user clicks the dark backdrop (optional)
-window.onclick = function(event) {
+function closeHelp() {
     const overlay = document.getElementById('helpOverlay');
-    if (event.target == overlay) {
-        closeHelp();
+    if (overlay) {
+        overlay.style.opacity = '0';
+        overlay.style.transition = 'opacity 0.3s ease';
+        // Wait for fade out before removing from view
+        setTimeout(() => {
+            overlay.style.display = 'none';
+        }, 300);
     }
 }
+
+
+
+
