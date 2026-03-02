@@ -307,7 +307,7 @@ function calculate() {
                     <table>
                         <thead>
                             <tr>
-                                <th>Provider (click for info)</th>
+                                <th>Provider (click hyperlink to view subscription info)</th>
                                 <th>Speed</th>
                                 <th>Sub. Cost</th>
                                 <th>Disc. Rate</th>
