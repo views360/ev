@@ -789,17 +789,14 @@ function showHelp() {
 function updateHelpUI() {
     const step = helpScreens[currentHelpStep];
     const content = document.getElementById("helpContent");
+    const nextBtn = document.getElementById("nextHelp");
+    const prevBtn = document.getElementById("prevHelp");
+
     content.innerHTML = `<h3>${step.title}</h3><p>${step.text}</p>`;
     
-    // Ensure both buttons are visible if needed
-    const prevBtn = document.getElementById("prevHelp");
-    const nextBtn = document.getElementById("nextHelp");
-
-    // Show/Hide Previous button
+    // Explicitly manage button visibility
     prevBtn.style.display = currentHelpStep > 0 ? "block" : "none";
-    
-    // ALWAYS show the Next/Finish button
-    nextBtn.style.display = "block"; 
+    nextBtn.style.display = "block"; // Fix: Ensure Next is always visible
     
     // Update button text
     nextBtn.textContent = currentHelpStep === helpScreens.length - 1 ? "Finish" : "Next";
