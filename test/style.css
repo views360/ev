@@ -708,8 +708,8 @@ tr.bad td { color: var(--danger); }
 .help-footer {
     margin-top: 30px;
     display: flex;
-    justify-content: flex-end;
-    gap: 10px;
+    justify-content: center; /* Changed from flex-end to center */
+    gap: 15px; /* Slightly more gap looks better when centered */
 }
 
 
@@ -817,3 +817,4 @@ tr.bad td { color: var(--danger); }
         padding: 8px 2px;
     }
 }
+
