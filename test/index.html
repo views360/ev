@@ -18,7 +18,7 @@
         <div class="help-slides" id="helpSlides">
             <div class="help-slide">
                 <h2>Welcome!</h2>
-                <p>This tool helps you compare EV charging subscription costs against standard PAYG rates.</p>
+                <p>This free tool helps you to compare EV charging subscription costs against standard PAYG rates.</p>
                 <div class="help-footer">
                     <button class="btn secondary" onclick="moveSlide(1)">Next →</button>
                 </div>
@@ -26,7 +26,7 @@
 
             <div class="help-slide">
                 <h2>Comparison Modes</h2>
-                <p>Use the toggle to Switch between <strong>Break Even</strong> mode and <strong>Trip Savings</strong>.</p><p style="font-size: 0.8em"><strong>Break Even</strong>mode will display each provider in order of the number of miles necessary to drive on its discounted rate to justify the subscription fee.</p><p style="font-size: 0.8em"><strong>Trip Savings</strong> mode allows you to view the savings available to you when planning a specific trip.</p>
+                <p>Switch between two modes: <strong>Break Even</strong> and <strong>Trip Savings</strong>.</p><p style="font-size: 0.8em"><strong>Break Even</strong> mode displays all subscription providers in order of the number of miles necessary to drive using its discounted rate to justify the subscription fee.</p><p style="font-size: 0.8em"><strong>Trip Savings</strong> mode allows you to view potential savings for a planned trip.</p>
                 <div class="help-footer">
                     <button class="btn" onclick="moveSlide(-1)">← Back</button>
                     <button class="btn secondary" onclick="moveSlide(1)">Next →</button>
@@ -35,7 +35,9 @@
 
             <div class="help-slide">
                 <h2>Getting Results</h2>
-                <p>Enter your vehicle details, select providers, and the table at the bottom will automatically update with your potential savings.</p>
+                <p>Enter values in the fields, and the results table at the bottom will automatically update with your potential savings.</p><p>If you are unsure what a field is asking for, hover over or click the <div class="tooltip-container">
+                            <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
+                        <div class="tooltip-box">Like this one</div> for more information.</p>
                 <div class="help-footer">
                     <button class="btn" onclick="moveSlide(-1)">← Back</button>
                     <button class="btn secondary" onclick="closeHelp()">Get Started</button>
@@ -266,5 +268,4 @@
 
 <script src="functions.js"></script>
 </body>
-
 </html>
