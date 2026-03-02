@@ -1,6 +1,6 @@
 const setCookie = (name, value) => {
     const date = new Date();
-    date.setTime(date.getTime() + (30 * 24 * 60 * 60 * 1000)); // 30 days
+    date.setTime(date.getTime() + (let30 * 24 * 60 * 60 * 1000)); // 30 days
     const cookieValue = encodeURIComponent(JSON.stringify(value));
     document.cookie = `${name}=${cookieValue};expires=${date.toUTCString()};path=/;SameSite=Lax`;
 };
@@ -319,7 +319,7 @@ if (!isTripMode) {
                 <table>
                     <thead>
                         <tr>
-                            <th>Provider</th>
+                            <th>Provider (click hyperlink to view info)</th>
                             <th>Speed</th>
                             <th>Sub. Cost</th>
                             <th>Disc. Rate</th>
@@ -329,8 +329,18 @@ if (!isTripMode) {
                     <tbody>`;
 
     beData.forEach(row => {
+        // Find the original preset data to get the URL and comments
+        const pData = PRESETS.find(p => p.name === row.name);
+        const providerLink = pData?.subscription?.url 
+            ? `<a href="${pData.subscription.url}" target="_blank" style="color:inherit; text-decoration:underline;">${row.name}</a>` 
+            : row.name;
+        const comments = pData?.subscription?.comments || "";
+
         html += `<tr>
-            <td>${row.name}</td>
+            <td>
+                ${providerLink}
+                <div style="font-size: 0.75rem; opacity:0.8;">${comments}</div>
+            </td>
             <td>${row.speedDisplay}</td>
             <td>£${row.subCost.toFixed(2)}</td>
             <td>${row.rate.toFixed(1)}p</td>
@@ -339,7 +349,7 @@ if (!isTripMode) {
     });
 
     document.getElementById("providerResults").innerHTML = html + `</tbody></table></div>`;
-    return; 
+    return;
 }
 
     if (uiPreText) uiPreText.style.display = "block";
@@ -759,4 +769,3 @@ function exportPdf() {
 }
 
 window.addEventListener("DOMContentLoaded", init);
-
