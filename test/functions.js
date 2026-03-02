@@ -384,8 +384,8 @@ function calculate() {
     
     document.getElementById("preChargeLine").innerHTML = `Pre-journey charge: <strong>${startChargeKwh.toFixed(1)} kWh</strong> (£${startChargeCost.toFixed(2)})`;
     document.getElementById("homeRangeLine").innerHTML = `Range from start charge: <strong>${initialRange.toFixed(0)} miles</strong>`;
-    document.getElementById("publicMilesLine").innerHTML = `Public charging miles needed: <strong>${publicMiles.toFixed(0)} miles</strong>`;
-    document.getElementById("publicKwhLine").innerHTML = `Public charging energy needed: <strong>${publicKwh.toFixed(1)} kWh</strong>`;
+    document.getElementById("publicMilesLine").innerHTML = `PAYG public charging miles needed: <strong>${publicMiles.toFixed(0)} miles</strong>`;
+    document.getElementById("publicKwhLine").innerHTML = `PAYG public charging energy needed: <strong>${publicKwh.toFixed(1)} kWh</strong>`;
     document.getElementById("adhocCostLine").innerHTML = `Total cost (Standard PAYG @ ${inputs.adhoc}p): <strong>£${totalAdhocCost.toFixed(2)}</strong>`;
 
     const providers = [];
@@ -434,10 +434,10 @@ function calculate() {
     let html = `<div class="results-scroll"><table><thead><tr>
         <th>Provider (click hyperlink to view subscription info)</th>
         <th>Sub. Fee</th>
-        <th>Rate</th>
+        <th>Disc. Rate</th>
         <th>Trip Cost</th>
         <th>vs. PAYG</th>
-        <th>Break Even (Public)</th>
+        <th>Break Even Miles (Disc. Rate)</th>
         <th>Total Miles (Inc. Battery)</th>
         </tr></thead><tbody>`;
     providers.forEach(p => {
@@ -742,7 +742,7 @@ function exportPdf() {
             const imgHeight = (bwCanvas.height * imgWidth) / bwCanvas.width;
 
             pdf.setFontSize(16);
-            pdf.text("EV Public Charging Comparison Report", pageWidth / 2, 15, { align: "center" });
+            pdf.text("EV Subscription Comparison Report", pageWidth / 2, 15, { align: "center" });
             pdf.addImage(bwCanvas.toDataURL("image/png"), "PNG", margin, 25, imgWidth, imgHeight);
             
             pdf.save("ev-charging-comparison.pdf");
