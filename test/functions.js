@@ -787,20 +787,21 @@ function showHelp() {
 }
 
 function updateHelpUI() {
-    const content = document.getElementById("helpContent");
     const step = helpScreens[currentHelpStep];
-    
-    // Inject content
+    const content = document.getElementById("helpContent");
     content.innerHTML = `<h3>${step.title}</h3><p>${step.text}</p>`;
     
-    // Navigation Button Logic
+    // Ensure both buttons are visible if needed
     const prevBtn = document.getElementById("prevHelp");
     const nextBtn = document.getElementById("nextHelp");
 
-    // "Previous" button only on screen 2 and 3
-    prevBtn.style.display = currentHelpStep > 0 ? "flex" : "none";
+    // Show/Hide Previous button
+    prevBtn.style.display = currentHelpStep > 0 ? "block" : "none";
     
-    // "Next" becomes "Finish" on the last screen
+    // ALWAYS show the Next/Finish button
+    nextBtn.style.display = "block"; 
+    
+    // Update button text
     nextBtn.textContent = currentHelpStep === helpScreens.length - 1 ? "Finish" : "Next";
 }
 
