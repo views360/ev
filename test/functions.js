@@ -797,6 +797,19 @@ function closeHelp() {
     }
 }
 
+function toggleTooltip(el) {
+    // Toggle the 'active' class on the parent container
+    const container = el.closest('.tooltip-container');
+    if (container) {
+        container.classList.toggle('active');
+    }
+}
 
-
-
+// Optional: Close tooltip when clicking elsewhere
+document.addEventListener('click', (e) => {
+    if (!e.target.closest('.tooltip-container')) {
+        document.querySelectorAll('.tooltip-container.active').forEach(openTooltip => {
+            openTooltip.classList.remove('active');
+        });
+    }
+});
