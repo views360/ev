@@ -11,6 +11,39 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
+<div id="helpOverlay" class="help-overlay">
+    <div class="help-modal">
+        <button class="close-x" onclick="closeHelp()">×</button>
+        
+        <div class="help-slides" id="helpSlides">
+            <div class="help-slide">
+                <h2>Welcome!</h2>
+                <p>This tool helps you compare EV charging subscription costs against standard PAYG rates.</p>
+                <div class="help-footer">
+                    <button class="btn secondary" onclick="moveSlide(1)">Next →</button>
+                </div>
+            </div>
+
+            <div class="help-slide">
+                <h2>Comparison Modes</h2>
+                <p>Switch between <strong>Break Even</strong> to see how many miles you need to drive to justify a fee, or <strong>Trip Savings</strong> to plan a specific journey.</p>
+                <div class="help-footer">
+                    <button class="btn" onclick="moveSlide(-1)">← Back</button>
+                    <button class="btn secondary" onclick="moveSlide(1)">Next →</button>
+                </div>
+            </div>
+
+            <div class="help-slide">
+                <h2>Getting Results</h2>
+                <p>Enter your vehicle details, select providers, and the table at the bottom will automatically update with your potential savings.</p>
+                <div class="help-footer">
+                    <button class="btn" onclick="moveSlide(-1)">← Back</button>
+                    <button class="btn secondary" onclick="closeHelp()">Get Started</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="app">
 
     <div class="header-row">
@@ -233,4 +266,5 @@
 
 <script src="functions.js"></script>
 </body>
+
 </html>
