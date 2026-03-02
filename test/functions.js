@@ -768,19 +768,18 @@ window.addEventListener("DOMContentLoaded", init);
 let currentSlide = 0;
 
 function moveSlide(step) {
+    const container = document.getElementById('helpSlides');
+    const slides = document.querySelectorAll('.help-slide');
+    const totalSlides = slides.length;
+    
+    // Update current index
     currentSlide += step;
-    const slidesContainer = document.getElementById('helpSlides');
-    // Slide right to left (negative translateX)
-    const offset = currentSlide * -33.333; 
-    slidesContainer.style.transform = `translateX(${offset}%)`;
-}
-
-function closeHelp() {
-    const overlay = document.getElementById('helpOverlay');
-    overlay.style.opacity = '0';
-    setTimeout(() => {
-        overlay.style.display = 'none';
-    }, 300);
+    
+    // Calculate the percentage based on actual slide count
+    const slideWidthPercent = 100 / totalSlides;
+    const offset = currentSlide * -slideWidthPercent;
+    
+    container.style.transform = `translateX(${offset}%)`;
 }
 
 // Automatically close if user clicks the dark backdrop (optional)
