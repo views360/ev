@@ -109,6 +109,12 @@ h3 {
     transform: translateX(-50%) translateY(0);
 }
 
+.tooltip-container:hover .tooltip-box {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+}
+
 /* Red Pulsating Effect for Warning Text */
 #preConclusionsText {
     color: var(--danger);
@@ -838,4 +844,5 @@ tr.bad td { color: var(--danger); }
         padding: 8px 2px;
     }
 }
+
 
