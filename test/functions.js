@@ -760,4 +760,79 @@ function exportPdf() {
     });
 }
 
-window.addEventListener("DOMContentLoaded", init);
+// Help Panel Logic
+let currentHelpStep = 0;
+const helpScreens = [
+    { title: "Welcome!", text: "This app helps you compare EV charging subscription costs against standard PAYG rates." },
+    { title: "Trip & Vehicle", text: "Enter your trip details and vehicle efficiency to see tailored results for your journey." },
+    { title: "Providers", text: "Add different charging providers to see which subscription saves you the most money." }
+];
+
+function initHelp() {
+    const hasSeenHelp = getCookie("hasSeenHelp");
+    if (!hasSeenHelp) {
+        showHelp();
+    }
+}
+
+function showHelp() {
+    currentHelpStep = 0;
+    updateHelpUI();
+    document.getElementById("helpOverlay").style.display = "flex";
+    setTimeout(() => {
+        document.getElementById("helpPanel").classList.add("active");
+    }, 10);
+}
+
+function updateHelpUI() {
+    const content = document.getElementById("helpContent");
+    const step = helpScreens[currentHelpStep];
+    
+    content.innerHTML = `<h3>${step.title}</h3><p>${step.text}</p>`;
+    
+    document.getElementById("prevHelp").style.display = currentHelpStep > 0 ? "block" : "none";
+    document.getElementById("nextHelp").textContent = currentHelpStep === helpScreens.length - 1 ? "Finish" : "Next";
+}
+
+function changeHelp(direction) {
+    const panel = document.getElementById("helpPanel");
+    
+    if (direction === 1 && currentHelpStep === helpScreens.length - 1) {
+        finishHelp();
+        return;
+    }
+
+    // Slide transition effect
+    panel.classList.remove("active");
+    if (direction === 1) panel.classList.add("slide-left");
+
+    setTimeout(() => {
+        currentHelpStep += direction;
+        updateHelpUI();
+        panel.classList.remove("slide-left");
+        panel.classList.add("active");
+    }, 400);
+}
+
+function closeHelp() {
+    const panel = document.getElementById("helpPanel");
+    panel.classList.remove("active");
+    setTimeout(() => {
+        document.getElementById("helpOverlay").style.display = "none";
+    }, 400);
+}
+
+function finishHelp() {
+    setCookie("hasSeenHelp", true); // Remember the user has seen it
+    closeHelp();
+}
+
+// Modify existing resetAll to re-invoke help
+const originalResetAll = resetAll;
+resetAll = function() {
+    document.cookie = "hasSeenHelp=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    originalResetAll();
+};
+
+// Auto-launch on window load
+window.addEventListener('load', initHelp);
