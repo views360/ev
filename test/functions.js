@@ -311,9 +311,9 @@ function calculate() {
                                 <th>Speed</th>
                                 <th>Sub. Cost</th>
                                 <th>Disc. Rate</th>
-                                <th>Miles to Break Even<div class="tooltip-container">
+                                <th>Break Even Miles<div class="tooltip-container">
                             <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
-                          <div class="tooltip-box">The number of miles you must drive (on the discounted rate) after subscribing to pay off the subscription fee.</div></th>
+                          <div class="tooltip-box">The number of miles you must drive (on the discounted rate) after subscribing to pay off the subscription fee. Remember, a subscription lasts for an entire month.</div></th>
                             </tr>
                         </thead>
                         <tbody>`;
@@ -442,8 +442,13 @@ function calculate() {
         <th>Disc. Rate</th>
         <th>Trip Cost</th>
         <th>vs. PAYG</th>
-        <th>Break Even Miles (Disc. Rate)</th>
-        <th>Total Miles (Inc. Battery)</th>
+        <th>Break Even Miles<div class="tooltip-container">
+                            <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
+                          <div class="tooltip-box">The number of miles you must drive (on the discounted rate) after subscribing to pay off the subscription fee. Remember, a subscription lasts for an entire month.</div></th>
+        <th>Total Miles (Inc. Battery)<div class="tooltip-container">
+                            <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
+                          <div class="tooltip-box">This is the break-even miles PLUS your battery's pre-charged miles.) after subscribing to pay off the subscription fee. Remember, a subscription lasts for an entire month.</div></th>
+        </th>
         </tr></thead><tbody>`;
     providers.forEach(p => {
         const rowClass = p.savings > 0 ? "good" : (p.savings < 0 ? "bad" : "");
