@@ -705,9 +705,16 @@ tr.bad td { color: var(--danger); }
 
 .help-footer {
     display: flex;
-    justify-content: flex-end; /* Aligns buttons to the bottom right */
-    gap: 12px;
+    justify-content: space-between;
+    align-items: center;
     margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid var(--border);
+}
+
+/* Ensure buttons are visible */
+#nextHelp, #prevHelp {
+    display: block; 
 }
 
 
