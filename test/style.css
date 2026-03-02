@@ -649,7 +649,7 @@ tr.bad td { color: var(--danger); }
     50% { box-shadow: var(--glow-strong); border-color: #fff; }
 }
 
-/* Help Modal Styles */
+/* Ensure the overlay can fade out */
 .help-overlay {
     position: fixed;
     top: 0;
@@ -661,7 +661,9 @@ tr.bad td { color: var(--danger); }
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000;
+    z-index: 2000; /* Ensure it is above everything else */
+    opacity: 1;
+    transition: opacity 0.3s ease;
 }
 
 .help-modal {
@@ -712,17 +714,23 @@ tr.bad td { color: var(--danger); }
     gap: 15px; /* Slightly more gap looks better when centered */
 }
 
-/* Centers the list block itself, but keeps text aligned to the bullets */
+/* Fix for the bullet points centering */
 .help-slide ul, .help-slide ol {
     display: inline-block;
     text-align: left;
     margin: 10px auto;
-    padding-left: 20px; /* Ensures space for the bullets */
+    padding-left: 25px;
 }
 
 /* Ensure the paragraph above doesn't get squashed */
 .help-slide p {
     margin-bottom: 15px;
+}
+
+/* Ensure buttons are clickable */
+.help-footer button, .close-x {
+    cursor: pointer;
+    pointer-events: auto;
 }
 
 
@@ -830,3 +838,4 @@ tr.bad td { color: var(--danger); }
         padding: 8px 2px;
     }
 }
+
