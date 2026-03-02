@@ -346,7 +346,12 @@ function calculate() {
     const uiShare = document.getElementById("shareBtn");
     const uiPdf = document.getElementById("pdfBtn");
 
-    const tripIncomplete = Object.values(inputs).some(val => isNaN(val));
+    const tripIncomplete = 
+        inputs.journeyMiles <= 0 || 
+        inputs.batteryKwh <= 0 || 
+        inputs.efficiency <= 0 || 
+        inputs.adhoc <= 0;
+    
     const providerBoxes = document.querySelectorAll(".provider-box");
 
     // Sequential Validation Logic for Trip Mode
@@ -356,8 +361,8 @@ function calculate() {
         uiResults.style.display = "none";
         if (uiShare) uiShare.style.display = "none";
         if (uiPdf) uiPdf.style.display = "none";
-        return;
-    } 
+        return; // Exit here if trip fields aren't valid
+    }
     
     if (providerBoxes.length === 0) {
         uiPreText.innerHTML = "Before you may view a comparison, you must select at least one provider from the list of providers (above).";
