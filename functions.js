@@ -833,40 +833,50 @@ document.addEventListener('click', (e) => {
  * to indicate that more content exists off-screen.
  */
 function hintHorizontalScroll() {
-    // Target the scrollable containers in both modes
     const scrollContainers = document.querySelectorAll('.results-scroll');
     
-    scrollContainers.forEach(container => {
-        // Check if the table is actually wider than the screen
-        if (container.scrollWidth > container.clientWidth) {
-            let scrollAmount = 0;
-            const maxPeek = 50; // Distance to scroll in pixels
-            
-            // Perform the animation
-            const scrollInterval = setInterval(() => {
-                scrollAmount += 2;
-                container.scrollLeft = scrollAmount;
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            // Only trigger when the table is 50% visible on screen
+            if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
+                const container = entry.target;
                 
-                if (scrollAmount >= maxPeek) {
-                    clearInterval(scrollInterval);
-                    // Optional: Smoothly scroll back to 0 after a short pause
-                    setTimeout(() => {
-                        container.scrollTo({ left: 0, behavior: 'smooth' });
-                    }, 500);
+                // Only peek if there is actually content to scroll to
+                if (container.scrollWidth > container.clientWidth) {
+                    let scrollAmount = 0;
+                    const maxPeek = 50; 
+                    
+                    const scrollInterval = setInterval(() => {
+                        scrollAmount += 2;
+                        container.scrollLeft = scrollAmount;
+                        
+                        if (scrollAmount >= maxPeek) {
+                            clearInterval(scrollInterval);
+                            setTimeout(() => {
+                                container.scrollTo({ left: 0, behavior: 'smooth' });
+                            }, 500);
+                        }
+                    }, 15);
+
+                    // STOP logic: Only stops if they touch or scroll the table itself
+                    const stopScroll = () => {
+                        clearInterval(scrollInterval);
+                        container.removeEventListener('touchstart', stopScroll);
+                        container.removeEventListener('mousedown', stopScroll);
+                        container.removeEventListener('wheel', stopScroll);
+                    };
+
+                    container.addEventListener('touchstart', stopScroll, {passive: true});
+                    container.addEventListener('mousedown', stopScroll);
+                    container.addEventListener('wheel', stopScroll, {passive: true});
                 }
-            }, 15);
+                // Once we've attempted the peek, stop observing this container
+                observer.unobserve(container);
+            }
+        });
+    }, { threshold: 0.5 });
 
-            // STOP the animation immediately if the user interacts
-            const stopScroll = () => {
-                clearInterval(scrollInterval);
-                container.removeEventListener('touchstart', stopScroll);
-                container.removeEventListener('mousedown', stopScroll);
-                container.removeEventListener('wheel', stopScroll);
-            };
-
-            container.addEventListener('touchstart', stopScroll);
-            container.addEventListener('mousedown', stopScroll);
-            container.addEventListener('wheel', stopScroll);
-        }
-    });
+    scrollContainers.forEach(container => observer.observe(container));
 }
+}
+
