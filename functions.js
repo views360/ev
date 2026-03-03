@@ -839,6 +839,3 @@ document.addEventListener('click', (e) => {
     }
 
 });
-
-
-
