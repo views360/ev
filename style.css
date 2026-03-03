@@ -573,6 +573,10 @@ tr.bad td { color: var(--danger); }
     color: var(--accent);
 }
 
+.results-headingTRIP {
+    color: var(--accent);
+}
+
 .results-header-container .jump-btn-pulse:hover {
     transform: translateY(-3px);
 }
