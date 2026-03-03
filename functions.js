@@ -401,7 +401,7 @@ function calculate() {
     document.getElementById("publicMilesLine").innerHTML = `PAYG public charging miles needed: <strong>${publicMiles.toFixed(0)} miles</strong> <div class="tooltip-container">
                             <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
                           <div class="tooltip-box">This is how many miles of your trip will need to be covered by public charging.</div>`;
-    document.getElementById("publicKwhLine").innerHTML = `PAYG public charging energy needed: <strong>${publicKwh.toFixed(1)} kWh</strong> @ ${inputs.adhoc}p`;
+    document.getElementById("publicKwhLine").innerHTML = `PAYG public charging energy needed: <strong>${publicKwh.toFixed(1)} kWh @ ${inputs.adhoc}p</strong>`;
     document.getElementById("adhocCostLine").innerHTML = `Total journey cost (pre-charge + standard PAYG): <strong>£${totalAdhocCost.toFixed(2)}</strong>`;
     
     const providers = [];
