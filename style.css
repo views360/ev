@@ -569,7 +569,7 @@ tr.bad td { color: var(--danger); }
 }
 
 .results-heading {
-    margin: 0 !important;
+    margin: 20 0 0 0 !important;
     color: var(--accent);
 }
 
