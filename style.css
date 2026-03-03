@@ -742,7 +742,7 @@ tr.bad td { color: var(--danger); }
 /* Constrain the first column in Break-Even Mode */
 #providerResults table td:first-child,
 #providerResults table th:first-child {
-    max-width: 250px; /* Adjust this value as needed */
+    max-width: 200px; /* Adjust this value as needed */
     white-space: normal;
     word-wrap: break-word;
     overflow: hidden;
