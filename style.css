@@ -834,6 +834,16 @@ tr.bad td { color: var(--danger); }
         background: linear-gradient(to left, var(--panel), transparent);
         z-index: 10;
     }
+
+    #providerResults table th:first-child,
+    #providerResults table td:first-child {
+        position: sticky;
+        left: 0;
+        background-color: var(--panel); /* Matches your existing theme */
+        z-index: 2;
+        border-right: 2px solid var(--accent); /* Adds a clear vertical line */
+        box-shadow: 4px 0 8px rgba(0,0,0,0.3); /* Adds depth */
+    }
 }
 
 /* Mobile adjustments for the Results Table */
@@ -861,3 +871,4 @@ tr.bad td { color: var(--danger); }
     }
 
 }
+
