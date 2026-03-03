@@ -740,18 +740,19 @@ tr.bad td { color: var(--danger); }
 }
 
 /* Constrain the first column in Break-Even Mode */
-#providerResults table td:first-child,
-#providerResults table th:first-child {
+#providerResults table th:first-child,
+#providerResults table td:first-child
+ {
     max-width: 200px; /* Adjust this value as needed */
     white-space: normal;
     word-wrap: break-word;
     overflow: hidden;
     position: sticky;
     left: 0;
-    z-index: 2; /* Ensures it stays above the scrolling content */
-    background-color: var(--panel); /* Keeps background solid so text doesn't bleed through */
-    border-right: 2px solid var(--accent);
-    /* Neon Glow Effect */
+    z-index: 2; /* Ensures it stays above other columns when scrolling */
+    background-color: var(--panel); /* Opaque background so scrolling text is hidden */
+    border-right: 2px solid var(--accent) !important;
+    /* Neon glow effect specifically on the right side */
     box-shadow: 5px 0 15px -5px var(--accent);
 }
 
@@ -759,6 +760,12 @@ tr.bad td { color: var(--danger); }
 #providerResults th:first-child {
     z-index: 3;
     background-color: var(--panel-alt);
+}
+
+/* Optional: Ensure the second column doesn't have an overlapping background */
+#providerResults td:nth-child(2),
+#providerResults th:nth-child(2) {
+    background-color: transparent !important;
 }
 
 /* Optional: Stronger neon "glow" line using a pseudo-element */
@@ -877,4 +884,5 @@ tr.bad td { color: var(--danger); }
     }
 
 }
+
 
