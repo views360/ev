@@ -746,9 +746,19 @@ tr.bad td { color: var(--danger); }
     white-space: normal;
     word-wrap: break-word;
     overflow: hidden;
-    border-right: 2px solid var(--accent); /* Uses your existing light blue color */
-    box-shadow: 4px 0 10px -2px var(--accent-soft); /* Adds a soft glow effect */
-    position: relative;
+    position: sticky;
+    left: 0;
+    z-index: 2; /* Ensures it stays above the scrolling content */
+    background-color: var(--panel); /* Keeps background solid so text doesn't bleed through */
+    border-right: 2px solid var(--accent);
+    /* Neon Glow Effect */
+    box-shadow: 5px 0 15px -5px var(--accent);
+}
+
+/* Ensure the header stays above the body during vertical/horizontal scroll */
+#providerResults th:first-child {
+    z-index: 3;
+    background-color: var(--panel-alt);
 }
 
 /* Optional: Stronger neon "glow" line using a pseudo-element */
@@ -867,3 +877,4 @@ tr.bad td { color: var(--danger); }
     }
 
 }
+
