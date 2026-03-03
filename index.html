@@ -226,7 +226,7 @@
 
         <div class="card">
             <div class="providers-header-row">
-                <h3>Subscriptions & Discounts</h3>
+                <h3>Subscription Providers</h3>
                 <button type="button" class="btn secondary" id="toggleProvidersBtn" onclick="toggleProviderVisibility()" style="margin-bottom: 10px; width: 100%;">
                   Collapse Providers list
                 </button>
@@ -258,7 +258,15 @@
     <div id="preConclusionsText">Please complete all fields in the <strong>Trip & Vehicle</strong> section</div>
     <div id="results" class="results">
 
-        <div id="sortContainer" class="input-group" style="max-width:200px;">
+        <div class="calc-lines">
+            <div id="preChargeLine"></div>
+            <div id="homeRangeLine"></div>
+            <div id="publicMilesLine"></div>
+            <div id="publicKwhLine"></div>
+            <div id="adhocCostLine"></div>
+        </div>
+
+		<div id="sortContainer" class="input-group" style="max-width:200px;">
             <label>Sort results</label>
             <select id="sortResults" onchange="calculate()">
                 <option value="cheapest">Cheapest first</option>
@@ -266,14 +274,6 @@
                 <option value="az">A → Z</option>
                 <option value="za">Z → A</option>
             </select>
-        </div>
-
-        <div class="calc-lines">
-            <div id="preChargeLine"></div>
-            <div id="homeRangeLine"></div>
-            <div id="publicMilesLine"></div>
-            <div id="publicKwhLine"></div>
-            <div id="adhocCostLine"></div>
         </div>
 
         <div id="providerResults"></div>
