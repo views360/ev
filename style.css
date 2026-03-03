@@ -819,7 +819,7 @@ tr.bad td { color: var(--danger); }
         position: absolute;
         top: 0;
         right: 0;
-        width: 50px; /* Slightly wider for better visibility */
+        width: 40px;
         height: 100%;
         pointer-events: none;
         background: linear-gradient(to left, var(--panel), transparent);
@@ -851,4 +851,3 @@ tr.bad td { color: var(--danger); }
         padding: 8px 2px;
     }
 }
-

@@ -340,7 +340,6 @@ function calculate() {
         });
 
         document.getElementById("providerResults").innerHTML = html + `</tbody></table></div>`;
-        setTimeout(hintHorizontalScroll, 100);
         return; 
     }
 
@@ -480,15 +479,12 @@ function calculate() {
         </tr>`;
     });
     document.getElementById("providerResults").innerHTML = html + `</tbody></table></div>`;
-    setTimeout(hintHorizontalScroll, 100);
 
     drawGraph(inputs, providers);
 
     // At the end of function calculate()
     const dataToSave = getInputs();
     setCookie("ev_trip_values", dataToSave);
-
-    
 }
 
 function drawGraph(core, providers) {
@@ -825,56 +821,4 @@ document.addEventListener('click', (e) => {
             openTooltip.classList.remove('active');
         });
     }
-
 });
-
-/**
- * Automatically scrolls the results table slightly to the left 
- * to indicate that more content exists off-screen.
- */
-function hintHorizontalScroll() {
-    const scrollContainers = document.querySelectorAll('.results-scroll');
-    
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            // Only trigger when the table is 50% visible on screen
-            if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
-                const container = entry.target;
-                
-                // Only peek if there is actually content to scroll to
-                if (container.scrollWidth > container.clientWidth) {
-                    let scrollAmount = 0;
-                    const maxPeek = 50; 
-                    
-                    const scrollInterval = setInterval(() => {
-                        scrollAmount += 2;
-                        container.scrollLeft = scrollAmount;
-                        
-                        if (scrollAmount >= maxPeek) {
-                            clearInterval(scrollInterval);
-                            setTimeout(() => {
-                                container.scrollTo({ left: 0, behavior: 'smooth' });
-                            }, 500);
-                        }
-                    }, 15);
-
-                    // STOP logic: Only stops if they touch or scroll the table itself
-                    const stopScroll = () => {
-                        clearInterval(scrollInterval);
-                        container.removeEventListener('touchstart', stopScroll);
-                        container.removeEventListener('mousedown', stopScroll);
-                        container.removeEventListener('wheel', stopScroll);
-                    };
-
-                    container.addEventListener('touchstart', stopScroll, {passive: true});
-                    container.addEventListener('mousedown', stopScroll);
-                    container.addEventListener('wheel', stopScroll, {passive: true});
-                }
-                // Once we've attempted the peek, stop observing this container
-                observer.unobserve(container);
-            }
-        });
-    }, { threshold: 0.5 });
-
-    scrollContainers.forEach(container => observer.observe(container));
-}
