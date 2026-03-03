@@ -340,6 +340,7 @@ function calculate() {
         });
 
         document.getElementById("providerResults").innerHTML = html + `</tbody></table></div>`;
+        setTimeout(hintHorizontalScroll, 100);
         return; 
     }
 
@@ -832,32 +833,40 @@ document.addEventListener('click', (e) => {
  * to indicate that more content exists off-screen.
  */
 function hintHorizontalScroll() {
+    // Target the scrollable containers in both modes
     const scrollContainers = document.querySelectorAll('.results-scroll');
     
     scrollContainers.forEach(container => {
-        // Only run if the content is actually wider than the container
+        // Check if the table is actually wider than the screen
         if (container.scrollWidth > container.clientWidth) {
             let scrollAmount = 0;
-            const maxPeek = 40; // How many pixels to scroll for the hint
+            const maxPeek = 50; // Distance to scroll in pixels
             
+            // Perform the animation
             const scrollInterval = setInterval(() => {
-                scrollAmount += 1;
+                scrollAmount += 2;
                 container.scrollLeft = scrollAmount;
                 
                 if (scrollAmount >= maxPeek) {
                     clearInterval(scrollInterval);
+                    // Optional: Smoothly scroll back to 0 after a short pause
+                    setTimeout(() => {
+                        container.scrollTo({ left: 0, behavior: 'smooth' });
+                    }, 500);
                 }
-            }, 15); // Adjust speed here (lower is faster)
+            }, 15);
 
-            // Stop the auto-scroll immediately if the user touches/scrolls it themselves
+            // STOP the animation immediately if the user interacts
             const stopScroll = () => {
                 clearInterval(scrollInterval);
                 container.removeEventListener('touchstart', stopScroll);
                 container.removeEventListener('mousedown', stopScroll);
+                container.removeEventListener('wheel', stopScroll);
             };
 
             container.addEventListener('touchstart', stopScroll);
             container.addEventListener('mousedown', stopScroll);
+            container.addEventListener('wheel', stopScroll);
         }
     });
 }
