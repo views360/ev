@@ -296,7 +296,7 @@ input:focus, select:focus {
 }
 
 #adhocCostLine {
-    margin-top: 20px;
+    margin-top: 15px;
     color: var(--accent);
 }
 
