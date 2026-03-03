@@ -308,13 +308,15 @@ function calculate() {
                         <thead>
                             <tr>
                                 <th>Provider (click hyperlink to view subscription info)</th>
-                                <th>Speed</th>
-                                <th>Sub. Cost<div class="tooltip-container">
+                                <th>Speed<div class="tooltip-container">
+                            <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
+                          <div class="tooltip-box">If the provider's discounted rate is tied to a speed (selected at the top of this page), it will be specified here. If the provider offers more than one speed at the same discounted rate, you will see 'Max. Available'.</div></th>
+                                <th>Sub. Fee<div class="tooltip-container">
                             <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
                           <div class="tooltip-box">This is the provider's subscription fee, which gives you access to their discounted rate for ONE MONTH.</div></th>
                                 <th>Disc. Rate<div class="tooltip-container">
                             <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
-                          <div class="tooltip-box">This is the provider's discounted charge rate (per kWh) that is on offer after subscribing for one month. Remember, a subscription lasts for an entire month.</div></th>
+                          <div class="tooltip-box">This is the provider's discounted charge rate (per kWh) that is available after subscribing for one month. Remember, a subscription lasts for an entire month, and some providers have variable charge rates depending on location and time of day.</div></th>
                                 <th>Break Even Miles<div class="tooltip-container">
                             <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
                           <div class="tooltip-box">This is the number of miles you must drive on the provider's discounted rate to pay off the subscription fee. Remember, a subscription lasts for an entire month.</div></th>
@@ -442,8 +444,12 @@ function calculate() {
     });
     let html = `<div class="results-scroll"><table><thead><tr>
         <th>Provider (click hyperlink to view subscription info)</th>
-        <th>Sub. Fee</th>
-        <th>Disc. Rate</th>
+        <th>Sub. Fee<div class="tooltip-container">
+                            <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
+                          <div class="tooltip-box">This is the provider's subscription fee, which gives you access to their discounted rate for ONE MONTH.</div></th>
+        <th>Disc. Rate<div class="tooltip-container">
+                            <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
+                          <div class="tooltip-box">This is the provider's discounted charge rate (per kWh) that is available after subscribing for one month. Remember, a subscription lasts for an entire month, and some providers have variable charge rates depending on location and time of day.</div></th>
         <th>Trip Cost</th>
         <th>vs. PAYG</th>
         <th>Break Even Miles<div class="tooltip-container">
@@ -821,4 +827,5 @@ document.addEventListener('click', (e) => {
             openTooltip.classList.remove('active');
         });
     }
+
 });
