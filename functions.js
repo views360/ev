@@ -479,12 +479,15 @@ function calculate() {
         </tr>`;
     });
     document.getElementById("providerResults").innerHTML = html + `</tbody></table></div>`;
+    setTimeout(hintHorizontalScroll, 100);
 
     drawGraph(inputs, providers);
 
     // At the end of function calculate()
     const dataToSave = getInputs();
     setCookie("ev_trip_values", dataToSave);
+
+    
 }
 
 function drawGraph(core, providers) {
@@ -821,4 +824,40 @@ document.addEventListener('click', (e) => {
             openTooltip.classList.remove('active');
         });
     }
+
 });
+
+/**
+ * Automatically scrolls the results table slightly to the left 
+ * to indicate that more content exists off-screen.
+ */
+function hintHorizontalScroll() {
+    const scrollContainers = document.querySelectorAll('.results-scroll');
+    
+    scrollContainers.forEach(container => {
+        // Only run if the content is actually wider than the container
+        if (container.scrollWidth > container.clientWidth) {
+            let scrollAmount = 0;
+            const maxPeek = 40; // How many pixels to scroll for the hint
+            
+            const scrollInterval = setInterval(() => {
+                scrollAmount += 1;
+                container.scrollLeft = scrollAmount;
+                
+                if (scrollAmount >= maxPeek) {
+                    clearInterval(scrollInterval);
+                }
+            }, 15); // Adjust speed here (lower is faster)
+
+            // Stop the auto-scroll immediately if the user touches/scrolls it themselves
+            const stopScroll = () => {
+                clearInterval(scrollInterval);
+                container.removeEventListener('touchstart', stopScroll);
+                container.removeEventListener('mousedown', stopScroll);
+            };
+
+            container.addEventListener('touchstart', stopScroll);
+            container.addEventListener('mousedown', stopScroll);
+        }
+    });
+}
