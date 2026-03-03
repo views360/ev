@@ -1,1 +1,292 @@
-<script>document.write(decodeURIComponent(escape(atob("PCFET0NUWVBFIGh0bWw+CjxodG1sIGxhbmc9ImVuIj4KPGhlYWQ+CiAgICA8bWV0YSBjaGFyc2V0PSJVVEYtOCI+CiAgICA8dGl0bGU+RVYgU3Vic2NyaXB0aW9uIENoYXJnaW5nIENvbXBhcmlzb248L3RpdGxlPgogICAgPG1ldGEgbmFtZT0idmlld3BvcnQiIGNvbnRlbnQ9IndpZHRoPWRldmljZS13aWR0aCwgaW5pdGlhbC1zY2FsZT0xIj4KICAgIDxsaW5rIHJlbD0iaWNvbiIgdHlwZT0iaW1hZ2UveC1pY29uIiBocmVmPSJmYXZpY29uLmljbyI+CiAgICA8bGluayByZWw9InN0eWxlc2hlZXQiIGhyZWY9InN0eWxlLmNzcyI+CiAgICA8c2NyaXB0IHNyYz0iaHR0cHM6Ly9jZG4uanNkZWxpdnIubmV0L25wbS9jaGFydC5qcyI+PC9zY3JpcHQ+CiAgICA8c2NyaXB0IHNyYz0iaHR0cHM6Ly9jZG5qcy5jbG91ZGZsYXJlLmNvbS9hamF4L2xpYnMvaHRtbDJjYW52YXMvMS40LjEvaHRtbDJjYW52YXMubWluLmpzIj48L3NjcmlwdD4KICAgIDxzY3JpcHQgc3JjPSJodHRwczovL2NkbmpzLmNsb3VkZmxhcmUuY29tL2FqYXgvbGlicy9qc3BkZi8yLjUuMS9qc3BkZi51bWQubWluLmpzIj48L3NjcmlwdD4KPC9oZWFkPgo8Ym9keT4KPGRpdiBpZD0iaGVscE92ZXJsYXkiIGNsYXNzPSJoZWxwLW92ZXJsYXkiPgogICAgPGRpdiBjbGFzcz0iaGVscC1tb2RhbCI+CiAgICAgICAgPGJ1dHRvbiBjbGFzcz0iY2xvc2UteCIgb25jbGljaz0iY2xvc2VIZWxwKCkiPsOXPC9idXR0b24+CiAgICAgICAgCiAgICAgICAgPGRpdiBjbGFzcz0iaGVscC1zbGlkZXMiIGlkPSJoZWxwU2xpZGVzIj4KICAgICAgICAgICAgCiAgICAgICAgICAgIDxkaXYgY2xhc3M9ImhlbHAtc2xpZGUiPgogICAgICAgICAgICAgICAgPGgyPldlbGNvbWUgdG8gdGhlIEVWIFN1YnNjcmlwdGlvbiBDb21wYXJpc29uIFRvb2w8L2gyPgogICAgICAgICAgICAgICAgPHA+R29pbmcgb24gYSBsb25nIHRyaXAgYW5kIHdhbnQgdG8ga25vdyBpZiBhIG9uZS1tb250aCBFViBjaGFyZ2luZyBzdWJzY3JpcHRpb24gd2lsbCBzYXZlIHlvdSBtb25leSBvdmVyIFBBWUcgcmF0ZXM/PC9wPgoJCQkJPHA+VGhpcyB0b29sIHdpbGwgdGVsbCB5b3UhPC9wPgoJCQkJPHAgc3R5bGU9InRleHQtYWxpZ246IGNlbnRlcjsgbWFyZ2luOiAzMHB4IDAgMjVweCAwIj48aW1nIHNyYz0iZXYtbWcud2VicCIgbGFiZWw9IkVWIiBzdHlsZT0iaGVpZ2h0OiA1MHB4IiAvPjwvcD4KICAgICAgICAgICAgICAgIDxkaXYgY2xhc3M9ImhlbHAtZm9vdGVyIj4KICAgICAgICAgICAgICAgICAgICA8YnV0dG9uIGNsYXNzPSJidG4gc2Vjb25kYXJ5IiBvbmNsaWNrPSJtb3ZlU2xpZGUoMSkiPk5leHQmbmJzcDsmZ3Q7PC9idXR0b24+CiAgICAgICAgICAgICAgICA8L2Rpdj4KICAgICAgICAgICAgPC9kaXY+CgogICAgICAgICAgICA8ZGl2IGNsYXNzPSJoZWxwLXNsaWRlIj4KICAgICAgICAgICAgICAgIDxoMj5Db21wYXJpc29uIE1vZGVzPC9oMj4KICAgICAgICAgICAgICAgIDxwPlN3aXRjaCBiZXR3ZWVuIHR3byBtb2RlczogPG9sPjxsaT48c3Ryb25nPkJSRUFLIEVWRU48L3N0cm9uZz4gKGRlZmF1bHQpPC9saT4KCQk8bGk+PHN0cm9uZz5UUklQIFNBVklOR1M8L3N0cm9uZz4uPC9saT48L3VsPjwvcD4KICAgICAgICAgICAgICAgIDxkaXYgY2xhc3M9ImhlbHAtZm9vdGVyIj4KICAgICAgICAgICAgICAgICAgICA8YnV0dG9uIGNsYXNzPSJidG4iIG9uY2xpY2s9Im1vdmVTbGlkZSgtMSkiPiZsdDsmbmJzcDtCYWNrPC9idXR0b24+CiAgICAgICAgICAgICAgICAgICAgPGJ1dHRvbiBjbGFzcz0iYnRuIHNlY29uZGFyeSIgb25jbGljaz0ibW92ZVNsaWRlKDEpIj5OZXh0Jm5ic3A7Jmd0OzwvYnV0dG9uPgogICAgICAgICAgICAgICAgPC9kaXY+CiAgICAgICAgICAgIDwvZGl2PgoKICAgICAgICAgICAgPGRpdiBjbGFzcz0iaGVscC1zbGlkZSI+CiAgICAgICAgICAgICAgICA8aDI+QlJFQUsgRVZFTjwvaDI+CiAgICAgICAgICAgICAgICA8cD48c3Ryb25nPkJyZWFrIEV2ZW48L3N0cm9uZz4gKGRlZmF1bHQgbW9kZSkgZGlzcGxheXMgYSBicmVhay1ldmVuLW1pbGVzIHZhbHVlIGZvciBhbGwgc3Vic2NyaXB0aW9uIHByb3ZpZGVycy4gVGhpcyB0ZWxscyB5b3UgaG93IG1hbnkgbWlsZXMgeW91IG11c3QgZHJpdmUgdXNpbmcgYSBwcm92aWRlcidzIGRpc2NvdW50ZWQgcmF0ZSB0byByZWNvdXAgaXRzIHN1YnNjcmlwdGlvbiBmZWUuPC9wPiAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgIDxkaXYgY2xhc3M9ImhlbHAtZm9vdGVyIj4KICAgICAgICAgICAgICAgICAgICA8YnV0dG9uIGNsYXNzPSJidG4iIG9uY2xpY2s9Im1vdmVTbGlkZSgtMSkiPiZsdDsmbmJzcDtCYWNrPC9idXR0b24+CiAgICAgICAgICAgICAgICAgICAgPGJ1dHRvbiBjbGFzcz0iYnRuIHNlY29uZGFyeSIgb25jbGljaz0ibW92ZVNsaWRlKDEpIj5OZXh0Jm5ic3A7Jmd0OzwvYnV0dG9uPgogICAgICAgICAgICAgICAgPC9kaXY+CiAgICAgICAgICAgIDwvZGl2PgoKICAgICAgICAgICAgPGRpdiBjbGFzcz0iaGVscC1zbGlkZSI+CiAgICAgICAgICAgICAgICA8aDI+VFJJUCBTQVZJTkdTPC9oMj4KICAgICAgICAgICAgICAgIDxwPjxzdHJvbmc+VHJpcCBTYXZpbmdzPC9zdHJvbmc+IG1vZGUgY2FsY3VsYXRlcyBwb3RlbnRpYWwgc2F2aW5ncyBmb3IgYSBwbGFubmVkIHRyaXAuPC9wPgogICAgICAgICAgICAgICAgPGRpdiBjbGFzcz0iaGVscC1mb290ZXIiPgogICAgICAgICAgICAgICAgICAgIDxidXR0b24gY2xhc3M9ImJ0biIgb25jbGljaz0ibW92ZVNsaWRlKC0xKSI+Jmx0OyZuYnNwO0JhY2s8L2J1dHRvbj4KICAgICAgICAgICAgICAgICAgICA8YnV0dG9uIGNsYXNzPSJidG4gc2Vjb25kYXJ5IiBvbmNsaWNrPSJtb3ZlU2xpZGUoMSkiPk5leHQmbmJzcDsmZ3Q7PC9idXR0b24+CiAgICAgICAgICAgICAgICA8L2Rpdj4KICAgICAgICAgICAgPC9kaXY+CgogICAgICAgICAgICA8ZGl2IGNsYXNzPSJoZWxwLXNsaWRlIj4KICAgICAgICAgICAgICAgIDxoMj5Bc3Nlc3NpbmcgUmVzdWx0czwvaDI+CiAgICAgICAgICAgICAgICA8cD5BZnRlciBjb21wbGV0aW5nIGFsbCBmaWVsZHMgKHdoaWNoIHlvdSBtYXkgZWRpdCBvbiB0aGUgZmx5KSwgdGhlIHJlc3VsdHMgdGFibGUgYXQgdGhlIGJvdHRvbSBvZiB0aGUgcGFnZSB3aWxsIGF1dG9tYXRpY2FsbHkgdXBkYXRlLjwvcD48cD5JZiB5b3UgYXJlIHVuc3VyZSB3aGF0IGEgZmllbGQgaXMgYXNraW5nIGZvciwgaG92ZXIgb3ZlciAob3IgY2xpY2spIHRoZfCfkqFmb3IgbW9yZSBpbmZvcm1hdGlvbi48L3A+CjxwPkRvbid0IGZvcmdldCB0aGF0IHN1YnNjcmlwdGlvbnMgbGFzdCBmb3IgYW4gZW50aXJlIG1vbnRoLjwvcD4KICAgICAgICAgICAgICAgIDxkaXYgY2xhc3M9ImhlbHAtZm9vdGVyIj4KICAgICAgICAgICAgICAgICAgICA8YnV0dG9uIGNsYXNzPSJidG4iIG9uY2xpY2s9Im1vdmVTbGlkZSgtMSkiPiZsdDsmbmJzcDtCYWNrPC9idXR0b24+CiAgICAgICAgICAgICAgICAgICAgPGJ1dHRvbiBjbGFzcz0iYnRuIHNlY29uZGFyeSIgb25jbGljaz0iY2xvc2VIZWxwKCkiPkdldCZuYnNwO1N0YXJ0ZWQ8L2J1dHRvbj4KICAgICAgICAgICAgICAgIDwvZGl2PgogICAgICAgICAgICA8L2Rpdj4KICAgICAgICA8L2Rpdj4KICAgIDwvZGl2Pgo8L2Rpdj4KPGRpdiBjbGFzcz0iYXBwIj4KCiAgICA8ZGl2IGNsYXNzPSJoZWFkZXItcm93Ij4KICAgICAgICA8aDE+RVYgU3Vic2NyaXB0aW9uIENoYXJnaW5nIENvbXBhcmlzb248L2gxPgogICAgICAgIDxkaXYgY2xhc3M9InRvcC1idXR0b25zIj4KICAgICAgICAgICAgPGJ1dHRvbiBjbGFzcz0iYnRuIHNlY29uZGFyeSIgaWQ9InRoZW1lVG9nZ2xlIiBvbmNsaWNrPSJ0b2dnbGVUaGVtZSgpIj5MaWdodC9EYXJrIFZpZXc8L2J1dHRvbj4KICAgICAgICAgICAgPGEgaHJlZj0iaHR0cHM6Ly93d3cuZmFjZWJvb2suY29tL2tlbHZpbi5hLmhpbGwiIHRhcmdldD0iX2JsYW5rIiBjbGFzcz0iYnRuIHNlY29uZGFyeSI+Q29udGFjdCBBdXRob3I8L2E+CiAgICAgICAgICAgIDxidXR0b24gaWQ9InJlc2V0QWxsIiBjbGFzcz0iYnRuIHNlY29uZGFyeSIgb25jbGljaz0icmVzZXRBbGwoKSI+UmVzZXQgQWxsPC9idXR0b24+CiAgICAgICAgPC9kaXY+CiAgICA8L2Rpdj4KCjxkaXYgY2xhc3M9InRvZ2dsZS1jb250YWluZXItYmxvY2siPgogICAgPGRpdiBjbGFzcz0iY29tcGFyaXNvbi1tb2RlLWJveCI+CiAgICAgICAgPHNwYW4gY2xhc3M9ImNvbXBhcmlzb24tbGFiZWwiPkNvbXBhcmlzb24gTW9kZTwvc3Bhbj4KICAgICAgICA8ZGl2IGNsYXNzPSJwaWxsLXRvZ2dsZSI+CiAgICAgICAgICAgIDxkaXYgaWQ9InBpbGwtc2xpZGVyIiBjbGFzcz0icGlsbC1zbGlkZXIiPjwvZGl2PgogICAgICAgICAgICA8YnV0dG9uIHR5cGU9ImJ1dHRvbiIgY2xhc3M9InBpbGwtYnRuIGFjdGl2ZSIgb25jbGljaz0ic2V0VG9nZ2xlKCdicmVhay1ldmVuJywgdGhpcykiPkJyZWFrIEV2ZW48L2J1dHRvbj4KICAgICAgICAgICAgPGJ1dHRvbiB0eXBlPSJidXR0b24iIGNsYXNzPSJwaWxsLWJ0biIgb25jbGljaz0ic2V0VG9nZ2xlKCd0cmlwLXNhdmluZ3MnLCB0aGlzKSI+VHJpcCBTYXZpbmdzPC9idXR0b24+CiAgICAgICAgPC9kaXY+CiAgICA8L2Rpdj4KPC9kaXY+Cgo8ZGl2IGlkPSJicmVha0V2ZW5DYXJkIiBjbGFzcz0iY2FyZCIgc3R5bGU9Im1hcmdpbi1ib3R0b206IDIwcHg7IG1heC13aWR0aDogNDAwcHg7IG1hcmdpbi1sZWZ0OiBhdXRvOyBtYXJnaW4tcmlnaHQ6IGF1dG87Ij4KICAgIDxoMz5UcmlwICYgVmVoaWNsZTwvaDM+CiAgICA8ZGl2IGNsYXNzPSJpbnB1dC1ncm91cCI+CiAgICAgICAgPGxhYmVsIGZvcj0iZWZmaWNpZW5jeUJFIj5WZWhpY2xlIGVmZmljaWVuY3kgKG1pbGVzIHBlciBrV2gpCiAgICAgICAgICAgIDxkaXYgY2xhc3M9InRvb2x0aXAtY29udGFpbmVyIj4KICAgICAgICAgICAgICAgIDxzcGFuIGNsYXNzPSJpbmZvLWljb24iIG9uY2xpY2s9InRvZ2dsZVRvb2x0aXAodGhpcykiPvCfkqE8L3NwYW4+CiAgICAgICAgICAgICAgICA8ZGl2IGNsYXNzPSJ0b29sdGlwLWJveCI+VGhpcyBpcyBsaWtlbHkgdG8gYmUgYmV0d2VlbiAyLjUgYW5kIDUsIGRlcGVuZGluZyBvbiB0aGUgdGltZSBvZiB5ZWFyIGFuZCB5b3VyIGRyaXZpbmcgc3R5bGUgYW5kIGhhYml0cy4gWW91IGNhbiBlaXRoZXIgZXN0aW1hdGUgaXQgZm9yIHRoZSB0aW1lIG9mIHllYXIgd2hlbiB5b3Ugd2lsbCB0cmF2ZWwsIG9yIHlvdSBjYW4gcmVzZXQgeW91ciB0cmlwIGNvdW50ZXIgYW5kIGNhbGN1bGF0ZSBpdCBpZiB5b3VyIHRyaXAgaXMgaW1taW5lbnQuPC9kaXY+CiAgICAgICAgICAgIDwvZGl2PgogICAgICAgIDwvbGFiZWw+CiAgICAgICAgPGlucHV0IHR5cGU9Im51bWJlciIgaWQ9ImVmZmljaWVuY3lCRSIgcGxhY2Vob2xkZXI9ImUuZy4sIDMuNSIgc3RlcD0iMC4xIj4KICAgIDwvZGl2PgogICAgPGRpdiBjbGFzcz0iaW5wdXQtZ3JvdXAiPgogICAgICAgIDxsYWJlbCBmb3I9Im1pblNwZWVkQkUiPk1pbmltdW0gZGVzaXJlZCBjaGFyZ2luZyBzcGVlZAogICAgICAgICAgICA8ZGl2IGNsYXNzPSJ0b29sdGlwLWNvbnRhaW5lciI+CiAgICAgICAgICAgICAgICA8c3BhbiBjbGFzcz0iaW5mby1pY29uIiBvbmNsaWNrPSJ0b2dnbGVUb29sdGlwKHRoaXMpIj7wn5KhPC9zcGFuPgogICAgICAgICAgICAgICAgPGRpdiBjbGFzcz0idG9vbHRpcC1ib3giPkZpbHRlciBvdXQgc2xvd2VyIGNoYXJnaW5nIHNwZWVkcyBmcm9tIHRoZSByZXN1bHRzIGlmIHlvdSBkb24ndCBldmVyIHVzZSB0aGVtLCBlbHNlIHRoZXkgd2lsbCBza2V3IHRoZSByZXN1bHRzIGJlY2F1c2UgdGhleSBhcmUgY2hlYXBlciAoZS5nLiwgc2V0dGluZyB0aGUgdmFsdWUgdG8gNTBrVyB3aWxsIGZpbHRlciBvdXQgN2tXIGFuZCAyMmtXKS48L2Rpdj4KICAgICAgICAgICAgPC9kaXY+CiAgICAgICAgPC9sYWJlbD4KICAgICAgICA8c2VsZWN0IGlkPSJtaW5TcGVlZEJFIj4KICAgICAgICAgICAgPG9wdGlvbiB2YWx1ZT0iNyI+N2tXIEFDIChmYXN0KTwvb3B0aW9uPgogICAgICAgICAgICA8b3B0aW9uIHZhbHVlPSIyMiI+MjJrVyBBQyAoYWNjZWxlcmF0ZWQpPC9vcHRpb24+CiAgICAgICAgICAgIDxvcHRpb24gdmFsdWU9IjUwIiBzZWxlY3RlZD41MGtXIERDIChyYXBpZCk8L29wdGlvbj4KICAgICAgICAgICAgPG9wdGlvbiB2YWx1ZT0iNzUiPjc1a1cgREModWx0cmEgcmFwaWQpPC9vcHRpb24+CiAgICAgICAgICAgIDxvcHRpb24gdmFsdWU9IjE1MCI+MTUwa1cgREMgKGhpZ2ggcG93ZXIpPC9vcHRpb24+CiAgICAgICAgPC9zZWxlY3Q+CiAgICA8L2Rpdj4KICAgIDxkaXYgY2xhc3M9ImlucHV0LWdyb3VwIj4KICAgICAgICA8bGFiZWwgZm9yPSJhZGhvY0JFIj5TdGFuZGFyZCBQQVlHIHJhdGUgKHBlbmNlIHBlciBrV2gpCiAgICAgICAgICAgIDxkaXYgY2xhc3M9InRvb2x0aXAtY29udGFpbmVyIj4KICAgICAgICAgICAgICAgIDxzcGFuIGNsYXNzPSJpbmZvLWljb24iIG9uY2xpY2s9InRvZ2dsZVRvb2x0aXAodGhpcykiPvCfkqE8L3NwYW4+CiAgICAgICAgICAgICAgICA8ZGl2IGNsYXNzPSJ0b29sdGlwLWJveCI+VGhpcyBpcyB0aGUgYXZlcmFnZSBhbW91bnQgeW91IHdvdWxkIG9yZGluYXJpbHkgZXhwZWN0IHRvIHBheSBkdXJpbmcgeW91ciB0cmlwIHdoaWxlIHVzaW5nIFBBWUcgY2hhcmdlcnMuIElmIHlvdSBhbHJlYWR5IGdldCBhIGRpc2NvdW50IChlLmcuLCA4JSBmcm9tIEVsZWN0cm92ZXJzZSksIGlucHV0IHRoZSBkaXNjb3VudGVkIHJhdGUuPC9kaXY+CiAgICAgICAgICAgIDwvZGl2PgogICAgICAgIDwvbGFiZWw+CiAgICAgICAgPGlucHV0IHR5cGU9Im51bWJlciIgaWQ9ImFkaG9jQkUiIHBsYWNlaG9sZGVyPSJlLmcuLCA2MiAoNjJwIGlzIHRoZSA1MGtXIExpZGwrIGFwcCBwcmljZSkiIHN0ZXA9IjAuMSI+CiAgICA8L2Rpdj4KPC9kaXY+CgogICAgPGRpdiBjbGFzcz0iZ3JpZCI+CiAgICAgICAgPGRpdiBjbGFzcz0iY2FyZCI+CiAgICAgICAgICAgIDxoMz5UcmlwICYgVmVoaWNsZTwvaDM+CiAgICAgICAgICAgIDxwIHN0eWxlPSJmb250LXNpemU6IDAuOGVtOyBtYXJnaW4tYm90dG9tOiAyMHB4Ij5DbGlja/CfkqFmb3IgZXhwbGFuYXRpb24uPC9wPgogICAgICAgICAgICA8ZGl2IGNsYXNzPSJpbnB1dC1yb3ciPgogICAgICAgICAgICAgICAgPGRpdiBjbGFzcz0iaW5wdXQtZ3JvdXAiPgogICAgICAgICAgICAgICAgICAgIDxsYWJlbCBmb3IgImpvdXJuZXlNaWxlcyI+VHJpcCBkaXN0YW5jZSAobWlsZXMpCiAgICAgICAgICAgICAgICAgICAgICAgIDxkaXYgY2xhc3M9InRvb2x0aXAtY29udGFpbmVyIj4KICAgICAgICAgICAgICAgICAgICAgICAgICA8c3BhbiBjbGFzcz0iaW5mby1pY29uIiBvbmNsaWNrPSJ0b2dnbGVUb29sdGlwKHRoaXMpIj7wn5KhPC9zcGFuPgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8ZGl2IGNsYXNzPSJ0b29sdGlwLWJveCI+SG93IGZhciBkbyB5b3UgcGxhbiB0byB0cmF2ZWw/IEFkanVzdCB0aGlzIHZhbHVlLCBhbmQgdGhlIHJlc3VsdHMgKGF0IHRoZSBib3R0b20gb2YgdGhlIHBhZ2UpIHdpbGwgYXV0by11cGRhdGUuPC9kaXY+CiAgICAgICAgICAgICAgICAgICAgICAgIDwvZGl2PgogICAgICAgICAgICAgICAgICAgIDwvbGFiZWw+CiAgICAgICAgICAgICAgICAgICAgPGlucHV0IHR5cGU9Im51bWJlciIgaWQ9ImpvdXJuZXlNaWxlcyIgcGxhY2Vob2xkZXI9ImUuZy4sIDI1MCI+CiAgICAgICAgICAgICAgICA8L2Rpdj4KICAgICAgICAgICAgICAgIDxkaXYgY2xhc3M9ImlucHV0LWdyb3VwIj4KICAgICAgICAgICAgICAgICAgICA8bGFiZWwgZm9yICJiYXR0ZXJ5S3doIj5CYXR0ZXJ5IHNpemUgKGtXaCkKICAgICAgICAgICAgICAgICAgICAgICAgIDxkaXYgY2xhc3M9InRvb2x0aXAtY29udGFpbmVyIj4KICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxzcGFuIGNsYXNzPSJpbmZvLWljb24iIG9uY2xpY2s9InRvZ2dsZVRvb2x0aXAodGhpcykiPvCfkqE8L3NwYW4+CiAgICAgICAgICAgICAgICAgICAgICAgICAgPGRpdiBjbGFzcz0idG9vbHRpcC1ib3giPldoYXQgaXMgdGhlIHVzZWFibGUgc2l6ZSBvZiB5b3VyIHZlaGljbGUncyBiYXR0ZXJ5PzwvZGl2PgogICAgICAgICAgICAgICAgICAgICAgICA8L2Rpdj4KICAgICAgICAgICAgICAgICAgICA8L2xhYmVsPgogICAgICAgICAgICAgICAgICAgIDxpbnB1dCB0eXBlPSJudW1iZXIiIGlkPSJiYXR0ZXJ5S3doIiBwbGFjZWhvbGRlcj0iZS5nLiwgNjEiPgogICAgICAgICAgICAgICAgPC9kaXY+CiAgICAgICAgICAgIDwvZGl2PgoKICAgICAgICAgICAgPGRpdiBjbGFzcz0iaW5wdXQtcm93Ij4KICAgICAgICAgICAgICAgIDxkaXYgY2xhc3M9ImlucHV0LWdyb3VwIj4KICAgICAgICAgICAgICAgICAgICA8bGFiZWwgZm9yICJzb2MiPlN0YXJ0aW5nIHN0YXRlIG9mIGNoYXJnZSAoJSkKICAgICAgICAgICAgICAgICAgICAgICAgPGRpdiBjbGFzcz0idG9vbHRpcC1jb250YWluZXIiPgogICAgICAgICAgICAgICAgICAgICAgICAgICAgPHNwYW4gY2xhc3M9ImluZm8taWNvbiIgb25jbGljaz0idG9nZ2xlVG9vbHRpcCh0aGlzKSI+8J+SoTwvc3Bhbj4KICAgICAgICAgICAgICAgICAgICAgICAgICA8ZGl2IGNsYXNzPSJ0b29sdGlwLWJveCI+SG93IG11Y2ggY2hhcmdlIHdpbGwgeW91ciBFViBoYXZlIHdoZW4geW91IGJlZ2luIHlvdXIgdHJpcD88L2Rpdj4KICAgICAgICAgICAgICAgICAgICAgICAgPC9kaXY+CiAgICAgICAgICAgICAgICAgICAgPC9sYWJlbD4KICAgICAgICAgICAgICAgICAgICA8aW5wdXQgdHlwZT0ibnVtYmVyIiBpZD0ic29jIiBwbGFjZWhvbGRlcj0iZS5nLiwgOTAiPgogICAgICAgICAgICAgICAgPC9kaXY+CiAgICAgICAgICAgICAgICA8ZGl2IGNsYXNzPSJpbnB1dC1ncm91cCI+CiAgICAgICAgICAgICAgICAgICAgPGxhYmVsIGZvciAiPlZlaGljbGUgZWZmaWNpZW5jeSAobWlsZXMgcGVyIGtXaCkKICAgICAgICAgICAgICAgICAgICAgICAgPGRpdiBjbGFzcz0idG9vbHRpcC1jb250YWluZXIiPgogICAgICAgICAgICAgICAgICAgICAgICAgICAgPHNwYW4gY2xhc3M9ImluZm8taWNvbiIgb25jbGljaz0idG9nZ2xlVG9vbHRpcCh0aGlzKSI+8J+SoTwvc3Bhbj4KICAgICAgICAgICAgICAgICAgICAgICAgPGRpdiBjbGFzcz0idG9vbHRpcC1ib3giPlRoaXMgaXMgbGlrZWx5IHRvIGJlIGJldHdlZW4gMi41IGFuZCA1LCBkZXBlbmRpbmcgb24gdGhlIHRpbWUgb2YgeWVhciBhbmQgeW91ciBkcml2aW5nIHN0eWxlIGFuZCBoYWJpdHMuIFlvdSBjYW4gZWl0aGVyIGVzdGltYXRlIGl0IGZvciB0aGUgdGltZSBvZiB5ZWFyIHdoZW4geW91IHdpbGwgdHJhdmVsLCBvciB5b3UgY2FuIHJlc2V0IHlvdXIgdHJpcCBjb3VudGVyIGFuZCBjYWxjdWxhdGUgaXQgaWYgeW91ciB0cmlwIGlzIGltbWluZW50LjwvZGl2PgogICAgICAgICAgICAgICAgICAgICAgICA8L2Rpdj4KICAgICAgICAgICAgICAgICAgICA8L2xhYmVsPgogICAgICAgICAgICAgICAgICAgIDxpbnB1dCB0eXBlPSJudW1iZXIiIGlkPSJlZmZpY2llbmN5IiBwbGFjZWhvbGRlcj0iZS5nLiwgMy41Ij4KICAgICAgICAgICAgICAgIDwvZGl2PgogICAgICAgICAgICA8L2Rpdj4KCiAgICAgICAgICAgIDxkaXYgY2xhc3M9ImlucHV0LWdyb3VwIj4KICAgICAgICAgICAgICAgIDxsYWJlbCBmb3I9Im1pblNwZWVkIj4KICAgICAgICAgICAgICAgICAgICBNaW5pbXVtIGRlc2lyZWQgY2hhcmdpbmcgc3BlZWQKICAgICAgICAgICAgICAgICAgICA8ZGl2IGNsYXNzPSJ0b29sdGlwLWNvbnRhaW5lciI+CiAgICAgICAgICAgICAgICAgICAgICAgIDxzcGFuIGNsYXNzPSJpbmZvLWljb24iIG9uY2xpY2s9InRvZ2dsZVRvb2x0aXAodGhpcykiPvCfkqE8L3NwYW4+CiAgICAgICAgICAgICAgICAgICAgICAgIDxkaXYgY2xhc3M9InRvb2x0aXAtYm94Ij5GaWx0ZXIgb3V0IHNsb3dlciBjaGFyZ2luZyBzcGVlZHMgZnJvbSB0aGUgcmVzdWx0cyBpZiB5b3UgZG9uJ3QgcGxhbiB0byB1c2UgdGhlbSBkdXJpbmcgeW91ciB0cmlwLCBlbHNlIHRoZXkgd2lsbCBza2V3IHRoZSByZXN1bHRzIGJlY2F1c2UgdGhleSBhcmUgY2hlYXBlciAoZS5nLiwgc2V0dGluZyB0aGUgdmFsdWUgdG8gNTBrVyB3aWxsIGZpbHRlciBvdXQgN2tXIGFuZCAyMmtXKS48L2Rpdj4KICAgICAgICAgICAgICAgICAgICA8L2Rpdj4KICAgICAgICAgICAgICAgIDwvbGFiZWw+CiAgICAgICAgICAgICAgICA8c2VsZWN0IGlkPSJtaW5TcGVlZCI+CiAgICAgICAgICAgICAgICAgICAgPG9wdGlvbiB2YWx1ZT0iNyI+N2tXIEFDIChmYXN0KTwvb3B0aW9uPgogICAgICAgICAgICAgICAgICAgIDxvcHRpb24gdmFsdWU9IjIyIj4yMmtXIEFDIChhY2NlbGVyYXRlZCk8L29wdGlvbj4KICAgICAgICAgICAgICAgICAgICA8b3B0aW9uIHZhbHVlPSI1MCIgc2VsZWN0ZWQ+NTBrVyBEQyAocmFwaWQpPC9vcHRpb24+CiAgICAgICAgICAgICAgICAgICAgPG9wdGlvbiB2YWx1ZT0iNzUiPjc1a1cgREModWx0cmEgcmFwaWQpPC9vcHRpb24+CiAgICAgICAgICAgICAgICAgICAgPG9wdGlvbiB2YWx1ZT0iMTUwIj4xNTBrVyBEQyAoaGlnaCBwb3dlcik8L29wdGlvbj4KICAgICAgICAgICAgICAgIDwvc2VsZWN0PgogICAgICAgICAgICA8L2Rpdj4KCiAgICAgICAgICAgIDxkaXYgY2xhc3M9ImlucHV0LXJvdyI+CiAgICAgICAgICAgICAgICA8ZGl2IGNsYXNzPSJpbnB1dC1ncm91cCI+CiAgICAgICAgICAgICAgICAgICAgPGxhYmVsPlN0YXJ0aW5nIGNoYXJnZSB0eXBlCiAgICAgICAgICAgICAgICAgICAgICAgIDxkaXYgY2xhc3M9InRvb2x0aXAtY29udGFpbmVyIj4KICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxzcGFuIGNsYXNzPSJpbmZvLWljb24iIG9uY2xpY2s9InRvZ2dsZVRvb2x0aXAodGhpcykiPvCfkqE8L3NwYW4+CiAgICAgICAgICAgICAgICAgICAgICAgICAgPGRpdiBjbGFzcz0idG9vbHRpcC1ib3giPkJlZm9yZSB5b3UgYmVnaW4geW91ciB0cmlwLCB3aWxsIHlvdSBoYXZlIGNoYXJnZWQgeW91ciBiYXR0ZXJ5IGF0IGhvbWUgb3IgdXNpbmcgUEFZRyBjaGFyZ2luZz88L2Rpdj4KICAgICAgICAgICAgICAgICAgICAgICAgPC9kaXY+ICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgPC9sYWJlbD4KICAgICAgICAgICAgICAgICAgICA8c2VsZWN0IGlkPSJzdGFydENoYXJnZVR5cGUiPgogICAgICAgICAgICAgICAgICAgICAgICA8b3B0aW9uIHZhbHVlPSJob21lIj5DaGVhcCBob21lIGNoYXJnaW5nPC9vcHRpb24+CiAgICAgICAgICAgICAgICAgICAgICAgIDxvcHRpb24gdmFsdWU9InB1YmxpYyI+UEFZRyBQdWJsaWMgY2hhcmdpbmc8L29wdGlvbj4KICAgICAgICAgICAgICAgICAgICA8L3NlbGVjdD4KICAgICAgICAgICAgICAgIDwvZGl2PgogICAgICAgICAgICAgICAgPGRpdiBjbGFzcz0iaW5wdXQtZ3JvdXAiPgogICAgICAgICAgICAgICAgICAgIDxsYWJlbD5TdGFydGluZyByYXRlIChwZW5jZSBwZXIga1doKQogICAgICAgICAgICAgICAgICAgICAgICA8ZGl2IGNsYXNzPSJ0b29sdGlwLWNvbnRhaW5lciI+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8c3BhbiBjbGFzcz0iaW5mby1pY29uIiBvbmNsaWNrPSJ0b2dnbGVUb29sdGlwKHRoaXMpIj7wn5KhPC9zcGFuPgogICAgICAgICAgICAgICAgICAgICAgICAgIDxkaXYgY2xhc3M9InRvb2x0aXAtYm94Ij5XaGVuIHlvdSBjaGFyZ2UgeW91ciBiYXR0ZXJ5IGJlZm9yZSB0aGUgdHJpcCwgaG93IG11Y2ggd2lsbCB0aGUgcmF0ZSBiZT88L2Rpdj4KICAgICAgICAgICAgICAgICAgICAgICAgPC9kaXY+ICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgPC9sYWJlbD4KICAgICAgICAgICAgICAgICAgICA8aW5wdXQgdHlwZT0ibnVtYmVyIiBpZD0ic3RhcnRDaGFyZ2VSYXRlIiBwbGFjZWhvbGRlcj0iZS5nLiwgNy41Ij4KICAgICAgICAgICAgICAgIDwvZGl2PgogICAgICAgICAgICA8L2Rpdj4KCiAgICAgICAgICAgIDxkaXYgY2xhc3M9ImlucHV0LWdyb3VwIj4KICAgICAgICAgICAgICAgIDxsYWJlbD5UeXBpY2FsIGF2ZXJhZ2UgUEFZRyBwdWJsaWMgcmF0ZSB5b3UgcGF5IChwZW5jZSBwZXIga1doKQogICAgICAgICAgICAgICAgICAgIDxkaXYgY2xhc3M9InRvb2x0aXAtY29udGFpbmVyIj4KICAgICAgICAgICAgICAgICAgICAgICAgPHNwYW4gY2xhc3M9ImluZm8taWNvbiIgb25jbGljaz0idG9nZ2xlVG9vbHRpcCh0aGlzKSI+8J+SoTwvc3Bhbj4KICAgICAgICAgICAgICAgICAgICAgIDxkaXYgY2xhc3M9InRvb2x0aXAtYm94Ij5UaGlzIGlzIHRoZSBhdmVyYWdlIGFtb3VudCB5b3Ugd291bGQgb3JkaW5hcmlseSBleHBlY3QgdG8gcGF5IGR1cmluZyB5b3VyIHRyaXAgd2hpbGUgdXNpbmcgUEFZRyBjaGFyZ2Vycy4gSWYgeW91IGFscmVhZHkgZ2V0IGEgZGlzY291bnQgKGUuZy4sIDglIGZyb20gRWxlY3Ryb3ZlcnNlKSwgaW5wdXQgdGhlIGRpc2NvdW50ZWQgcmF0ZS4gVGhpcyB3aWxsIGJlIHRoZSBiYXNlbGluZSBmb3IgY2FsY3VsYXRpbmcgd2hldGhlciBpdCBpcyBwb3NzaWJsZSB0byBtYWtlIHlvdXIgdHJpcCBjaGVhcGVyLjwvZGl2PgogICAgICAgICAgICAgICAgICAgIDwvZGl2PiAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICA8L2xhYmVsPgogICAgICAgICAgICAgICAgPGlucHV0IHR5cGU9Im51bWJlciIgaWQ9ImFkaG9jIiBwbGFjZWhvbGRlcj0iZS5nLiwgNjIgKDYycCBpcyB0aGUgNTBrVyBMaWRsKyBhcHAgcHJpY2UpIj4KICAgICAgICAgICAgPC9kaXY+CiAgICAgICAgPC9kaXY+CgogICAgICAgIDxkaXYgY2xhc3M9ImNhcmQiPgogICAgICAgICAgICA8ZGl2IGNsYXNzPSJwcm92aWRlcnMtaGVhZGVyLXJvdyI+CiAgICAgICAgICAgICAgICA8aDM+U3Vic2NyaXB0aW9ucyAmIERpc2NvdW50czwvaDM+CiAgICAgICAgICAgICAgICA8YnV0dG9uIHR5cGU9ImJ1dHRvbiIgY2xhc3M9ImJ0biBzZWNvbmRhcnkiIGlkPSJ0b2dnbGVQcm92aWRlcnNCdG4iIG9uY2xpY2s9InRvZ2dsZVByb3ZpZGVyVmlzaWJpbGl0eSgpIiBzdHlsZT0ibWFyZ2luLWJvdHRvbTogMTBweDsgd2lkdGg6IDEwMCU7Ij4KICAgICAgICAgICAgICAgICAgQ29sbGFwc2UgUHJvdmlkZXJzIGxpc3QKICAgICAgICAgICAgICAgIDwvYnV0dG9uPgogICAgICAgICAgICAgICAgPGRpdiBpZD0icHJvdmlkZXJDb250cm9scyI+CiAgICAgICAgICAgICAgICAgICAgPHAgc3R5bGU9ImZvbnQtc2l6ZTogMC44ZW07IG1hcmdpbi1ib3R0b206IDE1cHgiPlNlbGVjdCA8c3Ryb25nPmFsbDwvc3Ryb25nPiBzdWJzY3JpcHRpb24gcHJvdmlkZXJzIHRvIGlkZW50aWZ5IHRoZSBjaGVhcGVzdCBmb3IgeW91ciBwbGFubmVkIHJvdXRlIGNvbXBhcmVkIHdpdGggdGhlIGJhc2VsaW5lIGZvciBQQVlHIHB1YmxpYyBjaGFyZ2luZy4gU2Nyb2xsIGRvd24gZm9yIHRoZSByZXN1bHRzLiBZb3UgbWF5IGFsc28gYWRkLCByZW1vdmUsIGFuZCB0ZW1wb3JhcmlseSBlZGl0IGluZGl2aWR1YWwgcHJvdmlkZXJzIGlmIGRldGFpbHMgYXJlIG91dGRhdGVkLjwvcD4KICAgICAgICAgICAgICAgICAgICA8ZGl2IGNsYXNzPSJidXR0b24tZ3JvdXAiIHN0eWxlPSJkaXNwbGF5OmZsZXg7IGdhcDo2cHg7IG1hcmdpbi1ib3R0b206IDIwcHgiPgogICAgICAgICAgICAgICAgICAgICAgICA8YnV0dG9uIHR5cGU9ImJ1dHRvbiIgY2xhc3M9ImJ0biBidG4tZ2xvdyIgb25jbGljaz0iYWRkQWxsUHJvdmlkZXJzKCkiPkFkZCBhbGwgcHJvdmlkZXJzPC9idXR0b24+CiAgICAgICAgICAgICAgICAgICAgICAgIDxidXR0b24gdHlwZT0iYnV0dG9uIiBjbGFzcz0iYnRuIHNlY29uZGFyeSIgb25jbGljaz0iY3JlYXRlUHJvdmlkZXJCb3goKSI+QWRkIHByb3ZpZGVyPC9idXR0b24+CiAgICAgICAgICAgICAgICAgICAgPC9kaXY+CiAgICAgICAgICAgICAgICA8L2Rpdj4KICAgICAgICAgICAgPC9kaXY+CiAgICAgICAgICAgIDxkaXYgaWQ9ImNvbGxhcHNpYmxlUHJvdmlkZXJzIj4KICAgICAgICAgICAgICAgIDxkaXYgaWQ9InByb3ZpZGVycyI+PC9kaXY+CiAgICAgICAgICAgIDwvZGl2PgogICAgICAgIDwvZGl2PgogICAgPC9kaXY+CgogICAgCiAgICA8ZGl2IGlkPSJyZXN1bHRzSGVhZGVyIiBjbGFzcz0icmVzdWx0cy1oZWFkZXItY29udGFpbmVyIj4KICAgICAgICA8aDIgY2xhc3M9InJlc3VsdHMtaGVhZGluZyI+UkVTVUxUUzwvaDI+CiAgICAgICAgPGEgaHJlZj0iIyIgY2xhc3M9Imp1bXAtYnRuLXB1bHNlIiB0aXRsZT0iQmFjayB0byB0b3AiIHN0eWxlPSJ0ZXh0LWRlY29yYXRpb246IG5vbmU7Ij7ihpE8L2E+CgogICAgPGRpdiBjbGFzcz0iYnRuLXJvdyI+CiAgICAgICAgPGJ1dHRvbiB0eXBlPSJidXR0b24iIGNsYXNzPSJidG4gc2Vjb25kYXJ5IiBpZD0ic2hhcmVCdG4iIG9uY2xpY2s9InNoYXJlTGluaygpIj5Db3B5IHNoYXJlYWJsZSBsaW5rPC9idXR0b24+CiAgICAgICAgPGJ1dHRvbiB0eXBlPSJidXR0b24iIGNsYXNzPSJidG4gc2Vjb25kYXJ5IiBpZD0icGRmQnRuIiBvbmNsaWNrPSJleHBvcnRQZGYoKSI+RXhwb3J0IGFzIFBERjwvYnV0dG9uPgogICAgPC9kaXY+CiAgICA8L2Rpdj4KCiAgICA8ZGl2IGlkPSJwcmVDb25jbHVzaW9uc1RleHQiPlBsZWFzZSBjb21wbGV0ZSBhbGwgZmllbGRzIGluIHRoZSA8c3Ryb25nPlRyaXAgJiBWZWhpY2xlPC9zdHJvbmc+IHNlY3Rpb248L2Rpdj4KICAgIDxkaXYgaWQ9InJlc3VsdHMiIGNsYXNzPSJyZXN1bHRzIj4KCiAgICAgICAgPGRpdiBpZD0ic29ydENvbnRhaW5lciIgY2xhc3M9ImlucHV0LWdyb3VwIiBzdHlsZT0ibWF4LXdpZHRoOjIwMHB4OyI+CiAgICAgICAgICAgIDxsYWJlbD5Tb3J0IHJlc3VsdHM8L2xhYmVsPgogICAgICAgICAgICA8c2VsZWN0IGlkPSJzb3J0UmVzdWx0cyIgb25jaGFuZ2U9ImNhbGN1bGF0ZSgpIj4KICAgICAgICAgICAgICAgIDxvcHRpb24gdmFsdWU9ImNoZWFwZXN0Ij5DaGVhcGVzdCBmaXJzdDwvb3B0aW9uPgogICAgICAgICAgICAgICAgPG9wdGlvbiB2YWx1ZT0iYnJlYWtldmVuIj5CcmVhay1ldmVuIFBBWUcgcHVibGljIGNoYXJnaW5nIG1pbGVzIChsb3cgdG8gaGlnaCk8L29wdGlvbj4KICAgICAgICAgICAgICAgIDxvcHRpb24gdmFsdWU9ImF6Ij5BIOKGkiBaPC9vcHRpb24+CiAgICAgICAgICAgICAgICA8b3B0aW9uIHZhbHVlPSJ6YSI+WiDihpIgQTwvb3B0aW9uPgogICAgICAgICAgICA8L3NlbGVjdD4KICAgICAgICA8L2Rpdj4KCiAgICAgICAgPGRpdiBjbGFzcz0iY2FsYy1saW5lcyI+CiAgICAgICAgICAgIDxkaXYgaWQ9InByZUNoYXJnZUxpbmUiPjwvZGl2PgogICAgICAgICAgICA8ZGl2IGlkPSJob21lUmFuZ2VMaW5lIj48L2Rpdj4KICAgICAgICAgICAgPGRpdiBpZD0icHVibGljTWlsZXNMaW5lIj48L2Rpdj4KICAgICAgICAgICAgPGRpdiBpZD0icHVibGljS3doTGluZSI+PC9kaXY+CiAgICAgICAgICAgIDxkaXYgaWQ9ImFkaG9jQ29zdExpbmUiPjwvZGl2PgogICAgICAgIDwvZGl2PgoKICAgICAgICA8ZGl2IGlkPSJwcm92aWRlclJlc3VsdHMiPjwvZGl2PgogICAgICAgIDxkaXYgaWQ9ImNvbmNsdXNpb25zQm94Ij48L2Rpdj4KICAgICAgICA8ZGl2IGlkPSJzdW1tYXJ5Qm94IiBjbGFzcz0ic3VtbWFyeSI+PC9kaXY+CgogICAgICAgIDxkaXYgY2xhc3M9ImNoYXJ0LXdyYXBwZXIiPgogICAgICAgICAgICBDbGljayBhIGxlZ2VuZCBib3gvdGV4dCB0byBzaG93L2hpZGUgbGluZQogICAgICAgICAgICA8Y2FudmFzIGlkPSJjb3N0Q2hhcnQiIGhlaWdodD0iMjIwIj48L2NhbnZhcz4KICAgICAgICA8L2Rpdj4KICAgIDwvZGl2Pgo8L2Rpdj4KCjxzY3JpcHQgc3JjPSJmdW5jdGlvbnMuanMiPjwvc2NyaXB0Pgo8L2JvZHk+Cgo8L2h0bWw+"))));</script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>EV Subscription Charging Comparison</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+<div id="helpOverlay" class="help-overlay">
+    <div class="help-modal">
+        <button class="close-x" onclick="closeHelp()">×</button>
+        
+        <div class="help-slides" id="helpSlides">
+            
+            <div class="help-slide">
+                <h2>Welcome to the EV Subscription Comparison Tool</h2>
+                <p>Going on a long trip and want to know if a one-month EV charging subscription will save you money over PAYG rates?</p>
+				<p>This tool will tell you!</p>
+				<p style="text-align: center; margin: 30px 0 25px 0"><img src="ev-mg.webp" label="EV" style="height: 50px" /></p>
+                <div class="help-footer">
+                    <button class="btn secondary" onclick="moveSlide(1)">Next&nbsp;&gt;</button>
+                </div>
+            </div>
+
+            <div class="help-slide">
+                <h2>Comparison Modes</h2>
+                <p>Switch between two modes: <ol><li><strong>BREAK EVEN</strong> (default)</li>
+		<li><strong>TRIP SAVINGS</strong>.</li></ul></p>
+                <div class="help-footer">
+                    <button class="btn" onclick="moveSlide(-1)">&lt;&nbsp;Back</button>
+                    <button class="btn secondary" onclick="moveSlide(1)">Next&nbsp;&gt;</button>
+                </div>
+            </div>
+
+            <div class="help-slide">
+                <h2>BREAK EVEN</h2>
+                <p><strong>Break Even</strong> (default mode) displays a break-even-miles value for all subscription providers. This tells you how many miles you must drive using a provider's discounted rate to recoup its subscription fee.</p>                
+                <div class="help-footer">
+                    <button class="btn" onclick="moveSlide(-1)">&lt;&nbsp;Back</button>
+                    <button class="btn secondary" onclick="moveSlide(1)">Next&nbsp;&gt;</button>
+                </div>
+            </div>
+
+            <div class="help-slide">
+                <h2>TRIP SAVINGS</h2>
+                <p><strong>Trip Savings</strong> mode calculates potential savings for a planned trip.</p>
+                <div class="help-footer">
+                    <button class="btn" onclick="moveSlide(-1)">&lt;&nbsp;Back</button>
+                    <button class="btn secondary" onclick="moveSlide(1)">Next&nbsp;&gt;</button>
+                </div>
+            </div>
+
+            <div class="help-slide">
+                <h2>Assessing Results</h2>
+                <p>After completing all fields (which you may edit on the fly), the results table at the bottom of the page will automatically update.</p><p>If you are unsure what a field is asking for, hover over (or click) the💡for more information.</p>
+<p>Don't forget that subscriptions last for an entire month.</p>
+                <div class="help-footer">
+                    <button class="btn" onclick="moveSlide(-1)">&lt;&nbsp;Back</button>
+                    <button class="btn secondary" onclick="closeHelp()">Get&nbsp;Started</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="app">
+
+    <div class="header-row">
+        <h1>EV Subscription Charging Comparison</h1>
+        <div class="top-buttons">
+            <button class="btn secondary" id="themeToggle" onclick="toggleTheme()">Light/Dark View</button>
+            <a href="https://www.facebook.com/kelvin.a.hill" target="_blank" class="btn secondary">Contact Author</a>
+            <button id="resetAll" class="btn secondary" onclick="resetAll()">Reset All</button>
+        </div>
+    </div>
+
+<div class="toggle-container-block">
+    <div class="comparison-mode-box">
+        <span class="comparison-label">Comparison Mode</span>
+        <div class="pill-toggle">
+            <div id="pill-slider" class="pill-slider"></div>
+            <button type="button" class="pill-btn active" onclick="setToggle('break-even', this)">Break Even</button>
+            <button type="button" class="pill-btn" onclick="setToggle('trip-savings', this)">Trip Savings</button>
+        </div>
+    </div>
+</div>
+
+<div id="breakEvenCard" class="card" style="margin-bottom: 20px; max-width: 400px; margin-left: auto; margin-right: auto;">
+    <h3>Trip & Vehicle</h3>
+    <div class="input-group">
+        <label for="efficiencyBE">Vehicle efficiency (miles per kWh)
+            <div class="tooltip-container">
+                <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
+                <div class="tooltip-box">This is likely to be between 2.5 and 5, depending on the time of year and your driving style and habits. You can either estimate it for the time of year when you will travel, or you can reset your trip counter and calculate it if your trip is imminent.</div>
+            </div>
+        </label>
+        <input type="number" id="efficiencyBE" placeholder="e.g., 3.5" step="0.1">
+    </div>
+    <div class="input-group">
+        <label for="minSpeedBE">Minimum desired charging speed
+            <div class="tooltip-container">
+                <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
+                <div class="tooltip-box">Filter out slower charging speeds from the results if you don't ever use them, else they will skew the results because they are cheaper (e.g., setting the value to 50kW will filter out 7kW and 22kW).</div>
+            </div>
+        </label>
+        <select id="minSpeedBE">
+            <option value="7">7kW AC (fast)</option>
+            <option value="22">22kW AC (accelerated)</option>
+            <option value="50" selected>50kW DC (rapid)</option>
+            <option value="75">75kW DC(ultra rapid)</option>
+            <option value="150">150kW DC (high power)</option>
+        </select>
+    </div>
+    <div class="input-group">
+        <label for="adhocBE">Standard PAYG rate (pence per kWh)
+            <div class="tooltip-container">
+                <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
+                <div class="tooltip-box">This is the average amount you would ordinarily expect to pay during your trip while using PAYG chargers. If you already get a discount (e.g., 8% from Electroverse), input the discounted rate.</div>
+            </div>
+        </label>
+        <input type="number" id="adhocBE" placeholder="e.g., 62 (62p is the 50kW Lidl+ app price)" step="0.1">
+    </div>
+</div>
+
+    <div class="grid">
+        <div class="card">
+            <h3>Trip & Vehicle</h3>
+            <p style="font-size: 0.8em; margin-bottom: 20px">Click💡for explanation.</p>
+            <div class="input-row">
+                <div class="input-group">
+                    <label for "journeyMiles">Trip distance (miles)
+                        <div class="tooltip-container">
+                          <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
+                              <div class="tooltip-box">How far do you plan to travel? Adjust this value, and the results (at the bottom of the page) will auto-update.</div>
+                        </div>
+                    </label>
+                    <input type="number" id="journeyMiles" placeholder="e.g., 250">
+                </div>
+                <div class="input-group">
+                    <label for "batteryKwh">Battery size (kWh)
+                         <div class="tooltip-container">
+                            <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
+                          <div class="tooltip-box">What is the useable size of your vehicle's battery?</div>
+                        </div>
+                    </label>
+                    <input type="number" id="batteryKwh" placeholder="e.g., 61">
+                </div>
+            </div>
+
+            <div class="input-row">
+                <div class="input-group">
+                    <label for "soc">Starting state of charge (%)
+                        <div class="tooltip-container">
+                            <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
+                          <div class="tooltip-box">How much charge will your EV have when you begin your trip?</div>
+                        </div>
+                    </label>
+                    <input type="number" id="soc" placeholder="e.g., 90">
+                </div>
+                <div class="input-group">
+                    <label for ">Vehicle efficiency (miles per kWh)
+                        <div class="tooltip-container">
+                            <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
+                        <div class="tooltip-box">This is likely to be between 2.5 and 5, depending on the time of year and your driving style and habits. You can either estimate it for the time of year when you will travel, or you can reset your trip counter and calculate it if your trip is imminent.</div>
+                        </div>
+                    </label>
+                    <input type="number" id="efficiency" placeholder="e.g., 3.5">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="minSpeed">
+                    Minimum desired charging speed
+                    <div class="tooltip-container">
+                        <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
+                        <div class="tooltip-box">Filter out slower charging speeds from the results if you don't plan to use them during your trip, else they will skew the results because they are cheaper (e.g., setting the value to 50kW will filter out 7kW and 22kW).</div>
+                    </div>
+                </label>
+                <select id="minSpeed">
+                    <option value="7">7kW AC (fast)</option>
+                    <option value="22">22kW AC (accelerated)</option>
+                    <option value="50" selected>50kW DC (rapid)</option>
+                    <option value="75">75kW DC(ultra rapid)</option>
+                    <option value="150">150kW DC (high power)</option>
+                </select>
+            </div>
+
+            <div class="input-row">
+                <div class="input-group">
+                    <label>Starting charge type
+                        <div class="tooltip-container">
+                            <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
+                          <div class="tooltip-box">Before you begin your trip, will you have charged your battery at home or using PAYG charging?</div>
+                        </div>                        
+                    </label>
+                    <select id="startChargeType">
+                        <option value="home">Cheap home charging</option>
+                        <option value="public">PAYG Public charging</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Starting rate (pence per kWh)
+                        <div class="tooltip-container">
+                            <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
+                          <div class="tooltip-box">When you charge your battery before the trip, how much will the rate be?</div>
+                        </div>                        
+                    </label>
+                    <input type="number" id="startChargeRate" placeholder="e.g., 7.5">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>Typical average PAYG public rate you pay (pence per kWh)
+                    <div class="tooltip-container">
+                        <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
+                      <div class="tooltip-box">This is the average amount you would ordinarily expect to pay during your trip while using PAYG chargers. If you already get a discount (e.g., 8% from Electroverse), input the discounted rate. This will be the baseline for calculating whether it is possible to make your trip cheaper.</div>
+                    </div>                    
+                </label>
+                <input type="number" id="adhoc" placeholder="e.g., 62 (62p is the 50kW Lidl+ app price)">
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="providers-header-row">
+                <h3>Subscriptions & Discounts</h3>
+                <button type="button" class="btn secondary" id="toggleProvidersBtn" onclick="toggleProviderVisibility()" style="margin-bottom: 10px; width: 100%;">
+                  Collapse Providers list
+                </button>
+                <div id="providerControls">
+                    <p style="font-size: 0.8em; margin-bottom: 15px">Select <strong>all</strong> subscription providers to identify the cheapest for your planned route compared with the baseline for PAYG public charging. Scroll down for the results. You may also add, remove, and temporarily edit individual providers if details are outdated.</p>
+                    <div class="button-group" style="display:flex; gap:6px; margin-bottom: 20px">
+                        <button type="button" class="btn btn-glow" onclick="addAllProviders()">Add all providers</button>
+                        <button type="button" class="btn secondary" onclick="createProviderBox()">Add provider</button>
+                    </div>
+                </div>
+            </div>
+            <div id="collapsibleProviders">
+                <div id="providers"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- NEW RESULTS HEADING -->
+    <div id="resultsHeader" class="results-header-container">
+        <h2 class="results-heading">RESULTS</h2>
+        <a href="#" class="jump-btn-pulse" title="Back to top" style="text-decoration: none;">↑</a>
+
+    <div class="btn-row">
+        <button type="button" class="btn secondary" id="shareBtn" onclick="shareLink()">Copy shareable link</button>
+        <button type="button" class="btn secondary" id="pdfBtn" onclick="exportPdf()">Export as PDF</button>
+    </div>
+    </div>
+
+    <div id="preConclusionsText">Please complete all fields in the <strong>Trip & Vehicle</strong> section</div>
+    <div id="results" class="results">
+
+        <div id="sortContainer" class="input-group" style="max-width:200px;">
+            <label>Sort results</label>
+            <select id="sortResults" onchange="calculate()">
+                <option value="cheapest">Cheapest first</option>
+                <option value="breakeven">Break-even PAYG public charging miles (low to high)</option>
+                <option value="az">A → Z</option>
+                <option value="za">Z → A</option>
+            </select>
+        </div>
+
+        <div class="calc-lines">
+            <div id="preChargeLine"></div>
+            <div id="homeRangeLine"></div>
+            <div id="publicMilesLine"></div>
+            <div id="publicKwhLine"></div>
+            <div id="adhocCostLine"></div>
+        </div>
+
+        <div id="providerResults"></div>
+        <div id="conclusionsBox"></div>
+        <div id="summaryBox" class="summary"></div>
+
+        <div class="chart-wrapper">
+            Click a legend box/text to show/hide line
+            <canvas id="costChart" height="220"></canvas>
+        </div>
+    </div>
+</div>
+
+<script src="functions.js"></script>
+</body>
+</html>
