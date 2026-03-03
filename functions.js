@@ -302,7 +302,7 @@ function calculate() {
             return a.name.localeCompare(b.name);
         });
 
-        let html = `<h2 class="results-heading" style="text-align: center; margin-top: 20px">BREAK-EVEN ANALYSIS</h2>
+        let html = `<h2 class="results-heading" style="text-align: center">BREAK-EVEN ANALYSIS</h2>
                     <div style="text-align: center; font-size: 0.8em">In mobile view, slide table left to view hidden columns.</div>
                     <div class="results-scroll">
                     <table>
