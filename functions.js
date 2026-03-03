@@ -878,5 +878,3 @@ function hintHorizontalScroll() {
 
     scrollContainers.forEach(container => observer.observe(container));
 }
-}
-
