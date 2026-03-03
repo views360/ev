@@ -1,888 +1,488 @@
-html {
-    scroll-behavior: smooth;
-}
-
-:root {
-    --bg: #020617;
-    --panel: #0f172a;
-    --panel-alt: #1e293b;
-    --accent: #38bdf8;
-    --accent-soft: rgba(56, 189, 248, 0.15);
-    --text: #f1f5f9;
-    --muted: #94a3b8;
-    --border: #334155;
-    --danger: #ef4444;
-    --good: #22c55e;
-    --glow: 0 0 10px rgba(56, 189, 248, 0.4);
-    --glow-strong: 0 0 20px rgba(56, 189, 248, 0.6);
-}
-
-h3 {
-    margin: 0px 0px 10px 0px;
-}
-
-/* Tooltip Container */
-.tooltip-container {
-    position: relative;
-    display: inline-block;
-    cursor: pointer;
-    margin-left: 4px;
-}
-
-/* Tooltip Box Styling */
-.tooltip-box {
-    display: block;
-    position: absolute;
-    bottom: 140%; /* Space for the arrow */
-    left: 50%;
-    transform: translateX(-50%) translateY(10px);
-    background-color: var(--panel-alt);
-    color: var(--text);
-    padding: 10px 14px;
-    border-radius: 8px;
-    width: 200px;
-    text-align: center;
-    z-index: 100;
-    font-size: 0.85rem;
-    font-weight: normal;
-    text-transform: none;
-    line-height: 1.4;
-    border: 1px solid var(--accent);
-    
-    /* Animation & Visibility */
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
-    
-    /* Glowing Pulsating Effect */
-    box-shadow: 0 0 15px var(--accent-soft);
-    animation: pulseGlow 2s infinite ease-in-out;
-}
-
-/* The Arrow */
-.tooltip-box::after {
-    content: "";
-    position: absolute;
-    top: 100%; /* Bottom of the box */
-    left: 50%;
-    margin-left: -6px;
-    border-width: 6px;
-    border-style: solid;
-    border-color: var(--accent) transparent transparent transparent;
-}
-
-/* Neon Pulsing for Select Dropdowns */
-.preset-select-pulse {
-    border: 1px solid var(--accent) !important;
-    background-color: var(--panel-alt);
-    color: var(--text);
-    /* Using the existing pulse animation from the tooltips [cite: 55, 63] */
-    animation: tooltipPulse 2s infinite ease-in-out;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.btn-glow {
-    border: 1px solid var(--accent) !important;
-    background-color: var(--panel-alt);
-    color: var(--accent);
-    animation: tooltipPulse 2s infinite ease-in-out;
-    box-shadow: var(--glow);
-}
-
-/* Ensure the animation keyframes exist [cite: 69, 70] */
-@keyframes tooltipPulse {
-  0%, 100% { box-shadow: var(--glow); }
-  50% { box-shadow: var(--glow-strong); }
-}
-
-/* Pulsating Animation */
-@keyframes pulseGlow {
-    0% { box-shadow: 0 0 5px var(--accent-soft); }
-    50% { box-shadow: 0 0 18px var(--accent); }
-    100% { box-shadow: 0 0 5px var(--accent-soft); }
-}
-
-/* Show State (Fade In) */
-.tooltip-container.active .tooltip-box {
-    opacity: 1;
-    visibility: visible;
-    transform: translateX(-50%) translateY(0);
-}
-
-.tooltip-container:hover .tooltip-box {
-    opacity: 1;
-    visibility: visible;
-    transform: translateX(-50%) translateY(0);
-}
-
-/* Red Pulsating Effect for Warning Text */
-#preConclusionsText {
-    color: var(--danger);
-    font-weight: bold;
-    text-align: center;
-    margin: 20px 0;
-    padding: 15px;
-    border: 1px solid var(--danger);
-    border-radius: 8px;
-    background-color: rgba(239, 68, 68, 0.1); /* Light red tint */
+html{scroll-behavior:smooth;}:root{--bg:#020617;}:root{--panel:#0f172a;}:root{--
+panel-alt:#1e293b;}:root{--accent:#38bdf8;}:root{--accent-soft:rgba(56, 189, 248
+, 0.15);}:root{--text:#f1f5f9;}:root{--muted:#94a3b8;}:root{--border:#334155;}:r
+oot{--danger:#ef4444;}:root{--good:#22c55e;}:root{--glow:0 0 10px rgba(56, 189, 
+248, 0.4);}:root{--glow-strong:0 0 20px rgba(56, 189, 248, 0.6);}h3{margin:0px 0
+px 10px 0px;}/* Tooltip Container */
+.tooltip-container{position:relative;}/* Tooltip Container */
+.tooltip-container{display:inline-block;}/* Tooltip Container */
+.tooltip-container{cursor:pointer;}/* Tooltip Container */
+.tooltip-container{margin-left:0.2500pc;}/* Tooltip Box Styling */
+.tooltip-box{display:block;}/* Tooltip Box Styling */
+.tooltip-box{position:absolute;}/* Tooltip Box Styling */
+.tooltip-box{bottom:140%;}/* Tooltip Box Styling */
+.tooltip-box{/* Space for the arrow */
+    left:50%;}/* Tooltip Box Styling */
+.tooltip-box{transform:translateX(-50%) translateY(10px);}/* Tooltip Box Styling
+ */
+.tooltip-box{background-color:var(--panel-alt);}/* Tooltip Box Styling */
+.tooltip-box{color:var(--text);}/* Tooltip Box Styling */
+.tooltip-box{padding:10px 14px;}/* Tooltip Box Styling */
+.tooltip-box{border-radius:8px;}/* Tooltip Box Styling */
+.tooltip-box{width:150.00pt;}/* Tooltip Box Styling */
+.tooltip-box{text-align:center;}/* Tooltip Box Styling */
+.tooltip-box{z-index:100;}/* Tooltip Box Styling */
+.tooltip-box{font-size:0.85rem;}/* Tooltip Box Styling */
+.tooltip-box{font-weight:normal;}/* Tooltip Box Styling */
+.tooltip-box{text-transform:none;}/* Tooltip Box Styling */
+.tooltip-box{line-height:1.4;}/* Tooltip Box Styling */
+.tooltip-box{border:1px solid var(--accent);}/* Tooltip Box Styling */
+.tooltip-box{/* Animation & Visibility */
+    opacity:0;}/* Tooltip Box Styling */
+.tooltip-box{visibility:hidden;}/* Tooltip Box Styling */
+.tooltip-box{transition:opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+}/* Tooltip Box Styling */
+.tooltip-box{/* Glowing Pulsating Effect */
+    box-shadow:0 0 15px var(--accent-soft);}/* Tooltip Box Styling */
+.tooltip-box{animation:pulseGlow 2s infinite ease-in-out;}/* The Arrow */
+.tooltip-box::after{content:"";}/* The Arrow */
+.tooltip-box::after{position:absolute;}/* The Arrow */
+.tooltip-box::after{top:100%;}/* The Arrow */
+.tooltip-box::after{/* Bottom of the box */
+    left:50%;}/* The Arrow */
+.tooltip-box::after{margin-left:-6px;}/* The Arrow */
+.tooltip-box::after{border-width:4.50pt;}/* The Arrow */
+.tooltip-box::after{border-style:solid;}/* The Arrow */
+.tooltip-box::after{border-color:var(--accent) transparent transparent transpare
+nt;}/* Neon Pulsing for Select Dropdowns */
+.preset-select-pulse{border:1px solid var(--accent) !important;}/* Neon Pulsing 
+for Select Dropdowns */
+.preset-select-pulse{background-color:var(--panel-alt);}/* Neon Pulsing for Sele
+ct Dropdowns */
+.preset-select-pulse{color:var(--text);}/* Neon Pulsing for Select Dropdowns */
+.preset-select-pulse{/* Using the existing pulse animation from the tooltips [ci
+te:55, 63] */
+    animation;}/* Neon Pulsing for Select Dropdowns */
+.preset-select-pulse{transition:border-color 0.3s ease, box-shadow 0.3s ease;}[c
+lass~=btn-glow]{border:1px solid var(--accent) !important;}[class~=btn-glow]{bac
+kground-color:var(--panel-alt);}[class~=btn-glow]{color:var(--accent);}[class~=b
+tn-glow]{animation:tooltipPulse 2s infinite ease-in-out;}[class~=btn-glow]{box-s
+hadow:var(--glow);}50%{box-shadow:var(--glow-strong);}50%{box-shadow:0 0 18px va
+r(--accent);}100%{box-shadow:0 0 5px var(--accent-soft);}/* Show State (Fade In)
+ */
+.tooltip-container.active .tooltip-box{opacity:1;}/* Show State (Fade In) */
+.tooltip-container.active .tooltip-box{visibility:visible;}/* Show State (Fade I
+n) */
+.tooltip-container.active .tooltip-box{transform:translateX(-50%) translateY(0);
+}[class~=tooltip-container:hover .tooltip-box]{opacity:1;}[class~=tooltip-contai
+ner:hover .tooltip-box]{visibility:visible;}[class~=tooltip-container:hover .too
+ltip-box]{transform:translateX(-50%) translateY(0);}/* Red Pulsating Effect for 
+Warning Text */
+#preConclusionsText{color:var(--danger);}/* Red Pulsating Effect for Warning Tex
+t */
+#preConclusionsText{font-weight:bold;}/* Red Pulsating Effect for Warning Text *
+/
+#preConclusionsText{text-align:center;}/* Red Pulsating Effect for Warning Text 
+*/
+#preConclusionsText{margin:20px 0;}/* Red Pulsating Effect for Warning Text */
+#preConclusionsText{padding:0.9375pc;}/* Red Pulsating Effect for Warning Text *
+/
+#preConclusionsText{border:1px solid var(--danger);}/* Red Pulsating Effect for 
+Warning Text */
+#preConclusionsText{border-radius:8px;}/* Red Pulsating Effect for Warning Text 
+*/
+#preConclusionsText{background-color:rgba(239, 68, 68, 0.1);}/* Red Pulsating Ef
+fect for Warning Text */
+#preConclusionsText{/* Light red tint */
     
     /* Animation */
-    animation: alertPulse 1.5s infinite ease-in-out;
-}
+    animation:alertPulse 1.5s infinite ease-in-out;}50%{box-shadow:0 0 20px rgba
+(239, 68, 68, 0.6);}50%{transform:scale(1.01);}100%{box-shadow:0 0 5px rgba(239,
+ 68, 68, 0.4);}100%{transform:scale(1);}body.light-mode{--bg:#f8fafc;}body.light
+-mode{--panel:#ffffff;}body.light-mode{--panel-alt:#f1f5f9;}body.light-mode{--te
+xt:#0f172a;}body.light-mode{--muted:#64748b;}body.light-mode{--border:#e2e8f0;}b
+ody.light-mode{--accent:#0284c7;}body.light-mode{--accent-soft:rgba(2, 132, 199,
+ 0.1);}body.light-mode{--glow:0 0 8px rgba(2, 132, 199, 0.2);}body.light-mode{--
+glow-strong:0 0 15px rgba(2, 132, 199, 0.3);}body{background-color:var(--bg);}bo
+dy{color:var(--text);}body{font-family:'Inter', -apple-system, system-ui, sans-s
+erif;}body{margin:0;}body{padding:1.2500pc;}body{line-height:1.6;}body{transitio
+n:background-color 0.3s, color 0.3s;}[class~=app]{max-width:750.00pt;}[class~=ap
+p]{margin:0 auto;}[class~=app]{background:var(--panel);}[class~=app]{padding:1.8
+750pc;}[class~=app]{border-radius:16px;}[class~=app]{box-shadow:0 10px 30px -5px
+ rgba(0, 0, 0, 0.3), var(--glow);}[class~=app]{border:1px solid var(--border);}h
+1{font-size:1.75rem;}h1{margin:0 0 10px 0;}h1{color:var(--accent);}h1{text-shado
+w:var(--glow);}[class~=subtitle]{text-align:center;}[class~=subtitle]{max-width:
+600.00pt;}[class~=subtitle]{/* Optional:keeps text readable by limiting width */
+    margin-left;}[class~=subtitle]{margin-right:auto;}[class~=subtitle]{color:va
+r(--muted);}[class~=subtitle]{margin-top:0.6250pc;}[class~=subtitle]{margin-bott
+om:1.5625pc;}[class~=grid]{display:grid;}[class~=grid]{grid-template-columns:rep
+eat(auto-fit, minmax(300px, 1fr));}[class~=grid]{gap:20px;}[class~=grid]{margin-
+bottom:1.8750pc;}[class~=card]{background:var(--panel-alt);}[class~=card]{paddin
+g:1.2500pc;}[class~=card]{border-radius:12px;}[class~=card]{border:1px solid var
+(--border);}[class~=input-row]{display:flex;}[class~=input-row]{gap:15px;}[class
+~=input-row]{margin-bottom:0.9375pc;}[class~=input-group]{flex:1;}[class~=input-
+group]{margin-bottom:0.9375pc;}[class~=input-group label]{display:block;}[class~
+=input-group label]{font-size:0.6rem;}[class~=input-group label]{font-weight:600
+;}[class~=input-group label]{color:var(--muted);}[class~=input-group label]{marg
+in-bottom:0.5000pc;}[class~=input-group label]{text-transform:uppercase;}[class~
+=input-group label]{letter-spacing:0.05em;}input, select{width:100%;}input, sele
+ct{padding:0.7500pc;}input, select{background:var(--bg);}input, select{border:1p
+x solid var(--border);}input, select{border-radius:8px;}input, select{color:var(
+--text);}input, select{font-size:1rem;}input, select{box-sizing:border-box;}inpu
+t, select{transition:all 0.2s ease;}input:focus, select:focus{outline:none;}inpu
+t:focus, select:focus{border-color:var(--accent);}input:focus, select:focus{box-
+shadow:0 0 0 3px var(--accent-soft);}[class~=btn-row]{display:flex;}[class~=btn-
+row]{gap:12px;}[class~=btn-row]{margin:20px 0;}[class~=btn-row]{flex-wrap:wrap;}
+[class~=btn]{box-sizing:border-box;}[class~=btn]{height:40px;}[class~=btn]{paddi
+ng:0 20px;}[class~=btn]{border-radius:8px;}[class~=btn]{font-weight:600;}[class~
+=btn]{cursor:pointer;}[class~=btn]{transition:all 0.2s ease;}[class~=btn]{border
+:1px solid transparent;}[class~=btn]{font-size:0.9rem;}[class~=btn]{text-decorat
+ion:none;}[class~=btn]{display:inline-flex;}[class~=btn]{align-items:center;}[cl
+ass~=btn]{justify-content:center;}[class~=btn]{line-height:1;}[class~=btn.second
+ary]{background:var(--accent-soft);}[class~=btn.secondary]{border:1px solid var(
+--accent);}[class~=btn.secondary]{color:var(--accent);}[class~=btn.secondary:hov
+er]{background:var(--accent);}[class~=btn.secondary:hover]{color:var(--bg);}[cla
+ss~=provider-box]{background:var(--bg);}[class~=provider-box]{padding:1.2500pc;}
+[class~=provider-box]{border-radius:12px;}[class~=provider-box]{margin-bottom:0.
+9375pc;}[class~=provider-box]{border:1px solid var(--border);}[class~=provider-b
+ox]{position:relative;}[class~=provider-header]{display:flex;}[class~=provider-h
+eader]{justify-content:space-between;}[class~=provider-header]{align-items:cente
+r;}[class~=provider-header]{margin-bottom:0.9375pc;}[class~=remove-btn]{backgrou
+nd:none;}[class~=remove-btn]{border:none;}[class~=remove-btn]{color:var(--danger
+);}[class~=remove-btn]{font-size:1.5rem;}[class~=remove-btn]{cursor:pointer;}/*.
+results{margin-top:2.5000pc;}/*.results{padding-top:1.8750pc;}/*.results{border-
+top:2px dashed var(--border);}*/
 
-@keyframes alertPulse {
-    0% { 
-        box-shadow: 0 0 5px rgba(239, 68, 68, 0.4); 
-        transform: scale(1);
-    }
-    50% { 
-        box-shadow: 0 0 20px rgba(239, 68, 68, 0.6); 
-        transform: scale(1.01);
-    }
-    100% { 
-        box-shadow: 0 0 5px rgba(239, 68, 68, 0.4); 
-        transform: scale(1);
-    }
-}
+#providerResults table{width:100%;}*/
 
-body.light-mode {
-    --bg: #f8fafc;
-    --panel: #ffffff;
-    --panel-alt: #f1f5f9;
-    --text: #0f172a;
-    --muted: #64748b;
-    --border: #e2e8f0;
-    --accent: #0284c7;
-    --accent-soft: rgba(2, 132, 199, 0.1);
-    --glow: 0 0 8px rgba(2, 132, 199, 0.2);
-    --glow-strong: 0 0 15px rgba(2, 132, 199, 0.3);
-}
+#providerResults table{border-collapse:collapse;}*/
 
-body {
-    background-color: var(--bg);
-    color: var(--text);
-    font-family: 'Inter', -apple-system, system-ui, sans-serif;
-    margin: 0;
-    padding: 20px;
-    line-height: 1.6;
-    transition: background-color 0.3s, color 0.3s;
-}
+#providerResults table{margin:20px 0;}*/
 
-.app {
-    max-width: 1000px;
-    margin: 0 auto;
-    background: var(--panel);
-    padding: 30px;
-    border-radius: 16px;
-    box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.3), var(--glow);
-    border: 1px solid var(--border);
-}
+#providerResults table{border-radius:8px;}*/
 
-h1 {
-    font-size: 1.75rem;
-    margin: 0 0 10px 0;
-    color: var(--accent);
-    text-shadow: var(--glow);
-}
-
-.subtitle {
-    text-align: center;
-    max-width: 800px; /* Optional: keeps text readable by limiting width */
-    margin-left: auto;
-    margin-right: auto;
-    color: var(--muted);
-    margin-top: 10px;
-    margin-bottom: 25px;
-}
-
-.grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 20px;
-    margin-bottom: 30px;
-}
-
-.card {
-    background: var(--panel-alt);
-    padding: 20px;
-    border-radius: 12px;
-    border: 1px solid var(--border);
-}
-
-.input-row {
-    display: flex;
-    gap: 15px;
-    margin-bottom: 15px;
-}
-
-.input-group {
-    flex: 1;
-    margin-bottom: 15px;
-}
-
-.input-group label {
-    display: block;
-    font-size: 0.6rem;
-    font-weight: 600;
-    color: var(--muted);
-    margin-bottom: 8px;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-}
-
-input, select {
-    width: 100%;
-    padding: 12px;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    color: var(--text);
-    font-size: 1rem;
-    box-sizing: border-box;
-    transition: all 0.2s ease;
-}
-
-input:focus, select:focus {
-    outline: none;
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px var(--accent-soft);
-}
-
-.btn-row {
-    display: flex;
-    gap: 12px;
-    margin: 20px 0;
-    flex-wrap: wrap;
-}
-
-.btn {
-    box-sizing: border-box;
-    height: 40px;
-    padding: 0 20px;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    border: 1px solid transparent;
-    font-size: 0.9rem;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    line-height: 1;
-}
-
-.btn.secondary {
-    background: var(--accent-soft);
-    border: 1px solid var(--accent);
-    color: var(--accent);
-}
-
-.btn.secondary:hover {
-    background: var(--accent);
-    color: var(--bg);
-}
-
-.provider-box {
-    background: var(--bg);
-    padding: 20px;
-    border-radius: 12px;
-    margin-bottom: 15px;
-    border: 1px solid var(--border);
-    position: relative;
-}
-
-.provider-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-}
-
-.remove-btn {
-    background: none;
-    border: none;
-    color: var(--danger);
-    font-size: 1.5rem;
-    cursor: pointer;
-}
-
-/*.results {
-    margin-top: 40px;
-    padding-top: 30px;
-    border-top: 2px dashed var(--border);
-}*/
-
-#providerResults table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 20px 0;
-    border-radius: 8px;
-    /* overflow: hidden; */
-}
-
-#providerResults th {
-    background: var(--panel-alt);
-    text-align: left;
-    padding: 14px 12px;
-    font-size: 0.9rem;
-    color: var(--muted);
-    border-bottom: 2px solid var(--border);
-}
-
-#providerResults td {
-    padding: 14px 12px;
-    border-bottom: 1px solid var(--border);
-}
-
-#providerResults td:nth-child(even),
-#providerResults th:nth-child(even) {
-    background-color: rgba(255, 255, 255, 0.03);
-}
-
+#providerResults table{/* overflow:hidden;}#providerResults th{background:var(--
+panel-alt);}#providerResults th{text-align:left;}#providerResults th{padding:14p
+x 12px;}#providerResults th{font-size:0.9rem;}#providerResults th{color:var(--mu
+ted);}#providerResults th{border-bottom:2px solid var(--border);}#providerResult
+s td{padding:14px 12px;}#providerResults td{border-bottom:1px solid var(--border
+);}#providerResults td:nth-child(even),
+#providerResults th:nth-child(even){background-color:rgba(255, 255, 255, 0.03);}
 body.light-mode #providerResults td:nth-child(even),
-body.light-mode #providerResults th:nth-child(even) {
-    background-color: rgba(0, 0, 0, 0.02);
-}
-
-.calc-lines {
-    margin: 20px 0;
-    font-size: 1.1rem;
-}
-
-.calc-lines div {
-    margin-bottom: 8px;
-}
-
-.conclusion-card {
-    padding: 24px;
-    border-radius: 12px;
-    margin: 20px 0;
-    border: 1px solid var(--border);
-}
-
-.conclusion-card.good {
-    background: rgba(34, 197, 94, 0.05);
-    border-left: 5px solid var(--good);
-}
-
-.conclusion-card.bad {
-    background: rgba(239, 68, 68, 0.05);
-    border-left: 5px solid var(--danger);
-}
-
-.main-result {
-    font-size: 1.3rem;
-    margin-bottom: 10px;
-}
-
-.speed-comparison-container {
-    margin-top: 20px;
-    max-width: 500px;
-}
-
-.mini-table {
-    width: 100%;
-    border-collapse: collapse;
-    background: var(--bg);
-    border-radius: 8px;
-    overflow: hidden;
-}
-
-.mini-table th {
-    background: var(--panel-alt);
-    text-align: left;
-    padding: 12px;
-    font-size: 0.85rem;
-    color: var(--muted);
-}
-
-.mini-table td {
-    padding: 12px;
-    border-bottom: 1px solid var(--border);
-}
-
-tr.good td { color: var(--good); }
-tr.bad td { color: var(--danger); }
-
-.chart-wrapper {
-    margin-top: 30px;
-    background: var(--panel-alt);
-    padding: 20px;
-    border-radius: 12px;
-    border: 1px solid var(--border);
-    height: 350px;
-}
-
-#toggleProvidersBtn {
-    transition: all 0.3s ease;
-    font-weight: bold;
-    letter-spacing: 0.5px;
-}
-
-/* Container for the switch - no border, full width */
-.toggle-container-block {
-    width: 100%;
-    margin: 20px 0;
-    display: flex;
-    justify-content: center;
-}
-
-/* The 'sliding' wrapper */
-.toggle-wrapper {
-    display: flex;
-    gap: 0; 
-    width: 100%;
-    max-width: 400px; /* Limits width on desktop */
-}
-
-/* Remove rounded corners where buttons meet to look like one unit */
-.toggle-wrapper .btn {
-    flex: 1;
-    border-radius: 0;
-}
-
-.toggle-wrapper .btn:first-child {
-    border-top-left-radius: 8px;
-    border-bottom-left-radius: 8px;
-}
-
-.toggle-wrapper .btn:last-child {
-    border-top-right-radius: 8px;
-    border-bottom-right-radius: 8px;
-    border-left: none; /* Prevents double border in the middle */
-}
-
-/* Highlighting the selected side using your accent color */
-.active-toggle {
-    background: var(--accent) !important;
-    color: var(--bg) !important;
-    box-shadow: var(--glow);
-}
-
-.toggle-container-block {
-    width: 100%;
-    margin: 20px 0;
-    display: flex;
-    justify-content: center;
-}
-
-/* The main track */
-.pill-toggle {
-    position: relative;
-    display: flex;
-    width: 100%;
-    max-width: 400px;
-    background: var(--panel-alt);
-    border: 1px solid var(--border);
-    border-radius: 50px; /* Pill shape */
-    padding: 4px;
-    overflow: hidden;
-}
-
-/* The sliding background pill */
-.pill-slider {
-    position: absolute;
-    top: 4px;
-    left: 4px;
-    width: calc(50% - 4px);
-    height: calc(100% - 8px);
-    background: var(--accent);
-    border-radius: 50px;
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: var(--glow);
-    z-index: 1;
-}
-
-/* The buttons sitting on top */
-.pill-btn {
-    position: relative;
-    flex: 1;
-    background: none;
-    border: none;
-    color: var(--text);
-    padding: 10px 0;
-    font-weight: 600;
-    cursor: pointer;
-    z-index: 2;
-    transition: color 0.3s ease;
-    font-family: inherit;
-    font-size: 0.9rem;
-}
-
-/* Change text color when active */
-.pill-btn.active {
-    color: var(--bg);
-}
-
-.header-row {
-    display: flex;
-    flex-direction: column; /* Stack heading and buttons */
-    align-items: center;    /* Center horizontally */
-    text-align: center;
-    gap: 15px;
-    margin-bottom: 10px;
-}
-
-.top-buttons {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    flex-wrap: wrap; /* Allows wrapping on smaller screens */
-}
-
-/* Desktop Hover Support */
-@media (hover: hover) {
-    .tooltip-container:hover .tooltip-box {
-        opacity: 1;
-        visibility: visible;
-        transform: translateX(-50%) translateY(0);
-    }
-}
-
-/* Styling for the jump arrow in the provider box */
-.jump-btn {
-    text-decoration: none;
-    color: var(--accent);
-    font-size: 1.4rem;
-    font-weight: bold;
-    transition: transform 0.2s ease, opacity 0.2s ease;
-    line-height: 1;
-}
-
-.jump-btn:hover {
-    transform: translateY(3px);
-    opacity: 0.8;
-}
-
-/* Ensure the header layout stays aligned */
-.provider-header div {
-    display: flex;
-    align-items: center;
-}
-
-/* Jump Arrow Styling */
-.jump-btn-pulse {
-    text-decoration: none;
-    color: var(--accent);
-    font-size: 1.4rem;
-    font-weight: bold;
-    line-height: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    border: 1px solid var(--accent);
-    background: var(--panel-alt);
-    transition: transform 0.2s ease;
-    
-    /* Pulsating Glow Effect */
-    animation: jumpPulse 2s infinite ease-in-out;
-}
-
-.jump-btn-pulse:hover {
-    transform: translateY(3px);
-    background: var(--accent-soft);
-}
-
-@keyframes jumpPulse {
-    0%, 100% { 
-        box-shadow: 0 0 5px var(--accent-soft);
-        border-color: var(--accent);
-    }
-    50% { 
-        box-shadow: 0 0 15px var(--accent);
-        border-color: #fff;
-    }
-}
-
-/* Container to align the Results heading and the Up Arrow */
-.results-header-container {
-    display: none;
-    align-items: center;
-    justify-content: center;
-    gap: 15px;
-    margin-top: 40px;
-    margin-bottom: 10px;
-}
-
-/* Ensure the results heading margin doesn't offset the alignment */
-.results-heading {
-    margin: 0 !important;
-    color: var(--accent);
-}
-
-/* Optional: If you want the up-arrow to nudge upwards on hover (inverse of the down-arrow) */
-.results-header-container .jump-btn-pulse:hover {
-    transform: translateY(-3px);
-}
-
-/* Container for the Neon Box */
-.comparison-mode-box {
-    border: 2px solid var(--accent);
-    padding: 20px;
-    border-radius: 16px;
-    background: var(--panel-alt);
-    box-shadow: var(--glow); /* Uses your existing neon blue glow variable */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 15px;
-    width: 100%;
-    max-width: 420px; /* Slightly wider than the toggle itself */
-    animation: boxPulse 2s infinite ease-in-out;
-}
-
-/* Label inside the box */
-.comparison-label {
-    font-size: 0.75rem;
-    font-weight: 800;
-    color: var(--accent);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-}
-
-/* Override existing toggle-container-block margin if needed */
-.toggle-container-block {
-    margin: 30px 0;
-}
-
-/* Subtle pulse for the neon border to match your other elements */
-@keyframes boxPulse {
-    0%, 100% { box-shadow: var(--glow); border-color: var(--accent); }
-    50% { box-shadow: var(--glow-strong); border-color: #fff; }
-}
-
-/* Ensure the overlay can fade out */
-.help-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.85);
-    backdrop-filter: blur(4px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 2000; /* Ensure it is above everything else */
-    opacity: 1;
-    transition: opacity 0.3s ease;
-}
-
-.help-modal {
-    background: var(--panel);
-    width: 90%;
-    max-width: 500px;
-    border-radius: 16px;
-    border: 1px solid var(--accent);
-    position: relative;
-    overflow: hidden;
-    box-shadow: var(--glow-strong);
-}
-
-.close-x {
-    position: absolute;
-    top: 15px;
-    right: 20px;
-    background: none;
-    border: none;
-    color: var(--muted);
-    font-size: 2rem;
-    cursor: pointer;
-    z-index: 10;
-}
-
-.help-slides {
-    display: flex;
-    width: 500%; /* 5 slides */
-    transition: transform 0.4s ease-in-out;
-}
-
-.help-slide {
-    width: 20%;
-    padding: 40px;
-    box-sizing: border-box;
-    text-align: center;
-}
-
-.help-slide h2 {
-    color: var(--accent);
-    margin-bottom: 20px;
-}
-
-.help-footer {
-    margin-top: 30px;
-    display: flex;
-    justify-content: center; /* Changed from flex-end to center */
-    gap: 15px; /* Slightly more gap looks better when centered */
-}
-
-/* Fix for the bullet points centering */
-.help-slide ul, .help-slide ol {
-    display: inline-block;
-    text-align: left;
-    margin: 10px auto;
-    padding-left: 25px;
-}
-
-/* Ensure the paragraph above doesn't get squashed */
-.help-slide p {
-    margin-bottom: 15px;
-}
-
-/* Ensure buttons are clickable */
-.help-footer button, .close-x {
-    cursor: pointer;
-    pointer-events: auto;
-}
-
-/* Constrain the first column in Break-Even Mode */
+body.light-mode #providerResults th:nth-child(even){background-color:rgba(0, 0, 
+0, 0.02);}[class~=calc-lines]{margin:20px 0;}[class~=calc-lines]{font-size:1.1re
+m;}[class~=calc-lines div]{margin-bottom:0.5000pc;}[class~=conclusion-card]{padd
+ing:1.5000pc;}[class~=conclusion-card]{border-radius:12px;}[class~=conclusion-ca
+rd]{margin:20px 0;}[class~=conclusion-card]{border:1px solid var(--border);}[cla
+ss~=conclusion-card.good]{background:rgba(34, 197, 94, 0.05);}[class~=conclusion
+-card.good]{border-left:5px solid var(--good);}[class~=conclusion-card.bad]{back
+ground:rgba(239, 68, 68, 0.05);}[class~=conclusion-card.bad]{border-left:5px sol
+id var(--danger);}[class~=main-result]{font-size:1.3rem;}[class~=main-result]{ma
+rgin-bottom:0.6250pc;}[class~=speed-comparison-container]{margin-top:1.2500pc;}[
+class~=speed-comparison-container]{max-width:375.00pt;}[class~=mini-table]{width
+:100%;}[class~=mini-table]{border-collapse:collapse;}[class~=mini-table]{backgro
+und:var(--bg);}[class~=mini-table]{border-radius:8px;}[class~=mini-table]{overfl
+ow:hidden;}[class~=mini-table th]{background:var(--panel-alt);}[class~=mini-tabl
+e th]{text-align:left;}[class~=mini-table th]{padding:0.7500pc;}[class~=mini-tab
+le th]{font-size:0.85rem;}[class~=mini-table th]{color:var(--muted);}[class~=min
+i-table td]{padding:0.7500pc;}[class~=mini-table td]{border-bottom:1px solid var
+(--border);}tr.good td{color:var(--good);}tr.bad td{color:var(--danger);}[class~
+=chart-wrapper]{margin-top:1.8750pc;}[class~=chart-wrapper]{background:var(--pan
+el-alt);}[class~=chart-wrapper]{padding:1.2500pc;}[class~=chart-wrapper]{border-
+radius:12px;}[class~=chart-wrapper]{border:1px solid var(--border);}[class~=char
+t-wrapper]{height:350px;}#toggleProvidersBtn{transition:all 0.3s ease;}#togglePr
+ovidersBtn{font-weight:bold;}#toggleProvidersBtn{letter-spacing:0.5px;}/* Contai
+ner for the switch - no border, full width */
+.toggle-container-block{width:100%;}/* Container for the switch - no border, ful
+l width */
+.toggle-container-block{margin:20px 0;}/* Container for the switch - no border, 
+full width */
+.toggle-container-block{display:flex;}/* Container for the switch - no border, f
+ull width */
+.toggle-container-block{justify-content:center;}/* The 'sliding' wrapper */
+.toggle-wrapper{display:flex;}/* The 'sliding' wrapper */
+.toggle-wrapper{gap:0;}/* The 'sliding' wrapper */
+.toggle-wrapper{width:100%;}/* The 'sliding' wrapper */
+.toggle-wrapper{max-width:300.00pt;}/* Remove rounded corners where buttons meet
+ to look like one unit */
+.toggle-wrapper .btn{flex:1;}/* Remove rounded corners where buttons meet to loo
+k like one unit */
+.toggle-wrapper .btn{border-radius:0;}[class~=toggle-wrapper .btn:first-child]{b
+order-top-left-radius:8px;}[class~=toggle-wrapper .btn:first-child]{border-botto
+m-left-radius:8px;}[class~=toggle-wrapper .btn:last-child]{border-top-right-radi
+us:8px;}[class~=toggle-wrapper .btn:last-child]{border-bottom-right-radius:8px;}
+[class~=toggle-wrapper .btn:last-child]{border-left:none;}/* Highlighting the se
+lected side using your accent color */
+.active-toggle{background:var(--accent) !important;}/* Highlighting the selected
+ side using your accent color */
+.active-toggle{color:var(--bg) !important;}/* Highlighting the selected side usi
+ng your accent color */
+.active-toggle{box-shadow:var(--glow);}[class~=toggle-container-block]{width:100
+%;}[class~=toggle-container-block]{margin:20px 0;}[class~=toggle-container-block
+]{display:flex;}[class~=toggle-container-block]{justify-content:center;}/* The m
+ain track */
+.pill-toggle{position:relative;}/* The main track */
+.pill-toggle{display:flex;}/* The main track */
+.pill-toggle{width:100%;}/* The main track */
+.pill-toggle{max-width:300.00pt;}/* The main track */
+.pill-toggle{background:var(--panel-alt);}/* The main track */
+.pill-toggle{border:1px solid var(--border);}/* The main track */
+.pill-toggle{border-radius:50px;}/* The main track */
+.pill-toggle{/* Pill shape */
+    padding:0.2500pc;}/* The main track */
+.pill-toggle{overflow:hidden;}/* The sliding background pill */
+.pill-slider{position:absolute;}/* The sliding background pill */
+.pill-slider{top:4px;}/* The sliding background pill */
+.pill-slider{left:4px;}/* The sliding background pill */
+.pill-slider{width:calc(50% - 4px);}/* The sliding background pill */
+.pill-slider{height:calc(100% - 8px);}/* The sliding background pill */
+.pill-slider{background:var(--accent);}/* The sliding background pill */
+.pill-slider{border-radius:50px;}/* The sliding background pill */
+.pill-slider{transition:transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);}/* The slid
+ing background pill */
+.pill-slider{box-shadow:var(--glow);}/* The sliding background pill */
+.pill-slider{z-index:1;}/* The buttons sitting on top */
+.pill-btn{position:relative;}/* The buttons sitting on top */
+.pill-btn{flex:1;}/* The buttons sitting on top */
+.pill-btn{background:none;}/* The buttons sitting on top */
+.pill-btn{border:none;}/* The buttons sitting on top */
+.pill-btn{color:var(--text);}/* The buttons sitting on top */
+.pill-btn{padding:10px 0;}/* The buttons sitting on top */
+.pill-btn{font-weight:600;}/* The buttons sitting on top */
+.pill-btn{cursor:pointer;}/* The buttons sitting on top */
+.pill-btn{z-index:2;}/* The buttons sitting on top */
+.pill-btn{transition:color 0.3s ease;}/* The buttons sitting on top */
+.pill-btn{font-family:inherit;}/* The buttons sitting on top */
+.pill-btn{font-size:0.9rem;}/* Change text color when active */
+.pill-btn.active{color:var(--bg);}[class~=header-row]{display:flex;}[class~=head
+er-row]{flex-direction:column;}[class~=header-row]{/* Stack heading and buttons 
+*/
+    align-items:center;}[class~=header-row]{/* Center horizontally */
+    text-align:center;}[class~=header-row]{gap:15px;}[class~=header-row]{margin-
+bottom:0.6250pc;}[class~=top-buttons]{display:flex;}[class~=top-buttons]{justify
+-content:center;}[class~=top-buttons]{gap:10px;}[class~=top-buttons]{flex-wrap:w
+rap;}/* Desktop Hover Support */
+@media (hover: hover){.tooltip-container:hover .tooltip-box;}/* Styling for the 
+jump arrow in the provider box */
+.jump-btn{text-decoration:none;}/* Styling for the jump arrow in the provider bo
+x */
+.jump-btn{color:var(--accent);}/* Styling for the jump arrow in the provider box
+ */
+.jump-btn{font-size:1.4rem;}/* Styling for the jump arrow in the provider box */
+.jump-btn{font-weight:bold;}/* Styling for the jump arrow in the provider box */
+.jump-btn{transition:transform 0.2s ease, opacity 0.2s ease;}/* Styling for the 
+jump arrow in the provider box */
+.jump-btn{line-height:1;}[class~=jump-btn:hover]{transform:translateY(3px);}[cla
+ss~=jump-btn:hover]{opacity:0.8;}/* Ensure the header layout stays aligned */
+.provider-header div{display:flex;}/* Ensure the header layout stays aligned */
+.provider-header div{align-items:center;}/* Jump Arrow Styling */
+.jump-btn-pulse{text-decoration:none;}/* Jump Arrow Styling */
+.jump-btn-pulse{color:var(--accent);}/* Jump Arrow Styling */
+.jump-btn-pulse{font-size:1.4rem;}/* Jump Arrow Styling */
+.jump-btn-pulse{font-weight:bold;}/* Jump Arrow Styling */
+.jump-btn-pulse{line-height:1;}/* Jump Arrow Styling */
+.jump-btn-pulse{display:flex;}/* Jump Arrow Styling */
+.jump-btn-pulse{align-items:center;}/* Jump Arrow Styling */
+.jump-btn-pulse{justify-content:center;}/* Jump Arrow Styling */
+.jump-btn-pulse{width:22.50pt;}/* Jump Arrow Styling */
+.jump-btn-pulse{height:30px;}/* Jump Arrow Styling */
+.jump-btn-pulse{border-radius:50%;}/* Jump Arrow Styling */
+.jump-btn-pulse{border:1px solid var(--accent);}/* Jump Arrow Styling */
+.jump-btn-pulse{background:var(--panel-alt);}/* Jump Arrow Styling */
+.jump-btn-pulse{transition:transform 0.2s ease;}/* Jump Arrow Styling */
+.jump-btn-pulse{/* Pulsating Glow Effect */
+    animation:jumpPulse 2s infinite ease-in-out;}[class~=jump-btn-pulse:hover]{t
+ransform:translateY(3px);}[class~=jump-btn-pulse:hover]{background:var(--accent-
+soft);}50%{box-shadow:0 0 15px var(--accent);}50%{border-color:#fff;}/* Containe
+r to align the Results heading and the Up Arrow */
+.results-header-container{display:none;}/* Container to align the Results headin
+g and the Up Arrow */
+.results-header-container{align-items:center;}/* Container to align the Results 
+heading and the Up Arrow */
+.results-header-container{justify-content:center;}/* Container to align the Resu
+lts heading and the Up Arrow */
+.results-header-container{gap:15px;}/* Container to align the Results heading an
+d the Up Arrow */
+.results-header-container{margin-top:2.5000pc;}/* Container to align the Results
+ heading and the Up Arrow */
+.results-header-container{margin-bottom:0.6250pc;}/* Ensure the results heading 
+margin doesn't offset the alignment */
+.results-heading{margin:0 !important;}/* Ensure the results heading margin doesn
+'t offset the alignment */
+.results-heading{color:var(--accent);}/* Optional: If you want the up-arrow to n
+udge upwards on hover (inverse of the down-arrow) */
+.results-header-container .jump-btn-pulse:hover{transform:translateY(-3px);}/* C
+ontainer for the Neon Box */
+.comparison-mode-box{border:2px solid var(--accent);}/* Container for the Neon B
+ox */
+.comparison-mode-box{padding:1.2500pc;}/* Container for the Neon Box */
+.comparison-mode-box{border-radius:16px;}/* Container for the Neon Box */
+.comparison-mode-box{background:var(--panel-alt);}/* Container for the Neon Box 
+*/
+.comparison-mode-box{box-shadow:var(--glow);}/* Container for the Neon Box */
+.comparison-mode-box{/* Uses your existing neon blue glow variable */
+    display:flex;}/* Container for the Neon Box */
+.comparison-mode-box{flex-direction:column;}/* Container for the Neon Box */
+.comparison-mode-box{align-items:center;}/* Container for the Neon Box */
+.comparison-mode-box{gap:15px;}/* Container for the Neon Box */
+.comparison-mode-box{width:100%;}/* Container for the Neon Box */
+.comparison-mode-box{max-width:315.00pt;}/* Container for the Neon Box */
+.comparison-mode-box{/* Slightly wider than the toggle itself */
+    animation:boxPulse 2s infinite ease-in-out;}/* Label inside the box */
+.comparison-label{font-size:0.75rem;}/* Label inside the box */
+.comparison-label{font-weight:800;}/* Label inside the box */
+.comparison-label{color:var(--accent);}/* Label inside the box */
+.comparison-label{text-transform:uppercase;}/* Label inside the box */
+.comparison-label{letter-spacing:0.1em;}/* Override existing toggle-container-bl
+ock margin if needed */
+.toggle-container-block{margin:30px 0;}50%{box-shadow:var(--glow-strong);}50%{bo
+rder-color:#fff;}/* Ensure the overlay can fade out */
+.help-overlay{position:fixed;}/* Ensure the overlay can fade out */
+.help-overlay{top:0;}/* Ensure the overlay can fade out */
+.help-overlay{left:0;}/* Ensure the overlay can fade out */
+.help-overlay{width:100%;}/* Ensure the overlay can fade out */
+.help-overlay{height:100%;}/* Ensure the overlay can fade out */
+.help-overlay{background:rgba(0, 0, 0, 0.85);}/* Ensure the overlay can fade out
+ */
+.help-overlay{backdrop-filter:blur(4px);}/* Ensure the overlay can fade out */
+.help-overlay{display:flex;}/* Ensure the overlay can fade out */
+.help-overlay{justify-content:center;}/* Ensure the overlay can fade out */
+.help-overlay{align-items:center;}/* Ensure the overlay can fade out */
+.help-overlay{z-index:2000;}/* Ensure the overlay can fade out */
+.help-overlay{/* Ensure it is above everything else */
+    opacity:1;}/* Ensure the overlay can fade out */
+.help-overlay{transition:opacity 0.3s ease;}[class~=help-modal]{background:var(-
+-panel);}[class~=help-modal]{width:90%;}[class~=help-modal]{max-width:375.00pt;}
+[class~=help-modal]{border-radius:16px;}[class~=help-modal]{border:1px solid var
+(--accent);}[class~=help-modal]{position:relative;}[class~=help-modal]{overflow:
+hidden;}[class~=help-modal]{box-shadow:var(--glow-strong);}[class~=close-x]{posi
+tion:absolute;}[class~=close-x]{top:15px;}[class~=close-x]{right:20px;}[class~=c
+lose-x]{background:none;}[class~=close-x]{border:none;}[class~=close-x]{color:va
+r(--muted);}[class~=close-x]{font-size:2rem;}[class~=close-x]{cursor:pointer;}[c
+lass~=close-x]{z-index:10;}[class~=help-slides]{display:flex;}[class~=help-slide
+s]{width:500%;}[class~=help-slides]{/* 5 slides */
+    transition:transform 0.4s ease-in-out;}[class~=help-slide]{width:20%;}[class
+~=help-slide]{padding:2.5000pc;}[class~=help-slide]{box-sizing:border-box;}[clas
+s~=help-slide]{text-align:center;}[class~=help-slide h2]{color:var(--accent);}[c
+lass~=help-slide h2]{margin-bottom:1.2500pc;}[class~=help-footer]{margin-top:1.8
+750pc;}[class~=help-footer]{display:flex;}[class~=help-footer]{justify-content:c
+enter;}[class~=help-footer]{/* Changed from flex-end to center */
+    gap:15px;}/* Fix for the bullet points centering */
+.help-slide ul, .help-slide ol{display:inline-block;}/* Fix for the bullet point
+s centering */
+.help-slide ul, .help-slide ol{text-align:left;}/* Fix for the bullet points cen
+tering */
+.help-slide ul, .help-slide ol{margin:10px auto;}/* Fix for the bullet points ce
+ntering */
+.help-slide ul, .help-slide ol{padding-left:1.5625pc;}/* Ensure the paragraph ab
+ove doesn't get squashed */
+.help-slide p{margin-bottom:0.9375pc;}/* Ensure buttons are clickable */
+.help-footer button, .close-x{cursor:pointer;}/* Ensure buttons are clickable */
+.help-footer button, .close-x{pointer-events:auto;}/* Constrain the first column
+ in Break-Even Mode */
 #providerResults table th:first-child,
-#providerResults table td:first-child
- {
-    max-width: 200px; /* Adjust this value as needed */
-    white-space: normal;
-    word-wrap: break-word;
-    overflow: hidden;
-    position: sticky;
-    left: 0;
-    z-index: 2; /* Ensures it stays above other columns when scrolling */
-    background-color: var(--panel); /* Opaque background so scrolling text is hidden */
-    border-right: 2px solid var(--accent) !important;
-    /* Neon glow effect specifically on the right side */
-    box-shadow: 5px 0 15px -5px var(--accent);
-}
-
-/* Ensure the header stays above the body during vertical/horizontal scroll */
-#providerResults th:first-child {
-    z-index: 3;
-    background-color: var(--panel-alt);
-}
-
-/* Optional: Ensure the second column doesn't have an overlapping background */
+#providerResults table td:first-child{max-width:150.00pt;}/* Constrain the first
+ column in Break-Even Mode */
+#providerResults table th:first-child,
+#providerResults table td:first-child{/* Adjust this value as needed */
+    white-space:normal;}/* Constrain the first column in Break-Even Mode */
+#providerResults table th:first-child,
+#providerResults table td:first-child{word-wrap:break-word;}/* Constrain the fir
+st column in Break-Even Mode */
+#providerResults table th:first-child,
+#providerResults table td:first-child{overflow:hidden;}/* Constrain the first co
+lumn in Break-Even Mode */
+#providerResults table th:first-child,
+#providerResults table td:first-child{position:sticky;}/* Constrain the first co
+lumn in Break-Even Mode */
+#providerResults table th:first-child,
+#providerResults table td:first-child{left:0;}/* Constrain the first column in B
+reak-Even Mode */
+#providerResults table th:first-child,
+#providerResults table td:first-child{z-index:2;}/* Constrain the first column i
+n Break-Even Mode */
+#providerResults table th:first-child,
+#providerResults table td:first-child{/* Ensures it stays above other columns wh
+en scrolling */
+    background-color:var(--panel);}/* Constrain the first column in Break-Even M
+ode */
+#providerResults table th:first-child,
+#providerResults table td:first-child{/* Opaque background so scrolling text is 
+hidden */
+    border-right:2px solid var(--accent) !important;}/* Constrain the first colu
+mn in Break-Even Mode */
+#providerResults table th:first-child,
+#providerResults table td:first-child{/* Neon glow effect specifically on the ri
+ght side */
+    box-shadow:5px 0 15px -5px var(--accent);}/* Ensure the header stays above t
+he body during vertical/horizontal scroll */
+#providerResults th:first-child{z-index:3;}/* Ensure the header stays above the 
+body during vertical/horizontal scroll */
+#providerResults th:first-child{background-color:var(--panel-alt);}/* Optional: 
+Ensure the second column doesn't have an overlapping background */
 #providerResults td:nth-child(2),
-#providerResults th:nth-child(2) {
-    background-color: transparent !important;
-}
-
-/* Optional: Stronger neon "glow" line using a pseudo-element */
-#providerResults td:first-child::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    right: -2px;
-    height: 100%;
-    width: 2px;
-    background: var(--accent);
-    box-shadow: var(--glow); /* Uses your existing blue neon glow variable */
-}
-
-
-
-
-/* ============================================================
-   MOBILE FIXES REQUESTED BY USER (APPLY BELOW 700px ONLY)
-   ============================================================ */
-@media (max-width: 700px) {
-
-    .pill-toggle {
-        max-width: 100%;
-    }
-
-    body { padding: 10px; }
-    .app { padding: 15px; border-radius: 0; }
-    h1 { font-size: 1.4rem; }
-    .btn { width: 100%; }
-
-    /* Fixed right-edge gradient fade for scroll hint */
-    #providerResults {
-        position: relative; /* anchor the fade */
-        -webkit-overflow-scrolling: touch;
-    }
-
-    /* Freeze first column */
+#providerResults th:nth-child(2){background-color:transparent !important;}/* Opt
+ional: Stronger neon "glow" line using a pseudo-element */
+#providerResults td:first-child::after{content:"";}/* Optional: Stronger neon "g
+low" line using a pseudo-element */
+#providerResults td:first-child::after{position:absolute;}/* Optional: Stronger 
+neon "glow" line using a pseudo-element */
+#providerResults td:first-child::after{top:0;}/* Optional: Stronger neon "glow" 
+line using a pseudo-element */
+#providerResults td:first-child::after{right:-2px;}/* Optional: Stronger neon "g
+low" line using a pseudo-element */
+#providerResults td:first-child::after{height:100%;}/* Optional: Stronger neon "
+glow" line using a pseudo-element */
+#providerResults td:first-child::after{width:1.50pt;}/* Optional: Stronger neon 
+"glow" line using a pseudo-element */
+#providerResults td:first-child::after{background:var(--accent);}/* Optional: St
+ronger neon "glow" line using a pseudo-element */
+#providerResults td:first-child::after{box-shadow:var(--glow);}body{padding:0.62
+50pc;}[class~=app]{padding:0.9375pc;}[class~=app]{border-radius:0;}h1{font-size:
+1.4rem;}[class~=btn]{width:100%;}/* Fixed right-edge gradient fade for scroll hi
+nt */
+    #providerResults{position:relative;}/* Fixed right-edge gradient fade for sc
+roll hint */
+    #providerResults{/* anchor the fade */
+        -webkit-overflow-scrolling:touch;}/* Freeze first column */
     .results-scroll td:first-child,
-    .results-scroll th:first-child {
-       position: sticky;
-       left: 0;
-       z-index: 20;
-       background: var(--panel-alt);
-       backdrop-filter: blur(4px);
-   }
-
-    /* 2. Trip & Vehicle fields full width, one per line */
-    .input-row {
-        flex-direction: column;
-    }
-
-    /* 3. Add spacing for RESULTS heading */
-    .results-heading {
-        margin-top: 30px;
-        margin-bottom: 10px;
-        color: var(--accent);
-    }
-
-    /* 4. Make results table scrollable horizontally */
-    #providerResults {
-        -webkit-overflow-scrolling: touch;
-    }
-
-    #providerResults table {
-        min-width: 600px;
-    }
-    
-    /* Outer container: holds the fade */
-    #providerResults {
-        position: relative;
-    }
-    
-    /* Inner container: scrolls horizontally */
-    .results-scroll {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-    }
-    
-    /* Fixed right-edge fade */
-    #providerResults::after {
-        content: "";
-        position: absolute;
-        top: 0;
-        right: 0;
-        width: 40px;
-        height: 100%;
-        pointer-events: none;
-        background: linear-gradient(to left, var(--panel), transparent);
-        z-index: 10;
-    }
-}
-
-/* Mobile adjustments for the Results Table */
-@media (max-width: 600px) {
-    /* Adjust the grid proportions: 
-       Give the provider name a fixed narrow width (e.g., 80px) 
+    .results-scroll th:first-child{position:sticky;}/* Freeze first column */
+    .results-scroll td:first-child,
+    .results-scroll th:first-child{left:0;}/* Freeze first column */
+    .results-scroll td:first-child,
+    .results-scroll th:first-child{z-index:20;}/* Freeze first column */
+    .results-scroll td:first-child,
+    .results-scroll th:first-child{background:var(--panel-alt);}/* Freeze first 
+column */
+    .results-scroll td:first-child,
+    .results-scroll th:first-child{backdrop-filter:blur(4px);}/* 2. Trip & Vehic
+le fields full width, one per line */
+    .input-row{flex-direction:column;}/* 3. Add spacing for RESULTS heading */
+    .results-heading{margin-top:1.8750pc;}/* 3. Add spacing for RESULTS heading 
+*/
+    .results-heading{margin-bottom:0.6250pc;}/* 3. Add spacing for RESULTS headi
+ng */
+    .results-heading{color:var(--accent);}/* 4. Make results table scrollable ho
+rizontally */
+    #providerResults{-webkit-overflow-scrolling:touch;}#providerResults table{mi
+n-width:450.00pt;}/* Outer container: holds the fade */
+    #providerResults{position:relative;}/* Inner container: scrolls horizontally
+ */
+    .results-scroll{overflow-x:auto;}/* Inner container: scrolls horizontally */
+    .results-scroll{-webkit-overflow-scrolling:touch;}/* Fixed right-edge fade *
+/
+    #providerResults::after{content:"";}/* Fixed right-edge fade */
+    #providerResults::after{position:absolute;}/* Fixed right-edge fade */
+    #providerResults::after{top:0;}/* Fixed right-edge fade */
+    #providerResults::after{right:0;}/* Fixed right-edge fade */
+    #providerResults::after{width:30.00pt;}/* Fixed right-edge fade */
+    #providerResults::after{height:100%;}/* Fixed right-edge fade */
+    #providerResults::after{pointer-events:none;}/* Fixed right-edge fade */
+    #providerResults::after{background:linear-gradient(to left, var(--panel), tr
+ansparent);}/* Fixed right-edge fade */
+    #providerResults::after{z-index:10;}/* Mobile adjustments for the Results Ta
+ble */
+@media (max-width: 600px){/* Adjust the grid proportions:Give the provider name 
+a fixed narrow width (e.g., 80px)
        and let the numeric columns share the rest. */
-    .results-header, .result-row {
-        grid-template-columns: 85px 1fr 1fr 1fr !important;
-        gap: 5px;
-        font-size: 0.85rem; /* Slightly smaller text to fit data */
-    }
-
-    /* Prevent long provider names from breaking the layout */
-    .result-row div:first-child {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        padding-right: 5px;
-    }
-
-    /* Optional: Reduce padding in cells to save horizontal space */
-    .result-row div {
-        padding: 8px 2px;
-    }
-
-}
-
-
+    .results-header, .result-row;}/* Prevent long provider names from breaking t
+he layout */
+    .result-row div:first-child{white-space:nowrap;}/* Prevent long provider nam
+es from breaking the layout */
+    .result-row div:first-child{overflow:hidden;}/* Prevent long provider names 
+from breaking the layout */
+    .result-row div:first-child{text-overflow:ellipsis;}/* Prevent long provider
+ names from breaking the layout */
+    .result-row div:first-child{padding-right:0.3125pc;}/* Optional: Reduce padd
+ing in cells to save horizontal space */
+    .result-row div{padding:8px 2px;}
