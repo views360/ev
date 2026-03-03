@@ -746,6 +746,21 @@ tr.bad td { color: var(--danger); }
     white-space: normal;
     word-wrap: break-word;
     overflow: hidden;
+    border-right: 2px solid var(--accent); /* Uses your existing light blue color */
+    box-shadow: 4px 0 10px -2px var(--accent-soft); /* Adds a soft glow effect */
+    position: relative;
+}
+
+/* Optional: Stronger neon "glow" line using a pseudo-element */
+#providerResults td:first-child::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: -2px;
+    height: 100%;
+    width: 2px;
+    background: var(--accent);
+    box-shadow: var(--glow); /* Uses your existing blue neon glow variable */
 }
 
 
@@ -850,4 +865,5 @@ tr.bad td { color: var(--danger); }
     .result-row div {
         padding: 8px 2px;
     }
+
 }
