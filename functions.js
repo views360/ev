@@ -489,7 +489,7 @@ function calculate() {
             <td>${displayName}<div style="font-size: 0.75rem; opacity:0.8;">${p.comments}</div></td>
             <td>£${p.subCost.toFixed(2)}</td>
             <td>${p.rate.toFixed(1)}p</td>
-            <td>£${p.totalJourneyCost.toFixed(2)}</td>
+            <td><strong>£${p.totalJourneyCost.toFixed(2)}</strong></td>
             <td>${p.savings > 0 ? 'Save £' : 'Cost £'}${Math.abs(p.savings).toFixed(2)}</td>
             <td><strong>${breakEvenText}</strong></td>
             <td><strong>${totalMilesText}</strong></td>
