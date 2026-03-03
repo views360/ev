@@ -303,7 +303,7 @@ input:focus, select:focus {
 }
 
 #providerResults th {
-    background: var(--panel-alt);
+    /*background: var(--panel-alt);*/
     text-align: left;
     padding: 14px 12px;
     font-size: 0.9rem;
@@ -695,19 +695,19 @@ tr.bad td { color: var(--danger); }
     position: sticky;
     left: 0;
     z-index: 2;
-    background-color: var(--panel);
+    /*background-color: var(--panel);*/
     border-right: 2px solid var(--accent) !important;
     box-shadow: 5px 0 15px -5px var(--accent);
 }
 
 #providerResults th:first-child {
     z-index: 3;
-    background-color: var(--panel-alt);
+    /*background-color: var(--panel-alt);*/
 }
 
 #providerResults td:nth-child(2),
 #providerResults th:nth-child(2) {
-    background-color: transparent !important;
+    /*background-color: transparent !important;*/
 }
 
 #providerResults td:first-child::after {
@@ -795,3 +795,4 @@ tr.bad td { color: var(--danger); }
         padding: 8px 2px;
     }
 }
+
