@@ -801,3 +801,52 @@ tr.bad td { color: var(--danger); }
         padding: 8px 2px;
     }
 }
+
+/* Cookie Banner */
+.cookie-banner {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 600px;
+    background: var(--panel-alt);
+    border: 1px solid var(--border);
+    border-top: 2px solid var(--accent);
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: var(--glow);
+    z-index: 2000;
+}
+
+.cookie-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.cookie-content p {
+    margin: 0;
+    font-size: 0.95rem;
+    color: var(--text);
+}
+
+.cookie-actions {
+    display: flex;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+@media (max-width: 600px) {
+    .cookie-content {
+        flex-direction: column;
+        text-align: center;
+    }
+    .cookie-actions {
+        width: 100%;
+    }
+    .cookie-actions .btn {
+        flex: 1;
+    }
+}
