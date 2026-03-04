@@ -857,3 +857,25 @@ function toggleProviderVisibility() {
         btn.textContent = "Expand Providers list";
     }
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    if (!getCookie('cookiesAccepted')) {
+        document.getElementById('cookieBanner').style.display = 'block';
+    }
+});
+
+function acceptCookies() {
+    const date = new Date();
+    date.setTime(date.getTime() + (365 * 24 * 60 * 60 * 1000));
+    document.cookie = `cookiesAccepted=true;expires=${date.toUTCString()};path=/;SameSite=Lax`;
+    
+    closeCookieBanner();
+}
+
+function closeCookieBanner() {
+    const banner = document.getElementById('cookieBanner');
+    banner.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+    banner.style.opacity = '0';
+    banner.style.transform = 'translateX(-50%) translateY(20px)';
+    setTimeout(() => banner.style.display = 'none', 400);
+}
