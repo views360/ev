@@ -850,3 +850,107 @@ tr.bad td { color: var(--danger); }
         flex: 1;
     }
 }
+
+/* Burger Trigger */
+.menu-trigger {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1100;
+    cursor: pointer;
+    padding: 10px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    transition: all 0.3s ease;
+}
+
+.menu-trigger:hover {
+    border-color: var(--accent);
+    box-shadow: var(--glow);
+}
+
+.menu-trigger .bar {
+    width: 25px;
+    height: 3px;
+    background-color: var(--accent);
+    border-radius: 2px;
+}
+
+/* Side Menu Container */
+.side-menu {
+    position: fixed;
+    top: 0;
+    left: -300px; /* Hidden by default */
+    width: 280px;
+    height: 100%;
+    background: var(--panel);
+    border-right: 2px solid var(--accent);
+    box-shadow: 10px 0 20px rgba(0, 0, 0, 0.5);
+    z-index: 1200;
+    transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 60px 20px;
+}
+
+.side-menu.active {
+    left: 0;
+}
+
+.menu-content h3 {
+    color: var(--accent);
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+}
+
+/* Menu Items */
+.menu-item {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 10px;
+    background: var(--panel-alt);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    text-decoration: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.menu-item:hover {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+    color: var(--accent);
+    box-shadow: var(--glow);
+}
+
+.menu-item .icon {
+    margin-right: 12px;
+    font-size: 1.2rem;
+}
+
+.close-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-size: 2rem;
+    cursor: pointer;
+}
+
+.menu-divider {
+    border: 0;
+    border-top: 1px solid var(--border);
+    margin: 20px 0;
+}
+
+.top-buttons { display: none; }
