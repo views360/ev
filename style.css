@@ -851,11 +851,10 @@ tr.bad td { color: var(--danger); }
     }
 }
 
-/* Burger Trigger */
 .menu-trigger {
     position: fixed;
-    top: 20px;
-    left: 20px;
+    top: 25px;   /* Moved down by 5px */
+    left: 25px;  /* Moved right by 5px */
     z-index: 1100;
     cursor: pointer;
     padding: 10px;
@@ -880,11 +879,10 @@ tr.bad td { color: var(--danger); }
     border-radius: 2px;
 }
 
-/* Side Menu Container */
 .side-menu {
     position: fixed;
     top: 0;
-    left: -300px; /* Hidden by default */
+    left: -350px; /* Increased from -300px to ensure it's fully hidden */
     width: 280px;
     height: 100%;
     background: var(--panel);
@@ -911,9 +909,10 @@ tr.bad td { color: var(--danger); }
 .menu-item {
     display: flex;
     align-items: center;
-    width: 100%;
+    justify-content: flex-start;
+    width: 75%;                  /* 75% of parent width */
+    margin: 0 auto 10px auto;
     padding: 15px;
-    margin-bottom: 10px;
     background: var(--panel-alt);
     border: 1px solid var(--border);
     border-radius: 8px;
@@ -922,6 +921,7 @@ tr.bad td { color: var(--danger); }
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
+    box-sizing: border-box;
 }
 
 .menu-item:hover {
@@ -954,3 +954,4 @@ tr.bad td { color: var(--danger); }
 }
 
 .top-buttons { display: none; }
+
