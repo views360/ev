@@ -851,17 +851,15 @@ tr.bad td { color: var(--danger); }
     }
 }
 
-/* --- Modified Burger Trigger: Peeking Tab Style --- */
 .menu-trigger {
     position: fixed;
-    top: 25px;
-    /* Move it left so only half is visible */
+    top: 35px;
     left: -15px; 
     z-index: 1100;
     cursor: pointer;
-    padding: 12px 15px 12px 25px; /* Extra right/left padding for better "tab" feel */
+    padding: 12px 15px 12px 25px;
     background: var(--panel);
-    border: 1px solid var(--border);
+    border: 1px solid var(--border); 
     border-radius: 0 8px 8px 0;
     display: flex;
     flex-direction: column;
@@ -890,6 +888,29 @@ tr.bad td { color: var(--danger); }
     background: linear-gradient(to right, #ffffff 50%, #000000 50%);
     margin-right: 12px;
     display: inline-block;
+    flex-shrink: 0;
+}
+
+.fb-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    background: #1877F2; 
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 3px;
+    margin-right: 12px;
+    font-family: "Arial", sans-serif;
+    line-height: 1;
+}
+
+.reset-icon {
+    margin-right: 12px;
+    font-size: 1.1rem;
+    color: var(--danger);
 }
 
 .menu-item {
@@ -898,16 +919,22 @@ tr.bad td { color: var(--danger); }
     justify-content: flex-start;
     width: 75%; 
     margin: 0 auto 10px auto;
-    padding: 15px;
+    padding: 12px 15px;
     background: var(--panel-alt);
     border: 1px solid var(--border);
     border-radius: 8px;
     color: var(--text);
     text-decoration: none;
+    font-size: 0.95rem; 
     font-weight: 600;
+    font-family: 'Inter', sans-serif;
     cursor: pointer;
     transition: all 0.2s ease;
     box-sizing: border-box;
+}
+
+.menu-item span {
+    font-size: 0.95rem; 
 }
 
 .menu-trigger:hover {
