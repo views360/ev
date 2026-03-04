@@ -879,3 +879,20 @@ function closeCookieBanner() {
     banner.style.transform = 'translateX(-50%) translateY(20px)';
     setTimeout(() => banner.style.display = 'none', 400);
 }
+
+function toggleMenu() {
+    const menu = document.getElementById('sideMenu');
+    menu.classList.toggle('active');
+}
+
+// Close menu if clicking outside of it
+document.addEventListener('click', (e) => {
+    const menu = document.getElementById('sideMenu');
+    const trigger = document.querySelector('.menu-trigger');
+    
+    if (menu.classList.contains('active') && 
+        !menu.contains(e.target) && 
+        !trigger.contains(e.target)) {
+        toggleMenu();
+    }
+});
