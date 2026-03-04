@@ -71,11 +71,28 @@
 
     <div class="header-row">
         <h1>EV Subscription Charging Comparison</h1>
-        <div class="top-buttons">
-            <button class="btn secondary" id="themeToggle" onclick="toggleTheme()">Light/Dark View</button>
-            <a href="https://www.facebook.com/kelvin.a.hill" target="_blank" class="btn secondary">Contact Author</a>
-            <button id="resetAll" class="btn secondary" onclick="resetAll()">Reset All</button>
-        </div>
+        <div class="menu-trigger" onclick="toggleMenu()">
+		    <div class="bar"></div>
+		    <div class="bar"></div>
+		    <div class="bar"></div>
+		</div>
+		
+		<div id="sideMenu" class="side-menu">
+		    <button class="close-btn" onclick="toggleMenu()">×</button>
+		    <nav class="menu-content">
+		        <h3>Settings</h3>
+		        <button class="menu-item" onclick="toggleTheme(); toggleMenu()">
+		            <span class="icon">🌓</span> Light/Dark View
+		        </button>
+		        <button class="menu-item" onclick="resetAll()">
+		            <span class="icon">🔄</span> Reset All
+		        </button>
+		        <hr class="menu-divider">
+		        <a href="https://www.facebook.com/kelvin.a.hill" target="_blank" class="menu-item">
+		            <span class="icon">📧</span> Contact Author
+		        </a>
+		    </nav>
+		</div>
     </div>
 
 <div class="toggle-container-block">
