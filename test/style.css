@@ -161,7 +161,7 @@ body {
     max-width: 1000px;
     margin: 0 auto;
     background: var(--panel);
-    padding: 0 30px 30px 30px; /* Changed top padding to 0 */
+    padding: 0px;
     border-radius: 16px;
     box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.3), var(--glow);
     border: 1px solid var(--border);
