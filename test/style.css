@@ -194,11 +194,12 @@ h1 {
 .comparison-mode-box, 
 .card, 
 #breakEvenCard {
-    max-width: 420px; /* Adjust this value if you want them wider or narrower */
+    max-width: 420px; /* The master width */
+    width: 100%;
     margin-left: auto;
     margin-right: auto;
-    width: 100%;
-    box-sizing: border-box;
+    padding: 20px; /* Matches the toggle box padding */
+    box-sizing: border-box; /* Ensures padding doesn't add to width */
 }
 
 .card {
@@ -1136,9 +1137,9 @@ body {
 @media (max-width: 700px) {
 
     .toggle-container-block {
-        /* Adds the 10px margin on left/right for the wrapper */
-        padding: 0 10px; 
-        box-sizing: border-box;
+        margin: 20px 10px; /* 20px top/bottom, 10px left/right */
+        width: auto; /* Allows margins to take effect */
+        display: block; /* Changes from flex to allow auto margins */
     }
 
     .pill-toggle {
@@ -1234,10 +1235,14 @@ body {
         font-size: 1.2rem;
     }
     
-    .comparison-mode-box {
-        max-width: 100%; /* Allows it to feel native on small screens */
+    .comparison-mode-box,
+    .card,
+    #breakEvenCard {
+        max-width: 100%; /* Fills the container (minus the 10px margins) */
+        margin-bottom: 20px;
     }
-        .results-header, .result-row {
+    
+    .results-header, .result-row {
         grid-template-columns: 85px 1fr 1fr 1fr !important;
         gap: 5px;
         font-size: 0.85rem;    }
@@ -1263,10 +1268,5 @@ body {
     
     .cookie-actions .btn {
         flex: 1;
-    }
-    
-    .card {
-        /* Ensures cards also respect the 10px side gutter on very small screens */
-        max-width: 100%;
     }
 }
