@@ -152,6 +152,7 @@ body {
     font-family: 'Inter', -apple-system, system-ui, sans-serif;
     margin: 0;
     padding: 20px;
+    padding-top: 64px !important;
     line-height: 1.6;
     transition: background-color 0.3s, color 0.3s;
 }
@@ -160,7 +161,7 @@ body {
     max-width: 1000px;
     margin: 0 auto;
     background: var(--panel);
-    padding: 30px;
+    padding: 0 30px 30px 30px; /* Changed top padding to 0 */
     border-radius: 16px;
     box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.3), var(--glow);
     border: 1px solid var(--border);
@@ -190,11 +191,22 @@ h1 {
     margin-bottom: 30px;
 }
 
+#breakEvenCard {
+    margin-bottom: 20px;
+    max-width: 420px; /* Match the comparison-mode-box width */
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .card {
     background: var(--panel-alt);
     padding: 20px;
     border-radius: 12px;
     border: 1px solid var(--border);
+    max-width: 420px; /* Constraints width for symmetry */
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%; /* Ensures it fills space up to the max-width */
 }
 
 .input-row {
@@ -411,7 +423,7 @@ tr.bad td { color: var(--danger); }
 
 .toggle-container-block {
     width: 100%;
-    margin: 20px 0;
+    margin: 10px 0 20px 0;
     display: flex;
     justify-content: center;
 }
@@ -827,8 +839,9 @@ tr.bad td { color: var(--danger); }
 
 /* Compensate for fixed header */
 body {
-    padding-top: 80px !important;
+    padding-top: 64px !important; /* Matches height of .android-header-full */
     margin: 0;
+    padding: 0 30px 30px 30px;
 }
 
 .app {
@@ -906,7 +919,10 @@ body {
     opacity: 1;
 }
 
-/* Remove original container padding for mobile so header is flush */
+
+
+
+
 
 
 
@@ -920,7 +936,7 @@ body {
         padding: 0;
     }
     .app {
-        padding: 15px;
+        padding: 0 15px 15px 15px; /* Removes top padding on mobile */
         margin-top: 0;
         border: none;
         box-shadow: none;
@@ -1003,6 +1019,10 @@ body {
 
     .header-row h1 {
         font-size: 1.2rem;
+    }
+    
+    .comparison-mode-box {
+        max-width: 100%; /* Allows it to feel native on small screens */
     }
 }
 
