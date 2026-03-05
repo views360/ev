@@ -69,32 +69,31 @@
 </div>
 <div class="app">
 
-		<div class="header-row">
-		    <h1>EV Subscription Comparison</h1>
-		    <div class="menu-trigger" onclick="toggleMenu()">
-		        <div class="bar"></div>
-		        <div class="bar"></div>
-		        <div class="bar"></div>
+		<div class="android-header">
+		    <h1 class="android-title">EV Subscription Comparison</h1>
+		    <div class="android-menu-trigger" onclick="toggleMenu()">
+		        <span></span>
+		        <span></span>
+		        <span></span>
 		    </div>
 		</div>
 		
-		<div id="sideMenu" class="side-menu">
-		    <button class="close-btn" onclick="toggleMenu()">×</button>
-			<div class="menu-content">
-			    <h3>Settings</h3>
-			    <a class="menu-item" onclick="toggleTheme()">
-			        <span class="yin-yang"></span>
-			        <span>Light/Dark View</span>
-			    </a>
-				<a class="menu-item" onclick="resetAll()">
+		<div id="sideMenu" class="side-menu-android">
+		    <div class="menu-content">
+		        <h3>Settings</h3>
+		        <a class="menu-item" onclick="toggleTheme(); toggleMenu();">
+		            <span class="yin-yang"></span>
+		            <span>Light/Dark View</span>
+		        </a>
+		        <a class="menu-item" onclick="resetAll()">
 		            <span class="icon">🔄</span>
-					<span>Reset All</span>
-		        </button>
-			    <a href="https://www.facebook.com/kelvin.a.hill" target="_blank" class="menu-item">
-			        <span class="fb-icon">f</span>
-			        <span>Contact Author</span>
-			    </a>
-			</div>
+		            <span>Reset All</span>
+		        </a>
+		        <a href="https://www.facebook.com/kelvin.a.hill" target="_blank" class="menu-item">
+		            <span class="fb-icon">f</span>
+		            <span>Contact Author</span>
+		        </a>
+		    </div>
 		</div>
     </div>
 
