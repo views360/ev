@@ -740,6 +740,106 @@ tr.bad td { color: var(--danger); }
     box-shadow: var(--glow);
 }
 
+/* Full-Width Android Header */
+.android-header-full {
+    background-color: #000000;
+    width: 100vw;
+    height: 64px;
+    display: flex;
+    align-items: center; /* Vertically centers content */
+    justify-content: space-between;
+    padding: 0 20px;
+    box-sizing: border-box;
+    position: fixed; /* Keeps it at the very top */
+    top: 0;
+    left: 0;
+    z-index: 2000; /* Higher than everything else */
+}
+
+.android-title-clean {
+    color: #ffffff !important; /* White title */
+    font-size: 1.4rem !important; /* Larger */
+    font-weight: 400 !important;
+    margin: 0 !important;
+    letter-spacing: 0.5px;
+}
+
+/* White Three-Dot Menu */
+.android-dots-trigger {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    cursor: pointer;
+    padding: 10px;
+    z-index: 1900; /* Menu will appear over this */
+}
+
+.android-dots-trigger span {
+    width: 4px;
+    height: 4px;
+    background-color: #ffffff; /* White dots */
+    border-radius: 50%;
+}
+
+/* Chrome-style Slide Down Menu */
+.chrome-style-menu {
+    position: fixed;
+    top: 8px; /* Slight offset from top like Chrome */
+    right: 8px;
+    width: 200px;
+    background: #2d2e30; /* Deep Grey */
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    border-radius: 4px;
+    z-index: 2100; /* Higher than the dots */
+    transform-origin: top right;
+    transform: scale(0);
+    opacity: 0;
+    transition: transform 0.2s cubic-bezier(0, 0, 0.2, 1), opacity 0.1s linear;
+}
+
+.chrome-style-menu.active {
+    transform: scale(1);
+    opacity: 1;
+}
+
+.menu-item-clean {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    color: #e8eaed;
+    text-decoration: none;
+    font-size: 0.9rem; /* Smaller text */
+    cursor: pointer;
+    background: none;
+    border: none;
+}
+
+.menu-item-clean:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.menu-icon-svg {
+    width: 18px;
+    height: 18px;
+    margin-right: 14px;
+    opacity: 0.7; /* Mid-grey line appearance */
+}
+
+/* Compensate for fixed header */
+body {
+    padding-top: 80px !important;
+    margin: 0;
+}
+
+.app {
+    border-radius: 0; /* Optional: square off for true mobile look */
+    box-shadow: none;
+    border: none;
+}
+
+/* Hide original header elements */
+.header-row, .side-menu { display: none !important; }
+
 .android-header {
     background-color: #000000;
     width: 100%;
