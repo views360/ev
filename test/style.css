@@ -916,131 +916,6 @@ body {
     opacity: 1;
 }
 
-
-
-
-
-
-
-
-@media (max-width: 700px) {
-
-    .pill-toggle {
-        max-width: 100%;
-    }
-
-    body {
-        padding: 0;
-    }
-    .app {
-        padding: 0 15px 15px 15px; /* Removes top padding on mobile */
-        margin-top: 0;
-        border: none;
-        box-shadow: none;
-        background: transparent; /* Allows page background to show through */
-    }
-    /* Hide the old header and triggers */
-    .header-row, .menu-trigger {
-        display: none !important;
-    }
-    
-    h1 {
-        font-size: 1.2rem;
-        margin-left: 50px;
-        text-align: left;
-    }
-    .btn { width: 100%; }
-
-    #providerResults {
-        position: relative;
-        -webkit-overflow-scrolling: touch;
-    }
-
-    .results-scroll td:first-child,
-    .results-scroll th:first-child {
-       position: sticky;
-       left: 0;
-       z-index: 20;
-       background: var(--panel-alt);
-       backdrop-filter: blur(4px);
-   }
-
-    .input-row {
-        flex-direction: column;
-    }
-
-    #providerResults table {
-        min-width: 600px;
-    }
-    
-    .results-scroll {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-    }
-    
-    #providerResults::after {
-        content: "";
-        position: absolute;
-        top: 0;
-        right: 0;
-        width: 40px;
-        height: 100%;
-        pointer-events: none;
-        background: linear-gradient(to left, var(--panel), transparent);
-        z-index: 10;
-    }
-
-    .menu-trigger {
-        position: relative; 
-        top: 0;
-        left: 0;
-        width: 28px;
-        height: 28px;
-    }
-    
-    .bar {
-        width: 100%;
-        height: 3px;
-        background-color: var(--accent);
-        border-radius: 2px;
-        transition: 0.3s;
-    }
-    
-    .menu-trigger:hover {
-        left: auto; /* Prevent the 'hover: left: 0' rule from breaking it */
-    }
-
-    .header-row {
-        padding: 15px 0;
-    }
-
-    .header-row h1 {
-        font-size: 1.2rem;
-    }
-    
-    .comparison-mode-box {
-        max-width: 100%; /* Allows it to feel native on small screens */
-    }
-}
-
-@media (max-width: 600px) {
-    .results-header, .result-row {
-        grid-template-columns: 85px 1fr 1fr 1fr !important;
-        gap: 5px;
-        font-size: 0.85rem;    }
-
-    .result-row div:first-child {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        padding-right: 5px;
-    }
-
-    .result-row div {
-        padding: 8px 2px;
-    }
-}
-
 /* Cookie Banner */
 .cookie-banner {
     position: fixed;
@@ -1075,19 +950,6 @@ body {
     display: flex;
     gap: 10px;
     flex-shrink: 0;
-}
-
-@media (max-width: 600px) {
-    .cookie-content {
-        flex-direction: column;
-        text-align: center;
-    }
-    .cookie-actions {
-        width: 100%;
-    }
-    .cookie-actions .btn {
-        flex: 1;
-    }
 }
 
 .menu-trigger {
@@ -1262,3 +1124,149 @@ body {
 }
 
 .top-buttons { display: none; }
+
+
+
+
+
+
+
+
+
+@media (max-width: 700px) {
+
+    .toggle-container-block {
+        /* Adds the 10px margin on left/right for the wrapper */
+        padding: 0 10px; 
+        box-sizing: border-box;
+    }
+
+    .pill-toggle {
+        max-width: 100%;
+    }
+
+    body {
+        padding: 0;
+    }
+    .app {
+        padding: 0 10px 15px 15px; /* Removes top padding on mobile */
+        margin-top: 0;
+        border: none;
+        box-shadow: none;
+        background: transparent; /* Allows page background to show through */
+    }
+    /* Hide the old header and triggers */
+    .header-row, .menu-trigger {
+        display: none !important;
+    }
+    
+    h1 {
+        font-size: 1.2rem;
+        margin-left: 50px;
+        text-align: left;
+    }
+    .btn { width: 100%; }
+
+    #providerResults {
+        position: relative;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .results-scroll td:first-child,
+    .results-scroll th:first-child {
+       position: sticky;
+       left: 0;
+       z-index: 20;
+       background: var(--panel-alt);
+       backdrop-filter: blur(4px);
+   }
+
+    .input-row {
+        flex-direction: column;
+    }
+
+    #providerResults table {
+        min-width: 600px;
+    }
+    
+    .results-scroll {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    #providerResults::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 40px;
+        height: 100%;
+        pointer-events: none;
+        background: linear-gradient(to left, var(--panel), transparent);
+        z-index: 10;
+    }
+
+    .menu-trigger {
+        position: relative; 
+        top: 0;
+        left: 0;
+        width: 28px;
+        height: 28px;
+    }
+    
+    .bar {
+        width: 100%;
+        height: 3px;
+        background-color: var(--accent);
+        border-radius: 2px;
+        transition: 0.3s;
+    }
+    
+    .menu-trigger:hover {
+        left: auto; /* Prevent the 'hover: left: 0' rule from breaking it */
+    }
+
+    .header-row {
+        padding: 15px 0;
+    }
+
+    .header-row h1 {
+        font-size: 1.2rem;
+    }
+    
+    .comparison-mode-box {
+        max-width: 100%; /* Allows it to feel native on small screens */
+    }
+        .results-header, .result-row {
+        grid-template-columns: 85px 1fr 1fr 1fr !important;
+        gap: 5px;
+        font-size: 0.85rem;    }
+
+    .result-row div:first-child {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        padding-right: 5px;
+    }
+
+    .result-row div {
+        padding: 8px 2px;
+    }
+        .cookie-content {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .cookie-actions {
+        width: 100%;
+    }
+    
+    .cookie-actions .btn {
+        flex: 1;
+    }
+    
+    .card {
+        /* Ensures cards also respect the 10px side gutter on very small screens */
+        max-width: 100%;
+    }
+}
