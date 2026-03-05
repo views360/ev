@@ -885,11 +885,13 @@ function toggleMenu() {
     menu.classList.toggle('active');
 }
 
-// Close menu if clicking anywhere else
+// Close the slide-down menu if the user clicks anywhere else
 document.addEventListener('click', (e) => {
     const menu = document.getElementById('sideMenu');
-    const trigger = document.querySelector('.menu-trigger');
-    if (menu.classList.contains('active') && !menu.contains(e.target) && !trigger.contains(e.target)) {
-        menu.classList.remove('active');
+    const trigger = document.querySelector('.android-menu-trigger');
+    if (menu.classList.contains('active')) {
+        if (!menu.contains(e.target) && !trigger.contains(e.target)) {
+            menu.classList.remove('active');
+        }
     }
 });
