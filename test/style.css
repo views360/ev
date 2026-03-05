@@ -21,7 +21,6 @@ h3 {
     margin: 0px 0px 10px 0px;
 }
 
-/* Tooltip Container */
 .tooltip-container {
     position: relative;
     display: inline-block;
@@ -29,11 +28,10 @@ h3 {
     margin-left: 4px;
 }
 
-/* Tooltip Box Styling */
 .tooltip-box {
     display: block;
     position: absolute;
-    bottom: 140%; /* Space for the arrow */
+    bottom: 140%;
     left: 50%;
     transform: translateX(-50%) translateY(10px);
     background-color: var(--panel-alt);
@@ -49,21 +47,18 @@ h3 {
     line-height: 1.4;
     border: 1px solid var(--accent);
     
-    /* Animation & Visibility */
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
     
-    /* Glowing Pulsating Effect */
     box-shadow: 0 0 15px var(--accent-soft);
     animation: pulseGlow 2s infinite ease-in-out;
 }
 
-/* The Arrow */
 .tooltip-box::after {
     content: "";
     position: absolute;
-    top: 100%; /* Bottom of the box */
+    top: 100%;
     left: 50%;
     margin-left: -6px;
     border-width: 6px;
@@ -71,12 +66,10 @@ h3 {
     border-color: var(--accent) transparent transparent transparent;
 }
 
-/* Neon Pulsing for Select Dropdowns */
 .preset-select-pulse {
     border: 1px solid var(--accent) !important;
     background-color: var(--panel-alt);
     color: var(--text);
-    /* Using the existing pulse animation from the tooltips [cite: 55, 63] */
     animation: tooltipPulse 2s infinite ease-in-out;
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
@@ -89,20 +82,17 @@ h3 {
     box-shadow: var(--glow);
 }
 
-/* Ensure the animation keyframes exist [cite: 69, 70] */
 @keyframes tooltipPulse {
   0%, 100% { box-shadow: var(--glow); }
   50% { box-shadow: var(--glow-strong); }
 }
 
-/* Pulsating Animation */
 @keyframes pulseGlow {
     0% { box-shadow: 0 0 5px var(--accent-soft); }
     50% { box-shadow: 0 0 18px var(--accent); }
     100% { box-shadow: 0 0 5px var(--accent-soft); }
 }
 
-/* Show State (Fade In) */
 .tooltip-container.active .tooltip-box {
     opacity: 1;
     visibility: visible;
@@ -115,7 +105,6 @@ h3 {
     transform: translateX(-50%) translateY(0);
 }
 
-/* Red Pulsating Effect for Warning Text */
 #preConclusionsText {
     color: var(--danger);
     font-weight: bold;
@@ -124,15 +113,14 @@ h3 {
     padding: 15px;
     border: 1px solid var(--danger);
     border-radius: 8px;
-    background-color: rgba(239, 68, 68, 0.1); /* Light red tint */
+    background-color: rgba(239, 68, 68, 0.1);
     
-    /* Animation */
     animation: alertPulse 1.5s infinite ease-in-out;
 }
 
 @keyframes alertPulse {
     0% { 
-        box-shadow: 0 0 5px rgba(239, 68, 68, 0.4); 
+        box-shadow: 0 0 5px rgba(239, 239, 239, 68, 68, 0.4); 
         transform: scale(1);
     }
     50% { 
@@ -187,7 +175,7 @@ h1 {
 
 .subtitle {
     text-align: center;
-    max-width: 800px; /* Optional: keeps text readable by limiting width */
+    max-width: 800px;
     margin-left: auto;
     margin-right: auto;
     color: var(--muted);
@@ -307,22 +295,20 @@ input:focus, select:focus {
     cursor: pointer;
 }
 
-/*.results {
-    margin-top: 40px;
-    padding-top: 30px;
-    border-top: 2px dashed var(--border);
-}*/
+#adhocCostLine {
+    margin-top: 15px;
+    color: var(--accent);
+}
 
 #providerResults table {
     width: 100%;
     border-collapse: collapse;
     margin: 20px 0;
     border-radius: 8px;
-    /* overflow: hidden; */
 }
 
 #providerResults th {
-    background: var(--panel-alt);
+    /*background: var(--panel-alt);*/
     text-align: left;
     padding: 14px 12px;
     font-size: 0.9rem;
@@ -347,7 +333,10 @@ body.light-mode #providerResults th:nth-child(even) {
 
 .calc-lines {
     margin: 20px 0;
+    padding: 15px;
     font-size: 1.1rem;
+    border: solid 1px #808080;
+    border-radius: 8px;
 }
 
 .calc-lines div {
@@ -420,7 +409,6 @@ tr.bad td { color: var(--danger); }
     letter-spacing: 0.5px;
 }
 
-/* Container for the switch - no border, full width */
 .toggle-container-block {
     width: 100%;
     margin: 20px 0;
@@ -428,15 +416,13 @@ tr.bad td { color: var(--danger); }
     justify-content: center;
 }
 
-/* The 'sliding' wrapper */
 .toggle-wrapper {
     display: flex;
     gap: 0; 
     width: 100%;
-    max-width: 400px; /* Limits width on desktop */
+    max-width: 400px;
 }
 
-/* Remove rounded corners where buttons meet to look like one unit */
 .toggle-wrapper .btn {
     flex: 1;
     border-radius: 0;
@@ -450,24 +436,15 @@ tr.bad td { color: var(--danger); }
 .toggle-wrapper .btn:last-child {
     border-top-right-radius: 8px;
     border-bottom-right-radius: 8px;
-    border-left: none; /* Prevents double border in the middle */
+    border-left: none;
 }
 
-/* Highlighting the selected side using your accent color */
 .active-toggle {
     background: var(--accent) !important;
     color: var(--bg) !important;
     box-shadow: var(--glow);
 }
 
-.toggle-container-block {
-    width: 100%;
-    margin: 20px 0;
-    display: flex;
-    justify-content: center;
-}
-
-/* The main track */
 .pill-toggle {
     position: relative;
     display: flex;
@@ -475,12 +452,11 @@ tr.bad td { color: var(--danger); }
     max-width: 400px;
     background: var(--panel-alt);
     border: 1px solid var(--border);
-    border-radius: 50px; /* Pill shape */
+    border-radius: 50px;
     padding: 4px;
     overflow: hidden;
 }
 
-/* The sliding background pill */
 .pill-slider {
     position: absolute;
     top: 4px;
@@ -494,7 +470,6 @@ tr.bad td { color: var(--danger); }
     z-index: 1;
 }
 
-/* The buttons sitting on top */
 .pill-btn {
     position: relative;
     flex: 1;
@@ -510,28 +485,33 @@ tr.bad td { color: var(--danger); }
     font-size: 0.9rem;
 }
 
-/* Change text color when active */
 .pill-btn.active {
     color: var(--bg);
 }
 
 .header-row {
     display: flex;
-    flex-direction: column; /* Stack heading and buttons */
-    align-items: center;    /* Center horizontally */
-    text-align: center;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
     gap: 15px;
-    margin-bottom: 10px;
+    padding: 20px 0;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+}
+
+.header-row h1 {
+    margin: 0;
+    flex: 1;
 }
 
 .top-buttons {
     display: flex;
     justify-content: center;
     gap: 10px;
-    flex-wrap: wrap; /* Allows wrapping on smaller screens */
+    flex-wrap: wrap;
 }
 
-/* Desktop Hover Support */
 @media (hover: hover) {
     .tooltip-container:hover .tooltip-box {
         opacity: 1;
@@ -540,7 +520,6 @@ tr.bad td { color: var(--danger); }
     }
 }
 
-/* Styling for the jump arrow in the provider box */
 .jump-btn {
     text-decoration: none;
     color: var(--accent);
@@ -555,13 +534,11 @@ tr.bad td { color: var(--danger); }
     opacity: 0.8;
 }
 
-/* Ensure the header layout stays aligned */
 .provider-header div {
     display: flex;
     align-items: center;
 }
 
-/* Jump Arrow Styling */
 .jump-btn-pulse {
     text-decoration: none;
     color: var(--accent);
@@ -578,7 +555,6 @@ tr.bad td { color: var(--danger); }
     background: var(--panel-alt);
     transition: transform 0.2s ease;
     
-    /* Pulsating Glow Effect */
     animation: jumpPulse 2s infinite ease-in-out;
 }
 
@@ -598,7 +574,6 @@ tr.bad td { color: var(--danger); }
     }
 }
 
-/* Container to align the Results heading and the Up Arrow */
 .results-header-container {
     display: none;
     align-items: center;
@@ -608,34 +583,34 @@ tr.bad td { color: var(--danger); }
     margin-bottom: 10px;
 }
 
-/* Ensure the results heading margin doesn't offset the alignment */
 .results-heading {
-    margin: 0 !important;
+    margin: 30px 0 0 0 !important;
     color: var(--accent);
 }
 
-/* Optional: If you want the up-arrow to nudge upwards on hover (inverse of the down-arrow) */
+.results-headingTRIP {
+    color: var(--accent);
+}
+
 .results-header-container .jump-btn-pulse:hover {
     transform: translateY(-3px);
 }
 
-/* Container for the Neon Box */
 .comparison-mode-box {
     border: 2px solid var(--accent);
     padding: 20px;
     border-radius: 16px;
     background: var(--panel-alt);
-    box-shadow: var(--glow); /* Uses your existing neon blue glow variable */
+    box-shadow: var(--glow);
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 15px;
     width: 100%;
-    max-width: 420px; /* Slightly wider than the toggle itself */
+    max-width: 420px;
     animation: boxPulse 2s infinite ease-in-out;
 }
 
-/* Label inside the box */
 .comparison-label {
     font-size: 0.75rem;
     font-weight: 800;
@@ -644,18 +619,11 @@ tr.bad td { color: var(--danger); }
     letter-spacing: 0.1em;
 }
 
-/* Override existing toggle-container-block margin if needed */
-.toggle-container-block {
-    margin: 30px 0;
-}
-
-/* Subtle pulse for the neon border to match your other elements */
 @keyframes boxPulse {
     0%, 100% { box-shadow: var(--glow); border-color: var(--accent); }
     50% { box-shadow: var(--glow-strong); border-color: #fff; }
 }
 
-/* Ensure the overlay can fade out */
 .help-overlay {
     position: fixed;
     top: 0;
@@ -667,7 +635,7 @@ tr.bad td { color: var(--danger); }
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 2000; /* Ensure it is above everything else */
+    z-index: 2000;
     opacity: 1;
     transition: opacity 0.3s ease;
 }
@@ -697,7 +665,7 @@ tr.bad td { color: var(--danger); }
 
 .help-slides {
     display: flex;
-    width: 500%; /* 5 slides */
+    width: 500%;
     transition: transform 0.4s ease-in-out;
 }
 
@@ -716,11 +684,10 @@ tr.bad td { color: var(--danger); }
 .help-footer {
     margin-top: 30px;
     display: flex;
-    justify-content: center; /* Changed from flex-end to center */
-    gap: 15px; /* Slightly more gap looks better when centered */
+    justify-content: center;
+    gap: 15px;
 }
 
-/* Fix for the bullet points centering */
 .help-slide ul, .help-slide ol {
     display: inline-block;
     text-align: left;
@@ -728,43 +695,79 @@ tr.bad td { color: var(--danger); }
     padding-left: 25px;
 }
 
-/* Ensure the paragraph above doesn't get squashed */
 .help-slide p {
     margin-bottom: 15px;
 }
 
-/* Ensure buttons are clickable */
 .help-footer button, .close-x {
     cursor: pointer;
     pointer-events: auto;
 }
 
+#providerResults table th:first-child,
+#providerResults table td:first-child
+ {
+    max-width: 200px;
+    white-space: normal;
+    word-wrap: break-word;
+    overflow: hidden;
+    position: sticky;
+    left: 0;
+    z-index: 2;
+    /*background-color: var(--panel);*/
+    border-right: 2px solid var(--accent) !important;
+    box-shadow: 5px 0 15px -5px var(--accent);
+}
 
+#providerResults th:first-child {
+    z-index: 3;
+    /*background-color: var(--panel-alt);*/
+}
 
+#providerResults td:nth-child(2),
+#providerResults th:nth-child(2) {
+    /*background-color: transparent !important;*/
+}
 
+#providerResults td:first-child::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: -2px;
+    height: 100%;
+    width: 2px;
+    background: var(--accent);
+    box-shadow: var(--glow);
+}
 
-
-/* ============================================================
-   MOBILE FIXES REQUESTED BY USER (APPLY BELOW 700px ONLY)
-   ============================================================ */
 @media (max-width: 700px) {
 
     .pill-toggle {
         max-width: 100%;
     }
 
-    body { padding: 10px; }
-    .app { padding: 15px; border-radius: 0; }
-    h1 { font-size: 1.4rem; }
+    body {
+        padding: 0;
+    }
+    .app {
+        padding: 15px;
+        border-radius: 0;
+        border: none;
+        max-width: 100%;
+        box-shadow: none;
+    }
+    h1 {
+        font-size: 1.2rem;
+        margin-left: 50px;
+        text-align: left;
+    }
     .btn { width: 100%; }
 
-    /* Fixed right-edge gradient fade for scroll hint */
     #providerResults {
-        position: relative; /* anchor the fade */
+        position: relative;
         -webkit-overflow-scrolling: touch;
     }
 
-    /* Freeze first column */
     .results-scroll td:first-child,
     .results-scroll th:first-child {
        position: sticky;
@@ -774,39 +777,19 @@ tr.bad td { color: var(--danger); }
        backdrop-filter: blur(4px);
    }
 
-    /* 2. Trip & Vehicle fields full width, one per line */
     .input-row {
         flex-direction: column;
-    }
-
-    /* 3. Add spacing for RESULTS heading */
-    .results-heading {
-        margin-top: 30px;
-        margin-bottom: 10px;
-        color: var(--accent);
-    }
-
-    /* 4. Make results table scrollable horizontally */
-    #providerResults {
-        -webkit-overflow-scrolling: touch;
     }
 
     #providerResults table {
         min-width: 600px;
     }
     
-    /* Outer container: holds the fade */
-    #providerResults {
-        position: relative;
-    }
-    
-    /* Inner container: scrolls horizontally */
     .results-scroll {
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
     }
     
-    /* Fixed right-edge fade */
     #providerResults::after {
         content: "";
         position: absolute;
@@ -818,20 +801,42 @@ tr.bad td { color: var(--danger); }
         background: linear-gradient(to left, var(--panel), transparent);
         z-index: 10;
     }
+
+    .menu-trigger {
+        position: relative; 
+        top: 0;
+        left: 0;
+        width: 28px;
+        height: 28px;
+    }
+    
+    .bar {
+        width: 100%;
+        height: 3px;
+        background-color: var(--accent);
+        border-radius: 2px;
+        transition: 0.3s;
+    }
+    
+    .menu-trigger:hover {
+        left: auto; /* Prevent the 'hover: left: 0' rule from breaking it */
+    }
+
+    .header-row {
+        padding: 15px 0;
+    }
+
+    .header-row h1 {
+        font-size: 1.2rem;
+    }
 }
 
-/* Mobile adjustments for the Results Table */
 @media (max-width: 600px) {
-    /* Adjust the grid proportions: 
-       Give the provider name a fixed narrow width (e.g., 80px) 
-       and let the numeric columns share the rest. */
     .results-header, .result-row {
         grid-template-columns: 85px 1fr 1fr 1fr !important;
         gap: 5px;
-        font-size: 0.85rem; /* Slightly smaller text to fit data */
-    }
+        font-size: 0.85rem;    }
 
-    /* Prevent long provider names from breaking the layout */
     .result-row div:first-child {
         white-space: nowrap;
         overflow: hidden;
@@ -839,10 +844,229 @@ tr.bad td { color: var(--danger); }
         padding-right: 5px;
     }
 
-    /* Optional: Reduce padding in cells to save horizontal space */
     .result-row div {
         padding: 8px 2px;
     }
 }
 
+/* Cookie Banner */
+.cookie-banner {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 600px;
+    background: var(--panel-alt);
+    border: 1px solid var(--border);
+    border-top: 2px solid var(--accent);
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: var(--glow);
+    z-index: 2000;
+}
 
+.cookie-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.cookie-content p {
+    margin: 0;
+    font-size: 0.95rem;
+    color: var(--text);
+}
+
+.cookie-actions {
+    display: flex;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+@media (max-width: 600px) {
+    .cookie-content {
+        flex-direction: column;
+        text-align: center;
+    }
+    .cookie-actions {
+        width: 100%;
+    }
+    .cookie-actions .btn {
+        flex: 1;
+    }
+}
+
+.menu-trigger {
+    position: relative;
+    top: 0;
+    left: 0; 
+    z-index: 1100;
+    cursor: pointer;
+    padding: 10px;
+    background: var(--panel);
+    border: 1px solid var(--border); 
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: fit-content;
+}
+
+.menu-trigger:hover {
+    left: 0;
+    box-shadow: var(--glow);
+}
+
+.menu-trigger .bar {
+    width: 30px; 
+    height: 3px;
+    background-color: var(--accent);
+    border-radius: 2px;
+}
+
+.yin-yang {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 1px solid var(--muted);
+    background: linear-gradient(to right, #ffffff 50%, #000000 50%);
+    margin-right: 12px;
+    display: inline-block;
+    flex-shrink: 0;
+}
+
+.fb-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    background: #1877F2; 
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 3px;
+    margin-right: 12px;
+    font-family: "Arial", sans-serif;
+    line-height: 1;
+}
+
+.reset-icon {
+    margin-right: 12px;
+    font-size: 1.1rem;
+    color: var(--danger);
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 75%; 
+    margin: 0 auto 10px auto;
+    padding: 12px 15px;
+    background: var(--panel-alt);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    text-decoration: none;
+    font-size: 0.95rem; 
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+}
+
+.menu-item span {
+    font-size: 0.95rem; 
+}
+
+.menu-trigger:hover {
+    border-color: var(--accent);
+    box-shadow: var(--glow);
+}
+
+.menu-trigger .bar {
+    width: 25px;
+    height: 3px;
+    background-color: var(--accent);
+    border-radius: 2px;
+}
+
+.side-menu {
+    position: fixed;
+    top: 0;
+    left: -350px; /* Increased from -300px to ensure it's fully hidden */
+    width: 280px;
+    height: 100%;
+    background: var(--panel);
+    border-right: 2px solid var(--accent);
+    box-shadow: 10px 0 20px rgba(0, 0, 0, 0.5);
+    z-index: 1200;
+    transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 60px 20px;
+}
+
+.side-menu.active {
+    left: 0;
+}
+
+.menu-content h3 {
+    color: var(--accent);
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+}
+
+/* Menu Items */
+.menu-item {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 75%;                  /* 75% of parent width */
+    margin: 0 auto 10px auto;
+    padding: 15px;
+    background: var(--panel-alt);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    text-decoration: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+}
+
+.menu-item:hover {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+    color: var(--accent);
+    box-shadow: var(--glow);
+}
+
+.menu-item .icon {
+    margin-right: 12px;
+    font-size: 1.2rem;
+}
+
+.close-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-size: 2rem;
+    cursor: pointer;
+}
+
+.menu-divider {
+    border: 0;
+    border-top: 1px solid var(--border);
+    margin: 20px 0;
+}
+
+.top-buttons { display: none; }

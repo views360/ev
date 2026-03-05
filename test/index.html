@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>EV Subscription Charging Comparison</title>
+    <title>EV Subscription Comparison</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="stylesheet" href="style.css">
@@ -69,13 +69,33 @@
 </div>
 <div class="app">
 
-    <div class="header-row">
-        <h1>EV Subscription Charging Comparison</h1>
-        <div class="top-buttons">
-            <button class="btn secondary" id="themeToggle" onclick="toggleTheme()">Light/Dark View</button>
-            <a href="https://www.facebook.com/kelvin.a.hill" target="_blank" class="btn secondary">Contact Author</a>
-            <button id="resetAll" class="btn secondary" onclick="resetAll()">Reset All</button>
-        </div>
+		<div class="header-row">
+		    <h1>EV Subscription Comparison</h1>
+		    <div class="menu-trigger" onclick="toggleMenu()">
+		        <div class="bar"></div>
+		        <div class="bar"></div>
+		        <div class="bar"></div>
+		    </div>
+		</div>
+		
+		<div id="sideMenu" class="side-menu">
+		    <button class="close-btn" onclick="toggleMenu()">×</button>
+			<div class="menu-content">
+			    <h3>Settings</h3>
+			    <a class="menu-item" onclick="toggleTheme()">
+			        <span class="yin-yang"></span>
+			        <span>Light/Dark View</span>
+			    </a>
+				<a class="menu-item" onclick="resetAll()">
+		            <span class="icon">🔄</span>
+					<span>Reset All</span>
+		        </button>
+			    <a href="https://www.facebook.com/kelvin.a.hill" target="_blank" class="menu-item">
+			        <span class="fb-icon">f</span>
+			        <span>Contact Author</span>
+			    </a>
+			</div>
+		</div>
     </div>
 
 <div class="toggle-container-block">
@@ -95,7 +115,7 @@
         <label for="efficiencyBE">Vehicle efficiency (miles per kWh)
             <div class="tooltip-container">
                 <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
-                <div class="tooltip-box">Used to calculate how many miles you need to drive to break even.</div>
+                <div class="tooltip-box">This is likely to be between 2.5 and 5, depending on the time of year and your driving style and habits. You can either estimate it for the time of year when you will travel, or you can reset your trip counter and calculate it if your trip is imminent.</div>
             </div>
         </label>
         <input type="number" id="efficiencyBE" placeholder="e.g., 3.5" step="0.1">
@@ -226,17 +246,17 @@
 
         <div class="card">
             <div class="providers-header-row">
-                <h3>Subscriptions & Discounts</h3>
-                <button type="button" class="btn secondary" id="toggleProvidersBtn" onclick="toggleProviderVisibility()" style="margin-bottom: 10px; width: 100%;">
-                  Collapse Providers list
-                </button>
+                <h3>Subscription Providers</h3>
                 <div id="providerControls">
                     <p style="font-size: 0.8em; margin-bottom: 15px">Select <strong>all</strong> subscription providers to identify the cheapest for your planned route compared with the baseline for PAYG public charging. Scroll down for the results. You may also add, remove, and temporarily edit individual providers if details are outdated.</p>
-                    <div class="button-group" style="display:flex; gap:6px; margin-bottom: 20px">
-                        <button type="button" class="btn btn-glow" onclick="addAllProviders()">Add all providers</button>
-                        <button type="button" class="btn secondary" onclick="createProviderBox()">Add provider</button>
-                    </div>
+                    <div class="button-group" style="display:flex; gap:6px; margin-bottom: 20px; width: 100%">
+                        <button type="button" class="btn btn-glow" style="flex: 1;" onclick="addAllProviders()">Add all providers</button>
+                        <button type="button" class="btn secondary" style="flex: 1;" onclick="createProviderBox()">Add provider</button>
+					</div>					
                 </div>
+				<button type="button" class="btn secondary" id="toggleProvidersBtn" onclick="toggleProviderVisibility()" style="margin-bottom: 10px; width: 100%;">
+                  Collapse Providers list
+                </button>
             </div>
             <div id="collapsibleProviders">
                 <div id="providers"></div>
@@ -246,7 +266,7 @@
 
     <!-- NEW RESULTS HEADING -->
     <div id="resultsHeader" class="results-header-container">
-        <h2 class="results-heading">RESULTS</h2>
+        <h2 class="results-headingTRIP">RESULTS</h2>
         <a href="#" class="jump-btn-pulse" title="Back to top" style="text-decoration: none;">↑</a>
 
     <div class="btn-row">
@@ -257,8 +277,17 @@
 
     <div id="preConclusionsText">Please complete all fields in the <strong>Trip & Vehicle</strong> section</div>
     <div id="results" class="results">
+		<div style="align: center; margin: auto">
+	        <div class="calc-lines">
+	            <div id="preChargeLine"></div>
+	            <div id="homeRangeLine"></div>
+	            <div id="publicMilesLine"></div>
+	            <div id="publicKwhLine"></div>
+	            <div id="adhocCostLine"></div>
+	        </div>
+		</div>
 
-        <div id="sortContainer" class="input-group" style="max-width:200px;">
+		<div id="sortContainer" class="input-group" style="max-width:400px; margin-top: 30px">
             <label>Sort results</label>
             <select id="sortResults" onchange="calculate()">
                 <option value="cheapest">Cheapest first</option>
@@ -266,14 +295,6 @@
                 <option value="az">A → Z</option>
                 <option value="za">Z → A</option>
             </select>
-        </div>
-
-        <div class="calc-lines">
-            <div id="preChargeLine"></div>
-            <div id="homeRangeLine"></div>
-            <div id="publicMilesLine"></div>
-            <div id="publicKwhLine"></div>
-            <div id="adhocCostLine"></div>
         </div>
 
         <div id="providerResults"></div>
@@ -288,6 +309,14 @@
 </div>
 
 <script src="functions.js"></script>
+<div id="cookieBanner" class="cookie-banner" style="display: none;">
+    <div class="cookie-content">
+        <p>We use cookies to save your vehicle settings and preferences for your next visit. ⚡</p>
+        <div class="cookie-actions">
+            <button class="btn primary" onclick="acceptCookies()">Accept</button>
+            <button class="btn secondary" onclick="closeCookieBanner()">Dismiss</button>
+        </div>
+    </div>
+</div>
 </body>
 </html>
-

@@ -302,22 +302,25 @@ function calculate() {
             return a.name.localeCompare(b.name);
         });
 
-        let html = `<h2 class="results-heading" style="text-align: center;">BREAK-EVEN ANALYSIS</h2>
+        let html = `<h2 class="results-heading" style="text-align: center">BREAK-EVEN ANALYSIS</h2>
+                    <div style="text-align: center; font-size: 0.8em">In mobile view, slide table left to view hidden columns.</div>
                     <div class="results-scroll">
                     <table>
                         <thead>
                             <tr>
                                 <th>Provider (click hyperlink to view subscription info)</th>
-                                <th>Speed</th>
-                                <th>Sub. Cost<div class="tooltip-container">
+                                <th>Speed<div class="tooltip-container">
                             <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
-                          <div class="tooltip-box">This is the provider's subscription fee, which gives you access to their discounted rate for ONE MONTH.</div></th>
+                          <div class="tooltip-box">If the provider's discounted charge rate is tied to a charging speed (selected in the form above), it will be specified in this column. If the provider offers more than one speed at the same discounted charge rate, you will see <strong>'Max. available'</strong>.</div></th>
+                                <th>Sub. Fee<div class="tooltip-container">
+                            <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
+                          <div class="tooltip-box">This is the provider's subscription fee, which gives you access to their discounted charge rate for ONE MONTH.</div></th>
                                 <th>Disc. Rate<div class="tooltip-container">
                             <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
-                          <div class="tooltip-box">This is the provider's discounted charge rate (per kWh) that is on offer after subscribing for one month. Remember, a subscription lasts for an entire month.</div></th>
+                          <div class="tooltip-box">This is the provider's discounted charge rate (per kWh) that is available after subscribing for one month. Note that some providers have variable charge rates depending on location and time of day.</div></th>
                                 <th>Break Even Miles<div class="tooltip-container">
                             <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
-                          <div class="tooltip-box">This is the number of miles you must drive on the provider's discounted rate to pay off the subscription fee. Remember, a subscription lasts for an entire month.</div></th>
+                          <div class="tooltip-box">This is the number of miles you must drive on the provider's discounted charge rate to pay off the subscription fee. Remember, a subscription lasts for an entire month.</div></th>
                             </tr>
                         </thead>
                         <tbody>`;
@@ -391,12 +394,16 @@ function calculate() {
     const publicKwh = publicMiles / inputs.efficiency;
     const totalAdhocCost = startChargeCost + (publicKwh * (inputs.adhoc / 100));
     
-    document.getElementById("preChargeLine").innerHTML = `Pre-journey charge: <strong>${startChargeKwh.toFixed(1)} kWh</strong> (£${startChargeCost.toFixed(2)})`;
-    document.getElementById("homeRangeLine").innerHTML = `Range from start charge: <strong>${initialRange.toFixed(0)} miles</strong>`;
-    document.getElementById("publicMilesLine").innerHTML = `PAYG public charging miles needed: <strong>${publicMiles.toFixed(0)} miles</strong>`;
-    document.getElementById("publicKwhLine").innerHTML = `PAYG public charging energy needed: <strong>${publicKwh.toFixed(1)} kWh</strong>`;
-    document.getElementById("adhocCostLine").innerHTML = `Total cost (Standard PAYG @ ${inputs.adhoc}p): <strong>£${totalAdhocCost.toFixed(2)}</strong>`;
-
+    document.getElementById("preChargeLine").innerHTML = `Pre-journey starting charge: <strong>${startChargeKwh.toFixed(1)} kWh</strong> (£${startChargeCost.toFixed(2)})`;
+    document.getElementById("homeRangeLine").innerHTML = `Range from pre-journey starting charge: <strong>${initialRange.toFixed(0)} miles</strong> <div class="tooltip-container">
+                            <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
+                          <div class="tooltip-box">This is the distance you can expect to drive before your first public charge along your route.</div>`;
+    document.getElementById("publicMilesLine").innerHTML = `PAYG public charging miles needed: <strong>${publicMiles.toFixed(0)} miles</strong> <div class="tooltip-container">
+                            <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
+                          <div class="tooltip-box">This is how many miles of your trip will need to be covered by public charging.</div>`;
+    document.getElementById("publicKwhLine").innerHTML = `PAYG public charging energy needed: <strong>${publicKwh.toFixed(1)} kWh @ ${inputs.adhoc}p</strong>`;
+    document.getElementById("adhocCostLine").innerHTML = `Total benchmark journey cost (pre-charge + standard PAYG): <strong>£${totalAdhocCost.toFixed(2)}</strong>`;
+    
     const providers = [];
     providerBoxes.forEach(box => {
         const id = box.dataset.id;
@@ -440,15 +447,25 @@ function calculate() {
         if (sortVal === "za") return b.name.localeCompare(a.name);
         return 0;
     });
-    let html = `<div class="results-scroll"><table><thead><tr>
+    let html = `<div style="font-size: 0.8em">In mobile view, slide table left to view hidden columns.</div><div class="results-scroll"><table><thead><tr>
         <th>Provider (click hyperlink to view subscription info)</th>
-        <th>Sub. Fee</th>
-        <th>Disc. Rate</th>
-        <th>Trip Cost</th>
-        <th>vs. PAYG</th>
+        <th>Sub. Fee<div class="tooltip-container">
+                            <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
+                          <div class="tooltip-box">This is the provider's subscription fee, which gives you access to their discounted charge rate for ONE MONTH.</div></th>
+        <th>Disc. Rate<div class="tooltip-container">
+                            <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
+                          <div class="tooltip-box">This is the provider's discounted charge rate (per kWh) that is available after subscribing for one month. Note that some providers have variable charge rates depending on location and time of day.</div></th>
+        <th>Trip Cost<div class="tooltip-container">
+                            <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
+                          <div class="tooltip-box">This is the expected total cost of your trip using this provider (including your specified battery pre-charge). If it is displayed in green, it is cheaper than the equivalent journey using PAYG charging at the rate you entered above.</div></th>
+        </th>
+        <th>vs. PAYG<div class="tooltip-container">
+                            <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
+                          <div class="tooltip-box">This is the amount by which the discounted charge rate will either be cheaper or more expensive than your average PAYG rate for the same distance. Green means cheaper; red means more expensive. Bear in mind that you can continue to use a provider's subscription for one full month.</div></th>
+        </th>
         <th>Break Even Miles<div class="tooltip-container">
                             <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
-                          <div class="tooltip-box">This is the number of miles you must drive on the provider's discounted rate to pay off the subscription fee. Remember, a subscription lasts for an entire month.</div></th>
+                          <div class="tooltip-box">This is the number of miles you must drive on the provider's discounted charge rate to pay off the subscription fee. Remember, a subscription lasts for an entire month.</div></th>
         <th>Total Miles (Inc. Battery)<div class="tooltip-container">
                             <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
                           <div class="tooltip-box">This is the break-even miles PLUS the number of miles your car can drive in its precharged state.</div></th>
@@ -472,7 +489,7 @@ function calculate() {
             <td>${displayName}<div style="font-size: 0.75rem; opacity:0.8;">${p.comments}</div></td>
             <td>£${p.subCost.toFixed(2)}</td>
             <td>${p.rate.toFixed(1)}p</td>
-            <td>£${p.totalJourneyCost.toFixed(2)}</td>
+            <td><strong>£${p.totalJourneyCost.toFixed(2)}</strong></td>
             <td>${p.savings > 0 ? 'Save £' : 'Cost £'}${Math.abs(p.savings).toFixed(2)}</td>
             <td><strong>${breakEvenText}</strong></td>
             <td><strong>${totalMilesText}</strong></td>
@@ -820,5 +837,62 @@ document.addEventListener('click', (e) => {
         document.querySelectorAll('.tooltip-container.active').forEach(openTooltip => {
             openTooltip.classList.remove('active');
         });
+    }
+
+});
+
+function toggleProviderVisibility() {
+    const container = document.getElementById("collapsibleProviders");
+    const controls = document.getElementById("providerControls"); // New: targets the text and buttons
+    const btn = document.getElementById("toggleProvidersBtn");
+    
+    // Check the current state
+    if (container.style.display === "none") {
+        container.style.display = "block";
+        if (controls) controls.style.display = "block"; // Show instructions and buttons
+        btn.textContent = "Collapse Providers list";
+    } else {
+        container.style.display = "none";
+        if (controls) controls.style.display = "none"; // Hide instructions and buttons
+        btn.textContent = "Expand Providers list";
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    if (!getCookie('cookiesAccepted')) {
+        document.getElementById('cookieBanner').style.display = 'block';
+    }
+});
+
+function acceptCookies() {
+    const date = new Date();
+    date.setTime(date.getTime() + (365 * 24 * 60 * 60 * 1000));
+    document.cookie = `cookiesAccepted=true;expires=${date.toUTCString()};path=/;SameSite=Lax`;
+    
+    closeCookieBanner();
+}
+
+function closeCookieBanner() {
+    const banner = document.getElementById('cookieBanner');
+    banner.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+    banner.style.opacity = '0';
+    banner.style.transform = 'translateX(-50%) translateY(20px)';
+    setTimeout(() => banner.style.display = 'none', 400);
+}
+
+function toggleMenu() {
+    const menu = document.getElementById('sideMenu');
+    menu.classList.toggle('active');
+}
+
+// Close menu if clicking outside of it
+document.addEventListener('click', (e) => {
+    const menu = document.getElementById('sideMenu');
+    const trigger = document.querySelector('.menu-trigger');
+    
+    if (menu.classList.contains('active') && 
+        !menu.contains(e.target) && 
+        !trigger.contains(e.target)) {
+        toggleMenu();
     }
 });
