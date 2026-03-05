@@ -740,62 +740,64 @@ tr.bad td { color: var(--danger); }
     box-shadow: var(--glow);
 }
 
-/* Android Header Styles */
 .android-header {
-    background-color: #000000 !important; /* Black bar */
-    padding: 10px 16px;
+    background-color: #000000;
+    width: 100%;
     height: 60px;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    padding: 0 16px;
+    box-sizing: border-box;
     position: sticky;
     top: 0;
     z-index: 1300;
-    border-bottom: none !important;
 }
 
-.android-header h1 {
-    color: #00e5ff !important; /* Neon Blue Title */
-    font-size: 1.2rem !important;
-    text-transform: none;
-    margin: 0;
-    text-shadow: 0 0 5px rgba(0, 229, 255, 0.5);
+/* Slim, Neon Blue Title */
+.android-title {
+    color: #00e5ff !important;
+    font-size: 1.1rem !important;
+    font-weight: 400 !important; /* Not bold */
+    margin: 0 !important;
+    text-shadow: none !important;
+    letter-spacing: 0.5px;
 }
 
-/* Three Vertical Dots */
-.menu-trigger.dots {
+/* Three Small Round Circles (Kebab Menu) */
+.android-menu-trigger {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    height: 18px;
-    width: 20px;
+    justify-content: center;
+    align-items: center;
+    gap: 3px;
+    width: 30px;
+    height: 40px;
     cursor: pointer;
-    padding: 5px;
 }
 
-.menu-trigger.dots span {
+.android-menu-trigger span {
     width: 4px;
     height: 4px;
-    background-color: #00e5ff; /* Neon Blue Dots */
+    background-color: #00e5ff; /* Neon Blue */
     border-radius: 50%;
     display: block;
-    margin: 1px auto;
 }
 
-/* WhatsApp-style Slide Down Menu */
+/* Slide Down Menu (WhatsApp Style) */
 .side-menu-android {
     position: fixed;
-    top: 60px; /* Right below the header */
+    top: 60px;
     right: 10px;
     width: 200px;
-    background: #1f2c34; /* WhatsApp Dark Mode color */
+    background: #1f2c34; /* WhatsApp Dark Grey/Blue */
     box-shadow: 0 4px 12px rgba(0,0,0,0.5);
     border-radius: 4px;
     z-index: 1250;
     transform-origin: top right;
     transform: scaleY(0);
     opacity: 0;
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease;
+    transition: transform 0.25s ease, opacity 0.2s ease;
     overflow: hidden;
 }
 
@@ -804,30 +806,7 @@ tr.bad td { color: var(--danger); }
     opacity: 1;
 }
 
-.side-menu-android .menu-content {
-    padding: 10px 0;
-}
-
-.side-menu-android .menu-item {
-    padding: 12px 20px;
-    background: transparent;
-    border: none;
-    width: 100%;
-    display: block;
-    color: #e9edef;
-    text-decoration: none;
-    font-size: 0.95rem;
-}
-
-.side-menu-android .menu-item:hover {
-    background: rgba(255, 255, 255, 0.1);
-}
-
-/* Remove the old side-menu styles if necessary */
-.side-menu { display: none; }
-
-
-
+/* Remove original container padding for mobile so header is flush */
 
 
 
@@ -842,11 +821,16 @@ tr.bad td { color: var(--danger); }
     }
     .app {
         padding: 15px;
-        border-radius: 0;
+        margin-top: 0;
         border: none;
-        max-width: 100%;
         box-shadow: none;
+        background: transparent; /* Allows page background to show through */
     }
+    /* Hide the old header and triggers */
+    .header-row, .menu-trigger {
+        display: none !important;
+    }
+    
     h1 {
         font-size: 1.2rem;
         margin-left: 50px;
