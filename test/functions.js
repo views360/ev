@@ -885,10 +885,10 @@ function toggleMenu() {
     menu.classList.toggle('active');
 }
 
-// Close the slide-down menu if the user clicks anywhere else
+// Ensure clicking outside the Chrome-style menu closes it
 document.addEventListener('click', (e) => {
     const menu = document.getElementById('sideMenu');
-    const trigger = document.querySelector('.android-menu-trigger');
+    const trigger = document.querySelector('.android-dots-trigger');
     if (menu.classList.contains('active')) {
         if (!menu.contains(e.target) && !trigger.contains(e.target)) {
             menu.classList.remove('active');
