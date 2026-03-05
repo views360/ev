@@ -885,14 +885,11 @@ function toggleMenu() {
     menu.classList.toggle('active');
 }
 
-// Close menu if clicking outside of it
+// Close menu if clicking anywhere else
 document.addEventListener('click', (e) => {
     const menu = document.getElementById('sideMenu');
     const trigger = document.querySelector('.menu-trigger');
-    
-    if (menu.classList.contains('active') && 
-        !menu.contains(e.target) && 
-        !trigger.contains(e.target)) {
-        toggleMenu();
+    if (menu.classList.contains('active') && !menu.contains(e.target) && !trigger.contains(e.target)) {
+        menu.classList.remove('active');
     }
 });
