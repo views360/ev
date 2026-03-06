@@ -1137,6 +1137,15 @@ body {
     display: none;
 }
 
+/* style.css */
+#privacyOverlay .help-modal {
+    overflow: hidden;
+}
+
+#privacyOverlay .help-slide {
+    padding: 30px; /* Adjust based on your current help slide padding */
+}
+
 
 
 
