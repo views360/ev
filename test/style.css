@@ -38,6 +38,23 @@ html {
     50% { box-shadow: 0 0 15px var(--good); }
 }
 
+.pulse-green-initial {
+    border-color: var(--good) !important;
+    animation: greenGlow 1.5s infinite ease-in-out;
+}
+
+@keyframes greenGlow {
+    0%, 100% { box-shadow: 0 0 5px rgba(34, 197, 94, 0.2); }
+    50% { box-shadow: 0 0 15px var(--good); }
+}
+
+/* Class to strip all animations/glows after click */
+.no-glow {
+    animation: none !important;
+    box-shadow: none !important;
+    border-color: var(--border) !important;
+}
+
 .btn-standard {
     border: 1px solid var(--accent) !important;
     background: var(--accent-soft);
