@@ -740,115 +740,6 @@ tr.bad td { color: var(--danger); }
     box-shadow: var(--glow);
 }
 
-@media (max-width: 700px) {
-
-    .pill-toggle {
-        max-width: 100%;
-    }
-
-    body {
-        padding: 0;
-    }
-    .app {
-        padding: 15px;
-        border-radius: 0;
-        border: none;
-        max-width: 100%;
-        box-shadow: none;
-    }
-    h1 {
-        font-size: 1.2rem;
-        margin-left: 50px;
-        text-align: left;
-    }
-    .btn { width: 100%; }
-
-    #providerResults {
-        position: relative;
-        -webkit-overflow-scrolling: touch;
-    }
-
-    .results-scroll td:first-child,
-    .results-scroll th:first-child {
-       position: sticky;
-       left: 0;
-       z-index: 20;
-       background: var(--panel-alt);
-       backdrop-filter: blur(4px);
-   }
-
-    .input-row {
-        flex-direction: column;
-    }
-
-    #providerResults table {
-        min-width: 600px;
-    }
-    
-    .results-scroll {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-    }
-    
-    #providerResults::after {
-        content: "";
-        position: absolute;
-        top: 0;
-        right: 0;
-        width: 40px;
-        height: 100%;
-        pointer-events: none;
-        background: linear-gradient(to left, var(--panel), transparent);
-        z-index: 10;
-    }
-
-    .menu-trigger {
-        position: relative; 
-        top: 0;
-        left: 0;
-        width: 28px;
-        height: 28px;
-    }
-    
-    .bar {
-        width: 100%;
-        height: 3px;
-        background-color: var(--accent);
-        border-radius: 2px;
-        transition: 0.3s;
-    }
-    
-    .menu-trigger:hover {
-        left: auto; /* Prevent the 'hover: left: 0' rule from breaking it */
-    }
-
-    .header-row {
-        padding: 15px 0;
-    }
-
-    .header-row h1 {
-        font-size: 1.2rem;
-    }
-}
-
-@media (max-width: 600px) {
-    .results-header, .result-row {
-        grid-template-columns: 85px 1fr 1fr 1fr !important;
-        gap: 5px;
-        font-size: 0.85rem;    }
-
-    .result-row div:first-child {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        padding-right: 5px;
-    }
-
-    .result-row div {
-        padding: 8px 2px;
-    }
-}
-
 /* Cookie Banner */
 .cookie-banner {
     position: fixed;
@@ -1070,3 +961,139 @@ tr.bad td { color: var(--danger); }
 }
 
 .top-buttons { display: none; }
+
+/* Neon Green Pulsating Glow */
+.btn-next-glow {
+    background: rgba(34, 197, 94, 0.15) !important;
+    border: 1px solid #22c55e !important;
+    color: #22c55e !important;
+    animation: neonGreenPulse 2s infinite ease-in-out;
+    box-shadow: 0 0 10px rgba(34, 197, 94, 0.4);
+}
+
+@keyframes neonGreenPulse {
+    0%, 100% { 
+        box-shadow: 0 0 10px rgba(34, 197, 94, 0.4);
+        border-color: #22c55e;
+    }
+    50% { 
+        box-shadow: 0 0 20px rgba(34, 197, 94, 0.8);
+        border-color: #4ade80; /* A slightly lighter green for the peak */
+    }
+}
+
+
+
+
+
+
+
+
+
+
+@media (max-width: 700px) {
+
+    .pill-toggle {
+        max-width: 100%;
+    }
+
+    body {
+        padding: 0;
+    }
+    .app {
+        padding: 15px;
+        border-radius: 0;
+        border: none;
+        max-width: 100%;
+        box-shadow: none;
+    }
+    h1 {
+        font-size: 1.2rem;
+        margin-left: 50px;
+        text-align: left;
+    }
+    .btn { width: 100%; }
+
+    #providerResults {
+        position: relative;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .results-scroll td:first-child,
+    .results-scroll th:first-child {
+       position: sticky;
+       left: 0;
+       z-index: 20;
+       background: var(--panel-alt);
+       backdrop-filter: blur(4px);
+   }
+
+    .input-row {
+        flex-direction: column;
+    }
+
+    #providerResults table {
+        min-width: 600px;
+    }
+    
+    .results-scroll {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    #providerResults::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 40px;
+        height: 100%;
+        pointer-events: none;
+        background: linear-gradient(to left, var(--panel), transparent);
+        z-index: 10;
+    }
+
+    .menu-trigger {
+        position: relative; 
+        top: 0;
+        left: 0;
+        width: 28px;
+        height: 28px;
+    }
+    
+    .bar {
+        width: 100%;
+        height: 3px;
+        background-color: var(--accent);
+        border-radius: 2px;
+        transition: 0.3s;
+    }
+    
+    .menu-trigger:hover {
+        left: auto; /* Prevent the 'hover: left: 0' rule from breaking it */
+    }
+
+    .header-row {
+        padding: 15px 0;
+    }
+
+    .header-row h1 {
+        font-size: 1.2rem;
+    }
+
+    .results-header, .result-row {
+        grid-template-columns: 85px 1fr 1fr 1fr !important;
+        gap: 5px;
+        font-size: 0.85rem;    }
+
+    .result-row div:first-child {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        padding-right: 5px;
+    }
+
+    .result-row div {
+        padding: 8px 2px;
+    }
+}
