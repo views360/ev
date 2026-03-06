@@ -407,6 +407,12 @@ function calculate() {
         inputs.batteryKwh <= 0 || 
         inputs.efficiency <= 0 || 
         inputs.adhoc <= 0;
+
+    if (isTripMode && !tripIncomplete && providerBoxes.length > 0) {
+        resultsHeader.style.display = "flex"; // Show only when mode is correct and fields are full
+    } else {
+        resultsHeader.style.display = "none"; // Hide otherwise
+    }
     
     const providerBoxes = document.querySelectorAll(".provider-box");
 
