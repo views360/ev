@@ -114,7 +114,7 @@
                 <div class="tooltip-box">This is likely to be between 2.5 and 5, depending on the time of year and your driving style and habits. You can either estimate it for the time of year when you will travel, or you can reset your trip counter and calculate it if your trip is imminent.</div>
             </div>
         </label>
-        <input type="number" id="efficiencyBE" placeholder="e.g., 3.5" step="0.1">
+        <input type="number" id="efficiencyBE" oninput="calculate()" placeholder="e.g., 3.5" step="0.1">
     </div>
     <div class="input-group">
         <label for="minSpeedBE">Minimum desired charging speed
@@ -138,7 +138,7 @@
                 <div class="tooltip-box">This is the average amount you would ordinarily expect to pay during your trip while using PAYG chargers. If you already get a discount (e.g., 8% from Electroverse), input the discounted rate.</div>
             </div>
         </label>
-        <input type="number" id="adhocBE" placeholder="e.g., 62 (62p is the 50kW Lidl+ app price)" step="0.1">
+        <input type="number" id="adhocBE" oninput="calculate()" placeholder="e.g., 62 (62p is the 50kW Lidl+ app price)" step="0.1">
     </div>
 </div>
 
@@ -154,7 +154,7 @@
                               <div class="tooltip-box">How far do you plan to travel? Adjust this value, and the results (at the bottom of the page) will auto-update.</div>
                         </div>
                     </label>
-                    <input type="number" id="journeyMiles" placeholder="e.g., 250">
+                    <input type="number" id="journeyMiles" oninput="calculate()" placeholder="e.g., 250">
                 </div>
                 <div class="input-group">
                     <label for "batteryKwh">Battery size (kWh)
@@ -163,7 +163,7 @@
                           <div class="tooltip-box">What is the useable size of your vehicle's battery?</div>
                         </div>
                     </label>
-                    <input type="number" id="batteryKwh" placeholder="e.g., 61">
+                    <input type="number" id="batteryKwh" oninput="calculate()" placeholder="e.g., 61">
                 </div>
             </div>
 
@@ -175,7 +175,7 @@
                           <div class="tooltip-box">How much charge will your EV have when you begin your trip?</div>
                         </div>
                     </label>
-                    <input type="number" id="soc" placeholder="e.g., 90">
+                    <input type="number" id="soc" oninput="calculate()" placeholder="e.g., 90">
                 </div>
                 <div class="input-group">
                     <label for ">Vehicle efficiency (miles per kWh)
@@ -184,7 +184,7 @@
                         <div class="tooltip-box">This is likely to be between 2.5 and 5, depending on the time of year and your driving style and habits. You can either estimate it for the time of year when you will travel, or you can reset your trip counter and calculate it if your trip is imminent.</div>
                         </div>
                     </label>
-                    <input type="number" id="efficiency" placeholder="e.g., 3.5">
+                    <input type="number" id="efficiency" oninput="calculate()" placeholder="e.g., 3.5">
                 </div>
             </div>
 
@@ -225,7 +225,7 @@
                           <div class="tooltip-box">When you charge your battery before the trip, how much will the rate be?</div>
                         </div>                        
                     </label>
-                    <input type="number" id="startChargeRate" placeholder="e.g., 7.5">
+                    <input type="number" id="startChargeRate" oninput="calculate()" placeholder="e.g., 7.5">
                 </div>
             </div>
 
@@ -236,7 +236,7 @@
                       <div class="tooltip-box">This is the average amount you would ordinarily expect to pay during your trip while using PAYG chargers. If you already get a discount (e.g., 8% from Electroverse), input the discounted rate. This will be the baseline for calculating whether it is possible to make your trip cheaper.</div>
                     </div>                    
                 </label>
-                <input type="number" id="adhoc" placeholder="e.g., 62 (62p is the 50kW Lidl+ app price)">
+                <input type="number" id="adhoc" oninput="calculate()" placeholder="e.g., 62 (62p is the 50kW Lidl+ app price)">
             </div>
         </div>
 
