@@ -141,15 +141,24 @@ function createProviderBox(preset) {
 
 function addAllProviders() {
     const { minSpeed } = getInputs();
-    document.getElementById("providers").innerHTML = "";
+    const providersContainer = document.getElementById("providers");
+    const addAllBtn = document.getElementById("addAllBtn"); // Ensure this ID exists on your "Add All" button
+    const collapseBtn = document.getElementById("toggleProvidersBtn");
+
+    // 1. Clear existing and add new providers
+    providersContainer.innerHTML = "";
     PRESETS.forEach(p => {
         const canSupport = p.rates.default || Object.keys(p.rates).some(s => Number(s) >= minSpeed);
         if (canSupport) createProviderBox(p);
     });
 
-    const addAllBtn = document.getElementById("addAllBtn");
+    // 2. Shift the glow from "Add All" to "Collapse"
     if (addAllBtn) {
         addAllBtn.classList.remove("empty-pulse");
+    }
+    
+    if (collapseBtn) {
+        collapseBtn.classList.add("empty-pulse");
     }
 }
 
