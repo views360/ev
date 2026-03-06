@@ -844,19 +844,16 @@ let currentSlide = 0;
 
 function moveSlide(step) {
     const container = document.getElementById('helpSlides');
-    const slides = document.querySelectorAll('.help-slide');
-    const totalSlides = slides.length;
-    
-    currentSlide += step;
+    // This will now correctly find ONLY the 5 welcome slides
+    const slides = document.querySelectorAll('.help-slide'); 
+    const totalSlides = slides.length; 
 
-    // Boundary checks to prevent sliding into empty space
+    currentSlide += step;
     if (currentSlide < 0) currentSlide = 0;
     if (currentSlide >= totalSlides) currentSlide = totalSlides - 1;
-    
-    // Calculate percentage based on actual number of slides
+
     const slideWidthPercent = 100 / totalSlides;
     const offset = currentSlide * -slideWidthPercent;
-    
     container.style.transform = `translateX(${offset}%)`;
 }
 
