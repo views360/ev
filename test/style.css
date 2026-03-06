@@ -426,7 +426,7 @@ body.light-mode #providerResults th:nth-child(even) {
 }
 
 .mini-table td {
-    padding: 12px;
+    padding: 0 12px;
     border-bottom: 1px solid var(--border);
 }
 
