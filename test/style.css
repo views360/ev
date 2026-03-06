@@ -27,6 +27,25 @@ html {
     animation: neonPulse 1.5s infinite ease-in-out;
 }
 
+.pulse-green {
+    border-color: var(--good) !important;
+    box-shadow: 0 0 5px rgba(34, 197, 94, 0.2);
+    animation: greenPulseBtn 1.5s infinite ease-in-out;
+}
+
+@keyframes greenPulseBtn {
+    0%, 100% { box-shadow: 0 0 5px rgba(34, 197, 94, 0.2); }
+    50% { box-shadow: 0 0 15px var(--good); }
+}
+
+.btn-standard {
+    border: 1px solid var(--accent) !important;
+    background: var(--accent-soft);
+    color: var(--accent);
+    animation: none !important;
+    box-shadow: none !important;
+}
+
 @keyframes neonPulse {
     0%, 100% { box-shadow: 0 0 5px var(--neon-green-soft); }
     50% { box-shadow: 0 0 15px var(--neon-green); }
