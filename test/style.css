@@ -109,28 +109,19 @@ h3 {
     color: var(--danger);
     font-weight: bold;
     text-align: center;
-    margin: 20px 0;
+    margin: 20px auto; /* Added 'auto' to center it */
     padding: 15px;
     border: 1px solid var(--danger);
-    border-radius: 8px;
+    border-radius: 12px; /* Changed from 8px to match cards */
     background-color: rgba(239, 68, 68, 0.1);
     
-    animation: alertPulse 1.5s infinite ease-in-out;
-}
-
-@keyframes alertPulse {
-    0% { 
-        box-shadow: 0 0 5px rgba(239, 239, 239, 68, 68, 0.4); 
-        transform: scale(1);
-    }
-    50% { 
-        box-shadow: 0 0 20px rgba(239, 68, 68, 0.6); 
-        transform: scale(1.01);
-    }
-    100% { 
-        box-shadow: 0 0 5px rgba(239, 68, 68, 0.4); 
-        transform: scale(1);
-    }
+    /* Simplified layout to match the Comparison Mode card width */
+    max-width: 420px; 
+    width: 100%;
+    box-sizing: border-box;
+    
+    /* Removed alertPulse animation to stop the pulsating border */
+    animation: none; 
 }
 
 body.light-mode {
@@ -194,12 +185,13 @@ h1 {
 .comparison-mode-box, 
 .card, 
 #breakEvenCard {
-    max-width: 420px !important; /* Forces the master width */
+    max-width: 420px !important; 
     width: 100%;
     margin-left: auto;
     margin-right: auto;
     padding: 20px;
-    box-sizing: border-box; /* Ensures padding is included IN the 420px */
+    box-sizing: border-box;
+    border-radius: 12px;
 }
 
 
