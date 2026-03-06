@@ -89,22 +89,13 @@ h3 {
     font-style: normal;
 }
 
-/* 2. Force the ones inside labels to be small and ignore the parent's line-height/font-size */
-label .info-icon {
-    width: 14px !important;
-    height: 14px !important;
-    font-size: 11px !important;
-    margin-left: 4px;
-    /* Use scale to bypass system-enforced minimum font sizes for emojis */
-    transform: scale(0.9); 
-    display: inline-flex !important;
-}
-
-/* 3. If you still have 'small-bulb' in your HTML, this makes it even tinier to match your 'tiny' preference */
 .info-icon.small-bulb {
-    transform: scale(0.75) !important;
-    opacity: 0.9;
-}}
+    display: inline-block;
+    transform: scale(0.7);
+    transform-origin: center;
+    line-height: 1;
+    cursor: pointer;
+}
 
 .preset-select-pulse {
     border: 1px solid var(--accent) !important;
