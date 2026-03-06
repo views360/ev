@@ -15,19 +15,6 @@ html {
     --good: #22c55e;
     --glow: 0 0 10px rgba(56, 189, 248, 0.4);
     --glow-strong: 0 0 20px rgba(56, 189, 248, 0.6);
-    --neon-green: #39FF14;
-    --neon-green-soft: rgba(57, 255, 20, 0.2);
-}
-
-.empty-pulse {
-    border-color: var(--neon-green) !important;
-    box-shadow: 0 0 5px var(--neon-green-soft);
-    animation: neonPulse 1.5s infinite ease-in-out;
-}
-
-@keyframes neonPulse {
-    0%, 100% { box-shadow: 0 0 5px var(--neon-green-soft); }
-    50% { box-shadow: 0 0 15px var(--neon-green); }
 }
 
 h3 {
@@ -122,19 +109,28 @@ h3 {
     color: var(--danger);
     font-weight: bold;
     text-align: center;
-    margin: 20px auto; /* Added 'auto' to center it */
+    margin: 20px 0;
     padding: 15px;
     border: 1px solid var(--danger);
-    border-radius: 12px; /* Changed from 8px to match cards */
+    border-radius: 8px;
     background-color: rgba(239, 68, 68, 0.1);
     
-    /* Simplified layout to match the Comparison Mode card width */
-    max-width: 420px; 
-    width: 100%;
-    box-sizing: border-box;
-    
-    /* Removed alertPulse animation to stop the pulsating border */
-    animation: none; 
+    animation: alertPulse 1.5s infinite ease-in-out;
+}
+
+@keyframes alertPulse {
+    0% { 
+        box-shadow: 0 0 5px rgba(239, 239, 239, 68, 68, 0.4); 
+        transform: scale(1);
+    }
+    50% { 
+        box-shadow: 0 0 20px rgba(239, 68, 68, 0.6); 
+        transform: scale(1.01);
+    }
+    100% { 
+        box-shadow: 0 0 5px rgba(239, 68, 68, 0.4); 
+        transform: scale(1);
+    }
 }
 
 body.light-mode {
@@ -156,7 +152,6 @@ body {
     font-family: 'Inter', -apple-system, system-ui, sans-serif;
     margin: 0;
     padding: 20px;
-    padding-top: 64px !important;
     line-height: 1.6;
     transition: background-color 0.3s, color 0.3s;
 }
@@ -165,7 +160,7 @@ body {
     max-width: 1000px;
     margin: 0 auto;
     background: var(--panel);
-    padding: 0px;
+    padding: 30px;
     border-radius: 16px;
     box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.3), var(--glow);
     border: 1px solid var(--border);
@@ -194,19 +189,6 @@ h1 {
     gap: 20px;
     margin-bottom: 30px;
 }
-
-.comparison-mode-box, 
-.card, 
-#breakEvenCard {
-    max-width: 420px !important; 
-    width: 100%;
-    margin-left: auto;
-    margin-right: auto;
-    padding: 20px;
-    box-sizing: border-box;
-    border-radius: 12px;
-}
-
 
 .card {
     background: var(--panel-alt);
@@ -429,7 +411,7 @@ tr.bad td { color: var(--danger); }
 
 .toggle-container-block {
     width: 100%;
-    margin: 20px 0 20px 0;
+    margin: 20px 0;
     display: flex;
     justify-content: center;
 }
@@ -466,14 +448,13 @@ tr.bad td { color: var(--danger); }
 .pill-toggle {
     position: relative;
     display: flex;
-    width: 100%; /* Scale to fit the 420px container minus card padding */
-    max-width: 100%; 
-    background: var(--bg);
+    width: 100%;
+    max-width: 400px;
+    background: var(--panel-alt);
     border: 1px solid var(--border);
     border-radius: 50px;
     padding: 4px;
     overflow: hidden;
-    box-sizing: border-box;
 }
 
 .pill-slider {
@@ -495,14 +476,13 @@ tr.bad td { color: var(--danger); }
     background: none;
     border: none;
     color: var(--text);
-    padding: 10px 5px; /* Reduced side padding from 10px to 5px */
+    padding: 10px 0;
     font-weight: 600;
     cursor: pointer;
     z-index: 2;
     transition: color 0.3s ease;
     font-family: inherit;
-    font-size: 0.85rem; /* Slightly smaller font to ensure fit */
-    white-space: nowrap; /* Prevents text wrapping */
+    font-size: 0.9rem;
 }
 
 .pill-btn.active {
@@ -617,14 +597,18 @@ tr.bad td { color: var(--danger); }
 }
 
 .comparison-mode-box {
-    border: 1px solid var(--border); /* Matches standard card border */
+    border: 2px solid var(--accent);
+    padding: 20px;
+    border-radius: 16px;
     background: var(--panel-alt);
-    box-shadow: none; /* Removes the glow as requested */
+    box-shadow: var(--glow);
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 15px;
-    animation: none; /* Stops the pulsating animation */
+    width: 100%;
+    max-width: 420px;
+    animation: boxPulse 2s infinite ease-in-out;
 }
 
 .comparison-label {
@@ -756,173 +740,6 @@ tr.bad td { color: var(--danger); }
     box-shadow: var(--glow);
 }
 
-/* Full-Width Android Header */
-.android-header-full {
-    background-color: #000000;
-    width: 100vw;
-    height: 64px;
-    display: flex;
-    align-items: center; /* Vertically centers content */
-    justify-content: space-between;
-    padding: 0 20px;
-    box-sizing: border-box;
-    position: fixed; /* Keeps it at the very top */
-    top: 0;
-    left: 0;
-    z-index: 2000; /* Higher than everything else */
-}
-
-.android-title-clean {
-    color: #ffffff !important; /* White title */
-    font-size: 1.4rem !important; /* Larger */
-    font-weight: 400 !important;
-    margin: 0 !important;
-    letter-spacing: 0.5px;
-}
-
-/* White Three-Dot Menu */
-.android-dots-trigger {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-    cursor: pointer;
-    padding: 10px;
-    z-index: 1900; /* Menu will appear over this */
-}
-
-.android-dots-trigger span {
-    width: 4px;
-    height: 4px;
-    background-color: #ffffff; /* White dots */
-    border-radius: 50%;
-}
-
-/* Chrome-style Slide Down Menu */
-.chrome-style-menu {
-    position: fixed;
-    top: 8px; /* Slight offset from top like Chrome */
-    right: 8px;
-    width: 200px;
-    background: #2d2e30; /* Deep Grey */
-    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
-    border-radius: 4px;
-    z-index: 2100; /* Higher than the dots */
-    transform-origin: top right;
-    transform: scale(0);
-    opacity: 0;
-    transition: transform 0.2s cubic-bezier(0, 0, 0.2, 1), opacity 0.1s linear;
-}
-
-.chrome-style-menu.active {
-    transform: scale(1);
-    opacity: 1;
-}
-
-.menu-item-clean {
-    display: flex;
-    align-items: center;
-    padding: 12px 16px;
-    color: #e8eaed;
-    text-decoration: none;
-    font-size: 0.9rem; /* Smaller text */
-    cursor: pointer;
-    background: none;
-    border: none;
-}
-
-.menu-item-clean:hover {
-    background: rgba(255, 255, 255, 0.08);
-}
-
-.menu-icon-svg {
-    width: 18px;
-    height: 18px;
-    margin-right: 14px;
-    opacity: 0.7; /* Mid-grey line appearance */
-}
-
-/* Compensate for fixed header */
-body {
-    padding-top: 64px !important; /* Matches height of .android-header-full */
-    margin: 0;
-    padding: 0 30px 30px 30px;
-}
-
-.app {
-    border-radius: 0; /* Optional: square off for true mobile look */
-    box-shadow: none;
-    border: none;
-}
-
-/* Hide original header elements */
-.header-row, .side-menu { display: none !important; }
-
-.android-header {
-    background-color: #000000;
-    width: 100%;
-    height: 60px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 16px;
-    box-sizing: border-box;
-    position: sticky;
-    top: 0;
-    z-index: 1300;
-}
-
-/* Slim, Neon Blue Title */
-.android-title {
-    color: #00e5ff !important;
-    font-size: 1.1rem !important;
-    font-weight: 400 !important; /* Not bold */
-    margin: 0 !important;
-    text-shadow: none !important;
-    letter-spacing: 0.5px;
-}
-
-/* Three Small Round Circles (Kebab Menu) */
-.android-menu-trigger {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 3px;
-    width: 30px;
-    height: 40px;
-    cursor: pointer;
-}
-
-.android-menu-trigger span {
-    width: 4px;
-    height: 4px;
-    background-color: #00e5ff; /* Neon Blue */
-    border-radius: 50%;
-    display: block;
-}
-
-/* Slide Down Menu (WhatsApp Style) */
-.side-menu-android {
-    position: fixed;
-    top: 60px;
-    right: 10px;
-    width: 200px;
-    background: #1f2c34; /* WhatsApp Dark Grey/Blue */
-    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-    border-radius: 4px;
-    z-index: 1250;
-    transform-origin: top right;
-    transform: scaleY(0);
-    opacity: 0;
-    transition: transform 0.25s ease, opacity 0.2s ease;
-    overflow: hidden;
-}
-
-.side-menu-android.active {
-    transform: scaleY(1);
-    opacity: 1;
-}
-
 /* Cookie Banner */
 .cookie-banner {
     position: fixed;
@@ -957,6 +774,19 @@ body {
     display: flex;
     gap: 10px;
     flex-shrink: 0;
+}
+
+@media (max-width: 600px) {
+    .cookie-content {
+        flex-direction: column;
+        text-align: center;
+    }
+    .cookie-actions {
+        width: 100%;
+    }
+    .cookie-actions .btn {
+        flex: 1;
+    }
 }
 
 .menu-trigger {
@@ -1132,6 +962,7 @@ body {
 
 .top-buttons { display: none; }
 
+/* Neon Green Pulsating Glow */
 .btn-next-glow {
     background: rgba(34, 197, 94, 0.15) !important;
     border: 1px solid #22c55e !important;
@@ -1157,13 +988,10 @@ body {
 
 
 
-@media (max-width: 700px) {
 
-    .toggle-container-block {
-        margin: 20px 10px; /* 20px top/bottom, 10px left/right */
-        width: auto; /* Allows margins to take effect */
-        display: block; /* Changes from flex to allow auto margins */
-    }
+
+
+@media (max-width: 700px) {
 
     .pill-toggle {
         max-width: 100%;
@@ -1173,17 +1001,12 @@ body {
         padding: 0;
     }
     .app {
-        padding: 0 10px 15px 15px; /* Removes top padding on mobile */
-        margin-top: 0;
+        padding: 15px;
+        border-radius: 0;
         border: none;
+        max-width: 100%;
         box-shadow: none;
-        background: transparent; /* Allows page background to show through */
     }
-    /* Hide the old header and triggers */
-    .header-row, .menu-trigger {
-        display: none !important;
-    }
-    
     h1 {
         font-size: 1.2rem;
         margin-left: 50px;
@@ -1257,14 +1080,7 @@ body {
     .header-row h1 {
         font-size: 1.2rem;
     }
-    
-    .comparison-mode-box,
-    .card,
-    #breakEvenCard {
-        max-width: 100%; /* Fills the container (minus the 10px margins) */
-        margin-bottom: 20px;
-    }
-    
+
     .results-header, .result-row {
         grid-template-columns: 85px 1fr 1fr 1fr !important;
         gap: 5px;
@@ -1279,17 +1095,5 @@ body {
 
     .result-row div {
         padding: 8px 2px;
-    }
-        .cookie-content {
-        flex-direction: column;
-        text-align: center;
-    }
-    
-    .cookie-actions {
-        width: 100%;
-    }
-    
-    .cookie-actions .btn {
-        flex: 1;
     }
 }
