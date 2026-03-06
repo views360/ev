@@ -1196,7 +1196,23 @@ body {
     padding: 30px; /* Adjust based on your current help slide padding */
 }
 
+.results-header {
+    display: none; /* JS will change this to 'flex' */
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 20px;
+}
 
+.results-title-group {
+    display: flex;
+    align-items: center;
+}
+
+.top-buttons {
+    display: flex;
+    gap: 10px;
+}
 
 
 
@@ -1342,36 +1358,28 @@ body {
         flex: 1;
     }
     
-.results-header-container {
-        display: flex !important; /* Ensure it stays visible */
+    .results-header {
         flex-direction: column !important;
-        align-items: center !important;
-        gap: 15px !important;
+        gap: 15px;
+        text-align: center;
     }
 
-    /* 2. Group Heading and Arrow to stay side-by-side */
-    /* If they aren't already in a <div>, this logic targets them directly */
-    .results-header-container h2, 
-    .results-header-container .jump-btn-pulse {
-        display: inline-flex;
-        vertical-align: middle;
-        margin: 0 !important;
-    }
-
-    /* 3. Force the two buttons to stay side-by-side underneath */
-    .results-header-container .top-buttons {
-        display: flex !important;
-        flex-direction: row !important; /* Horizontal buttons */
+    /* Keeps RESULTS and ↑ side-by-side at the top */
+    .results-title-group {
         justify-content: center;
         width: 100%;
-        gap: 10px;
     }
 
-    /* Optional: Make buttons slightly narrower to ensure they fit side-by-side on small screens */
-    .results-header-container .top-buttons .btn {
-        padding: 0 10px;
-        font-size: 0.8rem;
-        flex: 1; /* Makes them equal width */
+    /* Keeps Copy and PDF buttons side-by-side underneath */
+    .top-buttons {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .top-buttons .btn {
+        flex: 1;
         max-width: 160px;
+        font-size: 0.8rem;
+        padding: 8px 5px;
     }
 }
