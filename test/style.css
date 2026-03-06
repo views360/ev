@@ -208,8 +208,8 @@ h1 {
 }
 
 .card {
-    background: #ffffff !important;
-    color: #000000 !important;
+    background: var(--panel);
+    color: var(--text);
     padding: 20px;
     border-radius: 12px;
     border: 1px solid #e2e8f0;
@@ -371,6 +371,21 @@ body.light-mode #providerResults th:nth-child(even) {
     border-radius: 12px;
     margin: 20px 0;
     border: 1px solid var(--border);
+}
+
+.conclusion-white-border {
+    border: 1px solid #ffffff; /* The simple white border */
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: 20px;
+    width: 100%; /* Ensure it spans full width */
+    box-sizing: border-box;
+}
+
+/* Ensure text inside stays the theme color */
+.conclusion-white-border p, 
+.conclusion-white-border strong {
+    color: var(--text) !important;
 }
 
 .conclusion-card.good {
