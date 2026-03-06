@@ -232,6 +232,33 @@ function calculate() {
     if (uiResults) uiResults.style.display = isTripMode ? "flex" : "none";
     if (btnRow) btnRow.style.display = isTripMode ? "flex" : "none";
 
+    const fieldIds = [
+        "journeyMiles", "batteryKwh", "soc", "efficiency", 
+        "adhoc", "startChargeRate", "efficiencyBE", "adhocBE"
+    ];
+
+    fieldIds.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            // If value is empty or 0 (and it's a number field), apply pulse
+            const val = parseFloat(el.value);
+            if (!el.value || val <= 0) {
+                el.classList.add('empty-pulse');
+            } else {
+                el.classList.remove('empty-pulse');
+            }
+        }
+    });
+
+    // Handle provider-specific inputs if they exist
+    document.querySelectorAll(".provider-box input[type='number'], .provider-box input[type='text']").forEach(input => {
+        if (!input.value || input.value === "0") {
+            input.classList.add('empty-pulse');
+        } else {
+            input.classList.remove('empty-pulse');
+        }
+    });
+
     if (!isTripMode) {
         const efficiency = parseFloat(document.getElementById("efficiencyBE").value);
         const adhocRate = parseFloat(document.getElementById("adhocBE").value) || 0;
