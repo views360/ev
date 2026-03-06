@@ -194,12 +194,14 @@ h1 {
 .comparison-mode-box, 
 .card, 
 #breakEvenCard {
-    max-width: 420px; /* The master width */
+    max-width: 420px; /* The master width you requested */
     width: 100%;
-    margin-left: auto;
-    margin-right: auto;
-    padding: 20px; /* Matches the toggle box padding */
-    box-sizing: border-box; /* Ensures padding doesn't add to width */
+    margin: 0 auto 20px auto;
+    padding: 20px;
+    box-sizing: border-box;
+    background: var(--panel-alt);
+    border-radius: 12px;
+    border: 1px solid var(--border);
 }
 
 .card {
@@ -460,9 +462,8 @@ tr.bad td { color: var(--danger); }
 .pill-toggle {
     position: relative;
     display: flex;
-    width: 100%;
-    max-width: 400px;
-    background: var(--panel-alt);
+    width: 100%; 
+    background: var(--bg); /* Darker background inside the card */
     border: 1px solid var(--border);
     border-radius: 50px;
     padding: 4px;
