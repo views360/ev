@@ -515,7 +515,7 @@ function calculate() {
         <th>Break Even Miles<div class="tooltip-container">
                             <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
                           <div class="tooltip-box">This is the number of miles you must drive on the provider's discounted charge rate to pay off the subscription fee. Remember, a subscription lasts for an entire month.</div></th>
-        <th>Total Miles (Inc. Battery)<div class="tooltip-container">
+        <th>Break Even + Battery<div class="tooltip-container">
                             <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
                           <div class="tooltip-box">This is the break-even miles PLUS the number of miles your car can drive in its precharged state.</div></th>
         </th>
