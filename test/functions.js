@@ -882,21 +882,23 @@ document.addEventListener('click', (e) => {
 
 });
 
-function toggleProviderVisibility() {
+function toggleProviders() {
     const container = document.getElementById("collapsibleProviders");
-    const controls = document.getElementById("providerControls"); // New: targets the text and buttons
+    const controls = document.getElementById("providerControls"); 
     const btn = document.getElementById("toggleProvidersBtn");
     
-    // Check the current state
     if (container.style.display === "none") {
         container.style.display = "block";
-        if (controls) controls.style.display = "block"; // Show instructions and buttons
+        if (controls) controls.style.display = "block"; 
         btn.textContent = "Collapse Providers list";
     } else {
         container.style.display = "none";
-        if (controls) controls.style.display = "none"; // Hide instructions and buttons
+        if (controls) controls.style.display = "none"; 
         btn.textContent = "Expand Providers list";
     }
+
+    // Remove the glow when clicked
+    btn.classList.remove("empty-pulse");
 }
 
 document.addEventListener('DOMContentLoaded', () => {
