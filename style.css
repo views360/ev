@@ -1341,4 +1341,19 @@ body {
     .cookie-actions .btn {
         flex: 1;
     }
+    
+    .results-header-container {
+        flex-direction: column !important; /* Stack items vertically */
+        gap: 20px !important;            /* Add space between the heading and buttons */
+    }
+
+    .results-header-container .top-buttons {
+        justify-content: center;
+        width: 100%;
+    }
+
+    .results-heading {
+        margin: 10px 0 0 0 !important;
+        text-align: center;
+    }
 }
