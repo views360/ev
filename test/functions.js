@@ -143,24 +143,26 @@ function addAllProviders() {
     const { minSpeed } = getInputs();
     document.getElementById("providers").innerHTML = "";
     
-    // Add all providers logic
+    // Add logic for presets
     PRESETS.forEach(p => {
         const canSupport = p.rates.default || Object.keys(p.rates).some(s => Number(s) >= minSpeed);
         if (canSupport) createProviderBox(p);
     });
 
-    // 1. Reset "Add all providers" button style to look like "Add provider"
+    // 1. Remove pulse from "Add all" and reset it to standard blue style
     const addAllBtn = document.getElementById("addAllBtn");
     if (addAllBtn) {
-        addAllBtn.classList.remove("btn-glow"); // Remove the pulse
-        addAllBtn.classList.add("secondary");  // Return to standard blue style
+        addAllBtn.classList.remove("pulse-green-initial");
+        addAllBtn.classList.add("no-glow");
     }
 
-    // 2. Make "Collapse Providers List" button pulse green
+    // 2. Add pulse to the wide "Collapse" button
     const collapseBtn = document.getElementById("toggleProvidersBtn");
     if (collapseBtn) {
-        collapseBtn.classList.add("pulse-green");
+        collapseBtn.classList.add("pulse-green-initial");
     }
+
+    calculate(); // Refresh the numbers
 }
 
 function updateProviderFields(id) {
