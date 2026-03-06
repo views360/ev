@@ -628,10 +628,12 @@ tr.bad td { color: var(--danger); }
 .results-heading {
     margin: 30px 0 0 0 !important;
     color: var(--accent);
+    letter-spacing: 0.2em;
 }
 
 .results-headingTRIP {
     color: var(--accent);
+    letter-spacing: 0.2em;
 }
 
 .results-header-container .jump-btn-pulse:hover {
