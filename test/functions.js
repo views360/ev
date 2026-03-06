@@ -45,8 +45,16 @@ function getInputs() {
 // ===============================
 
 function resetAll() {
+    // 1. Clear LocalStorage
     localStorage.removeItem("ev_calc_settings");
+    
+    // 2. Clear Trip Values Cookie
     document.cookie = "ev_trip_values=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    
+    // 3. Clear Cookie Acceptance (so banner reappears)
+    document.cookie = "cookiesAccepted=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    
+    // 4. Reload page to apply changes
     window.location.href = window.location.pathname;
 }
 
