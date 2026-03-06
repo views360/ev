@@ -142,10 +142,25 @@ function createProviderBox(preset) {
 function addAllProviders() {
     const { minSpeed } = getInputs();
     document.getElementById("providers").innerHTML = "";
+    
+    // Add all providers logic
     PRESETS.forEach(p => {
         const canSupport = p.rates.default || Object.keys(p.rates).some(s => Number(s) >= minSpeed);
         if (canSupport) createProviderBox(p);
     });
+
+    // 1. Reset "Add all providers" button style to look like "Add provider"
+    const addAllBtn = document.getElementById("addAllBtn");
+    if (addAllBtn) {
+        addAllBtn.classList.remove("btn-glow"); // Remove the pulse
+        addAllBtn.classList.add("secondary");  // Return to standard blue style
+    }
+
+    // 2. Make "Collapse Providers List" button pulse green
+    const collapseBtn = document.getElementById("toggleProvidersBtn");
+    if (collapseBtn) {
+        collapseBtn.classList.add("pulse-green");
+    }
 }
 
 function updateProviderFields(id) {
