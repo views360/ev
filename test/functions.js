@@ -890,11 +890,11 @@ function toggleProviders() {
     if (container.style.display === "none") {
         container.style.display = "block";
         if (controls) controls.style.display = "block"; 
-        btn.textContent = "Collapse Providers list";
+        btn.textContent = "Collapse Providers List";
     } else {
         container.style.display = "none";
         if (controls) controls.style.display = "none"; 
-        btn.textContent = "Expand Providers list";
+        btn.textContent = "Expand Providers List";
     }
 
     // Remove the glow when clicked
