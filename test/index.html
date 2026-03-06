@@ -58,11 +58,26 @@
             <div class="help-slide">
                 <h2>Assessing Results</h2>
                 <p>After completing all fields (which you may edit on the fly), the results table at the bottom of the page will automatically update.</p><p>If you are unsure what a field is asking for, hover over (or click) the💡for more information.</p>
-<p>Don't forget that subscriptions last for an entire month.</p>
+				<p>Don't forget that subscriptions last for an entire month.</p>
                 <div class="help-footer">
                     <button class="btn" onclick="moveSlide(-1)">&lt;&nbsp;Back</button>
                     <button class="btn secondary empty-pulse" onclick="closeHelp()">Get&nbsp;Started</button>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="privacyOverlay" class="help-overlay" style="display: none;">
+    <div class="help-modal">
+        <button class="close-x" onclick="closePrivacy()">×</button>
+        
+        <div class="help-slide" style="width: 100%;">
+            <h2>Privacy Policy</h2>
+            <p>Your privacy is important to us. No personally identifiable information (PII) is collected or stored by this tool.</p>
+            <p>We use <strong>cookies</strong> solely to save the values you enter into the input fields. This is done for your convenience so your data is available for subsequent visits.</p>
+            
+            <div class="help-footer">
+                <button class="btn secondary" onclick="closePrivacy()">Close</button>
             </div>
         </div>
     </div>
@@ -89,6 +104,10 @@
                 <div class="tooltip-box">Empty all input fields to begin again from scratch.</div>
             </div></span>
 	        </a>
+			<a class="menu-item-clean" onclick="openPrivacy(); toggleMenu();">
+			    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z'/%3E%3C/svg%3E" class="menu-icon-svg">
+			    <span>Privacy</span>
+			</a>
 	        <a href="https://www.facebook.com/kelvin.a.hill" target="_blank" class="menu-item-clean">
 	            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z'/%3E%3C/svg%3E" class="menu-icon-svg">
 	            <span>Contact Author</span>
