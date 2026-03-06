@@ -240,9 +240,9 @@ function calculate() {
     fieldIds.forEach(id => {
         const el = document.getElementById(id);
         if (el) {
-            // If value is empty or 0 (and it's a number field), apply pulse
             const val = parseFloat(el.value);
-            if (!el.value || val <= 0) {
+            // This applies the neon green pulse if the field is empty or 0
+            if (!el.value || isNaN(val) || val <= 0) {
                 el.classList.add('empty-pulse');
             } else {
                 el.classList.remove('empty-pulse');
