@@ -344,7 +344,7 @@ function calculate() {
         });
 
         let html = `<h2 class="results-heading" style="text-align: center">BREAK-EVEN ANALYSIS</h2>
-                    <div class="mobile-only-text" style="text-align: center; font-size: 0.8em">Slide table left to view hidden columns.</div>
+                    <div class="mobile-only-text" style="font-size: 0.8em; margin-left: 10px">Slide table left to view hidden columns.</div>
                     <div class="results-scroll">
                     <table>
                         <thead>
