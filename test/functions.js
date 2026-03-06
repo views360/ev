@@ -554,15 +554,11 @@ function calculate() {
     const conclusionsBox = document.getElementById("conclusionsBox");
     if (providers.length > 0) {
         const bestProvider = providers[0];
-        
-        // Use inputs.journeyMiles and publicKwh defined earlier in the function
         const timeLine = `Approx driving time (at 60mph): <strong>${(inputs.journeyMiles / 60).toFixed(1)} hours</strong>.`;
         
-        // Capture the text of the selected speed
         const minSpeedSelect = document.getElementById("minSpeed");
         const minSpeedLabel = minSpeedSelect.options[minSpeedSelect.selectedIndex].text;
-
-        // Speed comparison table
+    
         const speedTableHtml = `
             <div class="speed-comparison-container">
                 <table class="mini-table">
@@ -576,22 +572,26 @@ function calculate() {
                     </tbody>
                 </table>
             </div>`;
-            
-        const locationDisclaimer = `<p style="font-size:0.85rem; margin-top:12px; opacity:0.8;">* Times exclude the "80-100%" charging slowdown. Also, you will need to ensure that this provider has charging stations in your planned area of travel.</p>`;
         
-        let conclusionHTML = "";
-        if (bestProvider.savings > 0) {
-            conclusionHTML += `<div class="conclusion-card good"><p class="main-result"><strong>${bestProvider.name}</strong> is cheapest at the selected minimum charging rate of <strong>${minSpeedLabel}</strong> (saving <strong>£${bestProvider.savings.toFixed(2)}</strong>).</p>${timeLine}${speedTableHtml}${locationDisclaimer}</div>`;
+        const locationDisclaimer = `<p style="font-size:0.85rem; margin-top:12px; opacity:0.8;">* Times exclude the "80-100%" charging slowdown. Also, you will need to ensure that this provider has charging stations in your planned area of travel.</p>`;
+            
+            // Using the 'card' class to match the "Pre-journey starting charge" look
+            let conclusionHTML = `<div class="card" style="margin-top: 20px;">`; 
+            
+            if (bestProvider.savings > 0) {
+                conclusionHTML += `<p class="main-result"><strong>${bestProvider.name}</strong> is cheapest at the selected minimum charging rate of <strong>${minSpeedLabel}</strong> (saving <strong>£${bestProvider.savings.toFixed(2)}</strong>).</p>`;
+            } else {
+                conclusionHTML += `<p class="main-result"><strong>Standard PAYG</strong> is cheapest at the selected minimum charging rate of <strong>${minSpeedLabel}</strong>.</p>`;
+            }
+            
+            conclusionHTML += `${timeLine}${speedTableHtml}${locationDisclaimer}</div>`;
+            conclusionsBox.innerHTML = conclusionHTML;
         } else {
-            conclusionHTML += `<div class="conclusion-card bad"><p class="main-result"><strong>Standard PAYG</strong> is cheapest at the selected minimum charging rate of <strong>${minSpeedLabel}</strong>.</p>${timeLine}${speedTableHtml}${locationDisclaimer}</div>`;
+            conclusionsBox.innerHTML = "";
         }
-        conclusionsBox.innerHTML = conclusionHTML;
-    } else {
-        conclusionsBox.innerHTML = "";
-    }
-    // ==========================================
-    // RESTORED CONCLUSIONS BOX END
-    // ==========================================   
+        // ==========================================
+        // RESTORED CONCLUSIONS BOX END
+        // ==========================================   
 
 
 
