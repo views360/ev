@@ -406,7 +406,7 @@ body.light-mode #providerResults th:nth-child(even) {
 
 .speed-comparison-container {
     margin-top: 20px;
-    max-width: 500px;
+    max-width: 400px;
 }
 
 .mini-table {
