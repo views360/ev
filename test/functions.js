@@ -162,7 +162,7 @@ function addAllProviders() {
         collapseBtn.classList.add("pulse-green-initial");
     }
 
-    calculate(); 
+    calculate(); // Refresh to apply pulses to newly added provider fields
 }
 
 function updateProviderFields(id) {
@@ -242,6 +242,24 @@ function calculate() {
     const uiResults = document.getElementById("results");
     const uiPreText = document.getElementById("preConclusionsText");
     const sortContainer = document.getElementById("sortContainer");
+
+    const mainFieldIds = [
+        "journeyMiles", "batteryKwh", "soc", "efficiency", 
+        "startChargeRate", "adhoc", "efficiencyBE", "adhocBE"
+    ];
+
+    // 2. Apply pulse to empty main fields
+    mainFieldIds.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            const val = parseFloat(el.value);
+            if (!el.value || val <= 0) {
+                el.classList.add('pulse-green-initial');
+            } else {
+                el.classList.remove('pulse-green-initial');
+            }
+        }
+    });
 
     if (sortContainer) sortContainer.style.display = isTripMode ? "block" : "none";
     if (tripGrid) tripGrid.style.display = isTripMode ? "grid" : "none";
