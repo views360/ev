@@ -938,3 +938,22 @@ document.addEventListener('click', (e) => {
         }
     }
 });
+
+// functions.js
+
+function openPrivacy() {
+    const privacy = document.getElementById('privacyOverlay');
+    privacy.style.display = 'flex';
+    // Small timeout to allow display:flex to register before opacity transition
+    setTimeout(() => {
+        privacy.style.opacity = '1';
+    }, 10);
+}
+
+function closePrivacy() {
+    const privacy = document.getElementById('privacyOverlay');
+    privacy.style.opacity = '0';
+    setTimeout(() => {
+        privacy.style.display = 'none';
+    }, 400); // Matches your 0.4s transition in CSS
+}
