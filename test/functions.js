@@ -566,14 +566,14 @@ function calculate() {
                         <tr><th>Speed</th><th>Estimated Charge Time</th></tr>
                     </thead>
                     <tbody>
-                        <tr><td>7kW (AC)</td><td>${(publicKwh / 7).toFixed(1)}h</td></tr>
-                        <tr><td>22kW (AC)</td><td>${(publicKwh / 22).toFixed(1)}h</td></tr>
-                        <tr><td>35kW (AC)</td><td>${(publicKwh / 35).toFixed(1)}h</td></tr>
-                        <tr><td>50kW (Rapid)</td><td>${((publicKwh / 50) * 60).toFixed(0)}m</td></tr>
-                        <tr><td>100kW (Rapid)</td><td>${((publicKwh / 100) * 60).toFixed(0)}m</td></tr>
-                        <tr><td>150kW (Ultra)</td><td>${((publicKwh / 150) * 60).toFixed(0)}m</td></tr>
-                        <tr><td>200kW (Ultra)</td><td>${((publicKwh / 200) * 60).toFixed(0)}m</td></tr>
-                        <tr><td>300kW (Ultra)</td><td>${((publicKwh / 300) * 60).toFixed(0)}m</td></tr>
+                        <tr><td>7kW (AC)</td><td>${(publicKwh / 7).toFixed(1)} hours</td></tr>
+                        <tr><td>22kW (AC)</td><td>${(publicKwh / 22).toFixed(1)} hours</td></tr>
+                        <tr><td>35kW (AC)</td><td>${(publicKwh / 35).toFixed(1)} hours </td></tr>
+                        <tr><td>50kW (Rapid)</td><td>${((publicKwh / 50) * 60).toFixed(0)} minutes</td></tr>
+                        <tr><td>100kW (Rapid)</td><td>${((publicKwh / 100) * 60).toFixed(0)} minutes</td></tr>
+                        <tr><td>150kW (Ultra)</td><td>${((publicKwh / 150) * 60).toFixed(0)} minutes</td></tr>
+                        <tr><td>200kW (Ultra)</td><td>${((publicKwh / 200) * 60).toFixed(0)} minutes</td></tr>
+                        <tr><td>300kW (Ultra)</td><td>${((publicKwh / 300) * 60).toFixed(0)} minutes</td></tr>
                     </tbody>
                 </table>
             </div>`;
