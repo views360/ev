@@ -15,6 +15,19 @@ html {
     --good: #22c55e;
     --glow: 0 0 10px rgba(56, 189, 248, 0.4);
     --glow-strong: 0 0 20px rgba(56, 189, 248, 0.6);
+    --neon-green: #39FF14;
+    --neon-green-soft: rgba(57, 255, 20, 0.2);
+}
+
+.empty-pulse {
+    border-color: var(--neon-green) !important;
+    box-shadow: 0 0 5px var(--neon-green-soft);
+    animation: neonPulse 1.5s infinite ease-in-out;
+}
+
+@keyframes neonPulse {
+    0%, 100% { box-shadow: 0 0 5px var(--neon-green-soft); }
+    50% { box-shadow: 0 0 15px var(--neon-green); }
 }
 
 h3 {
