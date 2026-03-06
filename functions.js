@@ -407,12 +407,6 @@ function calculate() {
         inputs.batteryKwh <= 0 || 
         inputs.efficiency <= 0 || 
         inputs.adhoc <= 0;
-
-    if (isTripMode && !tripIncomplete && providerBoxes.length > 0) {
-        resultsHeader.style.display = "flex"; // Show only when mode is correct and fields are full
-    } else {
-        resultsHeader.style.display = "none"; // Hide otherwise
-    }
     
     const providerBoxes = document.querySelectorAll(".provider-box");
 
@@ -451,10 +445,10 @@ function calculate() {
     
     document.getElementById("preChargeLine").innerHTML = `Pre-journey starting charge: <strong>${startChargeKwh.toFixed(1)} kWh</strong> (£${startChargeCost.toFixed(2)})`;
     document.getElementById("homeRangeLine").innerHTML = `Range from pre-journey starting charge: <strong>${initialRange.toFixed(0)} miles</strong> <div class="tooltip-container">
-                            <span class="info-icon small-bulb" onclick="toggleTooltip(this)">💡</span>
+                            <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
                           <div class="tooltip-box">This is the distance you can expect to drive before your first public charge along your route.</div>`;
     document.getElementById("publicMilesLine").innerHTML = `PAYG public charging miles needed: <strong>${publicMiles.toFixed(0)} miles</strong> <div class="tooltip-container">
-                            <span class="info-icon small-bulb" onclick="toggleTooltip(this)">💡</span>
+                            <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
                           <div class="tooltip-box">This is how many miles of your trip will need to be covered by public charging.</div>`;
     document.getElementById("publicKwhLine").innerHTML = `PAYG public charging energy needed: <strong>${publicKwh.toFixed(1)} kWh @ ${inputs.adhoc}p</strong>`;
     document.getElementById("adhocCostLine").innerHTML = `Total benchmark journey cost (pre-charge + standard PAYG): <strong>£${totalAdhocCost.toFixed(2)}</strong>`;
@@ -521,7 +515,7 @@ function calculate() {
         <th>Break Even Miles<div class="tooltip-container">
                             <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
                           <div class="tooltip-box">This is the number of miles you must drive on the provider's discounted charge rate to pay off the subscription fee. Remember, a subscription lasts for an entire month.</div></th>
-        <th> Break Even + Battery<div class="tooltip-container">
+        <th>Total Miles (Inc. Battery)<div class="tooltip-container">
                             <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
                           <div class="tooltip-box">This is the break-even miles PLUS the number of miles your car can drive in its precharged state.</div></th>
         </th>

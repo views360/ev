@@ -53,7 +53,7 @@ h3 {
     border-radius: 8px;
     width: 200px;
     text-align: center;
-    z-index: 5000;
+    z-index: 100;
     font-size: 0.85rem;
     font-weight: normal;
     text-transform: none;
@@ -77,24 +77,6 @@ h3 {
     border-width: 6px;
     border-style: solid;
     border-color: var(--accent) transparent transparent transparent;
-}
-
-.info-icon {
-    display: inline-flex !important;
-    align-items: center;
-    justify-content: center;
-    vertical-align: middle;
-    cursor: pointer;
-    line-height: 1;
-    font-style: normal;
-}
-
-.info-icon.small-bulb {
-    display: inline-block;
-    transform: scale(0.7);
-    transform-origin: center;
-    line-height: 1;
-    cursor: pointer;
 }
 
 .preset-select-pulse {
@@ -374,8 +356,8 @@ body.light-mode #providerResults th:nth-child(even) {
 
 .calc-lines {
     margin: 20px 0;
-    padding: 10px;
-    font-size: 1rem;
+    padding: 15px;
+    font-size: 1.1rem;
     border: solid 1px #808080;
     border-radius: 8px;
 }
@@ -1196,23 +1178,7 @@ body {
     padding: 30px; /* Adjust based on your current help slide padding */
 }
 
-.results-header {
-    display: none; /* JS will change this to 'flex' */
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    margin-bottom: 20px;
-}
 
-.results-title-group {
-    display: flex;
-    align-items: center;
-}
-
-.top-buttons {
-    display: flex;
-    gap: 10px;
-}
 
 
 
@@ -1356,30 +1322,5 @@ body {
     
     .cookie-actions .btn {
         flex: 1;
-    }
-    
-    .results-header {
-        flex-direction: column !important;
-        gap: 15px;
-        text-align: center;
-    }
-
-    /* Keeps RESULTS and ↑ side-by-side at the top */
-    .results-title-group {
-        justify-content: center;
-        width: 100%;
-    }
-
-    /* Keeps Copy and PDF buttons side-by-side underneath */
-    .top-buttons {
-        width: 100%;
-        justify-content: center;
-    }
-
-    .top-buttons .btn {
-        flex: 1;
-        max-width: 160px;
-        font-size: 0.8rem;
-        padding: 8px 5px;
     }
 }
