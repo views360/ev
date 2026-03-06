@@ -686,8 +686,12 @@ tr.bad td { color: var(--danger); }
     transition: transform 0.4s ease-in-out;
 }
 
-.help-slide, .privacy-slide {
-    width: 20%;
+.help-slide {
+    width: 20%; 
+    flex-shrink: 0;
+}
+
+.help-slide, .standalone-slide {
     padding: 40px;
     box-sizing: border-box;
     text-align: center;
@@ -721,7 +725,8 @@ tr.bad td { color: var(--danger); }
     pointer-events: auto;
 }
 
-.privacy-slide {
+.standalone-slide {
+    width: 100%;
     display: block;
 }
 
