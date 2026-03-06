@@ -1,1303 +1,1019 @@
-html {
-    scroll-behavior: smooth;
-}
-
-:root {
-    --bg: #020617;
-    --panel: #0f172a;
-    --panel-alt: #1e293b;
-    --accent: #38bdf8;
-    --accent-soft: rgba(56, 189, 248, 0.15);
-    --text: #f1f5f9;
-    --muted: #94a3b8;
-    --border: #334155;
-    --danger: #ef4444;
-    --good: #22c55e;
-    --glow: 0 0 10px rgba(56, 189, 248, 0.4);
-    --glow-strong: 0 0 20px rgba(56, 189, 248, 0.6);
-    --neon-green: #39FF14;
-    --neon-green-soft: rgba(57, 255, 20, 0.2);
-}
-
-.empty-pulse {
-    border-color: var(--neon-green) !important;
-    box-shadow: 0 0 5px var(--neon-green-soft);
-    animation: neonPulse 1.5s infinite ease-in-out;
-}
-
-@keyframes neonPulse {
-    0%, 100% { box-shadow: 0 0 5px var(--neon-green-soft); }
-    50% { box-shadow: 0 0 15px var(--neon-green); }
-}
-
-h3 {
-    margin: 0px 0px 10px 0px;
-}
-
-.tooltip-container {
-    position: relative;
-    display: inline-block;
-    cursor: pointer;
-    margin-left: 4px;
-}
-
-.tooltip-box {
-    display: block;
-    position: absolute;
-    bottom: 140%;
-    left: 50%;
-    transform: translateX(-50%) translateY(10px);
-    background-color: var(--panel-alt);
-    color: var(--text);
-    padding: 10px 14px;
-    border-radius: 8px;
-    width: 200px;
-    text-align: center;
-    z-index: 100;
-    font-size: 0.85rem;
-    font-weight: normal;
-    text-transform: none;
-    line-height: 1.4;
-    border: 1px solid var(--accent);
-    
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
-    
-    box-shadow: 0 0 15px var(--accent-soft);
-    animation: pulseGlow 2s infinite ease-in-out;
-}
-
-.tooltip-box::after {
-    content: "";
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    margin-left: -6px;
-    border-width: 6px;
-    border-style: solid;
-    border-color: var(--accent) transparent transparent transparent;
-}
-
-.preset-select-pulse {
-    border: 1px solid var(--accent) !important;
-    background-color: var(--panel-alt);
-    color: var(--text);
-    animation: tooltipPulse 2s infinite ease-in-out;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.btn-glow {
-    border: 1px solid var(--accent) !important;
-    background-color: var(--panel-alt);
-    color: var(--accent);
-    animation: tooltipPulse 2s infinite ease-in-out;
-    box-shadow: var(--glow);
-}
-
-@keyframes tooltipPulse {
-  0%, 100% { box-shadow: var(--glow); }
-  50% { box-shadow: var(--glow-strong); }
-}
-
-@keyframes pulseGlow {
-    0% { box-shadow: 0 0 5px var(--accent-soft); }
-    50% { box-shadow: 0 0 18px var(--accent); }
-    100% { box-shadow: 0 0 5px var(--accent-soft); }
-}
-
-.tooltip-container.active .tooltip-box {
-    opacity: 1;
-    visibility: visible;
-    transform: translateX(-50%) translateY(0);
-}
-
-.tooltip-container:hover .tooltip-box {
-    opacity: 1;
-    visibility: visible;
-    transform: translateX(-50%) translateY(0);
-}
-
-#preConclusionsText {
-    color: var(--danger);
-    font-weight: bold;
-    text-align: center;
-    margin: 20px auto; /* Added 'auto' to center it */
-    padding: 15px;
-    border: 1px solid var(--danger);
-    border-radius: 12px; /* Changed from 8px to match cards */
-    background-color: rgba(239, 68, 68, 0.1);
-    
-    /* Simplified layout to match the Comparison Mode card width */
-    max-width: 420px; 
-    width: 100%;
-    box-sizing: border-box;
-    
-    /* Removed alertPulse animation to stop the pulsating border */
-    animation: none; 
-}
-
-body.light-mode {
-    --bg: #f8fafc;
-    --panel: #ffffff;
-    --panel-alt: #f1f5f9;
-    --text: #0f172a;
-    --muted: #64748b;
-    --border: #e2e8f0;
-    --accent: #0284c7;
-    --accent-soft: rgba(2, 132, 199, 0.1);
-    --glow: 0 0 8px rgba(2, 132, 199, 0.2);
-    --glow-strong: 0 0 15px rgba(2, 132, 199, 0.3);
-}
-
-body {
-    background-color: var(--bg);
-    color: var(--text);
-    font-family: 'Inter', -apple-system, system-ui, sans-serif;
-    margin: 0;
-    padding: 20px;
-    padding-top: 64px !important;
-    line-height: 1.6;
-    transition: background-color 0.3s, color 0.3s;
-}
-
-.app {
-    max-width: 1000px;
-    margin: 0 auto;
-    background: var(--panel);
-    padding: 0px;
-    border-radius: 16px;
-    box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.3), var(--glow);
-    border: 1px solid var(--border);
-}
-
-h1 {
-    font-size: 1.75rem;
-    margin: 0 0 10px 0;
-    color: var(--accent);
-    text-shadow: var(--glow);
-}
-
-.subtitle {
-    text-align: center;
-    max-width: 800px;
-    margin-left: auto;
-    margin-right: auto;
-    color: var(--muted);
-    margin-top: 10px;
-    margin-bottom: 25px;
-}
-
-.grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 20px;
-    margin-bottom: 30px;
-}
-
-.comparison-mode-box, 
-.card, 
-#breakEvenCard {
-    max-width: 420px !important; 
-    width: 100%;
-    margin-left: auto;
-    margin-right: auto;
-    padding: 20px;
-    box-sizing: border-box;
-    border-radius: 12px;
-}
-
-
-.card {
-    background: var(--panel-alt);
-    padding: 20px;
-    border-radius: 12px;
-    border: 1px solid var(--border);
-}
-
-.input-row {
-    display: flex;
-    gap: 15px;
-    margin-bottom: 15px;
-}
-
-.input-group {
-    flex: 1;
-    margin-bottom: 15px;
-}
-
-.input-group label {
-    display: block;
-    font-size: 0.6rem;
-    font-weight: 600;
-    color: var(--muted);
-    margin-bottom: 8px;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-}
-
-input, select {
-    width: 100%;
-    padding: 12px;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    color: var(--text);
-    font-size: 1rem;
-    box-sizing: border-box;
-    transition: all 0.2s ease;
-}
-
-input:focus, select:focus {
-    outline: none;
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px var(--accent-soft);
-}
-
-.btn-row {
-    display: flex;
-    gap: 12px;
-    margin: 20px 0;
-    flex-wrap: wrap;
-}
-
-.btn {
-    box-sizing: border-box;
-    height: 40px;
-    padding: 0 20px;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    border: 1px solid transparent;
-    font-size: 0.9rem;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    line-height: 1;
-}
-
-.btn.secondary {
-    background: var(--accent-soft);
-    border: 1px solid var(--accent);
-    color: var(--accent);
-}
-
-.btn.secondary:hover {
-    background: var(--accent);
-    color: var(--bg);
-}
-
-.provider-box {
-    background: var(--bg);
-    padding: 20px;
-    border-radius: 12px;
-    margin-bottom: 15px;
-    border: 1px solid var(--border);
-    position: relative;
-}
-
-.provider-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-}
-
-.remove-btn {
-    background: none;
-    border: none;
-    color: var(--danger);
-    font-size: 1.5rem;
-    cursor: pointer;
-}
-
-#adhocCostLine {
-    margin-top: 15px;
-    color: var(--accent);
-}
-
-#providerResults table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 20px 0;
-    border-radius: 8px;
-}
-
-#providerResults th {
-    /*background: var(--panel-alt);*/
-    text-align: left;
-    padding: 14px 12px;
-    font-size: 0.9rem;
-    color: var(--muted);
-    border-bottom: 2px solid var(--border);
-}
-
-#providerResults td {
-    padding: 14px 12px;
-    border-bottom: 1px solid var(--border);
-}
-
-#providerResults td:nth-child(even),
-#providerResults th:nth-child(even) {
-    background-color: rgba(255, 255, 255, 0.03);
-}
-
-body.light-mode #providerResults td:nth-child(even),
-body.light-mode #providerResults th:nth-child(even) {
-    background-color: rgba(0, 0, 0, 0.02);
-}
-
-.calc-lines {
-    margin: 20px 0;
-    padding: 15px;
-    font-size: 1.1rem;
-    border: solid 1px #808080;
-    border-radius: 8px;
-}
-
-.calc-lines div {
-    margin-bottom: 8px;
-}
-
-.conclusion-card {
-    padding: 24px;
-    border-radius: 12px;
-    margin: 20px 0;
-    border: 1px solid var(--border);
-}
-
-.conclusion-card.good {
-    background: rgba(34, 197, 94, 0.05);
-    border-left: 5px solid var(--good);
-}
-
-.conclusion-card.bad {
-    background: rgba(239, 68, 68, 0.05);
-    border-left: 5px solid var(--danger);
-}
-
-.main-result {
-    font-size: 1.3rem;
-    margin-bottom: 10px;
-}
-
-.speed-comparison-container {
-    margin-top: 20px;
-    max-width: 500px;
-}
-
-.mini-table {
-    width: 100%;
-    border-collapse: collapse;
-    background: var(--bg);
-    border-radius: 8px;
-    overflow: hidden;
-}
-
-.mini-table th {
-    background: var(--panel-alt);
-    text-align: left;
-    padding: 12px;
-    font-size: 0.85rem;
-    color: var(--muted);
-}
-
-.mini-table td {
-    padding: 12px;
-    border-bottom: 1px solid var(--border);
-}
-
-tr.good td { color: var(--good); }
-tr.bad td { color: var(--danger); }
-
-.chart-wrapper {
-    margin-top: 30px;
-    background: var(--panel-alt);
-    padding: 20px;
-    border-radius: 12px;
-    border: 1px solid var(--border);
-    height: 350px;
-}
-
-#toggleProvidersBtn {
-    transition: all 0.3s ease;
-    font-weight: bold;
-    letter-spacing: 0.5px;
-    margin-bottom: 20px !important;
-}
-
-.toggle-container-block {
-    width: 100%;
-    margin: 20px 0 20px 0;
-    display: flex;
-    justify-content: center;
-}
-
-.toggle-wrapper {
-    display: flex;
-    gap: 0; 
-    width: 100%;
-    max-width: 400px;
-}
-
-.toggle-wrapper .btn {
-    flex: 1;
-    border-radius: 0;
-}
-
-.toggle-wrapper .btn:first-child {
-    border-top-left-radius: 8px;
-    border-bottom-left-radius: 8px;
-}
-
-.toggle-wrapper .btn:last-child {
-    border-top-right-radius: 8px;
-    border-bottom-right-radius: 8px;
-    border-left: none;
-}
-
-.active-toggle {
-    background: var(--accent) !important;
-    color: var(--bg) !important;
-    box-shadow: var(--glow);
-}
-
-.pill-toggle {
-    position: relative;
-    display: flex;
-    width: 100%; /* Scale to fit the 420px container minus card padding */
-    max-width: 100%; 
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 50px;
-    padding: 4px;
-    overflow: hidden;
-    box-sizing: border-box;
-}
-
-.pill-slider {
-    position: absolute;
-    top: 4px;
-    left: 4px;
-    width: calc(50% - 4px);
-    height: calc(100% - 8px);
-    background: var(--accent);
-    border-radius: 50px;
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: var(--glow);
-    z-index: 1;
-}
-
-.pill-btn {
-    position: relative;
-    flex: 1;
-    background: none;
-    border: none;
-    color: var(--text);
-    padding: 10px 5px; /* Reduced side padding from 10px to 5px */
-    font-weight: 600;
-    cursor: pointer;
-    z-index: 2;
-    transition: color 0.3s ease;
-    font-family: inherit;
-    font-size: 0.85rem; /* Slightly smaller font to ensure fit */
-    white-space: nowrap; /* Prevents text wrapping */
-}
-
-.pill-btn.active {
-    color: var(--bg);
-}
-
-.header-row {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    gap: 15px;
-    padding: 20px 0;
-    margin-bottom: 20px;
-    border-bottom: 1px solid var(--border);
-}
-
-.header-row h1 {
-    margin: 0;
-    flex: 1;
-}
-
-.top-buttons {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    flex-wrap: wrap;
-}
-
-@media (hover: hover) {
-    .tooltip-container:hover .tooltip-box {
-        opacity: 1;
-        visibility: visible;
-        transform: translateX(-50%) translateY(0);
+const setCookie = (name, value) => {
+    const date = new Date();
+    date.setTime(date.getTime() + (30 * 24 * 60 * 60 * 1000)); // 30 days
+    const cookieValue = encodeURIComponent(JSON.stringify(value));
+    document.cookie = `${name}=${cookieValue};expires=${date.toUTCString()};path=/;SameSite=Lax`;
+};
+
+const getCookie = (name) => {
+    const nameEQ = name + "=";
+    const ca = document.cookie.split(';');
+    for (let i = 0; i < ca.length; i++) {
+        let c = ca[i].trim();
+        if (c.indexOf(nameEQ) === 0) {
+            try {
+                return JSON.parse(decodeURIComponent(c.substring(nameEQ.length)));
+            } catch (e) {
+                return null;
+            }
+        }
     }
+    return null;
+};
+
+// ===============================
+// Global State
+// ===============================
+let PRESETS = [];
+let providerCount = 0;
+let chart = null;
+
+function getInputs() {
+    return {
+        journeyMiles: parseFloat(document.getElementById("journeyMiles").value) || 0,
+        batteryKwh: parseFloat(document.getElementById("batteryKwh").value) || 0,
+        soc: parseFloat(document.getElementById("soc").value) || 0,
+        efficiency: parseFloat(document.getElementById("efficiency").value) || 0,
+        adhoc: parseFloat(document.getElementById("adhoc").value) || 0,
+        startChargeRate: parseFloat(document.getElementById("startChargeRate").value) || 0,
+        minSpeed: parseFloat(document.getElementById("minSpeed").value) || 0
+    };
 }
 
-.jump-btn {
-    text-decoration: none;
-    color: var(--accent);
-    font-size: 1.4rem;
-    font-weight: bold;
-    transition: transform 0.2s ease, opacity 0.2s ease;
-    line-height: 1;
-}
+// ===============================
+// UI & Provider Management
+// ===============================
 
-.jump-btn:hover {
-    transform: translateY(3px);
-    opacity: 0.8;
-}
-
-.provider-header div {
-    display: flex;
-    align-items: center;
-}
-
-.jump-btn-pulse {
-    text-decoration: none;
-    color: var(--accent);
-    font-size: 1.4rem;
-    font-weight: bold;
-    line-height: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    border: 1px solid var(--accent);
-    background: var(--panel-alt);
-    transition: transform 0.2s ease;
+function resetAll() {
+    // 1. Clear LocalStorage
+    localStorage.removeItem("ev_calc_settings");
     
-    animation: jumpPulse 2s infinite ease-in-out;
+    // 2. Clear Trip Values Cookie
+    document.cookie = "ev_trip_values=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    
+    // 3. Clear Cookie Acceptance (so banner reappears)
+    document.cookie = "cookiesAccepted=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    
+    // 4. Reload page to apply changes
+    window.location.href = window.location.pathname;
 }
 
-.jump-btn-pulse:hover {
-    transform: translateY(3px);
-    background: var(--accent-soft);
+function shareLink() {
+    const params = new URLSearchParams();
+    params.set("mode", "trip-savings");
+
+    // The specific IDs used in the Trip & Vehicle section
+    const tripIds = ["journeyMiles", "batteryKwh", "soc", "efficiency", "adhoc", "startChargeRate", "minSpeed"];
+    
+    tripIds.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) params.set(id, el.value);
+    });
+
+    // Add Providers
+    const providers = [];
+    document.querySelectorAll(".provider-box").forEach(box => {
+        const id = box.dataset.id;
+        providers.push({
+            name: document.getElementById(`name${id}`).value,
+            sub: document.getElementById(`subCost${id}`).value,
+            rate: document.getElementById(`rate${id}`).value,
+            preset: document.getElementById(`preset${id}`).value
+        });
+    });
+    params.set("p", JSON.stringify(providers));
+
+    const newUrl = `${window.location.origin}${window.location.pathname}?${params.toString()}`;
+    
+    navigator.clipboard.writeText(newUrl).then(() => {
+        const btn = document.getElementById("shareBtn");
+        const originalText = btn.textContent;
+        btn.textContent = "Copied!";
+        btn.classList.add("good");
+        setTimeout(() => {
+            btn.textContent = originalText;
+            btn.classList.remove("good");
+        }, 2000);
+    });
 }
 
-@keyframes jumpPulse {
-    0%, 100% { 
-        box-shadow: 0 0 5px var(--accent-soft);
-        border-color: var(--accent);
+function toggleTheme() {
+    document.body.classList.toggle("light-mode");
+}
+
+function createProviderBox(preset) {
+    providerCount++;
+    const id = providerCount;
+    const { minSpeed } = getInputs();
+    const sortedPresets = getSortedPresets(minSpeed);
+    const presetOptions = ['Custom', ...sortedPresets.map(p => p.name)]
+        .map(name => `<option value="${name}">${name}</option>`).join("");
+
+    const box = document.createElement("div");
+    box.className = "provider-box";
+    box.dataset.id = id;
+    box.innerHTML = `
+        <div class="provider-header">
+            <input type="text" id="name${id}" placeholder="Provider Name" oninput="calculate()">
+            <div style="display: flex; align-items: center; gap: 12px; margin-left: 8px;">
+                <a href="#resultsHeader" class="jump-btn-pulse" title="Jump to results">↓</a>
+                <button class="remove-btn" onclick="this.parentElement.parentElement.parentElement.remove(); calculate();">×</button>
+            </div>
+        </div>
+        <div class="input-group">
+            <label>Preset</label>
+            <select id="preset${id}" class="preset-select-pulse" onchange="updateProviderFields(${id})">${presetOptions}</select>
+        </div>
+        <div class="input-row">
+            <div class="input-group">
+                <label>Monthly Sub (£)</label>
+                <input type="number" id="subCost${id}" step="0.01" value="0" oninput="calculate()">
+            </div>
+            <div class="input-group">
+                <label>Rate (p/kWh)</label>
+                <input type="number" id="rate${id}" step="0.1" value="0" oninput="calculate()">
+            </div>
+        </div>
+        <div class="input-group" id="speedRow${id}" style="display:none">
+            <label>Charging Speed</label>
+            <select id="speed${id}" onchange="updateRateFromSpeed(${id})"></select>
+        </div>
+    `;
+    document.getElementById("providers").appendChild(box);
+    if (preset) {
+        document.getElementById(`preset${id}`).value = preset.name;
+        updateProviderFields(id);
     }
-    50% { 
-        box-shadow: 0 0 15px var(--accent);
-        border-color: #fff;
-    }
-}
-
-.results-header-container {
-    display: none;
-    align-items: center;
-    justify-content: center;
-    gap: 15px;
-    margin-top: 40px;
-    margin-bottom: 10px;
-}
-
-.results-heading {
-    margin: 30px 0 0 0 !important;
-    color: var(--accent);
-}
-
-.results-headingTRIP {
-    color: var(--accent);
-}
-
-.results-header-container .jump-btn-pulse:hover {
-    transform: translateY(-3px);
-}
-
-.comparison-mode-box {
-    border: 1px solid var(--border); /* Matches standard card border */
-    background: var(--panel-alt);
-    box-shadow: none; /* Removes the glow as requested */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 15px;
-    animation: none; /* Stops the pulsating animation */
-}
-
-.comparison-label {
-    font-size: 0.75rem;
-    font-weight: 800;
-    color: var(--accent);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-}
-
-@keyframes boxPulse {
-    0%, 100% { box-shadow: var(--glow); border-color: var(--accent); }
-    50% { box-shadow: var(--glow-strong); border-color: #fff; }
-}
-
-.help-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.85);
-    backdrop-filter: blur(4px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 2000;
-    opacity: 1;
-    transition: opacity 0.3s ease;
-}
-
-.help-modal {
-    background: var(--panel);
-    width: 90%;
-    max-width: 500px;
-    border-radius: 16px;
-    border: 1px solid var(--accent);
-    position: relative;
-    overflow: hidden;
-    box-shadow: var(--glow-strong);
-}
-
-.close-x {
-    position: absolute;
-    top: 15px;
-    right: 20px;
-    background: none;
-    border: none;
-    color: var(--muted);
-    font-size: 2rem;
-    cursor: pointer;
-    z-index: 10;
-}
-
-.help-slides {
-    display: flex;
-    width: 500%;
-    transition: transform 0.4s ease-in-out;
-}
-
-.help-slide {
-    width: 20%; 
-    flex-shrink: 0;
-}
-
-.help-slide, .standalone-slide {
-    padding: 40px;
-    box-sizing: border-box;
-    text-align: center;
-}
-
-.help-slide h2 {
-    color: var(--accent);
-    margin-bottom: 20px;
-}
-
-.help-footer {
-    margin-top: 30px;
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-}
-
-.help-slide ul, .help-slide ol {
-    display: inline-block;
-    text-align: left;
-    margin: 10px auto;
-    padding-left: 25px;
-}
-
-.help-slide p {
-    margin-bottom: 15px;
-}
-
-.help-footer button, .close-x {
-    cursor: pointer;
-    pointer-events: auto;
-}
-
-.standalone-slide {
-    width: 100%;
-    display: block;
-}
-
-#providerResults table th:first-child,
-#providerResults table td:first-child
- {
-    max-width: 200px;
-    white-space: normal;
-    word-wrap: break-word;
-    overflow: hidden;
-    position: sticky;
-    left: 0;
-    z-index: 2;
-    /*background-color: var(--panel);*/
-    border-right: 2px solid var(--accent) !important;
-    box-shadow: 5px 0 15px -5px var(--accent);
-}
-
-#providerResults th:first-child {
-    z-index: 3;
-    /*background-color: var(--panel-alt);*/
-}
-
-#providerResults td:nth-child(2),
-#providerResults th:nth-child(2) {
-    /*background-color: transparent !important;*/
-}
-
-#providerResults td:first-child::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    right: -2px;
-    height: 100%;
-    width: 2px;
-    background: var(--accent);
-    box-shadow: var(--glow);
-}
-
-/* Full-Width Android Header */
-.android-header-full {
-    background-color: #000000;
-    width: 100vw;
-    height: 64px;
-    display: flex;
-    align-items: center; /* Vertically centers content */
-    justify-content: space-between;
-    padding: 0 20px;
-    box-sizing: border-box;
-    position: fixed; /* Keeps it at the very top */
-    top: 0;
-    left: 0;
-    z-index: 2000; /* Higher than everything else */
-}
-
-.android-title-clean {
-    color: #ffffff !important; /* White title */
-    font-size: 1.4rem !important; /* Larger */
-    font-weight: 400 !important;
-    margin: 0 !important;
-    letter-spacing: 0.5px;
-}
-
-/* White Three-Dot Menu */
-.android-dots-trigger {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-    cursor: pointer;
-    padding: 10px;
-    z-index: 1900; /* Menu will appear over this */
-}
-
-.android-dots-trigger span {
-    width: 4px;
-    height: 4px;
-    background-color: #ffffff; /* White dots */
-    border-radius: 50%;
-}
-
-/* Chrome-style Slide Down Menu */
-.chrome-style-menu {
-    position: fixed;
-    top: 8px; /* Slight offset from top like Chrome */
-    right: 8px;
-    width: 200px;
-    background: #2d2e30; /* Deep Grey */
-    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
-    border-radius: 4px;
-    z-index: 2100; /* Higher than the dots */
-    transform-origin: top right;
-    transform: scale(0);
-    opacity: 0;
-    transition: transform 0.2s cubic-bezier(0, 0, 0.2, 1), opacity 0.1s linear;
-}
-
-.chrome-style-menu.active {
-    transform: scale(1);
-    opacity: 1;
-}
-
-.menu-item-clean {
-    display: flex;
-    align-items: center;
-    padding: 12px 16px;
-    color: #e8eaed;
-    text-decoration: none;
-    font-size: 0.9rem; /* Smaller text */
-    cursor: pointer;
-    background: none;
-    border: none;
-}
-
-.menu-item-clean:hover {
-    background: rgba(255, 255, 255, 0.08);
-}
-
-.menu-icon-svg {
-    width: 18px;
-    height: 18px;
-    margin-right: 14px;
-    opacity: 0.7; /* Mid-grey line appearance */
-}
-
-/* Compensate for fixed header */
-body {
-    padding-top: 64px !important; /* Matches height of .android-header-full */
-    margin: 0;
-    padding: 0 30px 30px 30px;
-}
-
-.app {
-    border-radius: 0; /* Optional: square off for true mobile look */
-    box-shadow: none;
-    border: none;
-}
-
-/* Hide original header elements */
-.header-row, .side-menu { display: none !important; }
-
-.android-header {
-    background-color: #000000;
-    width: 100%;
-    height: 60px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 16px;
-    box-sizing: border-box;
-    position: sticky;
-    top: 0;
-    z-index: 1300;
-}
-
-/* Slim, Neon Blue Title */
-.android-title {
-    color: #00e5ff !important;
-    font-size: 1.1rem !important;
-    font-weight: 400 !important; /* Not bold */
-    margin: 0 !important;
-    text-shadow: none !important;
-    letter-spacing: 0.5px;
-}
-
-/* Three Small Round Circles (Kebab Menu) */
-.android-menu-trigger {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 3px;
-    width: 30px;
-    height: 40px;
-    cursor: pointer;
-}
-
-.android-menu-trigger span {
-    width: 4px;
-    height: 4px;
-    background-color: #00e5ff; /* Neon Blue */
-    border-radius: 50%;
-    display: block;
-}
-
-/* Slide Down Menu (WhatsApp Style) */
-.side-menu-android {
-    position: fixed;
-    top: 60px;
-    right: 10px;
-    width: 200px;
-    background: #1f2c34; /* WhatsApp Dark Grey/Blue */
-    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-    border-radius: 4px;
-    z-index: 1250;
-    transform-origin: top right;
-    transform: scaleY(0);
-    opacity: 0;
-    transition: transform 0.25s ease, opacity 0.2s ease;
-    overflow: hidden;
-}
-
-.side-menu-android.active {
-    transform: scaleY(1);
-    opacity: 1;
-}
-
-/* Cookie Banner */
-.cookie-banner {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 90%;
-    max-width: 600px;
-    background: var(--panel-alt);
-    border: 1px solid var(--border);
-    border-top: 2px solid var(--accent);
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: var(--glow);
-    z-index: 2000;
-}
-
-.cookie-content {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 20px;
-}
-
-.cookie-content p {
-    margin: 0;
-    font-size: 0.95rem;
-    color: var(--text);
-}
-
-.cookie-actions {
-    display: flex;
-    gap: 10px;
-    flex-shrink: 0;
-}
-
-.menu-trigger {
-    position: relative;
-    top: 0;
-    left: 0; 
-    z-index: 1100;
-    cursor: pointer;
-    padding: 10px;
-    background: var(--panel);
-    border: 1px solid var(--border); 
-    border-radius: 8px;
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    width: fit-content;
-}
-
-.menu-trigger:hover {
-    left: 0;
-    box-shadow: var(--glow);
-}
-
-.menu-trigger .bar {
-    width: 30px; 
-    height: 3px;
-    background-color: var(--accent);
-    border-radius: 2px;
-}
-
-.yin-yang {
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    border: 1px solid var(--muted);
-    background: linear-gradient(to right, #ffffff 50%, #000000 50%);
-    margin-right: 12px;
-    display: inline-block;
-    flex-shrink: 0;
-}
-
-.fb-icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 18px;
-    height: 18px;
-    background: #1877F2; 
-    color: white;
-    font-size: 14px;
-    font-weight: bold;
-    border-radius: 3px;
-    margin-right: 12px;
-    font-family: "Arial", sans-serif;
-    line-height: 1;
-}
-
-.reset-icon {
-    margin-right: 12px;
-    font-size: 1.1rem;
-    color: var(--danger);
-}
-
-.menu-item {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    width: 75%; 
-    margin: 0 auto 10px auto;
-    padding: 12px 15px;
-    background: var(--panel-alt);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    color: var(--text);
-    text-decoration: none;
-    font-size: 0.95rem; 
-    font-weight: 600;
-    font-family: 'Inter', sans-serif;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    box-sizing: border-box;
-}
-
-.menu-item span {
-    font-size: 0.95rem; 
-}
-
-.menu-trigger:hover {
-    border-color: var(--accent);
-    box-shadow: var(--glow);
-}
-
-.menu-trigger .bar {
-    width: 25px;
-    height: 3px;
-    background-color: var(--accent);
-    border-radius: 2px;
-}
-
-.side-menu {
-    position: fixed;
-    top: 0;
-    left: -350px; /* Increased from -300px to ensure it's fully hidden */
-    width: 280px;
-    height: 100%;
-    background: var(--panel);
-    border-right: 2px solid var(--accent);
-    box-shadow: 10px 0 20px rgba(0, 0, 0, 0.5);
-    z-index: 1200;
-    transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    padding: 60px 20px;
-}
-
-.side-menu.active {
-    left: 0;
-}
-
-.menu-content h3 {
-    color: var(--accent);
-    text-transform: uppercase;
-    font-size: 0.8rem;
-    letter-spacing: 2px;
-    margin-bottom: 20px;
-}
-
-/* Menu Items */
-.menu-item {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    width: 75%;                  /* 75% of parent width */
-    margin: 0 auto 10px auto;
-    padding: 15px;
-    background: var(--panel-alt);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    color: var(--text);
-    text-decoration: none;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    box-sizing: border-box;
-}
-
-.menu-item:hover {
-    border-color: var(--accent);
-    background: var(--accent-soft);
-    color: var(--accent);
-    box-shadow: var(--glow);
-}
-
-.menu-item .icon {
-    margin-right: 12px;
-    font-size: 1.2rem;
-}
-
-.close-btn {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    background: none;
-    border: none;
-    color: var(--muted);
-    font-size: 2rem;
-    cursor: pointer;
-}
-
-.menu-divider {
-    border: 0;
-    border-top: 1px solid var(--border);
-    margin: 20px 0;
-}
-
-.top-buttons { display: none; }
-
-.mobile-only-text {
-    display: none;
-}
-
-/* style.css */
-#privacyOverlay .help-modal {
-    overflow: hidden;
-}
-
-#privacyOverlay .help-slide {
-    padding: 30px; /* Adjust based on your current help slide padding */
-}
-
-
-
-
-
-
-
-@media (max-width: 700px) {
-
-    .mobile-only-text {
-        display: block;
+    calculate();
+}
+
+function addAllProviders() {
+    const { minSpeed } = getInputs();
+    const providersContainer = document.getElementById("providers");
+    const addAllBtn = document.getElementById("addAllBtn"); // Ensure this ID exists on your "Add All" button
+    const collapseBtn = document.getElementById("toggleProvidersBtn");
+
+    // 1. Clear existing and add new providers
+    providersContainer.innerHTML = "";
+    PRESETS.forEach(p => {
+        const canSupport = p.rates.default || Object.keys(p.rates).some(s => Number(s) >= minSpeed);
+        if (canSupport) createProviderBox(p);
+    });
+
+    // 2. Shift the glow from "Add All" to "Collapse"
+    if (addAllBtn) {
+        addAllBtn.classList.remove("empty-pulse");
     }
     
-    .toggle-container-block {
-        margin: 20px 10px; /* 20px top/bottom, 10px left/right */
-        width: auto; /* Allows margins to take effect */
-        display: block; /* Changes from flex to allow auto margins */
+    if (collapseBtn) {
+        collapseBtn.classList.add("empty-pulse");
+    }
+}
+
+function updateProviderFields(id) {
+    const presetName = document.getElementById(`preset${id}`).value;
+    const p = PRESETS.find(x => x.name === presetName);
+    const speedRow = document.getElementById(`speedRow${id}`);
+    
+    if (presetName === 'Custom' || !p) {
+        speedRow.style.display = "none";
+        calculate();
+        return;
     }
 
-    .pill-toggle {
-        max-width: 100%;
+    document.getElementById(`name${id}`).value = p.name;
+    document.getElementById(`subCost${id}`).value = p.subscription.monthlyCost;
+
+    if (p.rates && !p.rates.default) {
+        const { minSpeed } = getInputs();
+        const speeds = Object.keys(p.rates).filter(s => parseFloat(s) >= minSpeed);
+        const speedSelect = document.getElementById(`speed${id}`);
+        speedSelect.innerHTML = speeds.map(s => `<option value="${s}">${s}kW</option>`).join("");
+        speedRow.style.display = "flex";
+        if (speeds.length > 0) document.getElementById(`rate${id}`).value = p.rates[speeds[0]];
+    } else {
+        document.getElementById(`rate${id}`).value = p.rates.default;
+        speedRow.style.display = "none";
+    }
+    calculate();
+}
+
+function updateRateFromSpeed(id) {
+    const presetName = document.getElementById(`preset${id}`).value;
+    const speed = document.getElementById(`speed${id}`).value;
+    const p = PRESETS.find(x => x.name === presetName);
+    if (p?.rates) document.getElementById(`rate${id}`).value = p.rates[speed];
+    calculate();
+}
+
+function getSortedPresets(minSpeed) {
+    return PRESETS.filter(p => {
+        if (p.rates?.default) return true;
+        return Object.keys(p.rates).some(s => Number(s) >= minSpeed);
+    }).sort((a, b) => {
+        const aSub = a.subscription.hasSubscription;
+        const bSub = b.subscription.hasSubscription;
+        return (aSub === bSub) ? a.name.localeCompare(b.name) : aSub ? -1 : 1;
+    });
+}
+
+function enforceSpeedRules() {
+    const { minSpeed } = getInputs();
+    const sortedPresets = getSortedPresets(minSpeed);
+    document.querySelectorAll(".provider-box").forEach(box => {
+        const id = box.dataset.id;
+        const presetSelect = document.getElementById(`preset${id}`);
+        const current = presetSelect.value;
+        presetSelect.innerHTML = ['Custom', ...sortedPresets.map(p => p.name)].map(n => `<option value="${n}">${n}</option>`).join("");
+        presetSelect.value = (sortedPresets.some(p => p.name === current) || current === 'Custom') ? current : 'Custom';
+        updateProviderFields(id);
+    });
+}
+
+// ===============================
+// Core Calculation & Graphing
+// ===============================
+
+function calculate() {
+    const activePill = document.querySelector('.pill-btn.active');
+    const isTripMode = activePill && activePill.textContent.trim() === "Trip Savings";
+
+    const beCard = document.getElementById("breakEvenCard");
+    if (beCard) beCard.style.display = isTripMode ? "none" : "block";
+    
+    const tripGrid = document.querySelector(".grid");
+    const resultsHeader = document.getElementById("resultsHeader");
+    const btnRow = document.querySelector(".btn-row");
+    const uiResults = document.getElementById("results");
+    const uiPreText = document.getElementById("preConclusionsText");
+    const sortContainer = document.getElementById("sortContainer");
+
+    if (sortContainer) sortContainer.style.display = isTripMode ? "block" : "none";
+    if (tripGrid) tripGrid.style.display = isTripMode ? "grid" : "none";
+    if (resultsHeader) resultsHeader.style.display = isTripMode ? "flex" : "none";
+    if (uiResults) uiResults.style.display = isTripMode ? "flex" : "none";
+    if (btnRow) btnRow.style.display = isTripMode ? "flex" : "none";
+
+    const fieldIds = [
+        "journeyMiles", "batteryKwh", "soc", "efficiency", 
+        "adhoc", "startChargeRate", "efficiencyBE", "adhocBE"
+    ];
+
+    fieldIds.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            const val = parseFloat(el.value);
+            // This applies the neon green pulse if the field is empty or 0
+            if (!el.value || isNaN(val) || val <= 0) {
+                el.classList.add('empty-pulse');
+            } else {
+                el.classList.remove('empty-pulse');
+            }
+        }
+    });
+
+    // Handle provider-specific inputs if they exist
+    document.querySelectorAll(".provider-box input[type='number'], .provider-box input[type='text']").forEach(input => {
+        if (!input.value || input.value === "0") {
+            input.classList.add('empty-pulse');
+        } else {
+            input.classList.remove('empty-pulse');
+        }
+    });
+
+    if (!isTripMode) {
+        const efficiency = parseFloat(document.getElementById("efficiencyBE").value);
+        const adhocRate = parseFloat(document.getElementById("adhocBE").value) || 0;
+        const minSpeedSelection = parseFloat(document.getElementById("minSpeedBE").value) || 0;
+
+        if (isNaN(efficiency) || efficiency <= 0 || isNaN(adhocRate) || adhocRate <= 0) {
+            uiPreText.innerHTML = "Please enter valid <strong>Efficiency</strong> and <strong>PAYG Rate</strong> values, or use the toggle at the top to switch to TRIP SAVINGS mode.";
+            uiPreText.style.display = "block";
+            uiResults.style.display = "none";
+            return;
+        }
+
+        uiPreText.style.display = "none";
+        uiResults.style.display = "block";
+        
+        document.querySelector(".calc-lines").style.display = "none";
+        document.querySelector(".chart-wrapper").style.display = "none";
+
+        let beData = [];
+
+        PRESETS.forEach(p => {
+            const sub = p.subscription.monthlyCost;
+            const rates = p.rates;
+            const speedKeys = Object.keys(rates);
+            
+            speedKeys.forEach(speed => {
+                const numericSpeed = speed === 'default' ? 0 : parseFloat(speed);
+                
+                if (speed !== 'default' && numericSpeed < minSpeedSelection) {
+                    return; 
+                }
+
+                const rate = rates[speed];
+                const speedDisplay = speed === 'default' ? "Max. available" : `${speed}kW`;
+                
+                let breakEvenMiles = null; 
+                let displayMiles = "";
+
+                if (rate < adhocRate) {
+                    const savingPerKwh = (adhocRate - rate) / 100;
+                    const kwhNeeded = sub / savingPerKwh;
+                    breakEvenMiles = Math.round(kwhNeeded * efficiency);
+                    displayMiles = breakEvenMiles + " miles";
+                } else if (sub > 0) {
+                    displayMiles = "Never (Rate ≥ PAYG)";
+                } else {
+                    breakEvenMiles = 0;
+                    displayMiles = "0 (Free/No Sub)";
+                }
+
+                beData.push({
+                    name: p.name,
+                    url: p.subscription?.url, // Store URL
+                    comments: p.subscription?.comments || "", // Store Comments
+                    speedDisplay: speedDisplay,
+                    subCost: sub,
+                    rate: rate,
+                    miles: breakEvenMiles,
+                    displayText: displayMiles
+                });
+            });
+        });
+
+        beData.sort((a, b) => {
+            if (a.miles !== null && b.miles !== null) return a.miles - b.miles;
+            if (a.miles !== null) return -1;
+            if (b.miles !== null) return 1;
+            return a.name.localeCompare(b.name);
+        });
+
+        let html = `<h2 class="results-heading" style="text-align: center">BREAK-EVEN ANALYSIS</h2>
+                    <div class="mobile-only-text" style="font-size: 0.8em; margin-left: 10px">Slide table left to view hidden columns.</div>
+                    <div class="results-scroll">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Provider (click hyperlink to view subscription info)</th>
+                                <th>Speed<div class="tooltip-container">
+                            <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
+                          <div class="tooltip-box">If the provider's discounted charge rate is tied to a charging speed (selected in the form above), it will be specified in this column. If the provider offers more than one speed at the same discounted charge rate, you will see <strong>'Max. available'</strong>.</div></th>
+                                <th>Sub. Fee<div class="tooltip-container">
+                            <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
+                          <div class="tooltip-box">This is the provider's subscription fee, which gives you access to their discounted charge rate for ONE MONTH.</div></th>
+                                <th>Disc. Rate<div class="tooltip-container">
+                            <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
+                          <div class="tooltip-box">This is the provider's discounted charge rate (per kWh) that is available after subscribing for one month. Note that some providers have variable charge rates depending on location and time of day.</div></th>
+                                <th>Break Even Miles<div class="tooltip-container">
+                            <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
+                          <div class="tooltip-box">This is the number of miles you must drive on the provider's discounted charge rate to pay off the subscription fee. Remember, a subscription lasts for an entire month.</div></th>
+                            </tr>
+                        </thead>
+                        <tbody>`;
+
+        beData.forEach(row => {
+            const providerLink = row.url 
+                ? `<a href="${row.url}" target="_blank" style="color:inherit; text-decoration:underline;">${row.name}</a>` 
+                : row.name;
+
+            html += `<tr>
+                <td>
+                    ${providerLink}
+                    <div style="font-size: 0.75rem; opacity:0.8;">${row.comments}</div>
+                </td>
+                <td>${row.speedDisplay}</td>
+                <td>£${row.subCost.toFixed(2)}</td>
+                <td>${row.rate.toFixed(1)}p</td>
+                <td><strong>${row.displayText}</strong></td>
+            </tr>`;
+        });
+
+        document.getElementById("providerResults").innerHTML = html + `</tbody></table></div>`;
+        return; 
     }
 
-    body {
-        padding: 0;
-    }
-    .app {
-        padding: 0 10px 15px 15px; /* Removes top padding on mobile */
-        margin-top: 0;
-        border: none;
-        box-shadow: none;
-        background: transparent; /* Allows page background to show through */
-    }
-    /* Hide the old header and triggers */
-    .header-row, .menu-trigger {
-        display: none !important;
+    if (uiPreText) uiPreText.style.display = "block";
+    if (uiResults) uiResults.style.display = "block";
+
+    const inputs = getInputs();
+    const uiShare = document.getElementById("shareBtn");
+    const uiPdf = document.getElementById("pdfBtn");
+
+    const tripIncomplete = 
+        inputs.journeyMiles <= 0 || 
+        inputs.batteryKwh <= 0 || 
+        inputs.efficiency <= 0 || 
+        inputs.adhoc <= 0;
+    
+    const providerBoxes = document.querySelectorAll(".provider-box");
+
+    // Sequential Validation Logic for Trip Mode
+    if (tripIncomplete) {
+        uiPreText.innerHTML = "Please complete all fields in the <strong>Trip & Vehicle</strong> section.";
+        uiPreText.style.display = "block";
+        uiResults.style.display = "none";
+        if (uiShare) uiShare.style.display = "none";
+        if (uiPdf) uiPdf.style.display = "none";
+        return; // Exit here if trip fields aren't valid
     }
     
-    h1 {
-        font-size: 1.2rem;
-        margin-left: 50px;
-        text-align: left;
-    }
-    .btn { width: 100%; }
-
-    #providerResults {
-        position: relative;
-        -webkit-overflow-scrolling: touch;
+    if (providerBoxes.length === 0) {
+        uiPreText.innerHTML = "Before you may view a comparison, you must select at least one provider from the list of providers (above).";
+        uiPreText.style.display = "block";
+        uiResults.style.display = "none";
+        if (uiShare) uiShare.style.display = "none";
+        if (uiPdf) uiPdf.style.display = "none";
+        return;
     }
 
-    .results-scroll td:first-child,
-    .results-scroll th:first-child {
-       position: sticky;
-       left: 0;
-       z-index: 20;
-       background: var(--panel-alt);
-       backdrop-filter: blur(4px);
-   }
+    uiPreText.style.display = "none";
+    uiResults.style.display = "block";
+    if (uiShare) uiShare.style.display = "";
+    if (uiPdf) uiPdf.style.display = "";
+    document.querySelector(".calc-lines").style.display = "block";
+    document.querySelector(".chart-wrapper").style.display = "block";
 
-    .input-row {
-        flex-direction: column;
-    }
-
-    #providerResults table {
-        min-width: 600px;
-    }
+    const startChargeKwh = (inputs.soc / 100) * inputs.batteryKwh;
+    const startChargeCost = startChargeKwh * (inputs.startChargeRate / 100);
+    const initialRange = startChargeKwh * inputs.efficiency;
+    const publicMiles = Math.max(0, inputs.journeyMiles - initialRange);
+    const publicKwh = publicMiles / inputs.efficiency;
+    const totalAdhocCost = startChargeCost + (publicKwh * (inputs.adhoc / 100));
     
-    .results-scroll {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-    }
+    document.getElementById("preChargeLine").innerHTML = `Pre-journey starting charge: <strong>${startChargeKwh.toFixed(1)} kWh</strong> (£${startChargeCost.toFixed(2)})`;
+    document.getElementById("homeRangeLine").innerHTML = `Range from pre-journey starting charge: <strong>${initialRange.toFixed(0)} miles</strong> <div class="tooltip-container">
+                            <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
+                          <div class="tooltip-box">This is the distance you can expect to drive before your first public charge along your route.</div>`;
+    document.getElementById("publicMilesLine").innerHTML = `PAYG public charging miles needed: <strong>${publicMiles.toFixed(0)} miles</strong> <div class="tooltip-container">
+                            <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
+                          <div class="tooltip-box">This is how many miles of your trip will need to be covered by public charging.</div>`;
+    document.getElementById("publicKwhLine").innerHTML = `PAYG public charging energy needed: <strong>${publicKwh.toFixed(1)} kWh @ ${inputs.adhoc}p</strong>`;
+    document.getElementById("adhocCostLine").innerHTML = `Total benchmark journey cost (pre-charge + standard PAYG): <strong>£${totalAdhocCost.toFixed(2)}</strong>`;
     
-    #providerResults::after {
-        content: "";
-        position: absolute;
-        top: 0;
-        right: 0;
-        width: 40px;
-        height: 100%;
-        pointer-events: none;
-        background: linear-gradient(to left, var(--panel), transparent);
-        z-index: 10;
+    const providers = [];
+    providerBoxes.forEach(box => {
+        const id = box.dataset.id;
+        const name = document.getElementById(`name${id}`).value || "Unnamed";
+        const subCost = parseFloat(document.getElementById(`subCost${id}`).value) || 0;
+        const rate = parseFloat(document.getElementById(`rate${id}`).value) || 0;
+       
+        const savingPerKwh = (inputs.adhoc - rate) / 100;
+        let breakEvenMiles = 0;
+        if (savingPerKwh > 0) {
+            const kwhNeeded = subCost / savingPerKwh;
+            breakEvenMiles = kwhNeeded * inputs.efficiency;
+        }
+        const totalJourneyCost = subCost + startChargeCost + (publicKwh * (rate / 100));
+        const pData = PRESETS.find(p => p.name === document.getElementById(`preset${id}`).value);
+
+        providers.push({ 
+            name, subCost, rate, totalJourneyCost, 
+            breakEvenMiles,
+            totalWithBattery: breakEvenMiles + initialRange,
+            savings: totalAdhocCost - totalJourneyCost,
+            url: pData?.subscription?.url,
+            comments: pData?.subscription?.comments || ""
+        });
+    });
+
+    const sortVal = document.getElementById("sortResults").value;
+    providers.sort((a, b) => {
+        if (sortVal === "cheapest") {
+            return a.totalJourneyCost - b.totalJourneyCost;
+        } 
+        if (sortVal === "breakeven") {
+            // Move "Never" cases to the bottom
+            const aNever = a.rate >= inputs.adhoc;
+            const bNever = b.rate >= inputs.adhoc;
+            if (aNever && !bNever) return 1;
+            if (!aNever && bNever) return -1;
+            return a.breakEvenMiles - b.breakEvenMiles;
+        }
+        if (sortVal === "az") return a.name.localeCompare(b.name);
+        if (sortVal === "za") return b.name.localeCompare(a.name);
+        return 0;
+    });
+    let html = `<div class="mobile-only-text" style="font-size: 0.8em; margin-left: 10px">Slide table left to view hidden columns.</div><div class="results-scroll"><table><thead><tr>
+        <th>Provider (click hyperlink to view subscription info)</th>
+        <th>Sub. Fee<div class="tooltip-container">
+                            <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
+                          <div class="tooltip-box">This is the provider's subscription fee, which gives you access to their discounted charge rate for ONE MONTH.</div></th>
+        <th>Disc. Rate<div class="tooltip-container">
+                            <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
+                          <div class="tooltip-box">This is the provider's discounted charge rate (per kWh) that is available after subscribing for one month. Note that some providers have variable charge rates depending on location and time of day.</div></th>
+        <th>Trip Cost<div class="tooltip-container">
+                            <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
+                          <div class="tooltip-box">This is the expected total cost of your trip using this provider (including your specified battery pre-charge). If it is displayed in green, it is cheaper than the equivalent journey using PAYG charging at the rate you entered above.</div></th>
+        </th>
+        <th>vs. PAYG<div class="tooltip-container">
+                            <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
+                          <div class="tooltip-box">This is the amount by which the discounted charge rate will either be cheaper or more expensive than your average PAYG rate for the same distance. Green means cheaper; red means more expensive. Bear in mind that you can continue to use a provider's subscription for one full month.</div></th>
+        </th>
+        <th>Break Even Miles<div class="tooltip-container">
+                            <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
+                          <div class="tooltip-box">This is the number of miles you must drive on the provider's discounted charge rate to pay off the subscription fee. Remember, a subscription lasts for an entire month.</div></th>
+        <th>Total Miles (Inc. Battery)<div class="tooltip-container">
+                            <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
+                          <div class="tooltip-box">This is the break-even miles PLUS the number of miles your car can drive in its precharged state.</div></th>
+        </th>
+        </tr></thead><tbody>`;
+    providers.forEach(p => {
+        const rowClass = p.savings > 0 ? "good" : (p.savings < 0 ? "bad" : "");
+        // Add a 'jump to results' arrow and the provider link
+        const jumpArrow = `<a href="#resultsHeader" title="Jump to results" style="text-decoration:none; margin-right:8px; color:var(--accent); font-size:1.1rem;">↓</a>`;
+        const providerLink = p.url 
+            ? `<a href="${p.url}" target="_blank" style="color:inherit; text-decoration:underline;">${p.name}</a>` 
+            : p.name;
+        const displayName = `${providerLink}`;        // Determine display text for providers more expensive than PAYG
+        const breakEvenText = p.rate < inputs.adhoc 
+            ? `${p.breakEvenMiles.toFixed(0)} miles` 
+            : "Never";
+        const totalMilesText = p.rate < inputs.adhoc 
+            ? `${p.totalWithBattery.toFixed(0)} miles` 
+            : "N/A";
+        html += `<tr class="${rowClass}">
+            <td>${displayName}<div style="font-size: 0.75rem; opacity:0.8;">${p.comments}</div></td>
+            <td>£${p.subCost.toFixed(2)}</td>
+            <td>${p.rate.toFixed(1)}p</td>
+            <td><strong>£${p.totalJourneyCost.toFixed(2)}</strong></td>
+            <td>${p.savings > 0 ? 'Save £' : 'Cost £'}${Math.abs(p.savings).toFixed(2)}</td>
+            <td><strong>${breakEvenText}</strong></td>
+            <td><strong>${totalMilesText}</strong></td>
+        </tr>`;
+    });
+    document.getElementById("providerResults").innerHTML = html + `</tbody></table></div>`;
+
+
+    
+ // ==========================================
+    // RESTORED CONCLUSIONS BOX START
+    // ==========================================
+    const conclusionsBox = document.getElementById("conclusionsBox");
+    if (providers.length > 0) {
+        const bestProvider = providers[0];
+        const timeLine = `Approximate driving time (at 60mph): <strong>${(inputs.journeyMiles / 60).toFixed(1)} hours</strong>.`;
+        
+        const minSpeedSelect = document.getElementById("minSpeed");
+        const minSpeedLabel = minSpeedSelect.options[minSpeedSelect.selectedIndex].text;
+    
+        const speedTableHtml = `
+            <div class="speed-comparison-container">
+                <table class="mini-table">
+                    <thead>
+                        <tr><th>Speed</th><th>Estimated Charge Time</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>7kW (AC)</td><td>${(publicKwh / 7).toFixed(1)} hours</td></tr>
+                        <tr><td>22kW (AC)</td><td>${(publicKwh / 22).toFixed(1)} hours</td></tr>
+                        <tr><td>35kW (AC)</td><td>${(publicKwh / 35).toFixed(1)} hours </td></tr>
+                        <tr><td>50kW (Rapid)</td><td>${((publicKwh / 50) * 60).toFixed(0)} minutes</td></tr>
+                        <tr><td>100kW (Rapid)</td><td>${((publicKwh / 100) * 60).toFixed(0)} minutes</td></tr>
+                        <tr><td>150kW (Ultra)</td><td>${((publicKwh / 150) * 60).toFixed(0)} minutes</td></tr>
+                        <tr><td>200kW (Ultra)</td><td>${((publicKwh / 200) * 60).toFixed(0)} minutes</td></tr>
+                        <tr><td>300kW (Ultra)</td><td>${((publicKwh / 300) * 60).toFixed(0)} minutes</td></tr>
+                    </tbody>
+                </table>
+            </div>`;
+        
+        const locationDisclaimer = `<p style="font-size:0.85rem; margin-top:12px; opacity:0.8;">* Times exclude the "80-100%" charging slowdown. Also, you will need to ensure that this provider has charging stations in your planned area of travel.</p>`;
+    
+            // Applying the specific white-border class only here
+            let conclusionHTML = `<div class="conclusion-white-border">`; 
+            
+            if (bestProvider.savings > 0) {
+                conclusionHTML += `<p class="main-result"><strong>${bestProvider.name}</strong> is cheapest at the selected minimum charging rate of <strong>${minSpeedLabel}</strong> (saving <strong>£${bestProvider.savings.toFixed(2)}</strong>).</p>`;
+            } else {
+                conclusionHTML += `<p class="main-result"><strong>Standard PAYG</strong> is cheapest at the selected minimum charging rate of <strong>${minSpeedLabel}</strong>.</p>`;
+            }
+            
+            conclusionHTML += `${timeLine}${speedTableHtml}${locationDisclaimer}</div>`;
+            conclusionsBox.innerHTML = conclusionHTML;
+        } else {
+            conclusionsBox.innerHTML = "";
+        }
+        // ==========================================
+        // RESTORED CONCLUSIONS BOX END
+        // ==========================================   
+
+
+
+    
+    drawGraph(inputs, providers);
+
+    // At the end of function calculate()
+    const dataToSave = getInputs();
+    setCookie("ev_trip_values", dataToSave);
+}
+
+function drawGraph(core, providers) {
+    const ctx = document.getElementById("costChart");
+    if (chart) chart.destroy();
+
+    const maxMiles = Math.max(core.journeyMiles * 1.2, 300); // Use .journeyMiles
+    const labels = Array.from({length: 11}, (_, i) => Math.round((maxMiles * i) / 10));
+    
+    const adhocData = labels.map(m => {
+        const pKwh = Math.max(0, m - (core.soc/100 * core.batteryKwh * core.efficiency)) / core.efficiency; // Use .batteryKwh
+        return (core.soc/100 * core.batteryKwh * core.startChargeRate/100) + (pKwh * core.adhoc/100); // Use .batteryKwh, .startChargeRate, .adhoc
+    });
+
+    const datasets = [{
+        label: "Standard PAYG",
+        data: adhocData,
+        borderColor: "#f97316",
+        borderWidth: 3,
+        pointRadius: 0,
+        fill: false
+    }];
+
+    providers.forEach((p, idx) => {
+        const data = labels.map(m => {
+        const pKwh = Math.max(0, m - (core.soc/100 * core.batteryKwh * core.efficiency)) / core.efficiency; // Use .batteryKwh
+        return p.subCost + (core.soc/100 * core.batteryKwh * core.startChargeRate/100) + (pKwh * p.rate/100); // Use .batteryKwh, .startChargeRate
+        });
+        datasets.push({
+            label: p.name,
+            data: data,
+            borderColor: getProviderColor(p.name, idx),
+            borderWidth: 2,
+            pointRadius: 0,
+            fill: false
+        });
+    });
+
+    chart = new Chart(ctx, {
+        type: "line",
+        data: { labels, datasets },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: { title: { display: true, text: 'Total Trip Cost (£)' } },
+                x: { title: { display: true, text: 'Distance (Miles)' } }
+            },
+            plugins: { legend: { position: 'bottom', labels: { boxWidth: 12 } } }
+        }
+    });
+}
+
+function getProviderColor(name, index) {
+    const colors = { "Be.EV": "#00d1ff", "Tesla": "#e81010", "BP Pulse": "#00a14b", "Shell Recharge": "#ffda00", "Osprey": "#f97316" };
+    if (colors[name]) return colors[name];
+    const palette = ["#38bdf8", "#22c55e", "#a855f7", "#ec4899", "#eab308"];
+    return palette[index % palette.length];
+}
+
+function setToggle(mode, btn) {
+    const slider = document.getElementById('pill-slider');
+    document.querySelectorAll('.pill-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    if(slider) {
+        slider.style.transform = mode === 'break-even' ? 'translateX(0)' : 'translateX(100%)';
+    }
+    calculate();
+}
+
+function init() {
+    const savedValues = getCookie("ev_trip_values");
+    const urlParams = new URLSearchParams(window.location.search);
+    
+    // 1. Identify both dropdowns
+    const speedTrip = document.getElementById("minSpeed");
+    const speedBE = document.getElementById("minSpeedBE");
+
+    // 2. Define the sync and recalculate function
+    const syncAndCalc = (e) => {
+        const newValue = e.target.value;
+        speedTrip.value = newValue;
+        speedBE.value = newValue;
+        calculate(); // Refresh the tables/logic for the current mode
+    };
+
+    // 3. Attach listeners
+    if (speedTrip && speedBE) {
+        speedTrip.addEventListener('change', syncAndCalc);
+        speedBE.addEventListener('change', syncAndCalc);
     }
 
-    .menu-trigger {
-        position: relative; 
-        top: 0;
-        left: 0;
-        width: 28px;
-        height: 28px;
-    }
+    fetch("providers.json").then(r => r.json()).then(data => {
+        PRESETS = data.providers;
+
+        // List of all IDs to restore
+        const tripIds = ["journeyMiles", "batteryKwh", "soc", "efficiency", "adhoc", "startChargeRate", "minSpeed"];        
+        tripIds.forEach(id => {
+            const el = document.getElementById(id);
+            if (!el) return;
+
+            if (urlParams.has(id)) {
+                el.value = urlParams.get(id);
+            } else if (savedValues && savedValues[id] !== undefined) {
+                el.value = savedValues[id];
+            }
+            el.addEventListener('input', calculate);
+        });
+
+        const effTrip = document.getElementById("efficiency");
+        const effBE = document.getElementById("efficiencyBE");
+        const adhocTrip = document.getElementById("adhoc");
+        const adhocBE = document.getElementById("adhocBE");
+        
+        // Helper to sync and trigger calculation
+        const syncFields = (source, target) => {
+            source.addEventListener('input', () => {
+                target.value = source.value;
+                calculate();
+            });
+        };
+        
+        if (effTrip && effBE) {
+            // Initial sync from saved/URL values
+            effBE.value = effTrip.value; 
+            syncFields(effTrip, effBE);
+            syncFields(effBE, effTrip);
+        }
+        
+        if (adhocTrip && adhocBE) {
+            // Initial sync from saved/URL values
+            adhocBE.value = adhocTrip.value;
+            syncFields(adhocTrip, adhocBE);
+            syncFields(adhocBE, adhocTrip);
+        }
+
+        if (urlParams.has("p")) {
+            try {
+                const sharedProviders = JSON.parse(urlParams.get("p"));
+                document.getElementById("providers").innerHTML = ""; // Clear existing
+                sharedProviders.forEach(p => {
+                    // Recreate the box
+                    createProviderBox(); 
+                    const id = providerCount;
+                    // Fill the fields manually from the shared data
+                    document.getElementById(`name${id}`).value = p.name;
+                    document.getElementById(`subCost${id}`).value = p.sub;
+                    document.getElementById(`rate${id}`).value = p.rate;
+                    document.getElementById(`preset${id}`).value = p.preset;
+                    // Ensure the speed row/logic is updated if it was a preset
+                    if(p.preset !== 'Custom') {
+                        updateProviderFields(id);
+                        // Re-override with the specific shared rate in case it differed
+                        document.getElementById(`rate${id}`).value = p.rate;
+                    }
+                });
+            } catch (e) {
+                console.error("Error parsing shared providers:", e);
+            }
+        }
+
+        const modeParam = urlParams.get("mode");
+        if (modeParam === "trip-savings") {
+            // Find the Trip Savings button and activate it
+            const tripBtn = document.querySelector('.pill-btn:nth-child(3)'); // The second button
+            if (tripBtn) setToggle('trip-savings', tripBtn);
+        } else {
+            // Default behavior: logic to ensure card visibility matches Break Even
+            const activePill = document.querySelector('.pill-btn.active');
+            const currentMode = activePill.textContent.trim() === "Trip Savings" ? 'trip-savings' : 'break-even';
+            setToggle(currentMode, activePill);
+        }
+
+        // Restore Provider dropdown (ensure this ID exists or remove if not used)
+        const provEl = document.getElementById("provider");
+        if (provEl && savedValues && savedValues.provider) {
+            provEl.value = savedValues.provider;
+        }
+
+        updateProviderInfo();
+        calculate();
+    });
+}
+
+/* ============================================
+   PDF EXPORT — OFF-SCREEN CLONE (NO FLASH)
+   PURE B&W + MARGINS + FIT TO A4
+   GRAPH REMOVED, SORT REMOVED, HEADER ADDED
+   ============================================ */
+/* ============================================
+   PDF EXPORT — UPDATED FOR BREAK EVEN COLUMNS
+   ============================================ */
+function exportPdf() {
+    const results = document.getElementById("results");
+    const pdfBtn = document.getElementById("pdfBtn");
+    if (!results || !pdfBtn) return;
     
-    .bar {
-        width: 100%;
-        height: 3px;
-        background-color: var(--accent);
-        border-radius: 2px;
-        transition: 0.3s;
+    const originalText = pdfBtn.textContent;
+    pdfBtn.textContent = "Generating...";
+    pdfBtn.style.pointerEvents = "none"; 
+    pdfBtn.style.opacity = "0.7";
+
+    // Create off-screen clone
+    const cloneWrapper = document.createElement("div");
+    const cloneId = "pdfClone_" + Math.floor(Math.random() * 1000000);
+    cloneWrapper.id = cloneId;
+    cloneWrapper.style.position = "absolute";
+    cloneWrapper.style.left = "-9999px";
+    cloneWrapper.style.top = "0";
+    // Increase width to ensure table doesn't wrap/squash the new columns
+    cloneWrapper.style.width = "1200px"; 
+
+    const clone = results.cloneNode(true);
+    cloneWrapper.appendChild(clone);
+    document.body.appendChild(cloneWrapper);
+
+    // Remove UI elements not needed in PDF
+    const uiElements = cloneWrapper.querySelectorAll(".input-group, .chart-wrapper, .btn-row");
+    uiElements.forEach(el => {
+        const label = el.querySelector("label");
+        if (label && label.textContent.trim() === "Sort results") el.remove();
+        if (el.classList.contains("chart-wrapper")) el.remove();
+    });
+
+    // Apply print-safe styles to the clone
+    const override = document.createElement("style");
+    override.innerHTML = `
+        #${cloneId} { padding: 20px; background: #fff; }
+        #${cloneId} * {
+            background: #ffffff !important;
+            color: #000000 !important;
+            border-color: #000000 !important;
+            box-shadow: none !important;
+            font-family: Arial, sans-serif !important;
+        }
+        #${cloneId} table { width: 100%; border-collapse: collapse; font-size: 12px; }
+        #${cloneId} th, #${cloneId} td { border: 1px solid #000; padding: 6px; text-align: left; }
+        #${cloneId} .good, #${cloneId} .bad { background: #fff !important; font-weight: bold; }
+    `;
+    document.head.appendChild(override);
+
+    requestAnimationFrame(() => {
+        html2canvas(cloneWrapper, { scale: 2 }).then(canvas => {
+            cloneWrapper.remove();
+            override.remove();
+
+            // Convert to B&W
+            const bwCanvas = document.createElement("canvas");
+            const bctx = bwCanvas.getContext("2d");
+            bwCanvas.width = canvas.width;
+            bwCanvas.height = canvas.height;
+            bctx.drawImage(canvas, 0, 0);
+
+            const imgData = bctx.getImageData(0, 0, bwCanvas.width, bwCanvas.height);
+            const pixels = imgData.data;
+            for (let i = 0; i < pixels.length; i += 4) {
+                const grey = 0.299 * pixels[i] + 0.587 * pixels[i+1] + 0.114 * pixels[i+2];
+                const bw = grey < 180 ? 0 : 255;
+                pixels[i] = pixels[i+1] = pixels[i+2] = bw;
+            }
+            bctx.putImageData(imgData, 0, 0);
+
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF("p", "mm", "a4");
+            const pageWidth = pdf.internal.pageSize.getWidth();
+            const margin = 10;
+            const usableWidth = pageWidth - (margin * 2);
+            const imgWidth = usableWidth;
+            const imgHeight = (bwCanvas.height * imgWidth) / bwCanvas.width;
+
+            pdf.setFontSize(16);
+            pdf.text("EV Subscription Comparison Report", pageWidth / 2, 15, { align: "center" });
+            pdf.addImage(bwCanvas.toDataURL("image/png"), "PNG", margin, 25, imgWidth, imgHeight);
+            
+            pdf.save("ev-charging-comparison.pdf");
+            
+            // Restore button
+            pdfBtn.textContent = originalText;
+            pdfBtn.style.pointerEvents = "auto";
+            pdfBtn.style.opacity = "1";
+        });
+    });
+}
+
+window.addEventListener("DOMContentLoaded", init);
+
+// ===============================
+// Help Modal Logic
+// ===============================
+let currentSlide = 0;
+
+function moveSlide(step) {
+    const container = document.getElementById('helpSlides');
+    // This will now correctly find ONLY the 5 welcome slides
+    const slides = document.querySelectorAll('.help-slide'); 
+    const totalSlides = slides.length; 
+
+    currentSlide += step;
+    if (currentSlide < 0) currentSlide = 0;
+    if (currentSlide >= totalSlides) currentSlide = totalSlides - 1;
+
+    const slideWidthPercent = 100 / totalSlides;
+    const offset = currentSlide * -slideWidthPercent;
+    container.style.transform = `translateX(${offset}%)`;
+}
+
+function closeHelp() {
+    const overlay = document.getElementById('helpOverlay');
+    if (overlay) {
+        overlay.style.opacity = '0';
+        overlay.style.transition = 'opacity 0.3s ease';
+        // Wait for fade out before removing from view
+        setTimeout(() => {
+            overlay.style.display = 'none';
+        }, 300);
     }
-    
-    .menu-trigger:hover {
-        left: auto; /* Prevent the 'hover: left: 0' rule from breaking it */
+}
+
+function toggleTooltip(el) {
+    // Toggle the 'active' class on the parent container
+    const container = el.closest('.tooltip-container');
+    if (container) {
+        container.classList.toggle('active');
+    }
+}
+
+// Optional: Close tooltip when clicking elsewhere
+document.addEventListener('click', (e) => {
+    if (!e.target.closest('.tooltip-container')) {
+        document.querySelectorAll('.tooltip-container.active').forEach(openTooltip => {
+            openTooltip.classList.remove('active');
+        });
     }
 
-    .header-row {
-        padding: 15px 0;
+});
+
+function toggleProviders() {
+    const container = document.getElementById("collapsibleProviders");
+    const controls = document.getElementById("providerControls"); 
+    const btn = document.getElementById("toggleProvidersBtn");
+    
+    if (container.style.display === "none") {
+        container.style.display = "block";
+        if (controls) controls.style.display = "block"; 
+        btn.textContent = "Collapse Providers List";
+    } else {
+        container.style.display = "none";
+        if (controls) controls.style.display = "none"; 
+        btn.textContent = "Expand Providers List";
     }
 
-    .header-row h1 {
-        font-size: 1.2rem;
-    }
-    
-    .comparison-mode-box,
-    .card,
-    #breakEvenCard {
-        max-width: 100%; /* Fills the container (minus the 10px margins) */
-        margin-bottom: 20px;
-    }
-    
-    .results-header, .result-row {
-        grid-template-columns: 85px 1fr 1fr 1fr !important;
-        gap: 5px;
-        font-size: 0.85rem;    }
+    // Remove the glow when clicked
+    btn.classList.remove("empty-pulse");
+}
 
-    .result-row div:first-child {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        padding-right: 5px;
+document.addEventListener('DOMContentLoaded', () => {
+    if (!getCookie('cookiesAccepted')) {
+        document.getElementById('cookieBanner').style.display = 'block';
     }
+});
 
-    .result-row div {
-        padding: 8px 2px;
-    }
-        .cookie-content {
-        flex-direction: column;
-        text-align: center;
-    }
+function acceptCookies() {
+    const date = new Date();
+    date.setTime(date.getTime() + (365 * 24 * 60 * 60 * 1000));
+    document.cookie = `cookiesAccepted=true;expires=${date.toUTCString()};path=/;SameSite=Lax`;
     
-    .cookie-actions {
-        width: 100%;
+    closeCookieBanner();
+}
+
+function closeCookieBanner() {
+    const banner = document.getElementById('cookieBanner');
+    banner.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+    banner.style.opacity = '0';
+    banner.style.transform = 'translateX(-50%) translateY(20px)';
+    setTimeout(() => banner.style.display = 'none', 400);
+}
+
+function toggleMenu() {
+    const menu = document.getElementById('sideMenu');
+    menu.classList.toggle('active');
+}
+
+// Ensure clicking outside the Chrome-style menu closes it
+document.addEventListener('click', (e) => {
+    const menu = document.getElementById('sideMenu');
+    const trigger = document.querySelector('.android-dots-trigger');
+    if (menu.classList.contains('active')) {
+        if (!menu.contains(e.target) && !trigger.contains(e.target)) {
+            menu.classList.remove('active');
+        }
     }
-    
-    .cookie-actions .btn {
-        flex: 1;
-    }
+});
+
+// functions.js
+
+function openPrivacy() {
+    const privacy = document.getElementById('privacyOverlay');
+    privacy.style.display = 'flex';
+    // Small timeout to allow display:flex to register before opacity transition
+    setTimeout(() => {
+        privacy.style.opacity = '1';
+    }, 10);
+}
+
+function closePrivacy() {
+    const privacy = document.getElementById('privacyOverlay');
+    privacy.style.opacity = '0';
+    setTimeout(() => {
+        privacy.style.display = 'none';
+    }, 400); // Matches your 0.4s transition in CSS
 }

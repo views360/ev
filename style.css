@@ -207,12 +207,17 @@ h1 {
     border-radius: 12px;
 }
 
-
 .card {
-    background: var(--panel-alt);
+    background: var(--panel);
+    color: var(--text);
     padding: 20px;
     border-radius: 12px;
-    border: 1px solid var(--border);
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.card strong {
+    color: #000000 !important;
 }
 
 .input-row {
@@ -368,6 +373,21 @@ body.light-mode #providerResults th:nth-child(even) {
     border: 1px solid var(--border);
 }
 
+.conclusion-white-border {
+    border: 1px solid #ffffff; /* The simple white border */
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: 20px;
+    width: 100%; /* Ensure it spans full width */
+    box-sizing: border-box;
+}
+
+/* Ensure text inside stays the theme color */
+.conclusion-white-border p, 
+.conclusion-white-border strong {
+    color: var(--text) !important;
+}
+
 .conclusion-card.good {
     background: rgba(34, 197, 94, 0.05);
     border-left: 5px solid var(--good);
@@ -379,13 +399,14 @@ body.light-mode #providerResults th:nth-child(even) {
 }
 
 .main-result {
-    font-size: 1.3rem;
+    font-size: 1.1rem;
     margin-bottom: 10px;
+    color: var(--bg); /* Dark text for the white box */
 }
 
 .speed-comparison-container {
     margin-top: 20px;
-    max-width: 500px;
+    max-width: 400px;
 }
 
 .mini-table {
@@ -405,7 +426,7 @@ body.light-mode #providerResults th:nth-child(even) {
 }
 
 .mini-table td {
-    padding: 12px;
+    padding: 0 12px;
     border-bottom: 1px solid var(--border);
 }
 
@@ -607,10 +628,12 @@ tr.bad td { color: var(--danger); }
 .results-heading {
     margin: 30px 0 0 0 !important;
     color: var(--accent);
+    letter-spacing: 0.2em;
 }
 
 .results-headingTRIP {
     color: var(--accent);
+    letter-spacing: 0.2em;
 }
 
 .results-header-container .jump-btn-pulse:hover {
@@ -629,11 +652,11 @@ tr.bad td { color: var(--danger); }
 }
 
 .comparison-label {
-    font-size: 0.75rem;
+    font-size: 1rem;
     font-weight: 800;
     color: var(--accent);
     text-transform: uppercase;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.2em;
 }
 
 @keyframes boxPulse {
@@ -686,8 +709,12 @@ tr.bad td { color: var(--danger); }
     transition: transform 0.4s ease-in-out;
 }
 
-.help-slide, .privacy-slide {
-    width: 20%;
+.help-slide {
+    width: 20%; 
+    flex-shrink: 0;
+}
+
+.help-slide, .standalone-slide {
     padding: 40px;
     box-sizing: border-box;
     text-align: center;
@@ -721,7 +748,8 @@ tr.bad td { color: var(--danger); }
     pointer-events: auto;
 }
 
-.privacy-slide {
+.standalone-slide {
+    width: 100%;
     display: block;
 }
 
