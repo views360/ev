@@ -194,15 +194,14 @@ h1 {
 .comparison-mode-box, 
 .card, 
 #breakEvenCard {
-    max-width: 420px; /* The master width you requested */
+    max-width: 420px !important; /* Forces the master width */
     width: 100%;
-    margin: 0 auto 20px auto;
+    margin-left: auto;
+    margin-right: auto;
     padding: 20px;
-    box-sizing: border-box;
-    background: var(--panel-alt);
-    border-radius: 12px;
-    border: 1px solid var(--border);
+    box-sizing: border-box; /* Ensures padding is included IN the 420px */
 }
+
 
 .card {
     background: var(--panel-alt);
@@ -462,12 +461,14 @@ tr.bad td { color: var(--danger); }
 .pill-toggle {
     position: relative;
     display: flex;
-    width: 100%; 
-    background: var(--bg); /* Darker background inside the card */
+    width: 100%; /* Scale to fit the 420px container minus card padding */
+    max-width: 100%; 
+    background: var(--bg);
     border: 1px solid var(--border);
     border-radius: 50px;
     padding: 4px;
     overflow: hidden;
+    box-sizing: border-box;
 }
 
 .pill-slider {
@@ -489,13 +490,14 @@ tr.bad td { color: var(--danger); }
     background: none;
     border: none;
     color: var(--text);
-    padding: 10px 0;
+    padding: 10px 5px; /* Reduced side padding from 10px to 5px */
     font-weight: 600;
     cursor: pointer;
     z-index: 2;
     transition: color 0.3s ease;
     font-family: inherit;
-    font-size: 0.9rem;
+    font-size: 0.85rem; /* Slightly smaller font to ensure fit */
+    white-space: nowrap; /* Prevents text wrapping */
 }
 
 .pill-btn.active {
@@ -610,16 +612,14 @@ tr.bad td { color: var(--danger); }
 }
 
 .comparison-mode-box {
-    border: 2px solid var(--accent);
-    padding: 20px;
-    border-radius: 16px;
+    border: 1px solid var(--border); /* Matches standard card border */
     background: var(--panel-alt);
-    box-shadow: var(--glow);
+    box-shadow: none; /* Removes the glow as requested */
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 15px;
-    animation: boxPulse 2s infinite ease-in-out;
+    animation: none; /* Stops the pulsating animation */
 }
 
 .comparison-label {
