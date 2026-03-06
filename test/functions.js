@@ -574,9 +574,9 @@ function calculate() {
             </div>`;
         
         const locationDisclaimer = `<p style="font-size:0.85rem; margin-top:12px; opacity:0.8;">* Times exclude the "80-100%" charging slowdown. Also, you will need to ensure that this provider has charging stations in your planned area of travel.</p>`;
-            
-            // Using the 'card' class to match the "Pre-journey starting charge" look
-            let conclusionHTML = `<div class="card" style="margin-top: 20px;">`; 
+    
+            // Applying the specific white-border class only here
+            let conclusionHTML = `<div class="conclusion-white-border">`; 
             
             if (bestProvider.savings > 0) {
                 conclusionHTML += `<p class="main-result"><strong>${bestProvider.name}</strong> is cheapest at the selected minimum charging rate of <strong>${minSpeedLabel}</strong> (saving <strong>£${bestProvider.savings.toFixed(2)}</strong>).</p>`;
