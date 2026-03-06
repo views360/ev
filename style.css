@@ -356,8 +356,8 @@ body.light-mode #providerResults th:nth-child(even) {
 
 .calc-lines {
     margin: 20px 0;
-    padding: 15px;
-    font-size: 1.1rem;
+    padding: 10px;
+    font-size: 1rem;
     border: solid 1px #808080;
     border-radius: 8px;
 }
@@ -1324,3 +1324,4 @@ body {
         flex: 1;
     }
 }
+
