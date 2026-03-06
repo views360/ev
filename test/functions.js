@@ -141,28 +141,11 @@ function createProviderBox(preset) {
 
 function addAllProviders() {
     const { minSpeed } = getInputs();
-    const providersContainer = document.getElementById("providers");
-    providersContainer.innerHTML = "";
-    
+    document.getElementById("providers").innerHTML = "";
     PRESETS.forEach(p => {
         const canSupport = p.rates.default || Object.keys(p.rates).some(s => Number(s) >= minSpeed);
         if (canSupport) createProviderBox(p);
     });
-
-    // 2. Handle Button Pulse Hand-off
-    const addAllBtn = document.getElementById("addAllBtn");
-    const collapseBtn = document.getElementById("toggleProvidersBtn");
-
-    if (addAllBtn) {
-        addAllBtn.classList.remove("pulse-green-initial");
-        addAllBtn.classList.add("no-glow");
-    }
-
-    if (collapseBtn) {
-        collapseBtn.classList.add("pulse-green-initial");
-    }
-
-    calculate(); // Refresh to apply pulses to newly added provider fields
 }
 
 function updateProviderFields(id) {
@@ -243,40 +226,26 @@ function calculate() {
     const uiPreText = document.getElementById("preConclusionsText");
     const sortContainer = document.getElementById("sortContainer");
 
-    const mainFieldIds = [
-        "journeyMiles", "batteryKwh", "soc", "efficiency", 
-        "startChargeRate", "adhoc", "efficiencyBE", "adhocBE"
-    ];
-
-    // 2. Apply pulse to empty main fields
-    mainFieldIds.forEach(id => {
-        const el = document.getElementById(id);
-        if (el) {
-            const val = parseFloat(el.value);
-            if (!el.value || val <= 0) {
-                el.classList.add('pulse-green-initial');
-            } else {
-                el.classList.remove('pulse-green-initial');
-            }
-        }
-    });
-
     if (sortContainer) sortContainer.style.display = isTripMode ? "block" : "none";
     if (tripGrid) tripGrid.style.display = isTripMode ? "grid" : "none";
     if (resultsHeader) resultsHeader.style.display = isTripMode ? "flex" : "none";
     if (uiResults) uiResults.style.display = isTripMode ? "flex" : "none";
     if (btnRow) btnRow.style.display = isTripMode ? "flex" : "none";
 
-    const fieldIds = ["journeyMiles", "batteryKwh", "soc", "efficiency", "efficiencyBE"];
-    
+    const fieldIds = [
+        "journeyMiles", "batteryKwh", "soc", "efficiency", 
+        "adhoc", "startChargeRate", "efficiencyBE", "adhocBE"
+    ];
+
     fieldIds.forEach(id => {
         const el = document.getElementById(id);
         if (el) {
-            // Pulse if empty or zero
-            if (!el.value || parseFloat(el.value) <= 0) {
-                el.classList.add('pulse-green-initial');
+            // If value is empty or 0 (and it's a number field), apply pulse
+            const val = parseFloat(el.value);
+            if (!el.value || val <= 0) {
+                el.classList.add('empty-pulse');
             } else {
-                el.classList.remove('pulse-green-initial');
+                el.classList.remove('empty-pulse');
             }
         }
     });

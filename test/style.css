@@ -17,49 +17,12 @@ html {
     --glow-strong: 0 0 20px rgba(56, 189, 248, 0.6);
     --neon-green: #39FF14;
     --neon-green-soft: rgba(57, 255, 20, 0.2);
-    --neon-green-glow: 0 0 10px rgba(57, 255, 20, 0.4);
-    --neon-green-glow-strong: 0 0 20px rgba(57, 255, 20, 0.6);
 }
 
 .empty-pulse {
     border-color: var(--neon-green) !important;
     box-shadow: 0 0 5px var(--neon-green-soft);
     animation: neonPulse 1.5s infinite ease-in-out;
-}
-
-.pulse-green {
-    border-color: var(--good) !important;
-    box-shadow: 0 0 5px rgba(34, 197, 94, 0.2);
-    animation: greenPulseBtn 1.5s infinite ease-in-out;
-}
-
-@keyframes greenPulseBtn {
-    0%, 100% { box-shadow: 0 0 5px rgba(34, 197, 94, 0.2); }
-    50% { box-shadow: 0 0 15px var(--good); }
-}
-
-.pulse-green-initial {
-    border-color: var(--good) !important;
-    box-shadow: 0 0 5px rgba(34, 197, 94, 0.2);
-    animation: greenGlow 1.5s infinite ease-in-out;
-}
-
-@keyframes greenGlow {
-    0%, 100% { box-shadow: 0 0 5px rgba(34, 197, 94, 0.2); }
-    50% { box-shadow: 0 0 15px var(--good); }
-}
-
-.no-glow {
-    animation: none !important;
-    box-shadow: none !important;
-}
-
-.btn-standard {
-    border: 1px solid var(--accent) !important;
-    background: var(--accent-soft);
-    color: var(--accent);
-    animation: none !important;
-    box-shadow: none !important;
 }
 
 @keyframes neonPulse {
@@ -125,16 +88,16 @@ h3 {
 }
 
 .btn-glow {
-    border: 1px solid var(--neon-green) !important;
+    border: 1px solid var(--accent) !important;
     background-color: var(--panel-alt);
-    color: var(--neon-green);
+    color: var(--accent);
     animation: tooltipPulse 2s infinite ease-in-out;
-    box-shadow: var(--neon-green-glow);
+    box-shadow: var(--glow);
 }
 
 @keyframes tooltipPulse {
-  0%, 100% { box-shadow: var(--neon-green-glow); }
-  50% { box-shadow: var(--neon-green-glow-strong); }
+  0%, 100% { box-shadow: var(--glow); }
+  50% { box-shadow: var(--glow-strong); }
 }
 
 @keyframes pulseGlow {
