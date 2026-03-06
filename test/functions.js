@@ -141,28 +141,28 @@ function createProviderBox(preset) {
 
 function addAllProviders() {
     const { minSpeed } = getInputs();
-    document.getElementById("providers").innerHTML = "";
+    const providersContainer = document.getElementById("providers");
+    providersContainer.innerHTML = "";
     
-    // Add logic for presets
     PRESETS.forEach(p => {
         const canSupport = p.rates.default || Object.keys(p.rates).some(s => Number(s) >= minSpeed);
         if (canSupport) createProviderBox(p);
     });
 
-    // 1. Remove pulse from "Add all" and reset it to standard blue style
+    // 2. Handle Button Pulse Hand-off
     const addAllBtn = document.getElementById("addAllBtn");
+    const collapseBtn = document.getElementById("toggleProvidersBtn");
+
     if (addAllBtn) {
         addAllBtn.classList.remove("pulse-green-initial");
         addAllBtn.classList.add("no-glow");
     }
 
-    // 2. Add pulse to the wide "Collapse" button
-    const collapseBtn = document.getElementById("toggleProvidersBtn");
     if (collapseBtn) {
         collapseBtn.classList.add("pulse-green-initial");
     }
 
-    calculate(); // Refresh the numbers
+    calculate(); 
 }
 
 function updateProviderFields(id) {
@@ -249,20 +249,16 @@ function calculate() {
     if (uiResults) uiResults.style.display = isTripMode ? "flex" : "none";
     if (btnRow) btnRow.style.display = isTripMode ? "flex" : "none";
 
-    const fieldIds = [
-        "journeyMiles", "batteryKwh", "soc", "efficiency", 
-        "adhoc", "startChargeRate", "efficiencyBE", "adhocBE"
-    ];
-
+    const fieldIds = ["journeyMiles", "batteryKwh", "soc", "efficiency", "efficiencyBE"];
+    
     fieldIds.forEach(id => {
         const el = document.getElementById(id);
         if (el) {
-            // If value is empty or 0 (and it's a number field), apply pulse
-            const val = parseFloat(el.value);
-            if (!el.value || val <= 0) {
-                el.classList.add('empty-pulse');
+            // Pulse if empty or zero
+            if (!el.value || parseFloat(el.value) <= 0) {
+                el.classList.add('pulse-green-initial');
             } else {
-                el.classList.remove('empty-pulse');
+                el.classList.remove('pulse-green-initial');
             }
         }
     });
