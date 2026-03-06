@@ -1137,13 +1137,6 @@ body {
     display: none;
 }
 
-/* Show only on Mobile/Tablets */
-@media (max-width: 768px) {
-    .mobile-only-text {
-        display: block;
-    }
-}
-
 
 
 
@@ -1152,6 +1145,10 @@ body {
 
 @media (max-width: 700px) {
 
+    .mobile-only-text {
+        display: block;
+    }
+    
     .toggle-container-block {
         margin: 20px 10px; /* 20px top/bottom, 10px left/right */
         width: auto; /* Allows margins to take effect */
