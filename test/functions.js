@@ -344,7 +344,7 @@ function calculate() {
         });
 
         let html = `<h2 class="results-heading" style="text-align: center">BREAK-EVEN ANALYSIS</h2>
-                    <div style="text-align: center; font-size: 0.8em">In mobile view, slide table left to view hidden columns.</div>
+                    <div class="mobile-only-text" style="text-align: center; font-size: 0.8em">Slide table left to view hidden columns.</div>
                     <div class="results-scroll">
                     <table>
                         <thead>
@@ -488,7 +488,7 @@ function calculate() {
         if (sortVal === "za") return b.name.localeCompare(a.name);
         return 0;
     });
-    let html = `<div style="font-size: 0.8em">In mobile view, slide table left to view hidden columns.</div><div class="results-scroll"><table><thead><tr>
+    let html = `<div class="mobile-only-text" style="font-size: 0.8em">Slide table left to view hidden columns.</div><div class="results-scroll"><table><thead><tr>
         <th>Provider (click hyperlink to view subscription info)</th>
         <th>Sub. Fee<div class="tooltip-container">
                             <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
