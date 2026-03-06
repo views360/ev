@@ -554,7 +554,7 @@ function calculate() {
     const conclusionsBox = document.getElementById("conclusionsBox");
     if (providers.length > 0) {
         const bestProvider = providers[0];
-        const timeLine = `Approx driving time (at 60mph): <strong>${(inputs.journeyMiles / 60).toFixed(1)} hours</strong>.`;
+        const timeLine = `Approximate driving time (at 60mph): <strong>${(inputs.journeyMiles / 60).toFixed(1)} hours</strong>.`;
         
         const minSpeedSelect = document.getElementById("minSpeed");
         const minSpeedLabel = minSpeedSelect.options[minSpeedSelect.selectedIndex].text;
@@ -563,12 +563,17 @@ function calculate() {
             <div class="speed-comparison-container">
                 <table class="mini-table">
                     <thead>
-                        <tr><th>Speed</th><th>Est. Charge Time</th></tr>
+                        <tr><th>Speed</th><th>Estimated Charge Time</th></tr>
                     </thead>
                     <tbody>
                         <tr><td>7kW (AC)</td><td>${(publicKwh / 7).toFixed(1)}h</td></tr>
+                        <tr><td>22kW (AC)</td><td>${(publicKwh / 22).toFixed(1)}h</td></tr>
+                        <tr><td>35kW (AC)</td><td>${(publicKwh / 35).toFixed(1)}h</td></tr>
                         <tr><td>50kW (Rapid)</td><td>${((publicKwh / 50) * 60).toFixed(0)}m</td></tr>
-                        <tr><td>150kW+ (Ultra)</td><td>${((publicKwh / 150) * 60).toFixed(0)}m</td></tr>
+                        <tr><td>100kW (Rapid)</td><td>${((publicKwh / 100) * 60).toFixed(0)}m</td></tr>
+                        <tr><td>150kW (Ultra)</td><td>${((publicKwh / 150) * 60).toFixed(0)}m</td></tr>
+                        <tr><td>200kW (Ultra)</td><td>${((publicKwh / 200) * 60).toFixed(0)}m</td></tr>
+                        <tr><td>300kW (Ultra)</td><td>${((publicKwh / 300) * 60).toFixed(0)}m</td></tr>
                     </tbody>
                 </table>
             </div>`;
