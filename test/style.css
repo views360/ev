@@ -650,11 +650,11 @@ tr.bad td { color: var(--danger); }
 }
 
 .comparison-label {
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 800;
     color: var(--accent);
     text-transform: uppercase;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.2em;
 }
 
 @keyframes boxPulse {
