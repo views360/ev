@@ -1342,18 +1342,36 @@ body {
         flex: 1;
     }
     
-    .results-header-container {
-        flex-direction: column !important; /* Stack items vertically */
-        gap: 20px !important;            /* Add space between the heading and buttons */
+.results-header-container {
+        display: flex !important; /* Ensure it stays visible */
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 15px !important;
     }
 
+    /* 2. Group Heading and Arrow to stay side-by-side */
+    /* If they aren't already in a <div>, this logic targets them directly */
+    .results-header-container h2, 
+    .results-header-container .jump-btn-pulse {
+        display: inline-flex;
+        vertical-align: middle;
+        margin: 0 !important;
+    }
+
+    /* 3. Force the two buttons to stay side-by-side underneath */
     .results-header-container .top-buttons {
+        display: flex !important;
+        flex-direction: row !important; /* Horizontal buttons */
         justify-content: center;
         width: 100%;
+        gap: 10px;
     }
 
-    .results-heading {
-        margin: 10px 0 0 0 !important;
-        text-align: center;
+    /* Optional: Make buttons slightly narrower to ensure they fit side-by-side on small screens */
+    .results-header-container .top-buttons .btn {
+        padding: 0 10px;
+        font-size: 0.8rem;
+        flex: 1; /* Makes them equal width */
+        max-width: 160px;
     }
 }
