@@ -686,7 +686,7 @@ tr.bad td { color: var(--danger); }
     transition: transform 0.4s ease-in-out;
 }
 
-.help-slide {
+.help-slide, .privacy-slide {
     width: 20%;
     padding: 40px;
     box-sizing: border-box;
@@ -719,6 +719,10 @@ tr.bad td { color: var(--danger); }
 .help-footer button, .close-x {
     cursor: pointer;
     pointer-events: auto;
+}
+
+.privacy-slide {
+    display: block;
 }
 
 #providerResults table th:first-child,
