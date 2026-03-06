@@ -146,6 +146,11 @@ function addAllProviders() {
         const canSupport = p.rates.default || Object.keys(p.rates).some(s => Number(s) >= minSpeed);
         if (canSupport) createProviderBox(p);
     });
+
+    const addAllBtn = document.getElementById("addAllBtn");
+    if (addAllBtn) {
+        addAllBtn.classList.remove("empty-pulse");
+    }
 }
 
 function updateProviderFields(id) {
