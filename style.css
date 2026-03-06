@@ -79,6 +79,14 @@ h3 {
     border-color: var(--accent) transparent transparent transparent;
 }
 
+.info-icon.small-bulb {
+    font-size: 0.8rem !important; /* Adjust this value until it looks right */
+    display: inline-block;
+    vertical-align: middle;
+    line-height: 1;
+    margin-left: 4px;
+}
+
 .preset-select-pulse {
     border: 1px solid var(--accent) !important;
     background-color: var(--panel-alt);
@@ -1324,4 +1332,3 @@ body {
         flex: 1;
     }
 }
-
