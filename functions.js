@@ -578,7 +578,7 @@ function calculate() {
                 </table>
             </div>`;
         
-        const locationDisclaimer = `<p style="font-size:0.85rem; margin-top:12px; opacity:0.8;">* Times exclude the "80-100%" charging slowdown. Also, you will need to ensure that this provider has charging stations in your planned area of travel.</p>`;
+        const locationDisclaimer = `<p style="font-size:0.85rem; margin-top:12px; opacity:0.8;">* Charging times exclude the "80-100%" charging slowdown. Also, you will need to ensure that this provider has charging stations in your planned area of travel.</p>`;
     
             // Applying the specific white-border class only here
             let conclusionHTML = `<div class="conclusion-white-border">`; 
