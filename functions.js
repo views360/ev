@@ -554,7 +554,7 @@ function calculate() {
     const conclusionsBox = document.getElementById("conclusionsBox");
     if (providers.length > 0) {
         const bestProvider = providers[0];
-        const timeLine = `<p class="approxTime">Approximate driving time (at 60mph) is <strong>${(inputs.journeyMiles / 60).toFixed(1)} hours</strong>.</p>`;
+        const timeLine = `<p class="approxTime">Approximate driving time for ${inputs.journeyMiles} at 60mph is <strong>${(inputs.journeyMiles / 60).toFixed(1)} hours</strong>.</p>`;
         
         const minSpeedSelect = document.getElementById("minSpeed");
         const minSpeedLabel = minSpeedSelect.options[minSpeedSelect.selectedIndex].text;
@@ -563,7 +563,7 @@ function calculate() {
             <div class="speed-comparison-container">
                 <table class="mini-table">
                     <thead>
-                        <tr><th>Speed</th><th>Estimated Charge Time</th></tr>
+                        <tr><th>Charge Speed</th><th>Estimated Charge Time</th></tr>
                     </thead>
                     <tbody>
                         <tr><td>7kW (AC)</td><td>${(publicKwh / 7).toFixed(1)} hours</td></tr>
