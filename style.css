@@ -79,6 +79,27 @@ h3 {
     border-color: var(--accent) transparent transparent transparent;
 }
 
+/* */
+/* Specific override for tooltips that should appear below the icon */
+.tooltip-box.tooltip-down {
+    bottom: auto;
+    top: 140%; /* Move to below the icon */
+    transform: translateX(-50%) translateY(-10px);
+}
+
+/* Adjust the arrow to point UP instead of DOWN */
+.tooltip-box.tooltip-down::after {
+    top: auto;
+    bottom: 100%;
+    border-color: transparent transparent var(--accent) transparent;
+}
+
+/* Ensure the animation matches the downward direction */
+.tooltip-container.active .tooltip-box.tooltip-down,
+.tooltip-container:hover .tooltip-box.tooltip-down {
+    transform: translateX(-50%) translateY(0);
+}
+
 .preset-select-pulse {
     border: 1px solid var(--accent) !important;
     background-color: var(--panel-alt);
