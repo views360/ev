@@ -658,6 +658,14 @@ tr.bad td { color: var(--danger); }
     gap: 15px;
     margin-top: 40px;
     margin-bottom: 10px;
+    flex-wrap: wrap;
+    text-align: center;
+}
+
+.results-title-group {
+    display: flex;
+    align-items: center;
+    gap: 15px;
 }
 
 .results-heading {
@@ -1361,5 +1369,15 @@ body {
     
     .calc-lines {
         font-size: 0.9rem;
+    }
+
+    .results-header-container {
+        flex-direction: column; /* Stacks the title-group and the btn-row */
+        gap: 10px;
+    }
+    
+    .btn-row {
+        margin: 0; /* Remove extra margins that might offset the buttons on mobile */
+        justify-content: center;
     }
 }
