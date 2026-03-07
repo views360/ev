@@ -94,6 +94,22 @@ h3 {
     border-color: transparent transparent var(--accent) transparent;
 }
 
+.tooltip-box.tooltip-reset-offset {
+    /* Moves the box 50px further to the left than the default center */
+    transform: translateX(calc(-50% - 50px)) translateY(10px) !important;
+}
+
+/* Ensure the arrow stays aligned with the lightbulb icon */
+.tooltip-box.tooltip-reset-offset::after {
+    left: calc(50% + 50px);
+}
+
+/* Maintain animation state when active/hovered */
+.tooltip-container.active .tooltip-box.tooltip-reset-offset,
+.tooltip-container:hover .tooltip-box.tooltip-reset-offset {
+    transform: translateX(calc(-50% - 50px)) translateY(0);
+}
+
 /* Ensure the animation matches the downward direction */
 .tooltip-container.active .tooltip-box.tooltip-down,
 .tooltip-container:hover .tooltip-box.tooltip-down {
