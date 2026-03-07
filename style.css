@@ -94,13 +94,15 @@ h3 {
     border-color: transparent transparent var(--accent) transparent !important;
 }
 
-.tooltip-box.tooltip-down.tooltip-reset-offset, tooltip-box.tooltip-reset-offset {
+.tooltip-box.tooltip-down.tooltip-reset-offset, 
+.tooltip-box.tooltip-reset-offset {
     /* Moves the box 50px further to the left than the default center */
     transform: translateX(calc(-50% - 50px)) translateY(10px) !important;
 }
 
 /* Ensure the arrow stays aligned with the lightbulb icon */
-.tooltip-box.tooltip-down.tooltip-reset-offset::after, tooltip-box.tooltip-reset-offset::after {
+.tooltip-box.tooltip-down.tooltip-reset-offset::after, 
+.tooltip-box.tooltip-reset-offset::after {
     left: calc(50% + 50px) !important;
 }
 
