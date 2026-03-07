@@ -1018,3 +1018,19 @@ function closePrivacy() {
         privacy.style.display = 'none';
     }, 400); // Matches your 0.4s transition in CSS
 }
+
+function openContact() {
+    const contact = document.getElementById('contactOverlay');
+    contact.style.display = 'flex';
+    setTimeout(() => {
+        contact.style.opacity = '1';
+    }, 10);
+}
+
+function closeContact() {
+    const contact = document.getElementById('contactOverlay');
+    contact.style.opacity = '0';
+    setTimeout(() => {
+        contact.style.display = 'none';
+    }, 400);
+}
