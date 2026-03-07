@@ -4,69 +4,59 @@
     <meta charset="UTF-8">
     <title>EV Subs Compare</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
-<div id="helpOverlay" class="help-overlay">
-    <div class="help-modal">
-        <button class="close-x" onclick="closeHelp()">×</button>
-        <div class="help-slides" id="helpSlides">
-            <div class="help-slide">
-                <h2>Welcome to the EV Subscription Comparison Tool (UK)</h2>
-                <p>Going on a long trip and want to know if a one-month EV charging subscription will save you money over PAYG rates? This tool will tell you!</p>
-				<p><strong>Note:</strong> Items that glow green are there to direct you.</p>
-				<p style="text-align: center; margin: 30px 0 25px 0"><img src="ev-mg.webp" label="EV" style="height: 50px" /></p>
-                <div class="help-footer">
-                    <button class="btn secondary empty-pulse" onclick="moveSlide(1)">Next&nbsp;&gt;</button>
-                </div>
-            </div>
-            <div class="help-slide">
-                <h2>Assessing Results</h2>
-                <p>After completing all fields, the results table at the bottom of the page will automatically update.</p>
-                <div class="help-footer">
-                    <button class="btn" onclick="moveSlide(-1)">&lt;&nbsp;Back</button>
-                    <button class="btn secondary empty-pulse" onclick="closeHelp()">Get&nbsp;Started</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<div id="privacyOverlay" class="help-overlay" style="display: none;">
-    <div class="help-modal">
-        <button class="close-x" onclick="closePrivacy()">×</button>
-        <div class="standalone-slide"> 
-            <h2>Privacy Policy</h2>
-            <p>Your privacy is important. No personally identifiable information (PII) is collected or stored by this tool.</p>
-            <div class="help-footer">
-                <button class="btn secondary" onclick="closePrivacy()">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
 <div class="app">
-	<div class="android-header-full">
-	    <h1 class="android-title-clean">EV Subs Compare (UK)</h1>
-	    <div class="android-dots-trigger" onclick="toggleMenu()">
-	        <span></span><span></span><span></span>
-	    </div>
-	</div>
+    <div class="android-header-full">
+        <h1 class="android-title-clean">EV Subs Compare (UK)</h1>
+        <div class="android-dots-trigger" onclick="toggleMenu()">
+            <span></span><span></span><span></span>
+        </div>
+    </div>
+
     <div id="sideMenu" class="chrome-style-menu">
-	    <div class="menu-content">
-	        <a class="menu-item-clean" onclick="toggleTheme(); toggleMenu();">
-	            <span>Light/Dark View</span>
-	        </a>
-	        <a class="menu-item-clean" onclick="resetAll()">
-	            <span>Reset All</span>
-	        </a>
-	    </div>
-	</div>
+        <div class="menu-content">
+            <a class="menu-item-clean" onclick="resetAll()">Reset All</a>
+        </div>
+    </div>
+
+    <div class="input-section">
+        <div class="input-group">
+            <label>Journey Miles</label>
+            <input type="number" id="journeyMiles" value="200" oninput="calculate()">
+        </div>
+        <div class="input-group">
+            <label>Battery Size (kWh)</label>
+            <input type="number" id="batteryKwh" value="64" oninput="calculate()">
+        </div>
+        <div class="input-group">
+            <label>Current SoC (%)</label>
+            <input type="number" id="soc" value="100" oninput="calculate()">
+        </div>
+        <div class="input-group">
+            <label>Efficiency (mi/kWh)</label>
+            <input type="number" id="efficiency" value="3.5" oninput="calculate()">
+        </div>
+        <div class="input-group">
+            <label>Ad-hoc PAYG Rate (p)</label>
+            <input type="number" id="adhoc" value="79" oninput="calculate()">
+        </div>
+        <input type="hidden" id="startChargeRate" value="0">
+        <input type="hidden" id="minSpeed" value="0">
+    </div>
+
+    <div class="controls">
+        <select id="sortResults" onchange="calculate()">
+            <option value="cheapest">Cheapest first</option>
+            <option value="az">A → Z</option>
+        </select>
+    </div>
+
     <div id="providerResults"></div>
     <div class="chart-wrapper">
-        <canvas id="costChart" height="220"></canvas>
+        <canvas id="costChart"></canvas>
     </div>
 </div>
 <script src="functions.js"></script>
