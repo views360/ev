@@ -563,7 +563,7 @@ function calculate() {
             <div class="speed-comparison-container">
                 <table class="mini-table">
                     <thead>
-                        <tr><th>Charging Speed</th><th>Estimated Charging Time</th></tr>
+                        <tr><th>Charging Speed</th><th>Journey Charging Time</th></tr>
                     </thead>
                     <tbody>
                         <tr style="${inputs.minSpeed == 7 ? 'font-weight:bold; color:var(--accent);' : ''}"><td>7kW (AC)</td><td>${(publicKwh / 7).toFixed(1)} hours</td></tr>
