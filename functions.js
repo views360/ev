@@ -37,25 +37,71 @@ function getInputs() {
     };
 }
 
+async function loadProviders() {
+    try {
+        const response = await fetch('providers.json');
+        const data = await response.json();
+        PRESETS = data.providers;
+        initApp();
+    } catch (error) {
+        console.error("Error loading providers:", error);
+    }
+}
+
+function initApp() {
+    const saved = getCookie("ev_trip_values");
+    if (saved) {
+        Object.keys(saved).forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.value = saved[id];
+        });
+    }
+    calculate();
+}
+
+function calculate() {
+    const inputs = getInputs();
+    setCookie("ev_trip_values", inputs);
+
+    const kwhNeeded = (inputs.journeyMiles / inputs.efficiency) - (inputs.batteryKwh * (inputs.soc / 100));
+    const netKwh = Math.max(0, kwhNeeded);
+
+    const results = PRESETS.map(p => {
+        let rate = p.rates.default;
+        if (inputs.startChargeRate > 0 && p.rates[inputs.startChargeRate]) {
+            rate = p.rates[inputs.startChargeRate];
+        }
+        
+        const cost = (p.subscription.monthlyCost || 0) + (netKwh * (rate / 100));
+        return { ...p, totalCost: cost, rateUsed: rate };
+    });
+
+    const sortVal = document.getElementById("sortResults").value;
+    if (sortVal === "cheapest") results.sort((a, b) => a.totalCost - b.totalCost);
+    
+    renderResults(results, netKwh);
+    updateChart(results);
+}
+
+function renderResults(results, netKwh) {
+    const container = document.getElementById("providerResults");
+    container.innerHTML = results.map(r => `
+        <div class="result-card">
+            <h3>${r.name}</h3>
+            <p>Total: £${r.totalCost.toFixed(2)}</p>
+            <small>Rate: ${r.rateUsed}p/kWh</small>
+        </div>
+    `).join('');
+}
+
+function toggleMenu() {
+    const menu = document.getElementById('sideMenu');
+    menu.classList.toggle('active');
+}
+
 function resetAll() {
-    localStorage.removeItem("ev_calc_settings");
     document.cookie = "ev_trip_values=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    document.cookie = "cookiesAccepted=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    window.location.href = window.location.pathname;
+    window.location.reload();
 }
 
-function toggleTheme() {
-    document.body.classList.toggle("light-mode");
-}
-
-function openPrivacy() {
-    const privacy = document.getElementById('privacyOverlay');
-    privacy.style.display = 'flex';
-    setTimeout(() => { privacy.style.opacity = '1'; }, 10);
-}
-
-function closePrivacy() {
-    const privacy = document.getElementById('privacyOverlay');
-    privacy.style.opacity = '0';
-    setTimeout(() => { privacy.style.display = 'none'; }, 400);
-}
+window.onload = loadProviders;
