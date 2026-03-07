@@ -554,7 +554,7 @@ function calculate() {
     const conclusionsBox = document.getElementById("conclusionsBox");
     if (providers.length > 0) {
         const bestProvider = providers[0];
-        const timeLine = `Approximate driving time (at 60mph): <strong>${(inputs.journeyMiles / 60).toFixed(1)} hours</strong>.`;
+        const timeLine = `Approximate driving time for ${(inputs.journeyMiles} miles at 60mph is <strong>${(inputs.journeyMiles / 60).toFixed(1)} hours</strong>.`;
         
         const minSpeedSelect = document.getElementById("minSpeed");
         const minSpeedLabel = minSpeedSelect.options[minSpeedSelect.selectedIndex].text;
@@ -584,9 +584,9 @@ function calculate() {
             let conclusionHTML = `<div class="conclusion-white-border">`; 
             
             if (bestProvider.savings > 0) {
-                conclusionHTML += `<h3 style="font-size: 1.2rem">PAYG vs SUBSCRIPTION CONCLUSION</h3><p class="main-result">A month's subscription with <strong>${bestProvider.name}</strong> is cheaper than PAYG based on the selected minimum charging rate of <strong>${minSpeedLabel}</strong> and the other information entered. The total journey cost will be <strong>£${bestProvider.totalJourneyCost.toFixed(2)}</strong>, which represents a saving of <strong>£${bestProvider.savings.toFixed(2)}</strong> over PAYG rates.</p>`;
+                conclusionHTML += `<h3>PAYG vs SUBSCRIPTION CONCLUSION</h3><p class="main-result">A month's subscription with <strong>${bestProvider.name}</strong> is cheaper than PAYG based on the selected minimum charging rate of <strong>${minSpeedLabel}</strong> and the other information entered. The total journey cost will be <strong>£${bestProvider.totalJourneyCost.toFixed(2)}</strong>, which represents a saving of <strong>£${bestProvider.savings.toFixed(2)}</strong> over PAYG rates.</p>`;
             } else {
-                conclusionHTML += `<h3 style="font-size: 1.2rem">PAYG vs SUBSCRIPTION CONCLUSION</h3><p class="main-result"><strong>Standard PAYG</strong> rates are cheaper than a subscription at the selected minimum charging rate of <strong>${minSpeedLabel}</strong> and the other information entered. The total journey cost will be <strong>£${bestProvider.totalJourneyCost.toFixed(2)}</strong>.</p>`;
+                conclusionHTML += `<h3>PAYG vs SUBSCRIPTION CONCLUSION</h3><p class="main-result"><strong>Standard PAYG</strong> rates are cheaper than a subscription at the selected minimum charging rate of <strong>${minSpeedLabel}</strong> and the other information entered. The total journey cost will be <strong>£${bestProvider.totalJourneyCost.toFixed(2)}</strong>.</p>`;
             }
             
             conclusionHTML += `${timeLine}${speedTableHtml}${locationDisclaimer}</div>`;
