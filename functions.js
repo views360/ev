@@ -1,6 +1,6 @@
 const setCookie = (name, value) => {
     const date = new Date();
-    date.setTime(date.getTime() + (30 * 24 * 60 * 60 * 1000)); // 30 days
+    date.setTime(date.getTime() + (30 * 24 * 60 * 60 * 1000));
     const cookieValue = encodeURIComponent(JSON.stringify(value));
     document.cookie = `${name}=${cookieValue};expires=${date.toUTCString()};path=/;SameSite=Lax`;
 };
@@ -21,9 +21,6 @@ const getCookie = (name) => {
     return null;
 };
 
-// ===============================
-// Global State
-// ===============================
 let PRESETS = [];
 let providerCount = 0;
 let chart = null;
@@ -40,29 +37,16 @@ function getInputs() {
     };
 }
 
-// ===============================
-// UI & Provider Management
-// ===============================
-
 function resetAll() {
-    // 1. Clear LocalStorage
     localStorage.removeItem("ev_calc_settings");
-    
-    // 2. Clear Trip Values Cookie
     document.cookie = "ev_trip_values=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    
-    // 3. Clear Cookie Acceptance (so banner reappears)
     document.cookie = "cookiesAccepted=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    
-    // 4. Reload page to apply changes
     window.location.href = window.location.pathname;
 }
 
 function shareLink() {
     const params = new URLSearchParams();
     params.set("mode", "trip-savings");
-
-    // The specific IDs used in the Trip & Vehicle section
     const tripIds = ["journeyMiles", "batteryKwh", "soc", "efficiency", "adhoc", "startChargeRate", "minSpeed"];
     
     tripIds.forEach(id => {
@@ -70,7 +54,6 @@ function shareLink() {
         if (el) params.set(id, el.value);
     });
 
-    // Add Providers
     const providers = [];
     document.querySelectorAll(".provider-box").forEach(box => {
         const id = box.dataset.id;
@@ -150,17 +133,14 @@ function createProviderBox(preset) {
 function addAllProviders() {
     const { minSpeed } = getInputs();
     const providersContainer = document.getElementById("providers");
-    const addAllBtn = document.getElementById("addAllBtn"); // Ensure this ID exists on your "Add All" button
+    const addAllBtn = document.getElementById("addAllBtn");
     const collapseBtn = document.getElementById("toggleProvidersBtn");
-
-    // 1. Clear existing and add new providers
     providersContainer.innerHTML = "";
     PRESETS.forEach(p => {
         const canSupport = p.rates.default || Object.keys(p.rates).some(s => Number(s) >= minSpeed);
         if (canSupport) createProviderBox(p);
     });
 
-    // 2. Shift the glow from "Add All" to "Collapse"
     if (addAllBtn) {
         addAllBtn.classList.remove("empty-pulse");
     }
@@ -230,10 +210,6 @@ function enforceSpeedRules() {
     });
 }
 
-// ===============================
-// Core Calculation & Graphing
-// ===============================
-
 function calculate() {
     const activePill = document.querySelector('.pill-btn.active');
     const isTripMode = activePill && activePill.textContent.trim() === "Trip Savings";
@@ -263,7 +239,6 @@ function calculate() {
         const el = document.getElementById(id);
         if (el) {
             const val = parseFloat(el.value);
-            // This applies the neon green pulse if the field is empty or 0
             if (!el.value || isNaN(val) || val <= 0) {
                 el.classList.add('empty-pulse');
             } else {
@@ -272,7 +247,6 @@ function calculate() {
         }
     });
 
-    // Handle provider-specific inputs if they exist
     document.querySelectorAll(".provider-box input[type='number'], .provider-box input[type='text']").forEach(input => {
         if (!input.value || input.value === "0") {
             input.classList.add('empty-pulse');
@@ -333,8 +307,8 @@ function calculate() {
 
                 beData.push({
                     name: p.name,
-                    url: p.subscription?.url, // Store URL
-                    comments: p.subscription?.comments || "", // Store Comments
+                    url: p.subscription?.url,
+                    comments: p.subscription?.comments || "",
                     speedDisplay: speedDisplay,
                     subCost: sub,
                     rate: rate,
@@ -409,8 +383,6 @@ function calculate() {
         inputs.adhoc <= 0;
     
     const providerBoxes = document.querySelectorAll(".provider-box");
-
-    // Sequential Validation Logic for Trip Mode
     if (tripIncomplete) {
         uiPreText.innerHTML = "Please complete all fields in the <strong>Trip & Vehicle</strong> section.";
         uiPreText.style.display = "block";
@@ -418,7 +390,7 @@ function calculate() {
         if (resultsHeader) resultsHeader.style.display = "none";
         if (uiShare) uiShare.style.display = "none";
         if (uiPdf) uiPdf.style.display = "none";
-        return; // Exit here if trip fields aren't valid
+        return;
     }
     
     if (providerBoxes.length === 0) {
@@ -487,7 +459,6 @@ function calculate() {
             return a.totalJourneyCost - b.totalJourneyCost;
         } 
         if (sortVal === "breakeven") {
-            // Move "Never" cases to the bottom
             const aNever = a.rate >= inputs.adhoc;
             const bNever = b.rate >= inputs.adhoc;
             if (aNever && !bNever) return 1;
@@ -524,12 +495,11 @@ function calculate() {
         </tr></thead><tbody>`;
     providers.forEach(p => {
         const rowClass = p.savings > 0 ? "good" : (p.savings < 0 ? "bad" : "");
-        // Add a 'jump to results' arrow and the provider link
         const jumpArrow = `<a href="#resultsHeader" title="Jump to results" style="text-decoration:none; margin-right:8px; color:var(--accent); font-size:1.1rem;">↓</a>`;
         const providerLink = p.url 
             ? `<a href="${p.url}" target="_blank" style="color:inherit; text-decoration:underline;">${p.name}</a>` 
             : p.name;
-        const displayName = `${providerLink}`;        // Determine display text for providers more expensive than PAYG
+        const displayName = `${providerLink}`; 
         const breakEvenText = p.rate < inputs.adhoc 
             ? `${p.breakEvenMiles.toFixed(0)} miles` 
             : "Never";
@@ -548,11 +518,6 @@ function calculate() {
     });
     document.getElementById("providerResults").innerHTML = html + `</tbody></table></div>`;
 
-
-    
- // ==========================================
-    // RESTORED CONCLUSIONS BOX START
-    // ==========================================
     const conclusionsBox = document.getElementById("conclusionsBox");
     if (providers.length > 0) {
         const bestProvider = providers[0];
@@ -582,8 +547,7 @@ function calculate() {
             </div>`;
         
         const locationDisclaimer = `<p style="font-size:0.85rem; margin-top:12px; opacity:0.8;">* Charging times exclude the "80-100%" charging slowdown. Also, you will need to ensure that this provider has charging stations in your planned area of travel.</p>`;
-    
-            // Applying the specific white-border class only here
+
             let conclusionHTML = `<div class="conclusion-white-border">`; 
             
             if (bestProvider.savings > 0) {
@@ -597,16 +561,8 @@ function calculate() {
         } else {
             conclusionsBox.innerHTML = "";
         }
-        // ==========================================
-        // RESTORED CONCLUSIONS BOX END
-        // ==========================================   
-
-
-
     
     drawGraph(inputs, providers);
-
-    // At the end of function calculate()
     const dataToSave = getInputs();
     setCookie("ev_trip_values", dataToSave);
 }
@@ -615,12 +571,12 @@ function drawGraph(core, providers) {
     const ctx = document.getElementById("costChart");
     if (chart) chart.destroy();
 
-    const maxMiles = Math.max(core.journeyMiles * 1.2, 300); // Use .journeyMiles
+    const maxMiles = Math.max(core.journeyMiles * 1.2, 300);
     const labels = Array.from({length: 11}, (_, i) => Math.round((maxMiles * i) / 10));
     
     const adhocData = labels.map(m => {
-        const pKwh = Math.max(0, m - (core.soc/100 * core.batteryKwh * core.efficiency)) / core.efficiency; // Use .batteryKwh
-        return (core.soc/100 * core.batteryKwh * core.startChargeRate/100) + (pKwh * core.adhoc/100); // Use .batteryKwh, .startChargeRate, .adhoc
+        const pKwh = Math.max(0, m - (core.soc/100 * core.batteryKwh * core.efficiency)) / core.efficiency;
+        return (core.soc/100 * core.batteryKwh * core.startChargeRate/100) + (pKwh * core.adhoc/100);
     });
 
     const datasets = [{
@@ -634,8 +590,8 @@ function drawGraph(core, providers) {
 
     providers.forEach((p, idx) => {
         const data = labels.map(m => {
-        const pKwh = Math.max(0, m - (core.soc/100 * core.batteryKwh * core.efficiency)) / core.efficiency; // Use .batteryKwh
-        return p.subCost + (core.soc/100 * core.batteryKwh * core.startChargeRate/100) + (pKwh * p.rate/100); // Use .batteryKwh, .startChargeRate
+        const pKwh = Math.max(0, m - (core.soc/100 * core.batteryKwh * core.efficiency)) / core.efficiency;
+        return p.subCost + (core.soc/100 * core.batteryKwh * core.startChargeRate/100) + (pKwh * p.rate/100);
         });
         datasets.push({
             label: p.name,
@@ -682,20 +638,15 @@ function setToggle(mode, btn) {
 function init() {
     const savedValues = getCookie("ev_trip_values");
     const urlParams = new URLSearchParams(window.location.search);
-    
-    // 1. Identify both dropdowns
     const speedTrip = document.getElementById("minSpeed");
     const speedBE = document.getElementById("minSpeedBE");
-
-    // 2. Define the sync and recalculate function
     const syncAndCalc = (e) => {
         const newValue = e.target.value;
         speedTrip.value = newValue;
         speedBE.value = newValue;
-        calculate(); // Refresh the tables/logic for the current mode
+        calculate();
     };
 
-    // 3. Attach listeners
     if (speedTrip && speedBE) {
         speedTrip.addEventListener('change', syncAndCalc);
         speedBE.addEventListener('change', syncAndCalc);
@@ -703,8 +654,6 @@ function init() {
 
     fetch("providers.json").then(r => r.json()).then(data => {
         PRESETS = data.providers;
-
-        // List of all IDs to restore
         const tripIds = ["journeyMiles", "batteryKwh", "soc", "efficiency", "adhoc", "startChargeRate", "minSpeed"];        
         tripIds.forEach(id => {
             const el = document.getElementById(id);
@@ -722,8 +671,6 @@ function init() {
         const effBE = document.getElementById("efficiencyBE");
         const adhocTrip = document.getElementById("adhoc");
         const adhocBE = document.getElementById("adhocBE");
-        
-        // Helper to sync and trigger calculation
         const syncFields = (source, target) => {
             source.addEventListener('input', () => {
                 target.value = source.value;
@@ -732,14 +679,12 @@ function init() {
         };
         
         if (effTrip && effBE) {
-            // Initial sync from saved/URL values
             effBE.value = effTrip.value; 
             syncFields(effTrip, effBE);
             syncFields(effBE, effTrip);
         }
         
         if (adhocTrip && adhocBE) {
-            // Initial sync from saved/URL values
             adhocBE.value = adhocTrip.value;
             syncFields(adhocTrip, adhocBE);
             syncFields(adhocBE, adhocTrip);
@@ -748,20 +693,16 @@ function init() {
         if (urlParams.has("p")) {
             try {
                 const sharedProviders = JSON.parse(urlParams.get("p"));
-                document.getElementById("providers").innerHTML = ""; // Clear existing
+                document.getElementById("providers").innerHTML = "";
                 sharedProviders.forEach(p => {
-                    // Recreate the box
                     createProviderBox(); 
                     const id = providerCount;
-                    // Fill the fields manually from the shared data
                     document.getElementById(`name${id}`).value = p.name;
                     document.getElementById(`subCost${id}`).value = p.sub;
                     document.getElementById(`rate${id}`).value = p.rate;
                     document.getElementById(`preset${id}`).value = p.preset;
-                    // Ensure the speed row/logic is updated if it was a preset
                     if(p.preset !== 'Custom') {
                         updateProviderFields(id);
-                        // Re-override with the specific shared rate in case it differed
                         document.getElementById(`rate${id}`).value = p.rate;
                     }
                 });
@@ -772,17 +713,14 @@ function init() {
 
         const modeParam = urlParams.get("mode");
         if (modeParam === "trip-savings") {
-            // Find the Trip Savings button and activate it
-            const tripBtn = document.querySelector('.pill-btn:nth-child(3)'); // The second button
+            const tripBtn = document.querySelector('.pill-btn:nth-child(3)');
             if (tripBtn) setToggle('trip-savings', tripBtn);
         } else {
-            // Default behavior: logic to ensure card visibility matches Break Even
             const activePill = document.querySelector('.pill-btn.active');
             const currentMode = activePill.textContent.trim() === "Trip Savings" ? 'trip-savings' : 'break-even';
             setToggle(currentMode, activePill);
         }
 
-        // Restore Provider dropdown (ensure this ID exists or remove if not used)
         const provEl = document.getElementById("provider");
         if (provEl && savedValues && savedValues.provider) {
             provEl.value = savedValues.provider;
@@ -793,14 +731,6 @@ function init() {
     });
 }
 
-/* ============================================
-   PDF EXPORT — OFF-SCREEN CLONE (NO FLASH)
-   PURE B&W + MARGINS + FIT TO A4
-   GRAPH REMOVED, SORT REMOVED, HEADER ADDED
-   ============================================ */
-/* ============================================
-   PDF EXPORT — UPDATED FOR BREAK EVEN COLUMNS
-   ============================================ */
 function exportPdf() {
     const results = document.getElementById("results");
     const pdfBtn = document.getElementById("pdfBtn");
@@ -811,21 +741,17 @@ function exportPdf() {
     pdfBtn.style.pointerEvents = "none"; 
     pdfBtn.style.opacity = "0.7";
 
-    // Create off-screen clone
     const cloneWrapper = document.createElement("div");
     const cloneId = "pdfClone_" + Math.floor(Math.random() * 1000000);
     cloneWrapper.id = cloneId;
     cloneWrapper.style.position = "absolute";
     cloneWrapper.style.left = "-9999px";
     cloneWrapper.style.top = "0";
-    // Increase width to ensure table doesn't wrap/squash the new columns
     cloneWrapper.style.width = "1200px"; 
 
     const clone = results.cloneNode(true);
     cloneWrapper.appendChild(clone);
     document.body.appendChild(cloneWrapper);
-
-    // Remove UI elements not needed in PDF
     const uiElements = cloneWrapper.querySelectorAll(".input-group, .chart-wrapper, .btn-row");
     uiElements.forEach(el => {
         const label = el.querySelector("label");
@@ -833,7 +759,6 @@ function exportPdf() {
         if (el.classList.contains("chart-wrapper")) el.remove();
     });
 
-    // Apply print-safe styles to the clone
     const override = document.createElement("style");
     override.innerHTML = `
         #${cloneId} { padding: 20px; background: #fff; }
@@ -854,8 +779,6 @@ function exportPdf() {
         html2canvas(cloneWrapper, { scale: 2 }).then(canvas => {
             cloneWrapper.remove();
             override.remove();
-
-            // Convert to B&W
             const bwCanvas = document.createElement("canvas");
             const bctx = bwCanvas.getContext("2d");
             bwCanvas.width = canvas.width;
@@ -882,10 +805,7 @@ function exportPdf() {
             pdf.setFontSize(16);
             pdf.text("EV Subscription Comparison Report", pageWidth / 2, 15, { align: "center" });
             pdf.addImage(bwCanvas.toDataURL("image/png"), "PNG", margin, 25, imgWidth, imgHeight);
-            
             pdf.save("ev-charging-comparison.pdf");
-            
-            // Restore button
             pdfBtn.textContent = originalText;
             pdfBtn.style.pointerEvents = "auto";
             pdfBtn.style.opacity = "1";
@@ -895,14 +815,10 @@ function exportPdf() {
 
 window.addEventListener("DOMContentLoaded", init);
 
-// ===============================
-// Help Modal Logic
-// ===============================
 let currentSlide = 0;
 
 function moveSlide(step) {
     const container = document.getElementById('helpSlides');
-    // This will now correctly find ONLY the 5 welcome slides
     const slides = document.querySelectorAll('.help-slide'); 
     const totalSlides = slides.length; 
 
@@ -920,7 +836,6 @@ function closeHelp() {
     if (overlay) {
         overlay.style.opacity = '0';
         overlay.style.transition = 'opacity 0.3s ease';
-        // Wait for fade out before removing from view
         setTimeout(() => {
             overlay.style.display = 'none';
         }, 300);
@@ -928,14 +843,12 @@ function closeHelp() {
 }
 
 function toggleTooltip(el) {
-    // Toggle the 'active' class on the parent container
     const container = el.closest('.tooltip-container');
     if (container) {
         container.classList.toggle('active');
     }
 }
 
-// Optional: Close tooltip when clicking elsewhere
 document.addEventListener('click', (e) => {
     if (!e.target.closest('.tooltip-container')) {
         document.querySelectorAll('.tooltip-container.active').forEach(openTooltip => {
@@ -960,7 +873,6 @@ function toggleProviders() {
         btn.textContent = "Expand Providers List";
     }
 
-    // Remove the glow when clicked
     btn.classList.remove("empty-pulse");
 }
 
@@ -973,8 +885,7 @@ document.addEventListener('DOMContentLoaded', () => {
 function acceptCookies() {
     const date = new Date();
     date.setTime(date.getTime() + (365 * 24 * 60 * 60 * 1000));
-    document.cookie = `cookiesAccepted=true;expires=${date.toUTCString()};path=/;SameSite=Lax`;
-    
+    document.cookie = `cookiesAccepted=true;expires=${date.toUTCString()};path=/;SameSite=Lax`;    
     closeCookieBanner();
 }
 
@@ -991,7 +902,6 @@ function toggleMenu() {
     menu.classList.toggle('active');
 }
 
-// Ensure clicking outside the Chrome-style menu closes it
 document.addEventListener('click', (e) => {
     const menu = document.getElementById('sideMenu');
     const trigger = document.querySelector('.android-dots-trigger');
@@ -1002,12 +912,9 @@ document.addEventListener('click', (e) => {
     }
 });
 
-// functions.js
-
 function openPrivacy() {
     const privacy = document.getElementById('privacyOverlay');
     privacy.style.display = 'flex';
-    // Small timeout to allow display:flex to register before opacity transition
     setTimeout(() => {
         privacy.style.opacity = '1';
     }, 10);
@@ -1018,7 +925,7 @@ function closePrivacy() {
     privacy.style.opacity = '0';
     setTimeout(() => {
         privacy.style.display = 'none';
-    }, 400); // Matches your 0.4s transition in CSS
+    }, 400);
 }
 
 function openContact() {
