@@ -586,7 +586,7 @@ function calculate() {
             if (bestProvider.savings > 0) {
                 conclusionHTML += `<p class="main-result"><strong>${bestProvider.name}</strong> is cheapest at the selected minimum charging rate of <strong>${minSpeedLabel}</strong> (saving <strong>£${bestProvider.savings.toFixed(2)}</strong>).</p>`;
             } else {
-                conclusionHTML += `<p class="main-result"><strong>Standard PAYG</strong> is cheapest at the selected minimum charging rate of <strong>${minSpeedLabel}</strong>.</p>`;
+                conclusionHTML += `<h3>PAYG vs SUB Conclusion</h3><p class="main-result"><strong>Standard PAYG</strong> is cheapest at the selected minimum charging rate of <strong>${minSpeedLabel}</strong>.</p>`;
             }
             
             conclusionHTML += `${timeLine}${speedTableHtml}${locationDisclaimer}</div>`;
