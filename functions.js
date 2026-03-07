@@ -566,14 +566,14 @@ function calculate() {
                         <tr><th>Charge Speed</th><th>Estimated Charge Time</th></tr>
                     </thead>
                     <tbody>
-                        <tr><td>7kW (AC)</td><td>${(publicKwh / 7).toFixed(1)} hours</td></tr>
-                        <tr><td>22kW (AC)</td><td>${(publicKwh / 22).toFixed(1)} hours</td></tr>
-                        <tr><td>35kW (AC)</td><td>${(publicKwh / 35).toFixed(1)} hours </td></tr>
-                        <tr style="${minSpeedValue === 50 ? 'font-weight:bold; color:var(--accent);' : ''}"><td>50kW (Rapid)</td><td>${((publicKwh / 50) * 60).toFixed(0)} minutes</td></tr>
-                        <tr><td>100kW (Rapid)</td><td>${((publicKwh / 100) * 60).toFixed(0)} minutes</td></tr>
-                        <tr><td>150kW (Ultra)</td><td>${((publicKwh / 150) * 60).toFixed(0)} minutes</td></tr>
-                        <tr><td>200kW (Ultra)</td><td>${((publicKwh / 200) * 60).toFixed(0)} minutes</td></tr>
-                        <tr><td>300kW (Ultra)</td><td>${((publicKwh / 300) * 60).toFixed(0)} minutes</td></tr>
+                        <tr style="${inputs.minSpeed == 7 ? 'font-weight:bold; color:var(--accent);' : ''}"><td>7kW (AC)</td><td>${(publicKwh / 7).toFixed(1)} hours</td></tr>
+                        <tr style="${inputs.minSpeed == 22 ? 'font-weight:bold; color:var(--accent);' : ''}"><td>22kW (AC)</td><td>${(publicKwh / 22).toFixed(1)} hours</td></tr>
+                        <tr style="${inputs.minSpeed == 35 ? 'font-weight:bold; color:var(--accent);' : ''}"><td>35kW (AC)</td><td>${(publicKwh / 35).toFixed(1)} hours</td></tr>
+                        <tr style="${inputs.minSpeed == 50 ? 'font-weight:bold; color:var(--accent);' : ''}"><td>50kW (Rapid)</td><td>${((publicKwh / 50) * 60).toFixed(0)} minutes</td></tr>
+                        <tr style="${inputs.minSpeed == 100 ? 'font-weight:bold; color:var(--accent);' : ''}"><td>100kW (Rapid)</td><td>${((publicKwh / 100) * 60).toFixed(0)} minutes</td></tr>
+                        <tr style="${inputs.minSpeed == 150 ? 'font-weight:bold; color:var(--accent);' : ''}"><td>150kW (Ultra)</td><td>${((publicKwh / 150) * 60).toFixed(0)} minutes</td></tr>
+                        <tr style="${inputs.minSpeed == 200 ? 'font-weight:bold; color:var(--accent);' : ''}"><td>200kW (Ultra)</td><td>${((publicKwh / 200) * 60).toFixed(0)} minutes</td></tr>
+                        <tr style="${inputs.minSpeed == 300 ? 'font-weight:bold; color:var(--accent);' : ''}"><td>300kW (Ultra)</td><td>${((publicKwh / 300) * 60).toFixed(0)} minutes</td></tr>
                     </tbody>
                 </table>
             </div>`;
@@ -1017,4 +1017,3 @@ function closePrivacy() {
         privacy.style.display = 'none';
     }, 400); // Matches your 0.4s transition in CSS
 }
-
