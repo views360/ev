@@ -357,7 +357,7 @@ body.light-mode #providerResults th:nth-child(even) {
 .calc-lines {
     margin: 10px 0;
     padding: 10px;
-    font-size: 0.9rem;
+    font-size: 1.2rem;
     border: solid 1px #808080;
     border-radius: 8px;
 }
@@ -1318,5 +1318,9 @@ body {
     
     .cookie-actions .btn {
         flex: 1;
+    }
+    
+    .calc-lines {
+        font-size: 0.9rem;
     }
 }
