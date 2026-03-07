@@ -1380,4 +1380,22 @@ body {
         margin: 0; /* Remove extra margins that might offset the buttons on mobile */
         justify-content: center;
     }
+
+    .results-header-container .btn-row {
+        display: flex;
+        flex-direction: row; /* Force side-by-side */
+        flex-wrap: nowrap;   /* Prevent them from stacking */
+        gap: 8px;
+        width: 100%;
+        justify-content: center;
+    }
+
+    /* Target the buttons specifically within the results header */
+    .results-header-container .btn {
+        flex: 1;             /* Grow to fill the space equally */
+        padding: 0 8px;      /* Significantly reduced padding */
+        font-size: 0.75rem;  /* Smaller font for mobile fit */
+        height: 36px;        /* Slightly slimmer height */
+        white-space: nowrap; /* Keep text on one line */
+    }
 }
