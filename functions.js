@@ -584,9 +584,9 @@ function calculate() {
             let conclusionHTML = `<div class="conclusion-white-border">`; 
             
             if (bestProvider.savings > 0) {
-                conclusionHTML += `<h3>PAYG vs SUB CONCLUSION</h3><p class="main-result"><strong>${bestProvider.name}</strong> is cheapest at the selected minimum charging rate of <strong>${minSpeedLabel}</strong> (saving <strong>£${bestProvider.savings.toFixed(2)}</strong>).</p>`;
+                conclusionHTML += `<h3>PAYG vs SUB CONCLUSION</h3><p class="main-result"><strong>${bestProvider.name}</strong> is cheapest at the selected minimum charging rate of <strong>${minSpeedLabel}</strong> at a cost of <strong>£${bestProvider.totalJourneyCost.toFixed(2)}</strong> (saving <strong>£${bestProvider.savings.toFixed(2)}</strong>).</p>`;
             } else {
-                conclusionHTML += `<h3>PAYG vs SUB CONCLUSION</h3><p class="main-result"><strong>Standard PAYG</strong> is cheapest at the selected minimum charging rate of <strong>${minSpeedLabel}</strong>.</p>`;
+                conclusionHTML += `<h3>PAYG vs SUB CONCLUSION</h3><p class="main-result"><strong>Standard PAYG</strong> is cheapest at the selected minimum charging rate of <strong>${minSpeedLabel}</strong> at a cost of <strong>£${bestProvider.totalJourneyCost.toFixed(2)}</strong>.</p>`;
             }
             
             conclusionHTML += `${timeLine}${speedTableHtml}${locationDisclaimer}</div>`;
