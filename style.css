@@ -80,11 +80,11 @@ h3 {
     border-color: var(--accent) transparent transparent transparent;
 }
 
-/* */
 /* Specific override for tooltips that should appear below the icon */
 .tooltip-box.tooltip-down {
     bottom: auto;
     top: 140%; /* Move to below the icon */
+    /* Center the box, then nudge left 50px */
     transform: translateX(calc(-50% - 50px)) translateY(10px) !important;
 }
 
@@ -92,13 +92,15 @@ h3 {
 .tooltip-box.tooltip-down::after {
     top: auto;
     bottom: 100%;
+    /* Keep arrow aligned with the bulb by nudging it right by the same 50px */
+    left: calc(50% + 50px) !important;
     border-color: transparent transparent var(--accent) transparent;
 }
 
-/* Ensure the animation matches the downward direction */
+/* LOCK the position during hover/active animations */
 .tooltip-container.active .tooltip-box.tooltip-down,
 .tooltip-container:hover .tooltip-box.tooltip-down {
-    transform: translateX(-50%) translateY(0);
+    transform: translateX(calc(-50% - 50px)) translateY(0) !important;
 }
 
 .preset-select-pulse {
@@ -1351,3 +1353,4 @@ body {
         font-size: 0.9rem;
     }
 }
+
