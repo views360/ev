@@ -39,6 +39,7 @@ h3 {
     display: inline-block;
     cursor: pointer;
     margin-left: 4px;
+    z-index: 5001;
 }
 
 .tooltip-box {
@@ -1208,6 +1209,8 @@ body {
 
     .mobile-only-text {
         display: block;
+        position: relative; /* Must be positioned for z-index to work */
+        z-index: 1;
     }
     
     .toggle-container-block {
