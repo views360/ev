@@ -362,10 +362,6 @@ body.light-mode #providerResults th:nth-child(even) {
     border-radius: 8px;
 }
 
-.calc-lines div {
-    margin-bottom: 8px;
-}
-
 .conclusion-card {
     padding: 24px;
     border-radius: 12px;
