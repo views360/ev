@@ -425,6 +425,7 @@ function calculate() {
         uiPreText.innerHTML = "Before you may view a comparison, you must select at least one provider from the list of providers (above).";
         uiPreText.style.display = "block";
         uiResults.style.display = "none";
+        if (resultsHeader) resultsHeader.style.display = "none";
         if (uiShare) uiShare.style.display = "none";
         if (uiPdf) uiPdf.style.display = "none";
         return;
