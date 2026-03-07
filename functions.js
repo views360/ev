@@ -415,6 +415,7 @@ function calculate() {
         uiPreText.innerHTML = "Please complete all fields in the <strong>Trip & Vehicle</strong> section.";
         uiPreText.style.display = "block";
         uiResults.style.display = "none";
+        if (resultsHeader) resultsHeader.style.display = "none";
         if (uiShare) uiShare.style.display = "none";
         if (uiPdf) uiPdf.style.display = "none";
         return; // Exit here if trip fields aren't valid
