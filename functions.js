@@ -443,7 +443,7 @@ function calculate() {
     const publicKwh = publicMiles / inputs.efficiency;
     const totalAdhocCost = startChargeCost + (publicKwh * (inputs.adhoc / 100));
     
-    document.getElementById("preChargeLine").innerHTML = `<h3>PAYG Conclusions</h3>Pre-journey starting charge: <strong>${startChargeKwh.toFixed(1)} kWh</strong> (£${startChargeCost.toFixed(2)})`;
+    document.getElementById("preChargeLine").innerHTML = `<h3>PAYG Summary</h3>Pre-journey starting charge: <strong>${startChargeKwh.toFixed(1)} kWh</strong> (£${startChargeCost.toFixed(2)})`;
     document.getElementById("homeRangeLine").innerHTML = `Range from pre-journey starting charge: <strong>${initialRange.toFixed(0)} miles</strong> <div class="tooltip-container">
                             <span class="info-icon" style="font-size:0.8rem" onclick="toggleTooltip(this)">💡</span>
                           <div class="tooltip-box">This is the distance you can expect to drive before your first public charge along your route.</div>`;
@@ -584,7 +584,7 @@ function calculate() {
             let conclusionHTML = `<div class="conclusion-white-border">`; 
             
             if (bestProvider.savings > 0) {
-                conclusionHTML += `<p class="main-result"><strong>${bestProvider.name}</strong> is cheapest at the selected minimum charging rate of <strong>${minSpeedLabel}</strong> (saving <strong>£${bestProvider.savings.toFixed(2)}</strong>).</p>`;
+                conclusionHTML += `<h3>PAYG vs SUB Conclusion</h3><p class="main-result"><strong>${bestProvider.name}</strong> is cheapest at the selected minimum charging rate of <strong>${minSpeedLabel}</strong> (saving <strong>£${bestProvider.savings.toFixed(2)}</strong>).</p>`;
             } else {
                 conclusionHTML += `<h3>PAYG vs SUB Conclusion</h3><p class="main-result"><strong>Standard PAYG</strong> is cheapest at the selected minimum charging rate of <strong>${minSpeedLabel}</strong>.</p>`;
             }
