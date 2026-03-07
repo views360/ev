@@ -361,9 +361,9 @@ function calculate() {
                                 <th>Speed<div class="tooltip-container tooltip-down">
                             <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
                           <div class="tooltip-box">If the provider's discounted charge rate is tied to a charging speed (selected in the form above), it will be specified in this column. If the provider offers more than one speed at the same discounted charge rate, you will see <strong>'Max. available'</strong>.</div></th>
-                                <th>Sub. Fee<div class="tooltip-container tooltip-down">
-                            <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
-                          <div class="tooltip-box">This is the provider's subscription fee, which gives you access to their discounted charge rate for ONE MONTH.</div></th>
+                                <th>Sub. Fee<div class="tooltip-container">
+                                <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
+                                <div class="tooltip-box tooltip-down">This is the provider's subscription fee, which gives you access to their discounted charge rate for ONE MONTH.</div></th>
                                 <th>Disc. Rate<div class="tooltip-container tooltip-down">
                             <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
                           <div class="tooltip-box">This is the provider's discounted charge rate (per kWh) that is available after subscribing for one month. Note that some providers have variable charge rates depending on location and time of day.</div></th>
