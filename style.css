@@ -94,19 +94,19 @@ h3 {
     border-color: transparent transparent var(--accent) transparent !important;
 }
 
-.tooltip-box.tooltip-down.tooltip-reset-offset {
+.tooltip-reset-offset {
     /* Moves the box 50px further to the left than the default center */
     transform: translateX(calc(-50% - 50px)) translateY(10px) !important;
 }
 
 /* Ensure the arrow stays aligned with the lightbulb icon */
-.tooltip-box.tooltip-down.tooltip-reset-offset::after {
-    left: calc(50% + 50px);
+.tooltip-reset-offset::after {
+    left: calc(50% + 50px) !important;
 }
 
 /* Maintain animation state when active/hovered */
-.tooltip-container.active .tooltip-box.tooltip-down.tooltip-reset-offset,
-.tooltip-container:hover .tooltip-box.tooltip-down.tooltip-reset-offset {
+.tooltip-container.active .tooltip-reset-offset,
+.tooltip-container:hover .tooltip-reset-offset {
     transform: translateX(calc(-50% - 50px)) translateY(0) !important;
 }
 
