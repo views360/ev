@@ -84,7 +84,7 @@ h3 {
 .tooltip-box.tooltip-down {
     bottom: auto;
     top: 140%; /* Move to below the icon */
-    transform: translateX(-75%) translateY(-10px);
+    transform: translateX(calc(-50% - 50px)) translateY(10px);
 }
 
 /* Adjust the arrow to point UP instead of DOWN */
