@@ -443,7 +443,7 @@ function calculate() {
     const publicKwh = publicMiles / inputs.efficiency;
     const totalAdhocCost = startChargeCost + (publicKwh * (inputs.adhoc / 100));
     
-    document.getElementById("preChargeLine").innerHTML = `<h3>PAYG Benchmark Stats</h3>Pre-journey starting charge: <strong>${startChargeKwh.toFixed(1)} kWh</strong> (£${startChargeCost.toFixed(2)})`;
+    document.getElementById("preChargeLine").innerHTML = `<h3>PAYG Conclusions</h3>Pre-journey starting charge: <strong>${startChargeKwh.toFixed(1)} kWh</strong> (£${startChargeCost.toFixed(2)})`;
     document.getElementById("homeRangeLine").innerHTML = `Range from pre-journey starting charge: <strong>${initialRange.toFixed(0)} miles</strong> <div class="tooltip-container">
                             <span class="info-icon" style="font-size:0.8rem" onclick="toggleTooltip(this)">💡</span>
                           <div class="tooltip-box">This is the distance you can expect to drive before your first public charge along your route.</div>`;
