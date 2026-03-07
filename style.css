@@ -1386,8 +1386,9 @@ body {
         flex-direction: row; /* Force side-by-side */
         flex-wrap: nowrap;   /* Prevent them from stacking */
         gap: 8px;
-        width: 90%;
+        width: 100%;
         justify-content: center;
+        margin-bottom: 25px;
     }
 
     /* Target the buttons specifically within the results header */
