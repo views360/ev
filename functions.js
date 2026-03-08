@@ -785,7 +785,7 @@ function exportPdf() {
         </style>
         
         <div class="pdf-header">
-            <h1 style="color:#000">EV Trip Savings Report</h1>
+            <strong style="font-size:24px; color:#000">EV SUBSCRIPTIONS COMPARISON REPORT</strong>
             <p>Generated on ${new Date().toLocaleDateString('en-GB')}</p>
         </div>
         
