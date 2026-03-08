@@ -237,7 +237,7 @@ function enforceSpeedRules() {
 function calculate() {
     const activePill = document.querySelector('.pill-btn.active');
     const isTripMode = activePill && activePill.textContent.trim() === "Trip Savings";
-
+    const conclusionsBox = document.getElementById("conclusionsBox");
     const beCard = document.getElementById("breakEvenCard");
     if (beCard) beCard.style.display = isTripMode ? "none" : "block";
     
@@ -282,6 +282,7 @@ function calculate() {
     });
 
     if (!isTripMode) {
+        if (conclusionsBox) conclusionsBox.style.display = "none";
         const efficiency = parseFloat(document.getElementById("efficiencyBE").value);
         const adhocRate = parseFloat(document.getElementById("adhocBE").value) || 0;
         const minSpeedSelection = parseFloat(document.getElementById("minSpeedBE").value) || 0;
@@ -1035,4 +1036,5 @@ function closeContact() {
     setTimeout(() => {
         contact.style.display = 'none';
     }, 400);
+
 }
