@@ -59,8 +59,7 @@ function resetAll() {
     if (providersContainer) {
         providersContainer.innerHTML = "";
     }
-
-    window.location.href = window.location.pathname;
+    window.location.href = "index.html";
 }
 
 function shareLink() {
