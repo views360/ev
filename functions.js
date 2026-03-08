@@ -770,7 +770,7 @@ function exportPdf() {
         <style>
             #pdf-render-area * { color: #000 !important; }
             .pdf-header { text-align: center; margin-bottom: 10px; }
-            .pdf-section-title { font-size: 22px; padding-bottom: 5px; margin-top: 20px; }
+            .pdf-section-title { font-size: 22px; margin-top: 20px; }
             .pdf-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 10px; margin-bottom: 30px; }
             .pdf-table th, .pdf-table td { border: 1px solid #000; padding: 8px; text-align: left; }
             .pdf-table th { background: #f2f2f2; }
