@@ -762,37 +762,51 @@ function exportPdf() {
     cloneWrapper.style.position = "absolute";
     cloneWrapper.style.left = "-9999px";
     cloneWrapper.style.top = "0";
-    cloneWrapper.style.width = "1200px"; 
+    cloneWrapper.style.width = "1000px";
 
     const clone = results.cloneNode(true);
     cloneWrapper.appendChild(clone);
     document.body.appendChild(cloneWrapper);
 
-    const uiElements = cloneWrapper.querySelectorAll(".input-group, .chart-wrapper, .btn-row");
-    uiElements.forEach(el => {
-        const label = el.querySelector("label");
-        if (label && label.textContent.trim() === "Sort results") el.remove();
-        if (el.classList.contains("chart-wrapper")) el.remove();
-    });
+    const uiElements = cloneWrapper.querySelectorAll(".input-group, .chart-wrapper, .btn-row, .info-icon, .mobile-only-text");
+    uiElements.forEach(el => el.remove());
 
     const override = document.createElement("style");
     override.innerHTML = `
-        #${cloneId} { padding: 20px; background: #fff; }
+        #${cloneId} { padding: 30px; background: #fff; }
         #${cloneId} * {
             background: #ffffff !important;
             color: #000000 !important;
-            border-color: #000000 !important;
             box-shadow: none !important;
             font-family: Arial, sans-serif !important;
+            direction: ltr !important; /* Force Left-to-Right */
         }
-        #${cloneId} table { width: 100%; border-collapse: collapse; font-size: 12px; }
-        #${cloneId} th, #${cloneId} td { border: 1px solid #000; padding: 6px; text-align: left; }
-        #${cloneId} .good, #${cloneId} .bad { background: #fff !important; font-weight: bold; }
+        #${cloneId} table { 
+            width: 100% !important; 
+            border-collapse: collapse !important; 
+            font-size: 11px !important;
+            table-layout: auto !important; /* Allow natural column widths */
+        }
+        #${cloneId} th, #${cloneId} td { 
+            border: 1px solid #000 !important; 
+            padding: 8px !important; 
+            text-align: left !important; /* Force alignment */
+            vertical-align: middle !important;
+        }
+        #${cloneId} .good, #${cloneId} .bad { font-weight: bold !important; }
+        /* Ensure the Provider column (first-child) is explicitly positioned */
+        #${cloneId} td:first-child, #${cloneId} th:first-child {
+            text-align: left !important;
+        }
     `;
     document.head.appendChild(override);
 
     requestAnimationFrame(() => {
-        html2canvas(cloneWrapper, { scale: 2 }).then(canvas => {
+        html2canvas(cloneWrapper, { 
+            scale: 2,
+            useCORS: true,
+            logging: false 
+        }).then(canvas => {
             cloneWrapper.remove();
             override.remove();
 
@@ -806,7 +820,7 @@ function exportPdf() {
             const pixels = imgData.data;
             for (let i = 0; i < pixels.length; i += 4) {
                 const grey = 0.299 * pixels[i] + 0.587 * pixels[i+1] + 0.114 * pixels[i+2];
-                const bw = grey < 180 ? 0 : 255;
+                const bw = grey < 200 ? 0 : 255;
                 pixels[i] = pixels[i+1] = pixels[i+2] = bw;
             }
             bctx.putImageData(imgData, 0, 0);
