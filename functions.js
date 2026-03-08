@@ -899,6 +899,19 @@ function closeHelp() {
     }
 }
 
+function initHelp() {
+    const helpOverlay = document.getElementById('helpOverlay');
+    if (helpOverlay && helpOverlay.style.display !== 'none') {
+        setTimeout(() => {
+            if (typeof currentSlide !== 'undefined' && currentSlide === 0) {
+                moveSlide(1);
+            }
+        }, 3000);
+    }
+}
+
+window.addEventListener('DOMContentLoaded', initHelp);
+
 function toggleTooltip(el) {
     const container = el.closest('.tooltip-container');
     if (container) {
