@@ -222,6 +222,7 @@ function calculate() {
     const btnRow = document.querySelector(".btn-row");
     const uiResults = document.getElementById("results");
     const uiPreText = document.getElementById("preConclusionsText");
+    const conclusionsBox = document.getElementById("conclusionsBox");
     const sortContainer = document.getElementById("sortContainer");
 
     if (sortContainer) sortContainer.style.display = isTripMode ? "block" : "none";
@@ -256,11 +257,11 @@ function calculate() {
     });
 
     if (!isTripMode) {
+        if (conclusionsBox) conclusionsBox.style.display = "none";
         const efficiency = parseFloat(document.getElementById("efficiencyBE").value);
         const adhocRate = parseFloat(document.getElementById("adhocBE").value) || 0;
         const minSpeedSelection = parseFloat(document.getElementById("minSpeedBE").value) || 0;
         const conclusionsBox = document.getElementById("conclusionsBox");
-        if (conclusionsBox) conclusionsBox.style.display = "none";
         
         if (isNaN(efficiency) || efficiency <= 0 || isNaN(adhocRate) || adhocRate <= 0) {
             uiPreText.innerHTML = "Please enter valid <strong>Efficiency</strong> and <strong>PAYG Rate</strong> values, or use the toggle at the top to switch to TRIP SAVINGS mode.";
@@ -376,18 +377,18 @@ function calculate() {
     const inputs = getInputs();
     const uiShare = document.getElementById("shareBtn");
     const uiPdf = document.getElementById("pdfBtn");
-
+    const providerBoxes = document.querySelectorAll(".provider-box");
     const tripIncomplete = 
         inputs.journeyMiles <= 0 || 
         inputs.batteryKwh <= 0 || 
         inputs.efficiency <= 0 || 
         inputs.adhoc <= 0;
-    
-    const providerBoxes = document.querySelectorAll(".provider-box");
+
     if (tripIncomplete) {
         uiPreText.innerHTML = "Please complete all fields in the <strong>Trip & Vehicle</strong> section.";
         uiPreText.style.display = "block";
         uiResults.style.display = "none";
+        conclusionsBox.style.display = "none";
         if (resultsHeader) resultsHeader.style.display = "none";
         if (uiShare) uiShare.style.display = "none";
         if (uiPdf) uiPdf.style.display = "none";
@@ -398,6 +399,7 @@ function calculate() {
         uiPreText.innerHTML = "Before you may view a comparison, you must select at least one provider from the list of providers (above).";
         uiPreText.style.display = "block";
         uiResults.style.display = "none";
+        conclusionsBox.style.display = "block";
         if (resultsHeader) resultsHeader.style.display = "none";
         if (uiShare) uiShare.style.display = "none";
         if (uiPdf) uiPdf.style.display = "none";
@@ -406,6 +408,7 @@ function calculate() {
 
     uiPreText.style.display = "none";
     uiResults.style.display = "block";
+    conclusionsBox.style.display = "block";
     if (uiShare) uiShare.style.display = "";
     if (uiPdf) uiPdf.style.display = "";
     document.querySelector(".calc-lines").style.display = "block";
