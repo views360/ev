@@ -874,6 +874,16 @@ window.addEventListener("DOMContentLoaded", init);
 
 let currentSlide = 0;
 
+function startSplashSequence() {
+    const overlay = document.getElementById('helpOverlay');
+    setTimeout(() => {
+        const activeSlide = overlay.querySelector('.help-slide.active');
+        if (activeSlide && activeSlide.classList.contains('splash-slide')) {
+            nextHelpSlide();
+        }
+    }, 1200);
+}
+
 function moveSlide(step) {
     const container = document.getElementById('helpSlides');
     const slides = document.querySelectorAll('.help-slide'); 
