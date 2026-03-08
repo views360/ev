@@ -754,18 +754,15 @@ function exportPdf() {
 
     if (!providerRows.length || !pdfBtn) return;
 
-    // UI Feedback
     const originalText = pdfBtn.textContent;
     pdfBtn.textContent = "Generating...";
     pdfBtn.style.pointerEvents = "none";
     pdfBtn.style.opacity = "0.7";
 
-    // 1. Create a sterile off-screen container
     const printContainer = document.createElement("div");
     printContainer.id = "pdf-render-area";
     printContainer.style.cssText = "position:absolute; left:-9999px; width:800px; padding:40px; background:#fff; color:#000; font-family:Arial, sans-serif;";
 
-    // 2. Build the HTML with internal styles to force Black text
     let contentHtml = `
         <style>
             #pdf-render-area * { color: #000 !important; }
@@ -807,7 +804,6 @@ function exportPdf() {
             </thead>
             <tbody>`;
 
-    // Manually map rows to ensure Provider (cols[0]) is always on the left
     providerRows.forEach(row => {
         const cols = row.querySelectorAll("td");
         if (cols.length >= 6) {
@@ -830,13 +826,11 @@ function exportPdf() {
         </div>`;
 
     printContainer.innerHTML = contentHtml;
-    
-    // Scrub unwanted UI elements from the cloned HTML
-    printContainer.querySelectorAll(".info-icon, .jump-btn-pulse, .mini-table, .mobile-only-text").forEach(el => el.remove());
+
+    printContainer.querySelectorAll(".info-icon, .jump-btn-pulse, .mini-table, .mobile-only-text, p[style*='opacity:0.8']").forEach(el => el.remove());
 
     document.body.appendChild(printContainer);
 
-    // 3. Render to Canvas then PDF
     html2canvas(printContainer, { 
         scale: 2,
         useCORS: true 
@@ -850,7 +844,6 @@ function exportPdf() {
         pdf.addImage(canvas.toDataURL("image/png"), "PNG", 10, 15, imgWidth, imgHeight);
         pdf.save("EV-Trip-Analysis.pdf");
 
-        // Cleanup
         document.body.removeChild(printContainer);
         pdfBtn.textContent = originalText;
         pdfBtn.style.pointerEvents = "auto";
