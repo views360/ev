@@ -434,6 +434,7 @@ function calculate() {
 
     uiPreText.style.display = "none";
     uiResults.style.display = "block";
+    conclusionsBox.style.display = "block";
     if (uiShare) uiShare.style.display = "";
     if (uiPdf) uiPdf.style.display = "";
     document.querySelector(".calc-lines").style.display = "block";
