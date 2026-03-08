@@ -173,7 +173,7 @@ h3 {
     animation: none; 
 }
 
-body.light-mode {
+.light-mode {
     --bg: #f8fafc;
     --panel: #ffffff;
     --panel-alt: #f1f5f9;
