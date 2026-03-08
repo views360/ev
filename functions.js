@@ -933,7 +933,25 @@ function toggleProviders() {
     btn.classList.remove("empty-pulse");
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener('DOMContentLoaded', () => {
+    const track = document.getElementById('helpSlides');
+    
+    // --- 1. YOUR REQUESTED ANIMATION SEQUENCE ---
+    if (track) {
+        // Start the automatic sequence
+        track.classList.add('intro-animation');
+
+        // When the 5-second animation finishes on Slide 3
+        track.addEventListener('animationend', () => {
+            track.classList.remove('intro-animation');
+            // Lock the position on Slide 3 (Index 2)
+            track.style.transform = `translateX(-28.5714%)`;
+            // Sync the manual index so 'Next' starts from Slide 3
+            currentSlide = 2; 
+        });
+    }
+
+    // --- 2. YOUR ORIGINAL COOKIE/BANNER LOGIC ---
     const savedMode = getCookie('calcMode');
 
     if (savedMode) {
@@ -953,7 +971,8 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     } else {
         if (!getCookie('cookiesAccepted')) {
-            document.getElementById('cookieBanner').style.display = 'block';
+            const banner = document.getElementById('cookieBanner');
+            if (banner) banner.style.display = 'block';
         }
     }
 });
