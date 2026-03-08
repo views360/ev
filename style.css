@@ -751,19 +751,19 @@ tr.bad td { color: var(--danger); }
 
 /* Update the Cinematic Drive-By Animation */
 @keyframes driveBySequence {
-    /* 0% to 10%: Slide 1 (Blank) moves out, Slide 2 (Car) moves in IMMEDIATELY */
+    /* 0% to 15%: Slide 1 (Blank) immediately moves out, Slide 2 (Car) moves in */
     0%   { transform: translateX(0); }
-    10%  { transform: translateX(-14.2857%); }
+    15%  { transform: translateX(-14.2857%); }
     
-    /* 10% to 85%: THE PAUSE. The car stays on screen because the value does not change */
+    /* 15% to 85%: THE PAUSE. The car stays stationary here. */
     85%  { transform: translateX(-14.2857%); }
     
-    /* 85% to 100%: The car whizzes off, bringing in Slide 3 (The Text) */
+    /* 85% to 100%: The car slides off, bringing in Slide 3 (The Text) */
     100% { transform: translateX(-28.5714%); }
 }
 
 .intro-animation {
-    /* 'forwards' ensures it stays on Slide 3 when finished */
+    /* forwards: ensures it stays on Slide 3 (the text) when done */
     animation: driveBySequence 5s ease-in-out forwards;
 }
 
