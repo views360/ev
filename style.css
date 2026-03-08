@@ -740,8 +740,8 @@ tr.bad td { color: var(--danger); }
 
 .help-slides {
     display: flex;
-    width: 700%; 
-    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 700%; /* 7 slides */
+    transition: transform 0.5s ease-out; /* For manual navigation later */
 }
 
 .help-slide {
@@ -751,20 +751,20 @@ tr.bad td { color: var(--danger); }
 
 /* Update the Cinematic Drive-By Animation */
 @keyframes driveBySequence {
-    /* 0% to 20%: Slide 1 (Blank) moves out immediately to bring Slide 2 (Car) in */
+    /* 0% to 10%: Slide 1 (Blank) moves out, Slide 2 (Car) moves in IMMEDIATELY */
     0%   { transform: translateX(0); }
-    20%  { transform: translateX(-14.2857%); }
+    10%  { transform: translateX(-14.2857%); }
     
-    /* 20% to 80%: THE PAUSE. The car stays in the center because the value doesn't change */
-    80%  { transform: translateX(-14.2857%); }
+    /* 10% to 85%: THE PAUSE. The car stays on screen because the value does not change */
+    85%  { transform: translateX(-14.2857%); }
     
-    /* 80% to 100%: The car speeds off to reveal Slide 3 (Welcome Text) */
+    /* 85% to 100%: The car whizzes off, bringing in Slide 3 (The Text) */
     100% { transform: translateX(-28.5714%); }
 }
 
 .intro-animation {
-    /* Total duration 5s. Linear timing ensures the 'pause' is static and clean. */
-    animation: driveBySequence 5s linear forwards;
+    /* 'forwards' ensures it stays on Slide 3 when finished */
+    animation: driveBySequence 5s ease-in-out forwards;
 }
 
 /* Ensure slides don't stretch */
