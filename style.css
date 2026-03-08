@@ -1222,9 +1222,9 @@ body {
 
 @keyframes intro-sequence {
     0% { transform: translateX(0); }                                      /* Start instantly */
-    5% { transform: translateX(-14.5%); }                               /* Quick slide-in (shifted from 20%) */
-    55% { transform: translateX(-15%); }                               /* Slow-motion crawl (duration reduced to 30%) */
-    75%, 100% { transform: translateX(-28.5714285714%); }                  /* Fast exit to Slide 3 */
+    10% { transform: translateX(-14.5%); }                               /* Quick slide-in (shifted from 20%) */
+    60% { transform: translateX(-15%); }                               /* Slow-motion crawl (duration reduced to 30%) */
+    90%, 100% { transform: translateX(-28.5714285714%); }                  /* Fast exit to Slide 3 */
 }
 
 .intro-animation {
