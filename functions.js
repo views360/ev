@@ -21,6 +21,25 @@ const getCookie = (name) => {
     return null;
 };
 
+document.addEventListener('DOMContentLoaded', () => {
+    const track = document.getElementById('helpSlides');
+    
+    // 1. Start the automatic intro
+    track.classList.add('intro-animation');
+
+    // 2. When intro finishes, set the state to Slide 3 (index 2) 
+    // and remove animation so manual 'Next' buttons work.
+    track.addEventListener('animationend', () => {
+        track.classList.remove('intro-animation');
+        
+        // Update your existing currentSlide variable to index 2 (the 3rd slide)
+        currentSlide = 2; 
+        
+        // Set the track position manually so it stays on the first info card
+        track.style.transform = `translateX(-${currentSlide * 100}%)`;
+    });
+});
+
 let PRESETS = [];
 let providerCount = 0;
 let chart = null;
