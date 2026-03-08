@@ -747,102 +747,68 @@ function init() {
 }
 
 function exportPdf() {
-    const results = document.getElementById("results");
     const pdfBtn = document.getElementById("pdfBtn");
-    if (!results || !pdfBtn) return;
-    
+    const providerRows = document.querySelectorAll("#providerResults tbody tr");
+    if (providerRows.length === 0 || !pdfBtn) return;
+
     const originalText = pdfBtn.textContent;
     pdfBtn.textContent = "Generating...";
-    pdfBtn.style.pointerEvents = "none"; 
+    pdfBtn.style.pointerEvents = "none";
     pdfBtn.style.opacity = "0.7";
 
-    const cloneWrapper = document.createElement("div");
-    const cloneId = "pdfClone_" + Math.floor(Math.random() * 1000000);
-    cloneWrapper.id = cloneId;
-    cloneWrapper.style.position = "absolute";
-    cloneWrapper.style.left = "-9999px";
-    cloneWrapper.style.top = "0";
-    cloneWrapper.style.width = "1000px";
+    const printContainer = document.createElement("div");
+    printContainer.style.position = "absolute";
+    printContainer.style.left = "-9999px";
+    printContainer.style.width = "800px";
+    printContainer.style.padding = "40px";
+    printContainer.style.background = "#fff";
+    printContainer.style.color = "#000";
 
-    const clone = results.cloneNode(true);
-    cloneWrapper.appendChild(clone);
-    document.body.appendChild(cloneWrapper);
+    let tableHtml = `
+        <h1 style="text-align:center; font-family:Arial; margin-bottom:20px;">EV Charging Comparison</h1>
+        <table style="width:100%; border-collapse:collapse; font-family:Arial; font-size:12px;">
+            <thead>
+                <tr style="background:#f2f2f2;">
+                    <th style="border:1px solid #000; padding:8px; text-align:left;">Provider</th>
+                    <th style="border:1px solid #000; padding:8px; text-align:left;">Sub. Fee</th>
+                    <th style="border:1px solid #000; padding:8px; text-align:left;">Rate</th>
+                    <th style="border:1px solid #000; padding:8px; text-align:left;">Trip Cost</th>
+                    <th style="border:1px solid #000; padding:8px; text-align:left;">vs. PAYG</th>
+                    <th style="border:1px solid #000; padding:8px; text-align:left;">Break Even</th>
+                </tr>
+            </thead>
+            <tbody>`;
 
-    const uiElements = cloneWrapper.querySelectorAll(".input-group, .chart-wrapper, .btn-row, .info-icon, .mobile-only-text");
-    uiElements.forEach(el => el.remove());
+    providerRows.forEach(row => {
+        const cols = row.querySelectorAll("td");
+        tableHtml += `
+            <tr>
+                <td style="border:1px solid #000; padding:8px;">${cols[0].innerText.split('\n')[0]}</td>
+                <td style="border:1px solid #000; padding:8px;">${cols[1].innerText}</td>
+                <td style="border:1px solid #000; padding:8px;">${cols[2].innerText}</td>
+                <td style="border:1px solid #000; padding:8px;">${cols[3].innerText}</td>
+                <td style="border:1px solid #000; padding:8px;">${cols[4].innerText}</td>
+                <td style="border:1px solid #000; padding:8px;">${cols[5].innerText}</td>
+            </tr>`;
+    });
 
-    const override = document.createElement("style");
-    override.innerHTML = `
-        #${cloneId} { padding: 30px; background: #fff; }
-        #${cloneId} * {
-            background: #ffffff !important;
-            color: #000000 !important;
-            box-shadow: none !important;
-            font-family: Arial, sans-serif !important;
-            direction: ltr !important; /* Force Left-to-Right */
-        }
-        #${cloneId} table { 
-            width: 100% !important; 
-            border-collapse: collapse !important; 
-            font-size: 11px !important;
-            table-layout: auto !important; /* Allow natural column widths */
-        }
-        #${cloneId} th, #${cloneId} td { 
-            border: 1px solid #000 !important; 
-            padding: 8px !important; 
-            text-align: left !important; /* Force alignment */
-            vertical-align: middle !important;
-        }
-        #${cloneId} .good, #${cloneId} .bad { font-weight: bold !important; }
-        /* Ensure the Provider column (first-child) is explicitly positioned */
-        #${cloneId} td:first-child, #${cloneId} th:first-child {
-            text-align: left !important;
-        }
-    `;
-    document.head.appendChild(override);
+    tableHtml += `</tbody></table>`;
+    printContainer.innerHTML = tableHtml;
+    document.body.appendChild(printContainer);
 
-    requestAnimationFrame(() => {
-        html2canvas(cloneWrapper, { 
-            scale: 2,
-            useCORS: true,
-            logging: false 
-        }).then(canvas => {
-            cloneWrapper.remove();
-            override.remove();
+    html2canvas(printContainer, { scale: 2 }).then(canvas => {
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF("p", "mm", "a4");
+        const imgWidth = 190; 
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
-            const bwCanvas = document.createElement("canvas");
-            const bctx = bwCanvas.getContext("2d");
-            bwCanvas.width = canvas.width;
-            bwCanvas.height = canvas.height;
-            bctx.drawImage(canvas, 0, 0);
+        pdf.addImage(canvas.toDataURL("image/png"), "PNG", 10, 20, imgWidth, imgHeight);
+        pdf.save("ev-charging-report.pdf");
 
-            const imgData = bctx.getImageData(0, 0, bwCanvas.width, bwCanvas.height);
-            const pixels = imgData.data;
-            for (let i = 0; i < pixels.length; i += 4) {
-                const grey = 0.299 * pixels[i] + 0.587 * pixels[i+1] + 0.114 * pixels[i+2];
-                const bw = grey < 200 ? 0 : 255;
-                pixels[i] = pixels[i+1] = pixels[i+2] = bw;
-            }
-            bctx.putImageData(imgData, 0, 0);
-
-            const { jsPDF } = window.jspdf;
-            const pdf = new jsPDF("p", "mm", "a4");
-            const pageWidth = pdf.internal.pageSize.getWidth();
-            const margin = 10;
-            const usableWidth = pageWidth - (margin * 2);
-            const imgWidth = usableWidth;
-            const imgHeight = (bwCanvas.height * imgWidth) / bwCanvas.width;
-
-            pdf.setFontSize(16);
-            pdf.text("EV Subscription Comparison Report", pageWidth / 2, 15, { align: "center" });
-            pdf.addImage(bwCanvas.toDataURL("image/png"), "PNG", margin, 25, imgWidth, imgHeight);
-            
-            pdf.save("ev-charging-comparison.pdf");
-            
-            pdfBtn.textContent = originalText;
-            pdfBtn.style.pointerEvents = "auto";
-            pdfBtn.style.opacity = "1";
-        });
+        document.body.removeChild(printContainer);
+        pdfBtn.textContent = originalText;
+        pdfBtn.style.pointerEvents = "auto";
+        pdfBtn.style.opacity = "1";
     });
 }
 
