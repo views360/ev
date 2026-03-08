@@ -6,6 +6,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="stylesheet" href="style.css">
+    <script>
+        // THEME GUARD: Immediately applies dark/light mode before the page renders
+        (function() {
+            const getCookie = (name) => {
+                const nameEQ = name + "=";
+                const ca = document.cookie.split(';');
+                for (let i = 0; i < ca.length; i++) {
+                    let c = ca[i].trim();
+                    if (c.indexOf(nameEQ) === 0) {
+                        try {
+                            return JSON.parse(decodeURIComponent(c.substring(nameEQ.length)));
+                        } catch (e) { return null; }
+                    }
+                }
+                return null;
+            };
+            const theme = getCookie('themePref');
+            if (theme === 'dark') {
+                document.documentElement.classList.add('dark-mode');
+            } else {
+                document.documentElement.classList.add('light-mode');
+            }
+        })();
+    </script>
     <style>
         .content-section {
             padding: 40px 25px;
@@ -35,74 +59,86 @@
             text-decoration: underline;
         }
     </style>
-    <script>
-        function getThemeCookie(name) {
-            const nameEQ = name + "=";
-            const ca = document.cookie.split(';');
-            for (let i = 0; i < ca.length; i++) {
-                let c = ca[i].trim();
-                if (c.indexOf(nameEQ) === 0) {
-                    try {
-                        return JSON.parse(decodeURIComponent(c.substring(nameEQ.length)));
-                    } catch (e) { return null; }
-                }
-            }
-            return null;
-        }
-    
-        const theme = getThemeCookie('themePref');
-        if (theme === 'dark') {
-            document.body.classList.add('dark-mode');
-        } else {
-            document.body.classList.add('light-mode');
-        }
-    </script>
 </head>
-<body class="light-mode">
+<body>
     <div class="app">
         <div class="android-dots-trigger" onclick="toggleMenu()">
-            <span></span>
-            <span></span>
-            <span></span>
+            <span></span><span></span><span></span>
         </div>
-        
+
         <nav id="sideMenu" class="side-menu">
             <div class="menu-header">Menu</div>
             <a class="menu-item-clean" href="index.html">
                 <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cGF0aCBkPSJNMyA5bDktN2w5IDd2MTFhMiAyIDAgMCAxLTIgMkg1YTIgMiAwIDAgMS0yLTJWOXoiIHN0cm9rZT0iIzk0YTNiOCIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPC9zdmc+" class="menu-icon-svg">
                 <span>Back to Calculator</span>
             </a>
+            <a class="menu-item-clean" href="javascript:void(0)" onclick="toggleTheme()">
+                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSI1IiBzdHJva2U9IiM5NGEzYjgiIHN0cm9rZS13aWR0aD0iMiIvPgogIDxwYXRoIGQ9Ik0xMiAxdjJNMTIgMjF2Mk00LjIyIDQuMjJsMS40MiAxLjQyTTE4LjM2IDE4LjM2bDEuNDIgMS40Mk0xIDExaDJNMjEgMTFoMk00LjIyIDE5Ljc4bDEuNDItMS40Mk0xOC4zNiA1LjY0bDEuNDItMS40MiIgc3Ryb2tlPSIjOTRhM2I4IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8L3N2Zz4=" class="menu-icon-svg">
+                <span>Toggle Theme</span>
+            </a>
         </nav>
+
         <div class="android-header-full">
-            <h1 class="android-title-clean">EV Subs Compare (UK)</h1>
+            <h1 class="android-title-clean">Optimising your EV charging strategy</h1>
         </div>
 
         <div class="content-section">
             <a href="index.html" class="back-link">← Back to Calculator</a>
             
-            <h1>Optimising Your EV Charging Strategy</h1>
             <p>Welcome to <strong>EV Subs Compare</strong>, a dedicated utility designed to help UK electric vehicle drivers navigate the increasingly complex landscape of public charging costs. As the UK transitions toward electric mobility, charging providers like Tesla, IONITY, and BP Pulse have introduced various subscription models that offer significant discounts in exchange for a monthly fee.</p>
 
             <h2>Our Mission</h2>
             <p>The goal of this tool is to provide transparency. Choosing between a standard Pay-As-You-Go (PAYG) rate and a monthly subscription can be difficult without doing the math. We provide a data-driven approach to help you decide if a one-month subscription is a savvy financial move for your specific driving habits.</p>
 
             <h2>How the Comparisons Work</h2>
-            <p>Our tool operates in two distinct modes to suit different user needs:</p>
             <ul>
-                <li><strong>Break-Even Analysis:</strong> This mode calculates the exact number of miles you need to drive using a provider's discounted rate to "pay back" the subscription fee. If your monthly mileage exceeds this number, the subscription is officially saving you money.</li>
-                <li><strong>Trip Savings:</strong> Planning a long holiday or a cross-country journey? This mode allows you to input your specific trip mileage and vehicle efficiency to see the total cost difference between PAYG and subscription rates for that single journey.</li>
+                <li><strong>Break-Even Analysis:</strong> This mode calculates the exact number of miles you need to drive using a provider's discounted rate to "pay back" the subscription fee.</li>
+                <li><strong>Trip Savings:</strong> This mode allows you to input your specific trip mileage and vehicle efficiency to see the total cost difference between PAYG and subscription rates for that journey.</li>
             </ul>
 
             <h2>Data Accuracy & Coverage</h2>
-            <p>We maintain a curated dataset of major UK charging providers, including their latest subscription costs and multi-tier kWh rates (covering AC, DC, and Ultra-Rapid charging). While we strive for 100% accuracy, we always recommend verifying the current rate within the provider's official app before starting a session, as prices in the EV sector can fluctuate frequently.</p>
+            <p>We maintain a curated dataset of major UK charging providers, including their latest subscription costs and multi-tier kWh rates. While we strive for accuracy, we always recommend verifying the current rate within the provider's official app.</p>
 
             <h2>Designed for Privacy</h2>
-            <p>We believe in a "privacy-first" approach. This tool does not collect or store any personally identifiable information. We use local cookies solely to remember your vehicle settings (like battery size and efficiency) so that the tool is ready to use immediately upon your next visit.</p>
+            <p>This tool does not collect or store any personally identifiable information. We use local cookies solely to remember your vehicle settings and theme preferences for your next visit.</p>
 
             <div class="help-footer" style="margin-top: 50px; text-align: center;">
                 <a href="index.html" class="btn secondary">Start Comparing Now</a>
             </div>
         </div>
     </div>
+
+    <script>
+        // Set body class to match the documentElement class applied by the Theme Guard
+        if (document.documentElement.classList.contains('dark-mode')) {
+            document.body.classList.add('dark-mode');
+        } else {
+            document.body.classList.add('light-mode');
+        }
+
+        function toggleMenu() {
+            document.getElementById('sideMenu').classList.toggle('active');
+        }
+
+        function toggleTheme() {
+            const isDark = document.body.classList.toggle('dark-mode');
+            document.body.classList.toggle('light-mode', !isDark);
+            
+            // Save preference to match index.html logic
+            const date = new Date();
+            date.setTime(date.getTime() + (30 * 24 * 60 * 60 * 1000));
+            const cookieValue = encodeURIComponent(JSON.stringify(isDark ? 'dark' : 'light'));
+            document.cookie = `themePref=${cookieValue};expires=${date.toUTCString()};path=/;SameSite=Lax`;
+        }
+
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            const menu = document.getElementById('sideMenu');
+            const trigger = document.querySelector('.android-dots-trigger');
+            if (menu.classList.contains('active') && !menu.contains(e.target) && !trigger.contains(e.target)) {
+                menu.classList.remove('active');
+            }
+        });
+    </script>
 </body>
 </html>
