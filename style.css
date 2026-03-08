@@ -1222,8 +1222,9 @@ body {
 
 @keyframes intro-sequence {
     0% { transform: translateX(0); }                                      /* Start immediately */
-    20%, 60% { transform: translateX(-14.2857142857%); }                   /* Slide 2: 2.0s hold */
-    70%, 100% { transform: translateX(-28.5714285714%); }                  /* Slide 3: Stop */
+    15% { transform: translateX(-12%); }                                  /* Fast move towards slide 2 */
+    20%, 60% { transform: translateX(-14.2857142857%); }                   /* Slow ease-in to stop at Slide 2 */
+    70%, 100% { transform: translateX(-28.5714285714%); }                  /* Slide 3: Final stop */
 }
 
 .intro-animation {
