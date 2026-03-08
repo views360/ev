@@ -1222,13 +1222,13 @@ body {
 
 @keyframes intro-sequence {
     0% { transform: translateX(0); }                                      /* Start instantly */
-    20% { transform: translateX(-13.5%); }                                /* Fast slide-in to near-center */
-    60% { transform: translateX(-15.5%); }                                /* Slow-motion "crawl" across the middle */
-    80%, 100% { transform: translateX(-28.5714285714%); }                  /* Fast exit to Slide 3 */
+    25% { transform: translateX(-13.5%); }                               /* Quick slide-in (shifted from 20%) */
+    55% { transform: translateX(-15.5%); }                               /* Slow-motion crawl (duration reduced to 30%) */
+    75%, 100% { transform: translateX(-28.5714285714%); }                  /* Fast exit to Slide 3 */
 }
 
 .intro-animation {
-    /* Changing to 'linear' prevents the jerky "backwards" look between steps */
+    /* 'linear' ensures the speed changes only at our defined keyframe markers */
     animation: intro-sequence 5s linear forwards; 
 }
 
