@@ -874,19 +874,28 @@ window.addEventListener("DOMContentLoaded", init);
 
 let currentSlide = 0;
 
-function startSplashAutoCycle() {
-    setTimeout(() => {
-        if (typeof currentSlide !== 'undefined' && currentSlide === 0) {
-            moveSlide(1);
-        }
-    }, 3000);
+function moveSlide(step) {
+    const slides = document.querySelectorAll('.help-slide');
+    currentSlide += step;
+    
+    if (currentSlide < 0) currentSlide = 0;
+    if (currentSlide >= slides.length) currentSlide = slides.length - 1;
+    
+    const percentage = 16.6666; 
+    document.getElementById('helpSlides').style.transform = `translateX(-${currentSlide * percentage}%)`;
 }
 
-window.addEventListener('load', () => {
-    if (document.getElementById('helpOverlay').style.display !== 'none') {
-        startSplashAutoCycle();
+function initSplash() {
+    const helpOverlay = document.getElementById('helpOverlay');
+    if (helpOverlay && helpOverlay.style.display !== 'none') {
+        setTimeout(() => {
+            if (currentSlide === 0) {
+                moveSlide(1);
+            }
+        }, 2500);
     }
-});
+}
+
 function moveSlide(step) {
     const container = document.getElementById('helpSlides');
     const slides = document.querySelectorAll('.help-slide'); 
