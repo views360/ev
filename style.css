@@ -740,33 +740,30 @@ tr.bad td { color: var(--danger); }
 
 .help-slides {
     display: flex;
+    width: 700%; 
     transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-@keyframes driveBySequence {
-    0% { transform: translateX(0); }           /* Slide 1: Blank */
-    10% { transform: translateX(0); }          /* Brief pause on blank */
-    40% { transform: translateX(-100%); }      /* Slide 2: Car enters center (Gently) */
-    65% { transform: translateX(-100%); }      /* Momentary pause for the car */
-    100% { transform: translateX(-200%); }     /* Car "Speeds off" to Slide 3 (Info) */
+@keyframes driveBy {
+    0% { transform: translateX(0); }             /* Slide 1: Blank */
+    10% { transform: translateX(0); }            /* Quick pause on blank */
+    45% { transform: translateX(-14.28%); }      /* Slide 2: Car eases into center */
+    70% { transform: translateX(-14.28%); }      /* Gentle moment in center */
+    100% { transform: translateX(-28.56%); }     /* Speeds off to Slide 3 (Info) */
 }
 
-.intro-animation {
-    /* 4 seconds total for the opening sequence */
-    animation: driveBySequence 4s cubic-bezier(0.45, 0.05, 0.55, 0.95) forwards;
+.intro-active {
+    animation: driveBy 4s cubic-bezier(0.45, 0.05, 0.55, 0.95) forwards;
 }
 
 /* Hide navigation buttons during the intro animation */
-.intro-animation .help-footer {
+.intro-active .help-footer {
     display: none;
 }
 
 .help-slide {
-    flex: 0 0 16.666%;
-    padding: 30px;
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
+    width: 14.28%; 
+    flex-shrink: 0;
 }
 
 .help-slide, .standalone-slide {
