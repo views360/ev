@@ -18,49 +18,47 @@
             border-bottom: 1px solid var(--border);
             padding-bottom: 10px;
         }
-        .content-section p {
+        .content-section p, .content-section li {
             margin-bottom: 20px;
             font-size: 1.05rem;
             color: var(--text);
             opacity: 0.9;
+            line-height: 1.6;
         }
-        /* Style for the back button to allow it to use the neon glow class */
-        .btn-back {
+        .btn-back-glow {
             display: inline-block;
             margin-bottom: 30px;
             text-decoration: none;
-            padding: 10px 20px;
+            padding: 12px 24px;
             border-radius: 8px;
             font-weight: 600;
             background: var(--panel-alt);
             color: var(--text);
-            border: 1px solid var(--border);
+            border: 2px solid var(--border);
             transition: transform 0.2s ease;
-        }
-        .btn-back:hover {
-            transform: translateY(-2px);
         }
     </style>
     <script>
-        /** * IMMEDIATE THEME CHECK 
-         * Applies theme to root element to prevent white flash.
-         */
         (function() {
-            const match = document.cookie.match(new RegExp('(^| )themePref=([^;]+)'));
-            if (match) {
-                const theme = decodeURIComponent(match[2]).replace(/"/g, '');
-                if (theme === 'dark') {
-                    document.documentElement.classList.add('dark-mode');
+            const getCookie = (name) => {
+                const nameEQ = name + "=";
+                const ca = document.cookie.split(';');
+                for (let i = 0; i < ca.length; i++) {
+                    let c = ca[i].trim();
+                    if (c.indexOf(nameEQ) === 0) {
+                        try { return JSON.parse(decodeURIComponent(c.substring(nameEQ.length))); } 
+                        catch (e) { return decodeURIComponent(c.substring(nameEQ.length)).replace(/"/g, ''); }
+                    }
                 }
-            }
+                return null;
+            };
+            const theme = getCookie('themePref');
+            if (theme === 'dark') document.documentElement.classList.add('dark-mode');
         })();
     </script>
 </head>
 <body>
     <script>
-        /** * BODY SYNC 
-         * Ensures the first toggle click works by syncing body state with root.
-         */
         if (document.documentElement.classList.contains('dark-mode')) {
             document.body.classList.add('dark-mode');
         } else {
@@ -73,7 +71,7 @@
             <button class="close-x" onclick="closePrivacy()">×</button>
             <div class="standalone-slide"> 
                 <h2>Privacy Policy</h2>
-                <p>We use local cookies solely to remember your vehicle settings and theme preferences.</p>
+                <p>We use local cookies solely to remember your vehicle settings and theme preferences. No personal data is stored or transmitted.</p>
                 <div class="help-footer"><button class="btn secondary" onclick="closePrivacy()">Close</button></div>
             </div>
         </div>
@@ -121,13 +119,22 @@
         </div>
 
         <div class="content-section">
-            <a href="index.html" class="btn-back empty-pulse">Back</a>
+            <a href="index.html" class="btn-back-glow empty-pulse">← Back to Calculator</a>
             
             <h1>Optimising Your EV Charging Strategy</h1>
-            <p>Welcome to <strong>EV Subs Compare</strong>, a dedicated utility designed to help UK electric vehicle drivers navigate the increasingly complex landscape of public charging costs.</p>
-            
+            <p>Welcome to <strong>EV Subs Compare</strong>, a dedicated utility designed to help UK electric vehicle drivers navigate the increasingly complex landscape of public charging costs. As the UK transitions toward electric mobility, major networks like Tesla, IONITY, and BP Pulse have introduced subscription models that offer significant discounts in exchange for a fixed monthly fee.</p>
+
             <h2>Our Mission</h2>
-            <p>The goal of this tool is to provide transparency. Choosing between a standard Pay-As-You-Go (PAYG) rate and a monthly subscription can be difficult without doing the math. We aim to simplify that decision-making process.</p>
+            <p>The goal of this tool is to provide total transparency. Choosing between a standard Pay-As-You-Go (PAYG) rate and a monthly subscription can be difficult without accurate data. We provide a data-driven approach to help you decide if a one-month subscription is a savvy financial move for your specific driving habits.</p>
+
+            <h2>Why Use This Tool?</h2>
+            <p>Public charging costs can vary wildly, from 40p/kWh to over 85p/kWh. A subscription might cost £10 but lower your rate by 20p/kWh. This means if you charge more than 50kWh in a month, you've already saved money. Our tool automates this calculation across all major UK providers instantly.</p>
+
+            <h2>How the Comparisons Work</h2>
+            <ul>
+                <li><strong>Break-Even Analysis:</strong> Calculates the exact mileage required to recoup a subscription fee based on your car's efficiency.</li>
+                <li><strong>Trip Savings:</strong> Perfect for planning long-distance holidays, showing you exactly how much you'll save on a specific route.</li>
+            </ul>
 
             <h2>Designed for Privacy</h2>
             <p>We believe in a "privacy-first" approach. This tool does not collect or store any personally identifiable information. We use local cookies solely to remember your vehicle settings so that the tool is ready to use immediately upon your next visit.</p>
