@@ -101,7 +101,7 @@ function shareLink() {
 }
 
 function toggleTheme() {
-    const isLight = document.body.classList.toggle("light-mode");
+    const isLight = document.documentElement.classList.toggle("light-mode");
     setCookie('themePref', isLight ? 'light' : 'dark');
 }
 
