@@ -747,25 +747,24 @@ tr.bad td { color: var(--danger); }
 .help-slide {
     width: 14.2857%; 
     flex-shrink: 0;
-    box-sizing: border-box;
 }
 
 /* Update the Cinematic Drive-By Animation */
 @keyframes driveBySequence {
-    0%   { transform: translateX(0); }               /* Slide 1: Blank */
-    10%  { transform: translateX(0); }               /* Hold on blank for a moment */
+    /* 0% to 30%: Immediately slide the blank slide out to bring the car in */
+    0%   { transform: translateX(0); }
+    30%  { transform: translateX(-14.2857%); }
     
-    /* Car enters and slows down in the center */
-    30%  { transform: translateX(-14.2857%); }       /* Slide 2: Car reaches center */
-    70%  { transform: translateX(-14.2857%); }       /* Car "lingers" or crawls in center */
+    /* 30% to 75%: PAUSE/HOLD the car in the center */
+    75%  { transform: translateX(-14.2857%); }
     
-    /* Car speeds off rapidly */
-    100% { transform: translateX(-28.5714%); }      /* Slide 3: Info card appears */
+    /* 75% to 100%: SPEED OFF to reveal the third slide */
+    100% { transform: translateX(-28.5714%); }
 }
 
 .intro-animation {
-    /* Set to 5 seconds to give the car enough time to "linger" */
-    animation: driveBySequence 5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    /* Set to 4.5s to give the 'pause' enough impact */
+    animation: driveBySequence 4.5s cubic-bezier(0.45, 0.05, 0.55, 0.95) forwards;
 }
 
 /* Ensure slides don't stretch */
