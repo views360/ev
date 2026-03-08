@@ -282,7 +282,7 @@ function calculate() {
     });
 
     if (!isTripMode) {
-        if (conclusionsBox) conclusionsBox.style.display = "none";
+        conclusionsBox.style.display = "none";
         const efficiency = parseFloat(document.getElementById("efficiencyBE").value);
         const adhocRate = parseFloat(document.getElementById("adhocBE").value) || 0;
         const minSpeedSelection = parseFloat(document.getElementById("minSpeedBE").value) || 0;
@@ -554,7 +554,6 @@ function calculate() {
  // ==========================================
     // RESTORED CONCLUSIONS BOX START
     // ==========================================
-    const conclusionsBox = document.getElementById("conclusionsBox");
     if (providers.length > 0) {
         const bestProvider = providers[0];
         const timeLine = `<p class="approxTime">Approximate driving time for ${inputs.journeyMiles} miles at 60mph is <strong>${(inputs.journeyMiles / 60).toFixed(1)} hours</strong>.</p>`;
@@ -1036,5 +1035,4 @@ function closeContact() {
     setTimeout(() => {
         contact.style.display = 'none';
     }, 400);
-
 }
