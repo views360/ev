@@ -267,9 +267,9 @@ function calculate() {
             return;
         }
 
+        document.getElementById("conclusionsBox").style.display = "none";
         uiPreText.style.display = "none";
         uiResults.style.display = "block";
-        
         document.querySelector(".calc-lines").style.display = "none";
         document.querySelector(".chart-wrapper").style.display = "none";
 
