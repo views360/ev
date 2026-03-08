@@ -259,7 +259,9 @@ function calculate() {
         const efficiency = parseFloat(document.getElementById("efficiencyBE").value);
         const adhocRate = parseFloat(document.getElementById("adhocBE").value) || 0;
         const minSpeedSelection = parseFloat(document.getElementById("minSpeedBE").value) || 0;
-
+        const conclusionsBox = document.getElementById("conclusionsBox");
+        if (conclusionsBox) conclusionsBox.style.display = "none";
+        
         if (isNaN(efficiency) || efficiency <= 0 || isNaN(adhocRate) || adhocRate <= 0) {
             uiPreText.innerHTML = "Please enter valid <strong>Efficiency</strong> and <strong>PAYG Rate</strong> values, or use the toggle at the top to switch to TRIP SAVINGS mode.";
             uiPreText.style.display = "block";
@@ -267,7 +269,6 @@ function calculate() {
             return;
         }
 
-        document.getElementById("conclusionsBox").style.display = "none";
         uiPreText.style.display = "none";
         uiResults.style.display = "block";
         document.querySelector(".calc-lines").style.display = "none";
@@ -369,7 +370,6 @@ function calculate() {
         return; 
     }
     
-    if (conclusionsBox) conclusionsBox.style.display = "block";
     if (uiPreText) uiPreText.style.display = "block";
     if (uiResults) uiResults.style.display = "block";
 
