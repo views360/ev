@@ -36,17 +36,32 @@
         }
     </style>
     <script>
-        // Apply theme to documentElement immediately to prevent flickering
+        /** * IMMEDIATE THEME CHECK 
+         * Prevents the white flash by applying the class to the root element.
+         */
         (function() {
             const match = document.cookie.match(new RegExp('(^| )themePref=([^;]+)'));
             if (match) {
                 const theme = decodeURIComponent(match[2]).replace(/"/g, '');
-                if (theme === 'dark') document.documentElement.classList.add('dark-mode');
+                if (theme === 'dark') {
+                    document.documentElement.classList.add('dark-mode');
+                }
             }
         })();
     </script>
 </head>
 <body>
+    <script>
+        /** * BODY SYNC 
+         * This ensures the first click of the toggle works by matching the body class to the root.
+         */
+        if (document.documentElement.classList.contains('dark-mode')) {
+            document.body.classList.add('dark-mode');
+        } else {
+            document.body.classList.add('light-mode');
+        }
+    </script>
+
     <div id="privacyOverlay" class="help-overlay" style="display: none;">
         <div class="help-modal">
             <button class="close-x" onclick="closePrivacy()">×</button>
@@ -63,6 +78,7 @@
             <button class="close-x" onclick="closeContact()">×</button>
             <div class="standalone-slide"> 
                 <h2>Contact Author</h2>
+                <p>Have feedback or spotted a pricing error? Get in touch:</p>
                 <p>Email: <a href="mailto:evsubscompare@gmail.com" style="color: var(--accent); font-weight: bold;">evsubscompare@gmail.com</a></p>
                 <div class="help-footer"><button class="btn secondary" onclick="closeContact()">Close</button></div>
             </div>
@@ -91,6 +107,10 @@
                     <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z'/%3E%3C/svg%3E" class="menu-icon-svg">
                     <span>Privacy</span>
                 </a>
+                <a class="menu-item-clean" onclick="openContact(); toggleMenu();">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z'%3E%3C/path%3E%3Cpolyline points='22,6 12,13 2,6'%3E%3C/polyline%3E%3C/svg%3E" class="menu-icon-svg">
+                    <span>Contact Author</span>
+                </a>
             </div>
         </div>
 
@@ -100,23 +120,16 @@
             <p>Welcome to <strong>EV Subs Compare</strong>, a dedicated utility designed to help UK electric vehicle drivers navigate the increasingly complex landscape of public charging costs.</p>
             
             <h2>Our Mission</h2>
-            <p>The goal of this tool is to provide transparency. Choosing between a standard Pay-As-You-Go (PAYG) rate and a monthly subscription can be difficult without doing the math.</p>
+            <p>The goal of this tool is to provide transparency. Choosing between a standard Pay-As-You-Go (PAYG) rate and a monthly subscription can be difficult without doing the math. We aim to simplify that decision-making process.</p>
 
             <h2>Designed for Privacy</h2>
-            <p>We believe in a "privacy-first" approach. This tool does not collect or store any personally identifiable information. We use local cookies solely to remember your vehicle settings and theme.</p>
+            <p>We believe in a "privacy-first" approach. This tool does not collect or store any personally identifiable information. We use local cookies solely to remember your vehicle settings (like battery size and efficiency) so that the tool is ready to use immediately upon your next visit.</p>
 
             <div class="help-footer" style="margin-top: 50px; text-align: center;">
                 <a href="index.html" class="btn secondary">Start Comparing Now</a>
             </div>
         </div>
     </div>
-
     <script src="functions.js"></script>
-    <script>
-        // Sync body class with the documentElement theme (ensures consistent styling)
-        if (document.documentElement.classList.contains('dark-mode')) {
-            document.body.classList.add('dark-mode');
-        }
-    </script>
 </body>
 </html>
