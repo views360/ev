@@ -1058,3 +1058,5 @@ function triggerSplashReveal() {
 function startSplashSequence() {
     setTimeout(triggerSplashReveal, 1200);
 }
+
+window.addEventListener('load', startSplashSequence);
