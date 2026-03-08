@@ -24,19 +24,18 @@ const getCookie = (name) => {
 document.addEventListener('DOMContentLoaded', () => {
     const track = document.getElementById('helpSlides');
     
-    // 1. Start the automatic intro
+    // Start the sequence
     track.classList.add('intro-animation');
 
-    // 2. Hand-off to manual control when the animation completes
+    // Handle the hand-off to manual control
     track.addEventListener('animationend', () => {
         track.classList.remove('intro-animation');
         
-        // Lock to Slide 3 (Index 2)
+        // Index 2 is the 3rd slide (Welcome Info)
         currentSlide = 2; 
         
-        // Calculate exact percentage (2 * 14.2857)
-        const offset = currentSlide * 14.2857;
-        track.style.transform = `translateX(-${offset}%)`;
+        // Move the track to the exact 3rd slide position
+        track.style.transform = `translateX(-28.5714%)`;
     });
 });
 
