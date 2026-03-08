@@ -27,15 +27,16 @@ document.addEventListener('DOMContentLoaded', () => {
     // 1. Start the automatic intro
     track.classList.add('intro-animation');
 
-    // 2. Hand-off to manual control
+    // 2. Hand-off to manual control when the animation completes
     track.addEventListener('animationend', () => {
         track.classList.remove('intro-animation');
         
-        // We are now on the 3rd slide (Welcome Info)
+        // Lock to Slide 3 (Index 2)
         currentSlide = 2; 
         
-        // Move the track to the 3rd slide position (index 2 * 14.2857%)
-        track.style.transform = `translateX(-${currentSlide * 14.2857}%)`;
+        // Calculate exact percentage (2 * 14.2857)
+        const offset = currentSlide * 14.2857;
+        track.style.transform = `translateX(-${offset}%)`;
     });
 });
 
