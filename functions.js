@@ -774,7 +774,7 @@ function exportPdf() {
             .conclusion-white-border { border: none !important; }
             .pdf-conclusion-wrapper { 
                 background: #f4f4f4 !important; 
-                padding: 20px; 
+                padding: 0px; 
                 border: 1px solid #ccc; 
                 border-radius: 8px; 
                 margin-top: 20px;
