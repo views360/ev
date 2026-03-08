@@ -1210,6 +1210,18 @@ body {
     height: 100%;
 }
 
+@keyframes intro-sequence {
+    0%, 10% { transform: translateX(0); }             /* Slide 1: Hold for 0.5s (10% of 5s) */
+    20%, 60% { transform: translateX(-14.2857%); }    /* Slide 2: Hold for 2s (40% of 5s) */
+    70%, 100% { transform: translateX(-28.5714%); }   /* Slide 3: Stop here */
+}
+
+.intro-animation {
+    animation: intro-sequence 5s ease-in-out forwards;
+}
+
+
+
 
 @media (max-width: 700px) {
 
