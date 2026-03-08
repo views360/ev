@@ -771,6 +771,7 @@ function exportPdf() {
             .pdf-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 10px; margin-bottom: 30px; }
             .pdf-table th, .pdf-table td { border: 1px solid #000; padding: 8px; text-align: left; }
             .pdf-table th { background: #f2f2f2; }
+            .conclusion-white-border { border: none !important; }
             .pdf-conclusion-wrapper { 
                 background: #f4f4f4 !important; 
                 padding: 20px; 
