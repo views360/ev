@@ -1210,6 +1210,33 @@ body {
     height: 100%;
 }
 
+.splash-slide {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at center, #1e293b 0%, #020617 100%);
+}
+
+.neon-car-large {
+    width: 200px;
+    filter: drop-shadow(0 0 15px var(--accent)) drop-shadow(0 0 30px var(--neon-green-soft));
+    margin-bottom: 20px;
+    animation: carEntrance 0.8s ease-out;
+}
+
+.splash-title {
+    font-size: 2.5rem;
+    background: linear-gradient(to right, var(--accent), var(--neon-green));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 800;
+}
+
+@keyframes carEntrance {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
 
 @media (max-width: 700px) {
 
@@ -1382,3 +1409,4 @@ body {
         white-space: nowrap; 
     }
 }
+
