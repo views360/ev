@@ -1042,3 +1042,19 @@ function closeContact() {
         contact.style.display = 'none';
     }, 400);
 }
+
+function triggerSplashReveal() {
+    const carImage = document.querySelector('.neon-car-large');
+    
+    if (carImage) {
+        carImage.classList.add('car-drive-off');
+    }
+
+    setTimeout(() => {
+        nextHelpSlide();
+    }, 500);
+}
+
+function startSplashSequence() {
+    setTimeout(triggerSplashReveal, 1200);
+}
