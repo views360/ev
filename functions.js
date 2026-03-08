@@ -1031,4 +1031,21 @@ function closeContact() {
     setTimeout(() => {
         contact.style.display = 'none';
     }, 400);
+
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    const splash = document.getElementById('marketingSplash');
+    
+    // Wait 2.5 seconds to show the marketing image, then slide left
+    if (splash) {
+        setTimeout(() => {
+            splash.classList.add('slide-out');
+            
+            // Optional: Remove from DOM after animation to save resources
+            setTimeout(() => {
+                splash.style.display = 'none';
+            }, 800); 
+        }, 2500);
+    }
+});
