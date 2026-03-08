@@ -1229,7 +1229,7 @@ body {
 
 .intro-animation {
     /* 'linear' ensures the speed changes only at our defined keyframe markers */
-    animation: intro-sequence 3s linear forwards; 
+    animation: intro-sequence 2.5s linear forwards; 
 }
 
 #helpSlides {
