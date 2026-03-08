@@ -38,12 +38,28 @@ function getInputs() {
 }
 
 function resetAll() {
-    localStorage.removeItem("ev_calc_settings");
-    
-    document.cookie = "ev_trip_values=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    
-    document.cookie = "cookiesAccepted=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    
+    localStorage.clear();
+
+    const cookies = document.cookie.split(";");
+    for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i];
+        const eqPos = cookie.indexOf("=");
+        const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+        document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
+    }
+
+    const inputs = document.querySelectorAll('input');
+    inputs.forEach(input => {
+        if (input.type === 'number' || input.type === 'text') {
+            input.value = '';
+        }
+    });
+
+    const providersContainer = document.getElementById("providers");
+    if (providersContainer) {
+        providersContainer.innerHTML = "";
+    }
+
     window.location.href = window.location.pathname;
 }
 
