@@ -785,10 +785,9 @@ function exportPdf() {
         </style>
         
         <div class="pdf-header">
-            <h1>EV Trip Savings Report</h1>
+            <h1 style="color:#000">EV Trip Savings Report</h1>
             <p>Generated on ${new Date().toLocaleDateString('en-GB')}</p>
         </div>
-        <hr style="border:0; border-top:1px solid #eee; margin-bottom:20px;">
         
         <div class="calc-lines">
             ${paygSummary ? paygSummary.innerHTML : ""}
