@@ -643,6 +643,7 @@ function setToggle(mode, btn) {
     if(slider) {
         slider.style.transform = mode === 'break-even' ? 'translateX(0)' : 'translateX(100%)';
     }
+    setCookie('calcMode', mode);
     calculate();
 }
 
@@ -915,11 +916,18 @@ function toggleProviders() {
     btn.classList.remove("empty-pulse");
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
     if (!getCookie('cookiesAccepted')) {
         document.getElementById('cookieBanner').style.display = 'block';
     }
-});
+    const savedMode = getCookie('calcMode');
+    if (savedMode) {
+        const modeBtn = document.querySelector(`.pill-btn[onclick*="${savedMode}"]`);
+        if (modeBtn) {
+            modeBtn.click();
+        }
+    }
+})
 
 function acceptCookies() {
     const date = new Date();
