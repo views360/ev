@@ -368,7 +368,8 @@ function calculate() {
         document.getElementById("providerResults").innerHTML = html + `</tbody></table></div>`;
         return; 
     }
-
+    
+    if (conclusionsBox) conclusionsBox.style.display = "block";
     if (uiPreText) uiPreText.style.display = "block";
     if (uiResults) uiResults.style.display = "block";
 
