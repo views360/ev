@@ -921,21 +921,20 @@ function toggleProviders() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    if (!getCookie('cookiesAccepted')) {
+        const banner = document.getElementById('cookieBanner');
+        if (banner) banner.style.display = 'block';
+    }
+    
     const savedMode = getCookie('comparisonMode');
     if (savedMode) {
-        // Find the button that matches the saved mode
         const buttons = document.querySelectorAll('.pill-btn');
         buttons.forEach(btn => {
-            // Check if button text or a data-attribute matches the saved mode
             if (btn.textContent.trim().toLowerCase().replace(' ', '-') === savedMode) {
                 setToggle(savedMode, btn);
             }
         });
-    
-    if (!getCookie('cookiesAccepted')) {
-        document.getElementById('cookieBanner').style.display = 'block';
     }
-});
 
 function acceptCookies() {
     const date = new Date();
