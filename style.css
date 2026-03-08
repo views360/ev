@@ -717,7 +717,9 @@ tr.bad td { color: var(--danger); }
     width: 90%;
     max-width: 500px;
     border-radius: 16px;
-    border: 1px solid var(--accent);
+    background-color: var(--panel);
+    border: 1px solid var(--border);
+    overflow: hidden;
     position: relative;
     overflow: hidden;
     box-shadow: var(--glow-strong);
@@ -796,6 +798,15 @@ tr.bad td { color: var(--danger); }
     align-items: center;
     height: 100%;
     width: 100%;
+}
+
+.splash-loader {
+    border: 3px solid var(--border);
+    border-top: 3px solid var(--accent); /* Only the spinning top is blue */
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
 }
 
 #providerResults table th:first-child,
@@ -1441,3 +1452,4 @@ body {
         white-space: nowrap; 
     }
 }
+
