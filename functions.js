@@ -749,7 +749,10 @@ function init() {
 function exportPdf() {
     const pdfBtn = document.getElementById("pdfBtn");
     const providerRows = document.querySelectorAll("#providerResults tbody tr");
-    if (providerRows.length === 0 || !pdfBtn) return;
+    const paygSummary = document.querySelector(".calc-lines");
+    const conclusion = document.getElementById("conclusionsBox");
+
+    if (!providerRows.length || !pdfBtn) return;
 
     const originalText = pdfBtn.textContent;
     pdfBtn.textContent = "Generating...";
@@ -757,21 +760,26 @@ function exportPdf() {
     pdfBtn.style.opacity = "0.7";
 
     const printContainer = document.createElement("div");
-    printContainer.style.position = "absolute";
-    printContainer.style.left = "-9999px";
-    printContainer.style.width = "800px";
-    printContainer.style.padding = "40px";
-    printContainer.style.background = "#fff";
-    printContainer.style.color = "#000";
+    printContainer.style.cssText = "position:absolute; left:-9999px; width:800px; padding:40px; background:#fff; color:#000; font-family:Arial, sans-serif;";
 
-    let tableHtml = `
-        <h1 style="text-align:center; font-family:Arial; margin-bottom:20px;">EV Charging Comparison</h1>
-        <table style="width:100%; border-collapse:collapse; font-family:Arial; font-size:12px;">
+    // 1. Header & PAYG Summary
+    let contentHtml = `
+        <h1 style="text-align:center; margin-bottom:10px;">EV Trip Report</h1>
+        <hr style="border:0; border-top:1px solid #eee; margin-bottom:20px;">
+        <div style="margin-bottom:30px;">
+            ${paygSummary ? paygSummary.innerHTML : ""}
+        </div>
+    `;
+
+    // 2. The Table (Manually mapped to fix column order)
+    contentHtml += `
+        <h2 style="font-size:18px; border-bottom:1px solid #000; padding-bottom:5px;">Comparison Results</h2>
+        <table style="width:100%; border-collapse:collapse; font-size:12px; margin-bottom:30px;">
             <thead>
                 <tr style="background:#f2f2f2;">
                     <th style="border:1px solid #000; padding:8px; text-align:left;">Provider</th>
                     <th style="border:1px solid #000; padding:8px; text-align:left;">Sub. Fee</th>
-                    <th style="border:1px solid #000; padding:8px; text-align:left;">Rate</th>
+                    <th style="border:1px solid #000; padding:8px; text-align:left;">Disc. Rate</th>
                     <th style="border:1px solid #000; padding:8px; text-align:left;">Trip Cost</th>
                     <th style="border:1px solid #000; padding:8px; text-align:left;">vs. PAYG</th>
                     <th style="border:1px solid #000; padding:8px; text-align:left;">Break Even</th>
@@ -781,9 +789,9 @@ function exportPdf() {
 
     providerRows.forEach(row => {
         const cols = row.querySelectorAll("td");
-        tableHtml += `
+        contentHtml += `
             <tr>
-                <td style="border:1px solid #000; padding:8px;">${cols[0].innerText.split('\n')[0]}</td>
+                <td style="border:1px solid #000; padding:8px;"><strong>${cols[0].innerText.split('\n')[0]}</strong></td>
                 <td style="border:1px solid #000; padding:8px;">${cols[1].innerText}</td>
                 <td style="border:1px solid #000; padding:8px;">${cols[2].innerText}</td>
                 <td style="border:1px solid #000; padding:8px;">${cols[3].innerText}</td>
@@ -792,18 +800,28 @@ function exportPdf() {
             </tr>`;
     });
 
-    tableHtml += `</tbody></table>`;
-    printContainer.innerHTML = tableHtml;
+    // 3. Final Conclusion
+    contentHtml += `</tbody></table>
+        <div style="background:#f9f9f9; padding:20px; border:1px solid #ddd; border-radius:8px;">
+            ${conclusion ? conclusion.innerHTML : ""}
+        </div>
+    `;
+
+    printContainer.innerHTML = contentHtml;
+    
+    // Clean up unwanted items inside the injected HTML (like tooltip icons)
+    printContainer.querySelectorAll(".info-icon, .jump-btn-pulse, .mini-table").forEach(el => el.remove());
+
     document.body.appendChild(printContainer);
 
     html2canvas(printContainer, { scale: 2 }).then(canvas => {
         const { jsPDF } = window.jspdf;
         const pdf = new jsPDF("p", "mm", "a4");
-        const imgWidth = 190; 
+        const imgWidth = 190;
         const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
-        pdf.addImage(canvas.toDataURL("image/png"), "PNG", 10, 20, imgWidth, imgHeight);
-        pdf.save("ev-charging-report.pdf");
+        pdf.addImage(canvas.toDataURL("image/png"), "PNG", 10, 15, imgWidth, imgHeight);
+        pdf.save("ev-trip-analysis.pdf");
 
         document.body.removeChild(printContainer);
         pdfBtn.textContent = originalText;
