@@ -85,7 +85,11 @@ function shareLink() {
 }
 
 function toggleTheme() {
-    document.body.classList.toggle("light-mode");
+    const isDark = document.body.classList.toggle('dark-mode');
+    document.body.classList.toggle('light-mode', !isDark);
+    
+    // Save the preference for 30 days
+    setCookie('themePref', isDark ? 'dark' : 'light');
 }
 
 function createProviderBox(preset) {
