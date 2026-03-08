@@ -788,6 +788,16 @@ tr.bad td { color: var(--danger); }
     display: block;
 }
 
+.help-slide.splash-slide {
+    background-color: var(--panel) !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+}
+
 #providerResults table th:first-child,
 #providerResults table td:first-child
  {
