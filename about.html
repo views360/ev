@@ -36,11 +36,14 @@
         }
     </style>
     <script>
-        // Apply theme immediately to documentElement to avoid white flash
-        const themeMatch = document.cookie.match(/themePref=([^;]+)/);
-        if (themeMatch && decodeURIComponent(themeMatch[1]).includes('dark')) {
-            document.documentElement.classList.add('dark-mode');
-        }
+        // Apply theme to documentElement immediately to prevent flickering
+        (function() {
+            const match = document.cookie.match(new RegExp('(^| )themePref=([^;]+)'));
+            if (match) {
+                const theme = decodeURIComponent(match[2]).replace(/"/g, '');
+                if (theme === 'dark') document.documentElement.classList.add('dark-mode');
+            }
+        })();
     </script>
 </head>
 <body>
@@ -50,9 +53,18 @@
             <div class="standalone-slide"> 
                 <h2>Privacy Policy</h2>
                 <p>We use local cookies solely to remember your vehicle settings and theme preferences.</p>
-                <div class="help-footer">
-                    <button class="btn secondary" onclick="closePrivacy()">Close</button>
-                </div>
+                <div class="help-footer"><button class="btn secondary" onclick="closePrivacy()">Close</button></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="contactOverlay" class="help-overlay" style="display: none;">
+        <div class="help-modal">
+            <button class="close-x" onclick="closeContact()">×</button>
+            <div class="standalone-slide"> 
+                <h2>Contact Author</h2>
+                <p>Email: <a href="mailto:evsubscompare@gmail.com" style="color: var(--accent); font-weight: bold;">evsubscompare@gmail.com</a></p>
+                <div class="help-footer"><button class="btn secondary" onclick="closeContact()">Close</button></div>
             </div>
         </div>
     </div>
@@ -101,11 +113,9 @@
 
     <script src="functions.js"></script>
     <script>
-        // Sync body class with the documentElement theme set in head
+        // Sync body class with the documentElement theme (ensures consistent styling)
         if (document.documentElement.classList.contains('dark-mode')) {
             document.body.classList.add('dark-mode');
-        } else {
-            document.body.classList.add('light-mode');
         }
     </script>
 </body>
