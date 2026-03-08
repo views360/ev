@@ -751,20 +751,20 @@ tr.bad td { color: var(--danger); }
 
 /* Update the Cinematic Drive-By Animation */
 @keyframes driveBySequence {
-    /* 0% to 30%: Immediately slide the blank slide out to bring the car in */
+    /* 0% to 20%: Slide 1 (Blank) moves out immediately to bring Slide 2 (Car) in */
     0%   { transform: translateX(0); }
-    30%  { transform: translateX(-14.2857%); }
+    20%  { transform: translateX(-14.2857%); }
     
-    /* 30% to 75%: PAUSE/HOLD the car in the center */
-    75%  { transform: translateX(-14.2857%); }
+    /* 20% to 80%: THE PAUSE. The car stays in the center because the value doesn't change */
+    80%  { transform: translateX(-14.2857%); }
     
-    /* 75% to 100%: SPEED OFF to reveal the third slide */
+    /* 80% to 100%: The car speeds off to reveal Slide 3 (Welcome Text) */
     100% { transform: translateX(-28.5714%); }
 }
 
 .intro-animation {
-    /* Set to 4.5s to give the 'pause' enough impact */
-    animation: driveBySequence 4.5s cubic-bezier(0.45, 0.05, 0.55, 0.95) forwards;
+    /* Total duration 5s. Linear timing ensures the 'pause' is static and clean. */
+    animation: driveBySequence 5s linear forwards;
 }
 
 /* Ensure slides don't stretch */
