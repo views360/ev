@@ -647,6 +647,7 @@ function setToggle(mode, btn) {
     if(slider) {
         slider.style.transform = mode === 'break-even' ? 'translateX(0)' : 'translateX(100%)';
     }
+    setCookie('comparisonMode', mode);
     calculate();
 }
 
@@ -920,6 +921,17 @@ function toggleProviders() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    const savedMode = getCookie('comparisonMode');
+    if (savedMode) {
+        // Find the button that matches the saved mode
+        const buttons = document.querySelectorAll('.pill-btn');
+        buttons.forEach(btn => {
+            // Check if button text or a data-attribute matches the saved mode
+            if (btn.textContent.trim().toLowerCase().replace(' ', '-') === savedMode) {
+                setToggle(savedMode, btn);
+            }
+        });
+    
     if (!getCookie('cookiesAccepted')) {
         document.getElementById('cookieBanner').style.display = 'block';
     }
