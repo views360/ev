@@ -35,6 +35,24 @@
             text-decoration: underline;
         }
     </style>
+    <script>
+        function getThemeCookie(name) {
+            let nameEQ = name + "=";
+            let ca = document.cookie.split(';');
+            for(let i=0;i < ca.length;i++) {
+                let c = ca[i].trim();
+                if (c.indexOf(nameEQ) == 0) return decodeURIComponent(c.substring(nameEQ.length));
+            }
+            return null;
+        }
+
+        const theme = getThemeCookie('themePref');
+        if (theme === 'dark' || theme === '"dark"') {
+            document.body.classList.add('dark-mode');
+        } else {
+            document.body.classList.add('light-mode');
+        }
+    </script>
 </head>
 <body class="light-mode"> <div class="app">
         <div class="android-header-full">
