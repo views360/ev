@@ -85,11 +85,7 @@ function shareLink() {
 }
 
 function toggleTheme() {
-    const isDark = document.body.classList.toggle('dark-mode');
-    document.body.classList.toggle('light-mode', !isDark);
-    
-    // Save the preference for 30 days
-    setCookie('themePref', isDark ? 'dark' : 'light');
+    document.body.classList.toggle("light-mode");
 }
 
 function createProviderBox(preset) {
@@ -647,7 +643,6 @@ function setToggle(mode, btn) {
     if(slider) {
         slider.style.transform = mode === 'break-even' ? 'translateX(0)' : 'translateX(100%)';
     }
-    setCookie('comparisonMode', mode);
     calculate();
 }
 
@@ -922,19 +917,9 @@ function toggleProviders() {
 
 document.addEventListener('DOMContentLoaded', () => {
     if (!getCookie('cookiesAccepted')) {
-        const banner = document.getElementById('cookieBanner');
-        if (banner) banner.style.display = 'block';
+        document.getElementById('cookieBanner').style.display = 'block';
     }
-    
-    const savedMode = getCookie('comparisonMode');
-    if (savedMode) {
-        const buttons = document.querySelectorAll('.pill-btn');
-        buttons.forEach(btn => {
-            if (btn.textContent.trim().toLowerCase().replace(' ', '-') === savedMode) {
-                setToggle(savedMode, btn);
-            }
-        });
-    }
+});
 
 function acceptCookies() {
     const date = new Date();
@@ -981,6 +966,18 @@ function closePrivacy() {
     setTimeout(() => {
         privacy.style.display = 'none';
     }, 400); 
+}
+
+function openAbout() {
+    const about = document.getElementById('aboutOverlay');
+    about.style.display = 'flex';
+    setTimeout(() => { about.style.opacity = '1'; }, 10);
+}
+
+function closeAbout() {
+    const about = document.getElementById('aboutOverlay');
+    about.style.opacity = '0';
+    setTimeout(() => { about.style.display = 'none'; }, 400); 
 }
 
 function openContact() {
