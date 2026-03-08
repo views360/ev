@@ -744,12 +744,18 @@ tr.bad td { color: var(--danger); }
     transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-@keyframes driveBy {
-    0% { transform: translateX(0); }             /* Slide 1: Blank */
-    10% { transform: translateX(0); }            /* Quick pause on blank */
-    45% { transform: translateX(-14.28%); }      /* Slide 2: Car eases into center */
-    70% { transform: translateX(-14.28%); }      /* Gentle moment in center */
-    100% { transform: translateX(-28.56%); }     /* Speeds off to Slide 3 (Info) */
+.help-slide {
+    width: 14.2857%; 
+    flex-shrink: 0;
+    box-sizing: border-box;
+}
+
+@keyframes driveBySequence {
+    0% { transform: translateX(0); }               /* Slide 1: Blank */
+    15% { transform: translateX(0); }              /* Brief pause on blank */
+    45% { transform: translateX(-14.2857%); }      /* Slide 2: Car enters center (1/7th) */
+    75% { transform: translateX(-14.2857%); }      /* Gentle pause for the car */
+    100% { transform: translateX(-28.5714%); }     /* Car "Speeds off" to Slide 3 (2/7ths) */
 }
 
 .intro-active {
@@ -759,11 +765,6 @@ tr.bad td { color: var(--danger); }
 /* Hide navigation buttons during the intro animation */
 .intro-active .help-footer {
     display: none;
-}
-
-.help-slide {
-    width: 14.28%; 
-    flex-shrink: 0;
 }
 
 .help-slide, .standalone-slide {
