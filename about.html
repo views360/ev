@@ -37,24 +37,42 @@
     </style>
     <script>
         function getThemeCookie(name) {
-            let nameEQ = name + "=";
-            let ca = document.cookie.split(';');
-            for(let i=0;i < ca.length;i++) {
+            const nameEQ = name + "=";
+            const ca = document.cookie.split(';');
+            for (let i = 0; i < ca.length; i++) {
                 let c = ca[i].trim();
-                if (c.indexOf(nameEQ) == 0) return decodeURIComponent(c.substring(nameEQ.length));
+                if (c.indexOf(nameEQ) === 0) {
+                    try {
+                        return JSON.parse(decodeURIComponent(c.substring(nameEQ.length)));
+                    } catch (e) { return null; }
+                }
             }
             return null;
         }
-
+    
         const theme = getThemeCookie('themePref');
-        if (theme === 'dark' || theme === '"dark"') {
+        if (theme === 'dark') {
             document.body.classList.add('dark-mode');
         } else {
             document.body.classList.add('light-mode');
         }
     </script>
 </head>
-<body class="light-mode"> <div class="app">
+<body class="light-mode">
+    <div class="app">
+        <div class="android-dots-trigger" onclick="toggleMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        
+        <nav id="sideMenu" class="side-menu">
+            <div class="menu-header">Menu</div>
+            <a class="menu-item-clean" href="index.html">
+                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cGF0aCBkPSJNMyA5bDktN2w5IDd2MTFhMiAyIDAgMCAxLTIgMkg1YTIgMiAwIDAgMS0yLTJWOXoiIHN0cm9rZT0iIzk0YTNiOCIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPC9zdmc+" class="menu-icon-svg">
+                <span>Back to Calculator</span>
+            </a>
+        </nav>
         <div class="android-header-full">
             <h1 class="android-title-clean">EV Subs Compare (UK)</h1>
         </div>
@@ -86,18 +104,5 @@
             </div>
         </div>
     </div>
-    <div class="android-dots-trigger" onclick="toggleMenu()">
-        <span></span>
-        <span></span>
-        <span></span>
-    </div>
-    
-    <nav id="sideMenu" class="side-menu">
-        <div class="menu-header">Menu</div>
-        <a class="menu-item-clean" href="index.html">
-            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cGF0aCBkPSJNMyA5bDktN2w5IDd2MTFhMiAyIDAgMCAxLTIgMkg1YTIgMiAwIDAgMS0yLTJWOXoiIHN0cm9rZT0iIzk0YTNiOCIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPC9zdmc+" class="menu-icon-svg">
-            <span>Back to Calculator</span>
-        </a>
-    </nav>
 </body>
 </html>
