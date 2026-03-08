@@ -737,13 +737,16 @@ tr.bad td { color: var(--danger); }
 
 .help-slides {
     display: flex;
-    width: 500%;
-    transition: transform 0.4s ease-in-out;
+    width: 600%;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .help-slide {
-    width: 20%; 
-    flex-shrink: 0;
+    flex: 0 0 16.666%;
+    padding: 30px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
 }
 
 .help-slide, .standalone-slide {
