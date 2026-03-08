@@ -754,75 +754,104 @@ function exportPdf() {
 
     if (!providerRows.length || !pdfBtn) return;
 
+    // UI Feedback
     const originalText = pdfBtn.textContent;
     pdfBtn.textContent = "Generating...";
     pdfBtn.style.pointerEvents = "none";
     pdfBtn.style.opacity = "0.7";
 
+    // 1. Create a sterile off-screen container
     const printContainer = document.createElement("div");
+    printContainer.id = "pdf-render-area";
     printContainer.style.cssText = "position:absolute; left:-9999px; width:800px; padding:40px; background:#fff; color:#000; font-family:Arial, sans-serif;";
 
-    // 1. Header & PAYG Summary
+    // 2. Build the HTML with internal styles to force Black text
     let contentHtml = `
-        <h1 style="text-align:center; margin-bottom:10px;">EV Trip Report</h1>
+        <style>
+            #pdf-render-area * { color: #000 !important; }
+            .pdf-header { text-align: center; margin-bottom: 10px; }
+            .pdf-section-title { font-size: 18px; border-bottom: 1px solid #000; padding-bottom: 5px; margin-top: 20px; }
+            .pdf-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 10px; margin-bottom: 30px; }
+            .pdf-table th, .pdf-table td { border: 1px solid #000; padding: 8px; text-align: left; }
+            .pdf-table th { background: #f2f2f2; }
+            .pdf-conclusion-wrapper { 
+                background: #f4f4f4 !important; 
+                padding: 20px; 
+                border: 1px solid #ccc; 
+                border-radius: 8px; 
+                margin-top: 20px;
+            }
+            .calc-lines div { margin-bottom: 5px; }
+        </style>
+        
+        <div class="pdf-header">
+            <h1>EV Trip Savings Report</h1>
+            <p>Generated on ${new Date().toLocaleDateString('en-GB')}</p>
+        </div>
         <hr style="border:0; border-top:1px solid #eee; margin-bottom:20px;">
-        <div style="margin-bottom:30px;">
+        
+        <div class="calc-lines">
             ${paygSummary ? paygSummary.innerHTML : ""}
         </div>
-    `;
 
-    // 2. The Table (Manually mapped to fix column order)
-    contentHtml += `
-        <h2 style="font-size:18px; border-bottom:1px solid #000; padding-bottom:5px;">Comparison Results</h2>
-        <table style="width:100%; border-collapse:collapse; font-size:12px; margin-bottom:30px;">
+        <h2 class="pdf-section-title">Comparison Results</h2>
+        <table class="pdf-table">
             <thead>
-                <tr style="background:#f2f2f2;">
-                    <th style="border:1px solid #000; padding:8px; text-align:left;">Provider</th>
-                    <th style="border:1px solid #000; padding:8px; text-align:left;">Sub. Fee</th>
-                    <th style="border:1px solid #000; padding:8px; text-align:left;">Disc. Rate</th>
-                    <th style="border:1px solid #000; padding:8px; text-align:left;">Trip Cost</th>
-                    <th style="border:1px solid #000; padding:8px; text-align:left;">vs. PAYG</th>
-                    <th style="border:1px solid #000; padding:8px; text-align:left;">Break Even</th>
+                <tr>
+                    <th>Provider</th>
+                    <th>Sub. Fee</th>
+                    <th>Disc. Rate</th>
+                    <th>Trip Cost</th>
+                    <th>vs. PAYG</th>
+                    <th>Break Even</th>
                 </tr>
             </thead>
             <tbody>`;
 
+    // Manually map rows to ensure Provider (cols[0]) is always on the left
     providerRows.forEach(row => {
         const cols = row.querySelectorAll("td");
-        contentHtml += `
-            <tr>
-                <td style="border:1px solid #000; padding:8px;"><strong>${cols[0].innerText.split('\n')[0]}</strong></td>
-                <td style="border:1px solid #000; padding:8px;">${cols[1].innerText}</td>
-                <td style="border:1px solid #000; padding:8px;">${cols[2].innerText}</td>
-                <td style="border:1px solid #000; padding:8px;">${cols[3].innerText}</td>
-                <td style="border:1px solid #000; padding:8px;">${cols[4].innerText}</td>
-                <td style="border:1px solid #000; padding:8px;">${cols[5].innerText}</td>
-            </tr>`;
+        if (cols.length >= 6) {
+            contentHtml += `
+                <tr>
+                    <td><strong>${cols[0].innerText.split('\n')[0]}</strong></td>
+                    <td>${cols[1].innerText}</td>
+                    <td>${cols[2].innerText}</td>
+                    <td>${cols[3].innerText}</td>
+                    <td>${cols[4].innerText}</td>
+                    <td>${cols[5].innerText}</td>
+                </tr>`;
+        }
     });
 
-    // 3. Final Conclusion
     contentHtml += `</tbody></table>
-        <div style="background:#f9f9f9; padding:20px; border:1px solid #ddd; border-radius:8px;">
+        <h2 class="pdf-section-title">Analysis Conclusion</h2>
+        <div class="pdf-conclusion-wrapper">
             ${conclusion ? conclusion.innerHTML : ""}
-        </div>
-    `;
+        </div>`;
 
     printContainer.innerHTML = contentHtml;
     
-    // Clean up unwanted items inside the injected HTML (like tooltip icons)
-    printContainer.querySelectorAll(".info-icon, .jump-btn-pulse, .mini-table").forEach(el => el.remove());
+    // Scrub unwanted UI elements from the cloned HTML
+    printContainer.querySelectorAll(".info-icon, .jump-btn-pulse, .mini-table, .mobile-only-text").forEach(el => el.remove());
 
     document.body.appendChild(printContainer);
 
-    html2canvas(printContainer, { scale: 2 }).then(canvas => {
+    // 3. Render to Canvas then PDF
+    html2canvas(printContainer, { 
+        scale: 2,
+        useCORS: true 
+    }).then(canvas => {
         const { jsPDF } = window.jspdf;
         const pdf = new jsPDF("p", "mm", "a4");
-        const imgWidth = 190;
+        const pageWidth = pdf.internal.pageSize.getWidth();
+        const imgWidth = pageWidth - 20; // 10mm margins
         const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
         pdf.addImage(canvas.toDataURL("image/png"), "PNG", 10, 15, imgWidth, imgHeight);
-        pdf.save("ev-trip-analysis.pdf");
+        pdf.save("EV-Trip-Analysis.pdf");
 
+        // Cleanup
         document.body.removeChild(printContainer);
         pdfBtn.textContent = originalText;
         pdfBtn.style.pointerEvents = "auto";
