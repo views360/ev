@@ -406,8 +406,10 @@ function calculate() {
     const tripIncomplete = 
         inputs.journeyMiles <= 0 || 
         inputs.batteryKwh <= 0 || 
+        inputs.soc <= 0 ||
         inputs.efficiency <= 0 || 
-        inputs.adhoc <= 0;
+        inputs.adhoc <= 0 ||
+        inputs.startChargeRate <= 0;
     
     const providerBoxes = document.querySelectorAll(".provider-box");
 
