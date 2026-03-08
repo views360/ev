@@ -802,7 +802,7 @@ function exportPdf() {
                     <th>Disc. Rate</th>
                     <th>Trip Cost</th>
                     <th>vs. PAYG</th>
-                    <th>Break Even</th>
+                    <th>Break Even (Exc. Battery Pre-Charge)</th>
                 </tr>
             </thead>
             <tbody>`;
