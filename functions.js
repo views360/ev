@@ -27,16 +27,15 @@ document.addEventListener('DOMContentLoaded', () => {
     // 1. Start the automatic intro
     track.classList.add('intro-animation');
 
-    // 2. When intro finishes, set the state to Slide 3 (index 2) 
-    // and remove animation so manual 'Next' buttons work.
+    // 2. Hand-off to manual control
     track.addEventListener('animationend', () => {
         track.classList.remove('intro-animation');
         
-        // Update your existing currentSlide variable to index 2 (the 3rd slide)
+        // We are now on the 3rd slide (Welcome Info)
         currentSlide = 2; 
         
-        // Set the track position manually so it stays on the first info card
-        track.style.transform = `translateX(-${currentSlide * 100}%)`;
+        // Move the track to the 3rd slide position (index 2 * 14.2857%)
+        track.style.transform = `translateX(-${currentSlide * 14.2857}%)`;
     });
 });
 
@@ -912,15 +911,18 @@ function initIntro() {
 // Call this when the page/modal opens
 initIntro();
 
-function moveSlide(step) {
-    const slides = document.querySelectorAll('.help-slide');
-    currentSlide += step;
+function moveSlide(direction) {
+    const track = document.getElementById('helpSlides');
+    const totalSlides = 7;
     
-    if (currentSlide < 0) currentSlide = 0;
-    if (currentSlide >= slides.length) currentSlide = slides.length - 1;
+    currentSlide += direction;
     
-    const percentage = 16.6666; 
-    document.getElementById('helpSlides').style.transform = `translateX(-${currentSlide * percentage}%)`;
+    // Prevent going out of bounds
+    if (currentSlide < 2) currentSlide = 2; // Don't go back to the intro/car
+    if (currentSlide >= totalSlides) currentSlide = totalSlides - 1;
+
+    // Move by 14.2857% increments
+    track.style.transform = `translateX(-${currentSlide * 14.2857}%)`;
 }
 
 function initSplash() {
