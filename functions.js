@@ -24,17 +24,18 @@ const getCookie = (name) => {
 document.addEventListener('DOMContentLoaded', () => {
     const track = document.getElementById('helpSlides');
     
-    // Start the sequence
+    // Start the intro animation immediately
     track.classList.add('intro-animation');
 
-    // Handle the hand-off to manual control
+    // When the animation completes (at Slide 3)
     track.addEventListener('animationend', () => {
+        // Remove the animation so manual buttons (CSS transitions) can take over
         track.classList.remove('intro-animation');
         
-        // Index 2 is the 3rd slide (Welcome Info)
+        // Index 2 is the 3rd slide (Welcome Text)
         currentSlide = 2; 
         
-        // Move the track to the exact 3rd slide position
+        // Lock the track to the 3rd slide's position
         track.style.transform = `translateX(-28.5714%)`;
     });
 });
