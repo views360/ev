@@ -892,7 +892,7 @@ function initSplash() {
             if (currentSlide === 0) {
                 moveSlide(1);
             }
-        }, 600);
+        }, 400);
     }
 }
 
