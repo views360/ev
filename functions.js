@@ -102,6 +102,7 @@ function shareLink() {
 
 function toggleTheme() {
     document.body.classList.toggle("light-mode");
+    setCookie('themePref', isLight ? 'light' : 'dark');
 }
 
 function createProviderBox(preset) {
