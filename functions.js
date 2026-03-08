@@ -968,18 +968,6 @@ function closePrivacy() {
     }, 400); 
 }
 
-function openAbout() {
-    const about = document.getElementById('aboutOverlay');
-    about.style.display = 'flex';
-    setTimeout(() => { about.style.opacity = '1'; }, 10);
-}
-
-function closeAbout() {
-    const about = document.getElementById('aboutOverlay');
-    about.style.opacity = '0';
-    setTimeout(() => { about.style.display = 'none'; }, 400); 
-}
-
 function openContact() {
     const contact = document.getElementById('contactOverlay');
     contact.style.display = 'flex';
