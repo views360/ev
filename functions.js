@@ -21,26 +21,6 @@ const getCookie = (name) => {
     return null;
 };
 
-document.addEventListener('DOMContentLoaded', () => {
-    const track = document.getElementById('helpSlides');
-    
-    // Start the automatic sequence
-    track.classList.add('intro-animation');
-
-    // When the 5-second animation finishes on Slide 3
-    track.addEventListener('animationend', () => {
-        // 1. Clear the animation class
-        track.classList.remove('intro-animation');
-        
-        // 2. Lock the position on Slide 3 (Index 2)
-        // 28.5714% is the position of the 3rd slide (2 * 100 / 7)
-        track.style.transform = `translateX(-28.5714%)`;
-        
-        // 3. Sync the manual index so 'Next' starts from Slide 3
-        currentSlide = 2; 
-    });
-});
-
 let PRESETS = [];
 let providerCount = 0;
 let chart = null;
@@ -894,50 +874,6 @@ window.addEventListener("DOMContentLoaded", init);
 
 let currentSlide = 0;
 
-function initIntro() {
-    const track = document.getElementById('helpSlides');
-    
-    // Start the auto-sequence
-    track.classList.add('intro-active');
-
-    // Once the car "speeds off" to the first info card:
-    track.addEventListener('animationend', () => {
-        track.classList.remove('intro-active');
-        
-        // Lock the position to the first Welcome Slide (Index 2)
-        currentSlide = 2; 
-        track.style.transform = `translateX(-${currentSlide * (100 / 7)}%)`;
-    });
-}
-
-// Call this when the page/modal opens
-initIntro();
-
-function moveSlide(direction) {
-    const track = document.getElementById('helpSlides');
-    const totalSlides = 7;
-    
-    currentSlide += direction;
-    
-    // Prevent going out of bounds
-    if (currentSlide < 2) currentSlide = 2; // Don't go back to the intro/car
-    if (currentSlide >= totalSlides) currentSlide = totalSlides - 1;
-
-    // Move by 14.2857% increments
-    track.style.transform = `translateX(-${currentSlide * 14.2857}%)`;
-}
-
-function initSplash() {
-    const helpOverlay = document.getElementById('helpOverlay');
-    if (helpOverlay && helpOverlay.style.display !== 'none') {
-        setTimeout(() => {
-            if (currentSlide === 0) {
-                moveSlide(1);
-            }
-        }, 400);
-    }
-}
-
 function moveSlide(step) {
     const container = document.getElementById('helpSlides');
     const slides = document.querySelectorAll('.help-slide'); 
@@ -962,19 +898,6 @@ function closeHelp() {
         }, 300);
     }
 }
-
-function initHelp() {
-    const helpOverlay = document.getElementById('helpOverlay');
-    if (helpOverlay && helpOverlay.style.display !== 'none') {
-        setTimeout(() => {
-            if (typeof currentSlide !== 'undefined' && currentSlide === 0) {
-                moveSlide(1);
-            }
-        }, 3000);
-    }
-}
-
-window.addEventListener('DOMContentLoaded', initHelp);
 
 function toggleTooltip(el) {
     const container = el.closest('.tooltip-container');

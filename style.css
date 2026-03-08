@@ -709,7 +709,7 @@ tr.bad td { color: var(--danger); }
     align-items: center;
     z-index: 2000;
     opacity: 1;
-    transition: opacity 0.2s ease;
+    transition: opacity 0.3s ease;
 }
 
 .help-modal {
@@ -717,13 +717,10 @@ tr.bad td { color: var(--danger); }
     width: 90%;
     max-width: 500px;
     border-radius: 16px;
-    background-color: var(--panel);
-    border: 1px solid var(--border);
-    overflow: hidden;
+    border: 1px solid var(--accent);
     position: relative;
     overflow: hidden;
     box-shadow: var(--glow-strong);
-    transition: transform 0.3s ease;
 }
 
 .close-x {
@@ -740,46 +737,13 @@ tr.bad td { color: var(--danger); }
 
 .help-slides {
     display: flex;
-    width: 700%; /* 7 slides */
-    transition: transform 0.5s ease-out; /* For manual navigation later */
+    width: 500%;
+    transition: transform 0.4s ease-in-out;
 }
 
 .help-slide {
-    width: 14.2857%; 
+    width: 20%; 
     flex-shrink: 0;
-}
-
-/* Update the Cinematic Drive-By Animation */
-@keyframes driveBySequence {
-    /* 0% to 15%: Slide 1 (Blank) immediately moves out, Slide 2 (Car) moves in */
-    0%   { transform: translateX(0); }
-    15%  { transform: translateX(-14.2857%); }
-    
-    /* 15% to 85%: THE PAUSE. The car stays stationary here. */
-    85%  { transform: translateX(-14.2857%); }
-    
-    /* 85% to 100%: The car slides off, bringing in Slide 3 (The Text) */
-    100% { transform: translateX(-28.5714%); }
-}
-
-.intro-animation {
-    /* forwards: ensures it stays on Slide 3 (the text) when done */
-    animation: driveBySequence 5s ease-in-out forwards;
-}
-
-/* Ensure slides don't stretch */
-.help-slide {
-    width: 14.2857%; 
-    flex-shrink: 0;
-}
-
-.intro-active {
-    animation: driveBy 4s cubic-bezier(0.45, 0.05, 0.55, 0.95) forwards;
-}
-
-/* Hide navigation buttons during the intro animation */
-.intro-active .help-footer {
-    display: none;
 }
 
 .help-slide, .standalone-slide {
@@ -819,25 +783,6 @@ tr.bad td { color: var(--danger); }
 .standalone-slide {
     width: 100%;
     display: block;
-}
-
-.help-slide.splash-slide {
-    background-color: var(--panel) !important;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    width: 100%;
-}
-
-.splash-loader {
-    border: 3px solid var(--border);
-    border-top: 3px solid var(--accent); /* Only the spinning top is blue */
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    animation: spin 1s linear infinite;
 }
 
 #providerResults table th:first-child,
@@ -1264,52 +1209,6 @@ body {
     flex-direction: column;
     height: 100%;
 }
-
-.splash-slide {
-    display: flex !important;
-    align-items: center;
-    justify-content: center;
-    background: var(--bg);
-    padding: 0 !important;
-    overflow: hidden; /* Prevents the zoom from causing scrollbars */
-}
-
-.splash-branding {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.splash-hero {
-    /* This makes the image fill the available space */
-    width: 100%;
-    height: 100%;
-    /* 'contain' ensures the whole 1024px square is visible */
-    /* Change to 'cover' if you want it to bleed off the edges like a background */
-    object-fit: contain; 
-    
-    padding: 0px;
-    box-sizing: border-box;
-    
-    animation: heroEntrance 2.5s ease-out forwards;
-}
-
-@keyframes heroEntrance {
-    0% {
-        opacity: 0;
-        transform: scale(0.9);
-    }
-    100% {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
-
-
-
-
 
 
 @media (max-width: 700px) {
