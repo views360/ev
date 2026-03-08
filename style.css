@@ -742,8 +742,18 @@ tr.bad td { color: var(--danger); }
 }
 
 .help-slide {
-    width: 14.2857%; 
+    width: 14.285714%; /* Exactly 1/7th */
     flex-shrink: 0;
+    overflow: hidden; /* This prevents the image from spilling into the next slide */
+    position: relative;
+    box-sizing: border-box;
+}
+
+.splash-hero {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
 }
 
 .help-slide, .standalone-slide {
