@@ -1222,14 +1222,14 @@ body {
 
 @keyframes intro-sequence {
     0% { transform: translateX(0); }                                      /* Start instantly */
-    15% { transform: translateX(-14.5%); }                               /* Quick slide-in (shifted from 20%) */
-    70% { transform: translateX(-15%); }                               /* Slow-motion crawl (duration reduced to 30%) */
+    25% { transform: translateX(-14.5%); }                               /* Quick slide-in (shifted from 20%) */
+    60% { transform: translateX(-15%); }                               /* Slow-motion crawl (duration reduced to 30%) */
     90%, 100% { transform: translateX(-28.5714285714%); }                  /* Fast exit to Slide 3 */
 }
 
 .intro-animation {
     /* 'linear' ensures the speed changes only at our defined keyframe markers */
-    animation: intro-sequence 2.5s linear forwards; 
+    animation: intro-sequence 2s linear forwards; 
 }
 
 #helpSlides {
