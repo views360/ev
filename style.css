@@ -79,15 +79,12 @@ h3 {
     border-color: var(--accent) transparent transparent transparent;
 }
 
-/* */
-/* Specific override for tooltips that should appear below the icon */
 .tooltip-box.tooltip-down {
     bottom: auto;
-    top: 140%; /* Move to below the icon */
+    top: 140%; 
     transform: translateX(-50%) translateY(-10px) !important;
 }
 
-/* Adjust the arrow to point UP instead of DOWN */
 .tooltip-box.tooltip-down::after {
     top: auto;
     bottom: 100%;
@@ -96,17 +93,14 @@ h3 {
 
 .tooltip-box.tooltip-down.tooltip-reset-offset, 
 .tooltip-box.tooltip-reset-offset {
-    /* Moves the box 50px further to the left than the default center */
     transform: translateX(calc(-50% - 50px)) translateY(10px) !important;
 }
 
-/* Ensure the arrow stays aligned with the lightbulb icon */
 .tooltip-box.tooltip-down.tooltip-reset-offset::after, 
 .tooltip-box.tooltip-reset-offset::after {
     left: calc(50% + 50px) !important;
 }
 
-/* Maintain animation state when active/hovered */
 .tooltip-container.active .tooltip-box.tooltip-down.tooltip-reset-offset,
 .tooltip-container.active .tooltip-box.tooltip-reset-offset,
 .tooltip-container:hover .tooltip-box.tooltip-down.tooltip-reset-offset,
@@ -114,7 +108,6 @@ h3 {
     transform: translateX(calc(-50% - 50px)) translateY(0) !important;
 }
 
-/* Ensure the animation matches the downward direction */
 .tooltip-container.active .tooltip-box.tooltip-down,
 .tooltip-container:hover .tooltip-box.tooltip-down {
     transform: translateX(-50%) translateY(0) !important;
@@ -167,18 +160,16 @@ h3 {
     color: var(--danger);
     font-weight: bold;
     text-align: center;
-    margin: 20px auto; /* Added 'auto' to center it */
+    margin: 20px auto; 
     padding: 15px;
     border: 1px solid var(--danger);
-    border-radius: 12px; /* Changed from 8px to match cards */
+    border-radius: 12px; 
     background-color: rgba(239, 68, 68, 0.1);
     
-    /* Simplified layout to match the Comparison Mode card width */
     max-width: 420px; 
     width: 100%;
     box-sizing: border-box;
     
-    /* Removed alertPulse animation to stop the pulsating border */
     animation: none; 
 }
 
@@ -371,7 +362,6 @@ input:focus, select:focus {
 }
 
 #providerResults th {
-    /*background: var(--panel-alt);*/
     text-align: left;
     padding: 14px 12px;
     font-size: 0.9rem;
@@ -409,15 +399,14 @@ body.light-mode #providerResults th:nth-child(even) {
 }
 
 .conclusion-white-border {
-    border: 1px solid #ffffff; /* The simple white border */
+    border: 1px solid #ffffff; 
     border-radius: 12px;
     padding: 20px;
     margin-top: 20px;
-    width: 100%; /* Ensure it spans full width */
+    width: 100%; 
     box-sizing: border-box;
 }
 
-/* Ensure text inside stays the theme color */
 .conclusion-white-border p, 
 .conclusion-white-border strong {
     color: var(--text) !important;
@@ -436,7 +425,7 @@ body.light-mode #providerResults th:nth-child(even) {
 .main-result {
     font-size: 1.1rem;
     margin-bottom: 10px;
-    color: var(--bg); /* Dark text for the white box */
+    color: var(--bg); 
 }
 
 .speed-comparison-container {
@@ -523,7 +512,7 @@ tr.bad td { color: var(--danger); }
 .pill-toggle {
     position: relative;
     display: flex;
-    width: 100%; /* Scale to fit the 420px container minus card padding */
+    width: 100%; 
     max-width: 100%; 
     background: var(--bg);
     border: 1px solid var(--border);
@@ -552,14 +541,14 @@ tr.bad td { color: var(--danger); }
     background: none;
     border: none;
     color: var(--text);
-    padding: 10px 5px; /* Reduced side padding from 10px to 5px */
+    padding: 10px 5px; 
     font-weight: 600;
     cursor: pointer;
     z-index: 2;
     transition: color 0.3s ease;
     font-family: inherit;
-    font-size: 0.85rem; /* Slightly smaller font to ensure fit */
-    white-space: nowrap; /* Prevents text wrapping */
+    font-size: 0.85rem; 
+    white-space: nowrap; 
 }
 
 .pill-btn.active {
@@ -684,14 +673,14 @@ tr.bad td { color: var(--danger); }
 }
 
 .comparison-mode-box {
-    border: 1px solid var(--border); /* Matches standard card border */
+    border: 1px solid var(--border); 
     background: var(--panel-alt);
-    box-shadow: none; /* Removes the glow as requested */
+    box-shadow: none; 
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 15px;
-    animation: none; /* Stops the pulsating animation */
+    animation: none; 
 }
 
 .comparison-label {
@@ -806,19 +795,12 @@ tr.bad td { color: var(--danger); }
     position: sticky;
     left: 0;
     z-index: 2;
-    /*background-color: var(--panel);*/
     border-right: 2px solid var(--accent) !important;
     box-shadow: 5px 0 15px -5px var(--accent);
 }
 
 #providerResults th:first-child {
     z-index: 3;
-    /*background-color: var(--panel-alt);*/
-}
-
-#providerResults td:nth-child(2),
-#providerResults th:nth-child(2) {
-    /*background-color: transparent !important;*/
 }
 
 #providerResults td:first-child::after {
@@ -832,57 +814,54 @@ tr.bad td { color: var(--danger); }
     box-shadow: var(--glow);
 }
 
-/* Full-Width Android Header */
 .android-header-full {
     background-color: #000000;
     width: 100vw;
     height: 64px;
     display: flex;
-    align-items: center; /* Vertically centers content */
+    align-items: center; 
     justify-content: space-between;
     padding: 0 20px;
     box-sizing: border-box;
-    position: fixed; /* Keeps it at the very top */
+    position: fixed; 
     top: 0;
     left: 0;
-    z-index: 2000; /* Higher than everything else */
+    z-index: 2000; 
 }
 
 .android-title-clean {
-    color: #ffffff !important; /* White title */
-    font-size: 1.4rem !important; /* Larger */
+    color: #ffffff !important; 
+    font-size: 1.4rem !important; 
     font-weight: 400 !important;
     margin: 0 !important;
     letter-spacing: 0.5px;
 }
 
-/* White Three-Dot Menu */
 .android-dots-trigger {
     display: flex;
     flex-direction: column;
     gap: 3px;
     cursor: pointer;
     padding: 10px;
-    z-index: 1900; /* Menu will appear over this */
+    z-index: 1900; 
 }
 
 .android-dots-trigger span {
     width: 4px;
     height: 4px;
-    background-color: #ffffff; /* White dots */
+    background-color: #ffffff; 
     border-radius: 50%;
 }
 
-/* Chrome-style Slide Down Menu */
 .chrome-style-menu {
     position: fixed;
-    top: 8px; /* Slight offset from top like Chrome */
+    top: 8px; 
     right: 8px;
     width: 200px;
-    background: #2d2e30; /* Deep Grey */
+    background: #2d2e30; 
     box-shadow: 0 8px 24px rgba(0,0,0,0.4);
     border-radius: 4px;
-    z-index: 2100; /* Higher than the dots */
+    z-index: 2100; 
     transform-origin: top right;
     transform: scale(0);
     opacity: 0;
@@ -900,7 +879,7 @@ tr.bad td { color: var(--danger); }
     padding: 12px 16px;
     color: #e8eaed;
     text-decoration: none;
-    font-size: 0.9rem; /* Smaller text */
+    font-size: 0.9rem; 
     cursor: pointer;
     background: none;
     border: none;
@@ -914,23 +893,21 @@ tr.bad td { color: var(--danger); }
     width: 18px;
     height: 18px;
     margin-right: 14px;
-    opacity: 0.7; /* Mid-grey line appearance */
+    opacity: 0.7; 
 }
 
-/* Compensate for fixed header */
 body {
-    padding-top: 64px !important; /* Matches height of .android-header-full */
+    padding-top: 64px !important; 
     margin: 0;
     padding: 0 30px 30px 30px;
 }
 
 .app {
-    border-radius: 0; /* Optional: square off for true mobile look */
+    border-radius: 0; 
     box-shadow: none;
     border: none;
 }
 
-/* Hide original header elements */
 .header-row, .side-menu { display: none !important; }
 
 .android-header {
@@ -947,17 +924,15 @@ body {
     z-index: 1300;
 }
 
-/* Slim, Neon Blue Title */
 .android-title {
     color: #00e5ff !important;
     font-size: 1.1rem !important;
-    font-weight: 400 !important; /* Not bold */
+    font-weight: 400 !important; 
     margin: 0 !important;
     text-shadow: none !important;
     letter-spacing: 0.5px;
 }
 
-/* Three Small Round Circles (Kebab Menu) */
 .android-menu-trigger {
     display: flex;
     flex-direction: column;
@@ -972,18 +947,17 @@ body {
 .android-menu-trigger span {
     width: 4px;
     height: 4px;
-    background-color: #00e5ff; /* Neon Blue */
+    background-color: #00e5ff; 
     border-radius: 50%;
     display: block;
 }
 
-/* Slide Down Menu (WhatsApp Style) */
 .side-menu-android {
     position: fixed;
     top: 60px;
     right: 10px;
     width: 200px;
-    background: #1f2c34; /* WhatsApp Dark Grey/Blue */
+    background: #1f2c34; 
     box-shadow: 0 4px 12px rgba(0,0,0,0.5);
     border-radius: 4px;
     z-index: 1250;
@@ -999,7 +973,6 @@ body {
     opacity: 1;
 }
 
-/* Cookie Banner */
 .cookie-banner {
     position: fixed;
     bottom: 20px;
@@ -1135,7 +1108,7 @@ body {
 .side-menu {
     position: fixed;
     top: 0;
-    left: -350px; /* Increased from -300px to ensure it's fully hidden */
+    left: -350px; 
     width: 280px;
     height: 100%;
     background: var(--panel);
@@ -1158,12 +1131,11 @@ body {
     margin-bottom: 20px;
 }
 
-/* Menu Items */
 .menu-item {
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    width: 75%;                  /* 75% of parent width */
+    width: 75%;                  
     margin: 0 auto 10px auto;
     padding: 15px;
     background: var(--panel-alt);
@@ -1212,20 +1184,13 @@ body {
     display: none;
 }
 
-/* style.css */
 #privacyOverlay .help-modal {
     overflow: hidden;
 }
 
 #privacyOverlay .help-slide {
-    padding: 30px; /* Adjust based on your current help slide padding */
+    padding: 30px; 
 }
-
-
-
-
-
-
 
 @media (max-width: 700px) {
 
@@ -1234,9 +1199,9 @@ body {
     }
     
     .toggle-container-block {
-        margin: 20px 10px; /* 20px top/bottom, 10px left/right */
-        width: auto; /* Allows margins to take effect */
-        display: block; /* Changes from flex to allow auto margins */
+        margin: 20px 10px; 
+        width: auto; 
+        display: block; 
     }
 
     .pill-toggle {
@@ -1247,13 +1212,12 @@ body {
         padding: 0;
     }
     .app {
-        padding: 0 10px 15px 15px; /* Removes top padding on mobile */
+        padding: 0 10px 15px 15px; 
         margin-top: 0;
         border: none;
         box-shadow: none;
-        background: transparent; /* Allows page background to show through */
+        background: transparent; 
     }
-    /* Hide the old header and triggers */
     .header-row, .menu-trigger {
         display: none !important;
     }
@@ -1321,7 +1285,7 @@ body {
     }
     
     .menu-trigger:hover {
-        left: auto; /* Prevent the 'hover: left: 0' rule from breaking it */
+        left: auto; 
     }
 
     .header-row {
@@ -1335,7 +1299,7 @@ body {
     .comparison-mode-box,
     .card,
     #breakEvenCard {
-        max-width: 100%; /* Fills the container (minus the 10px margins) */
+        max-width: 100%; 
         margin-bottom: 20px;
     }
     
@@ -1372,31 +1336,30 @@ body {
     }
 
     .results-header-container {
-        flex-direction: column; /* Stacks the title-group and the btn-row */
+        flex-direction: column; 
         gap: 10px;
     }
     
     .btn-row {
-        margin: 0; /* Remove extra margins that might offset the buttons on mobile */
+        margin: 0; 
         justify-content: center;
     }
 
     .results-header-container .btn-row {
         display: flex;
-        flex-direction: row; /* Force side-by-side */
-        flex-wrap: nowrap;   /* Prevent them from stacking */
+        flex-direction: row; 
+        flex-wrap: nowrap;   
         gap: 8px;
         width: 100%;
         justify-content: center;
         margin-bottom: 25px;
     }
 
-    /* Target the buttons specifically within the results header */
     .results-header-container .btn {
-        flex: 1;             /* Grow to fill the space equally */
-        padding: 0 8px;      /* Significantly reduced padding */
-        font-size: 0.75rem;  /* Smaller font for mobile fit */
-        height: 36px;        /* Slightly slimmer height */
-        white-space: nowrap; /* Keep text on one line */
+        flex: 1;             
+        padding: 0 8px;      
+        font-size: 0.75rem;  
+        height: 36px;        
+        white-space: nowrap; 
     }
 }
