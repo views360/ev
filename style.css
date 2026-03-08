@@ -750,12 +750,28 @@ tr.bad td { color: var(--danger); }
     box-sizing: border-box;
 }
 
+/* Update the Cinematic Drive-By Animation */
 @keyframes driveBySequence {
-    0% { transform: translateX(0); }               /* Slide 1: Blank */
-    15% { transform: translateX(0); }              /* Brief pause on blank */
-    45% { transform: translateX(-14.2857%); }      /* Slide 2: Car enters center (1/7th) */
-    75% { transform: translateX(-14.2857%); }      /* Gentle pause for the car */
-    100% { transform: translateX(-28.5714%); }     /* Car "Speeds off" to Slide 3 (2/7ths) */
+    0%   { transform: translateX(0); }               /* Slide 1: Blank */
+    10%  { transform: translateX(0); }               /* Hold on blank for a moment */
+    
+    /* Car enters and slows down in the center */
+    30%  { transform: translateX(-14.2857%); }       /* Slide 2: Car reaches center */
+    70%  { transform: translateX(-14.2857%); }       /* Car "lingers" or crawls in center */
+    
+    /* Car speeds off rapidly */
+    100% { transform: translateX(-28.5714%); }      /* Slide 3: Info card appears */
+}
+
+.intro-animation {
+    /* Set to 5 seconds to give the car enough time to "linger" */
+    animation: driveBySequence 5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Ensure slides don't stretch */
+.help-slide {
+    width: 14.2857%; 
+    flex-shrink: 0;
 }
 
 .intro-active {
