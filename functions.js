@@ -644,6 +644,7 @@ function setToggle(mode, btn) {
         slider.style.transform = mode === 'break-even' ? 'translateX(0)' : 'translateX(100%)';
     }
     setCookie('calcMode', mode);
+    setCookie('comparisonMode', mode);
     calculate();
 }
 
@@ -917,17 +918,29 @@ function toggleProviders() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    if (!getCookie('cookiesAccepted')) {
-        document.getElementById('cookieBanner').style.display = 'block';
-    }
     const savedMode = getCookie('calcMode');
+
     if (savedMode) {
         const modeBtn = document.querySelector(`.pill-btn[onclick*="${savedMode}"]`);
         if (modeBtn) {
             modeBtn.click();
         }
+
+        const helpOverlay = document.getElementById('helpOverlay');
+        if (helpOverlay) {
+            helpOverlay.style.display = 'none';
+        }
+
+        const cookieBanner = document.getElementById('cookieBanner');
+        if (cookieBanner) {
+            cookieBanner.style.display = 'none';
+        }
+    } else {
+        if (!getCookie('cookiesAccepted')) {
+            document.getElementById('cookieBanner').style.display = 'block';
+        }
     }
-})
+});
 
 function acceptCookies() {
     const date = new Date();
