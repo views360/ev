@@ -24,20 +24,26 @@
             color: var(--text);
             opacity: 0.9;
         }
-        .back-link {
+        /* Style for the back button to allow it to use the neon glow class */
+        .btn-back {
             display: inline-block;
-            margin-bottom: 20px;
-            color: var(--accent);
+            margin-bottom: 30px;
             text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 8px;
             font-weight: 600;
+            background: var(--panel-alt);
+            color: var(--text);
+            border: 1px solid var(--border);
+            transition: transform 0.2s ease;
         }
-        .back-link:hover {
-            text-decoration: underline;
+        .btn-back:hover {
+            transform: translateY(-2px);
         }
     </style>
     <script>
         /** * IMMEDIATE THEME CHECK 
-         * Prevents the white flash by applying the class to the root element.
+         * Applies theme to root element to prevent white flash.
          */
         (function() {
             const match = document.cookie.match(new RegExp('(^| )themePref=([^;]+)'));
@@ -53,7 +59,7 @@
 <body>
     <script>
         /** * BODY SYNC 
-         * This ensures the first click of the toggle works by matching the body class to the root.
+         * Ensures the first toggle click works by syncing body state with root.
          */
         if (document.documentElement.classList.contains('dark-mode')) {
             document.body.classList.add('dark-mode');
@@ -115,7 +121,8 @@
         </div>
 
         <div class="content-section">
-            <a href="index.html" class="back-link">← Back to Calculator</a>
+            <a href="index.html" class="btn-back empty-pulse">← Back to Calculator</a>
+            
             <h1>Optimising Your EV Charging Strategy</h1>
             <p>Welcome to <strong>EV Subs Compare</strong>, a dedicated utility designed to help UK electric vehicle drivers navigate the increasingly complex landscape of public charging costs.</p>
             
@@ -123,13 +130,10 @@
             <p>The goal of this tool is to provide transparency. Choosing between a standard Pay-As-You-Go (PAYG) rate and a monthly subscription can be difficult without doing the math. We aim to simplify that decision-making process.</p>
 
             <h2>Designed for Privacy</h2>
-            <p>We believe in a "privacy-first" approach. This tool does not collect or store any personally identifiable information. We use local cookies solely to remember your vehicle settings (like battery size and efficiency) so that the tool is ready to use immediately upon your next visit.</p>
-
-            <div class="help-footer" style="margin-top: 50px; text-align: center;">
-                <a href="index.html" class="btn secondary">Start Comparing Now</a>
-            </div>
+            <p>We believe in a "privacy-first" approach. This tool does not collect or store any personally identifiable information. We use local cookies solely to remember your vehicle settings so that the tool is ready to use immediately upon your next visit.</p>
         </div>
     </div>
+
     <script src="functions.js"></script>
 </body>
 </html>
