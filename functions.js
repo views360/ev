@@ -874,6 +874,19 @@ window.addEventListener("DOMContentLoaded", init);
 
 let currentSlide = 0;
 
+function startSplashAutoCycle() {
+    setTimeout(() => {
+        if (typeof currentSlide !== 'undefined' && currentSlide === 0) {
+            moveSlide(1);
+        }
+    }, 3000);
+}
+
+window.addEventListener('load', () => {
+    if (document.getElementById('helpOverlay').style.display !== 'none') {
+        startSplashAutoCycle();
+    }
+});
 function moveSlide(step) {
     const container = document.getElementById('helpSlides');
     const slides = document.querySelectorAll('.help-slide'); 
