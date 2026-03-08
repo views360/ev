@@ -893,6 +893,25 @@ window.addEventListener("DOMContentLoaded", init);
 
 let currentSlide = 0;
 
+function initIntro() {
+    const track = document.getElementById('helpSlides');
+    
+    // Start the auto-sequence
+    track.classList.add('intro-active');
+
+    // Once the car "speeds off" to the first info card:
+    track.addEventListener('animationend', () => {
+        track.classList.remove('intro-active');
+        
+        // Lock the position to the first Welcome Slide (Index 2)
+        currentSlide = 2; 
+        track.style.transform = `translateX(-${currentSlide * (100 / 7)}%)`;
+    });
+}
+
+// Call this when the page/modal opens
+initIntro();
+
 function moveSlide(step) {
     const slides = document.querySelectorAll('.help-slide');
     currentSlide += step;
