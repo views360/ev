@@ -1213,55 +1213,45 @@ body {
     height: 100%;
 }
 
-/* Splash Screen Styles */
 .splash-slide {
     display: flex !important;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
+    background: var(--bg);
+    padding: 0 !important;
+}
+
+.splash-branding {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
     height: 100%;
-    text-align: center;
 }
 
-.splash-logo {
-    height: 80px;
-    margin-bottom: 25px;
-    animation: splashFadeIn 1.2s ease-out;
+.splash-hero {
+    max-width: 250px; 
+    height: auto;
+    animation: heroEntrance 2.5s ease-out forwards;
 }
 
-.splash-progress {
-    width: 180px;
-    height: 4px;
-    background: var(--border);
-    border-radius: 10px;
-    overflow: hidden;
-    margin-bottom: 10px;
+@keyframes heroEntrance {
+    0% {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    30% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1.02);
+    }
 }
 
-.splash-progress-inner {
-    width: 0%;
-    height: 100%;
-    background: var(--accent);
-    box-shadow: var(--glow);
-    animation: splashProgress 2.5s linear forwards;
-}
 
-.splash-status {
-    font-size: 0.8rem;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
 
-@keyframes splashFadeIn {
-    from { opacity: 0; transform: scale(0.9); }
-    to { opacity: 1; transform: scale(1); }
-}
 
-@keyframes splashProgress {
-    0% { width: 0%; }
-    100% { width: 100%; }
-}
 
 
 @media (max-width: 700px) {
