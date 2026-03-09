@@ -39,7 +39,7 @@ h3 {
     display: inline-block;
     cursor: pointer;
     margin-left: 4px;
-    z-index: 11;
+    z-index: auto;
 }
 
 .tooltip-box {
@@ -804,14 +804,9 @@ tr.bad td { color: var(--danger); }
     overflow: hidden;
     position: sticky;
     left: 0;
-    z-index: 10;
     border-right: 2px solid var(--accent) !important;
     box-shadow: 5px 0 15px -5px var(--accent);
     background: var(--panel);
-}
-
-#providerResults th:first-child {
-    z-index: 3;
 }
 
 #providerResults td:first-child::after {
@@ -1408,6 +1403,15 @@ body {
         white-space: normal;
         word-wrap: break-word;
      }
+
+    #providerResults tr {
+        position: relative;
+        z-index: 1;
+    }
+
+    #providerResults tr:hover {
+        z-index: 100;
+    }
     
     .cookie-actions {
         width: 100%;
