@@ -379,7 +379,7 @@ function calculate() {
                 <td>
                     <div class="tooltip-container">
                         <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
-                        <div class="tooltip-box">${row.comments}</div>
+                        <div class="tooltip-box tooltip-right">${row.comments}</div>
                     </div> ${providerLink}
                 </td>
                 <td>${row.speedDisplay}</td>
