@@ -222,14 +222,11 @@
     <div class="grid">
         <div class="card">
             <h3>Trip & Vehicle</h3>
-            <p style="font-size: 0.8em; margin-bottom: 20px">Click💡for explanation.</p>
             <div class="input-row">
                 <div class="input-group">
-                    <label for "journeyMiles">Trip distance (miles)
-                        <div class="tooltip-container">
-                          <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
-                              <div class="tooltip-box">How far do you plan to travel? Adjust this value, and the results will auto-update.</div>
-                        </div>
+                    <label for "journeyMiles">
+                        <span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡</span><span class="tooltip-box">How far 
+							do you plan to travel? Adjust this value, and the results will auto-update.</span></span>Trip distance (miles)
                     </label>
                     <input type="number" id="journeyMiles" oninput="calculate()" placeholder="e.g., 250">
                 </div>
