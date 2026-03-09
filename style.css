@@ -1221,14 +1221,13 @@ body {
 }
 
 @keyframes intro-sequence {
-    0% { transform: translateX(0); }                                      /* Start instantly */
-    15% { transform: translateX(-14.5%); }                               /* Quick slide-in (shifted from 20%) */
-    60% { transform: translateX(-15%); }                               /* Slow-motion crawl (duration reduced to 30%) */
-    75%, 100% { transform: translateX(-28.5714285714%); }                  /* Fast exit to Slide 3 */
+    0% { transform: translateX(0); } 
+    15% { transform: translateX(-14.5%); } 
+    60% { transform: translateX(-15%); }
+    75%, 100% { transform: translateX(-28.5714285714%); } 
 }
 
 .intro-animation {
-    /* 'linear' ensures the speed changes only at our defined keyframe markers */
     animation: intro-sequence 3s linear forwards; 
 }
 
@@ -1236,6 +1235,36 @@ body {
     display: flex;
     transition: transform 0.5s ease-out;
 }
+
+#beReminderOverlay {
+    display: none;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 2000;
+    justify-content: center;
+    align-items: center;
+}
+
+#beReminderOverlay.active {
+    display: flex;
+    opacity: 1;
+}
+
+#beReminderOverlay .help-modal {
+    transform: translateY(20px);
+    transition: transform 0.4s ease;
+}
+
+#beReminderOverlay.active .help-modal {
+    transform: translateY(0);
+}
+
 
 
 @media (max-width: 700px) {
