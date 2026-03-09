@@ -39,7 +39,11 @@ h3 {
     display: inline-block;
     cursor: pointer;
     margin-left: 4px;
-    z-index: auto;
+}
+
+.tooltip-container:hover, 
+.tooltip-container.active {
+    z-index: 999;
 }
 
 .tooltip-box {
@@ -60,11 +64,10 @@ h3 {
     text-transform: none;
     line-height: 1.4;
     border: 1px solid var(--accent);
-    
+    pointer-events: none;
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
-    
     box-shadow: 0 0 15px var(--accent-soft);
     animation: pulseGlow 2s infinite ease-in-out;
 }
@@ -100,6 +103,9 @@ h3 {
 .tooltip-box.tooltip-down.tooltip-reset-offset::after, 
 .tooltip-box.tooltip-reset-offset::after {
     left: calc(50% + 50px) !important;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
 }
 
 .tooltip-container.active .tooltip-box.tooltip-down.tooltip-reset-offset,
@@ -107,11 +113,17 @@ h3 {
 .tooltip-container:hover .tooltip-box.tooltip-down.tooltip-reset-offset,
 .tooltip-container:hover .tooltip-box.tooltip-reset-offset {
     transform: translateX(calc(-50% - 50px)) translateY(0) !important;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
 }
 
 .tooltip-container.active .tooltip-box.tooltip-down,
 .tooltip-container:hover .tooltip-box.tooltip-down {
     transform: translateX(-50%) translateY(0) !important;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
 }
 
 .preset-select-pulse {
@@ -368,11 +380,13 @@ input:focus, select:focus {
     font-size: 0.9rem;
     color: var(--muted);
     border-bottom: 2px solid var(--border);
+    overflow: visible !important;
 }
 
 #providerResults td {
     padding: 14px 12px;
     border-bottom: 1px solid var(--border);
+    overflow: visible !important;
 }
 
 #providerResults td:nth-child(even),
@@ -1406,11 +1420,16 @@ body {
 
     #providerResults tr {
         position: relative;
-        z-index: 1;
     }
 
     #providerResults tr:hover {
         z-index: 100;
+    }
+
+    #providerResults tr:hover,
+    #providerResults tr:has(.tooltip-container:hover),
+    #providerResults tr:has(.tooltip-container.active) {
+        z-index: 10;
     }
     
     .cookie-actions {
@@ -1453,3 +1472,4 @@ body {
         white-space: nowrap; 
     }
 }
+
