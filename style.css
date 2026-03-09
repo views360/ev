@@ -798,7 +798,6 @@ tr.bad td { color: var(--danger); }
 #providerResults table th:first-child,
 #providerResults table td:first-child
  {
-    max-width: 200px;
     white-space: normal;
     word-wrap: break-word;
     overflow: hidden;
@@ -1381,7 +1380,8 @@ body {
     .results-header, .result-row {
         grid-template-columns: 85px 1fr 1fr 1fr !important;
         gap: 5px;
-        font-size: 0.85rem;    }
+        font-size: 0.85rem;
+    }
 
     .result-row div:first-child {
         white-space: nowrap;
@@ -1397,6 +1397,15 @@ body {
         flex-direction: column;
         text-align: center;
     }
+
+    #providerResults table th:first-child,
+    #providerResults table td:first-child
+     {
+        width: 85px;
+        max-width: 85px;
+        white-space: normal;
+        word-wrap: break-word;
+     }
     
     .cookie-actions {
         width: 100%;
