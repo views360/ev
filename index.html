@@ -105,15 +105,15 @@
         </div>
     </div>
 </div>
-<div id="beSplashOverlayReminder" class="help-overlay" style="display: none; opacity: 0;" onclick="closeBeSplashReminder()">
-    <div class="help-modal" onclick="event.stopPropagationReminder()">
-        <button class="close-x" onclick="closeBeSplashReminder()">×</button>
+<div id="beReminderOverlay" class="help-overlay" style="display: none;" onclick="closeBeReminder()">
+    <div class="help-modal">
+        <button class="close-x" onclick="closeBeReminder()">×</button>
         <div class="standalone-slide"> 
             <h2>Important Reminder About Break-Even Calculation Type</h2>
             <p>This calculation type determines the distance necessary to travel <strong>from the start of charging</strong> with a provider to recoup the subscription fee — based on your stated efficiency value.</p>
             <p>It does not include miles from your initial battery pre-charge.</p>
             <div class="help-footer">
-                <button class="btn secondary" onclick="closeBeSplashReminder()">Close</button>
+                <button class="btn secondary" onclick="closeBeReminder()">Close</button>
             </div>
         </div>
     </div>
