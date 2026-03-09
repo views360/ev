@@ -1089,5 +1089,3 @@ function closeBeReminder() {
         }, 400); 
     }
 }
-
-
