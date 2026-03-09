@@ -378,7 +378,10 @@ function calculate() {
             html += `<tr>
                 <td>
                     ${providerLink}
-                    <div style="font-size: 0.75rem; opacity:0.8;">${row.comments}</div>
+                    <div style="font-size: 0.75rem; opacity:0.8;"><div class="tooltip-container">
+                <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
+                <div class="tooltip-box">${row.comments}</div>
+            </div></div>
                 </td>
                 <td>${row.speedDisplay}</td>
                 <td>£${row.subCost.toFixed(2)}</td>
@@ -1087,3 +1090,4 @@ function closeBeReminder() {
         }, 400); 
     }
 }
+
