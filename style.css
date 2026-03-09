@@ -109,11 +109,11 @@ h3 {
 }
  
 .tooltip-box.tooltip-right {
-    transform: translateX(calc(-50% + 50px)) translateY(10px) !important;
+    transform: translateX(calc(-50% + 70px)) translateY(10px) !important;
 }
  
 .tooltip-box.tooltip-right::after {
-    left: calc(50% - 50px) !important;
+    left: calc(50% - 70px) !important;
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
@@ -121,7 +121,7 @@ h3 {
 
 .tooltip-container.active .tooltip-box.tooltip-right,
 .tooltip-container:hover .tooltip-box.tooltip-right {
-    transform: translateX(calc(-50% + 50px)) translateY(0) !important;
+    transform: translateX(calc(-50% + 70px)) translateY(0) !important;
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
