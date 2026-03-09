@@ -41,9 +41,9 @@ h3 {
 }
 
 .tooltip-container {
-    display: inline-block;
     position: relative;
-    vertical-align: baseline; /* Aligns the bulb with the text's baseline */
+    display: inline-block;
+    vertical-align: middle;
     cursor: pointer;
     margin: 0;
 }
