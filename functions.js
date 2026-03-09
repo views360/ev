@@ -365,7 +365,7 @@ function calculate() {
                           <div class="tooltip-box tooltip-down">This is the provider's discounted charge rate (per kWh) that is available after subscribing for one month. Note that some providers have variable charge rates depending on location and time of day.</div></th>
                                 <th>Break Even Miles<div class="tooltip-container">
                             <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
-                          <div class="tooltip-box tooltip-down tooltip-reset-offset">This is the number of miles you must drive on the provider's discounted charge rate to pay off the subscription fee. Remember, a subscription lasts for an entire month.</div></th>
+                          <div class="tooltip-box tooltip-down tooltip-reset-offset">This is the number of miles you must drive on the provider's discounted charge rate to pay off the subscription fee. <strong>Important! This is not the total miles of your journey</strong> — it is the number of miles you must drive from your first charge with this provider. Remember, a subscription lasts for an entire month.</div></th>
                             </tr>
                         </thead>
                         <tbody>`;
