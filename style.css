@@ -42,11 +42,10 @@ h3 {
 
 .tooltip-container {
     position: relative;
-    display: inline;
-    vertical-align: baseline;
+    display: inline-flex;
+    vertical-align: middle;
     cursor: pointer;
     margin: 0;
-    white-space: normal;
 }
 
 .tooltip-container:hover, 
