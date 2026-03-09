@@ -388,6 +388,19 @@ function calculate() {
         });
 
         document.getElementById("providerResults").innerHTML = html + `</tbody></table></div>`;
+
+        if (!beReminderShown) {
+            setTimeout(() => {
+                // Double check we are still in break-even mode before showing
+                const activePill = document.querySelector('.pill-btn.active');
+                const isTripMode = activePill && activePill.textContent.trim() === "Trip Savings";
+                
+                if (!isTripMode) {
+                    showBeReminder();
+                    beReminderShown = true; 
+                }
+            }, 2000); // 2 second delay
+        }
         return; 
     }
 
@@ -1050,4 +1063,27 @@ function closeContact() {
     setTimeout(() => {
         contact.style.display = 'none';
     }, 400);
+}
+
+let beReminderShown = false;
+
+function showBeReminder() {
+    const overlay = document.getElementById('beReminderOverlay');
+    if (overlay) {
+        overlay.style.display = 'flex';
+
+        setTimeout(() => {
+            overlay.style.opacity = '1';
+        }, 10);
+    }
+}
+
+function closeBeReminder() {
+    const overlay = document.getElementById('beReminderOverlay');
+    if (overlay) {
+        overlay.style.opacity = '0';
+        setTimeout(() => {
+            overlay.style.display = 'none';
+        }, 400);
+    }
 }
