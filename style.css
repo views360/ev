@@ -34,11 +34,18 @@ h3 {
     margin: 0px 0px 10px 0px;
 }
 
-.tooltip-container {
-    position: relative;
-    display: inline-block;
+.info-icon {
+    display: inline;
+    line-height: 1;
     cursor: pointer;
-    margin-left: 4px;
+}
+
+.tooltip-container {
+    display: inline-block;
+    position: relative;
+    vertical-align: baseline; /* Aligns the bulb with the text's baseline */
+    cursor: pointer;
+    margin: 0;
 }
 
 .tooltip-container:hover, 
