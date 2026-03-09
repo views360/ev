@@ -259,7 +259,7 @@ function calculate() {
     let beSplashShown = false;
 
     function openBeSplash() {
-        const overlay = document.getElementById('beSplashOverlay');
+        const overlay = document.getElementById('beSplashOverlay1');
         if (overlay) {
             overlay.style.display = 'flex';
             setTimeout(() => { overlay.style.opacity = '1'; }, 10);
@@ -267,7 +267,7 @@ function calculate() {
     }
     
     function closeBeSplash() {
-        const overlay = document.getElementById('beSplashOverlay');
+        const overlay = document.getElementById('beSplashOverlay1');
         if (overlay) {
             overlay.style.opacity = '0';
             setTimeout(() => { overlay.style.display = 'none'; }, 400);
@@ -409,7 +409,7 @@ function calculate() {
         
         if (typeof beSplashShown === 'undefined' || !beSplashShown) {
             window.beSplashShown = true; // Use window to ensure global scope if needed
-            setTimeout(openBeSplash, 2000); 
+            setTimeout(openBeSplash, 1000); 
         }
         return;
     }
