@@ -39,6 +39,7 @@ h3 {
     display: inline-block;
     cursor: pointer;
     margin-left: 4px;
+    z-index: 11;
 }
 
 .tooltip-box {
@@ -53,7 +54,7 @@ h3 {
     border-radius: 8px;
     width: 200px;
     text-align: center;
-    z-index: 5000;
+    z-index: 6000;
     font-size: 0.85rem;
     font-weight: normal;
     text-transform: none;
@@ -803,9 +804,10 @@ tr.bad td { color: var(--danger); }
     overflow: hidden;
     position: sticky;
     left: 0;
-    z-index: 2;
+    z-index: 10;
     border-right: 2px solid var(--accent) !important;
     box-shadow: 5px 0 15px -5px var(--accent);
+    background: var(--panel);
 }
 
 #providerResults th:first-child {
@@ -1447,4 +1449,3 @@ body {
         white-space: nowrap; 
     }
 }
-
