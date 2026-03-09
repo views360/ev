@@ -256,6 +256,24 @@ function calculate() {
         "adhoc", "startChargeRate", "efficiencyBE", "adhocBE"
     ];
 
+    let beSplashShown = false;
+
+    function openBeSplash() {
+        const overlay = document.getElementById('beSplashOverlay');
+        if (overlay) {
+            overlay.style.display = 'flex';
+            setTimeout(() => { overlay.style.opacity = '1'; }, 10);
+        }
+    }
+    
+    function closeBeSplash() {
+        const overlay = document.getElementById('beSplashOverlay');
+        if (overlay) {
+            overlay.style.opacity = '0';
+            setTimeout(() => { overlay.style.display = 'none'; }, 400);
+        }
+    }
+
     fieldIds.forEach(id => {
         const el = document.getElementById(id);
         if (el) {
@@ -388,7 +406,12 @@ function calculate() {
         });
 
         document.getElementById("providerResults").innerHTML = html + `</tbody></table></div>`;
-        return; 
+        
+        if (typeof beSplashShown === 'undefined' || !beSplashShown) {
+            window.beSplashShown = true; // Use window to ensure global scope if needed
+            setTimeout(openBeSplash, 2000); 
+        }
+        return;
     }
 
     if (uiPreText) uiPreText.style.display = "block";
@@ -1050,27 +1073,4 @@ function closeContact() {
     setTimeout(() => {
         contact.style.display = 'none';
     }, 400);
-}
-
-let beSplashShown = false;
-
-function openBeSplash() {
-    const overlay = document.getElementById('beSplashOverlay');
-    overlay.style.display = 'flex';
-    setTimeout(() => { overlay.style.opacity = '1'; }, 10);
-    
-    overlay.onclick = function(e) {
-        if (e.target === overlay) closeBeSplash();
-    };
-}
-
-function closeBeSplash() {
-    const overlay = document.getElementById('beSplashOverlay');
-    overlay.style.opacity = '0';
-    setTimeout(() => { overlay.style.display = 'none'; }, 400);
-}
-
-if (!beSplashShown) {
-    beSplashShown = true; 
-    setTimeout(openBeSplash, 2000);
 }
