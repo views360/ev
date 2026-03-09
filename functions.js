@@ -259,19 +259,19 @@ function calculate() {
     let beSplashShown = false;
 
     function openBeSplash() {
-        const overlay = document.getElementById('beSplashOverlay1');
-        if (overlay) {
-            overlay.style.display = 'flex';
-            setTimeout(() => { overlay.style.opacity = '1'; }, 10);
-        }
+        const overlay = document.getElementById('beSplashOverlay');
+        if (!overlay) return;
+        overlay.style.display = 'flex';
+        setTimeout(() => { overlay.style.opacity = '1'; }, 10);
     }
     
     function closeBeSplash() {
-        const overlay = document.getElementById('beSplashOverlay1');
-        if (overlay) {
-            overlay.style.opacity = '0';
-            setTimeout(() => { overlay.style.display = 'none'; }, 400);
-        }
+        const overlay = document.getElementById('beSplashOverlay');
+        if (!overlay) return;
+        overlay.style.opacity = '0';
+        setTimeout(() => { 
+            overlay.style.display = 'none'; 
+        }, 400);
     }
 
     fieldIds.forEach(id => {
@@ -406,11 +406,10 @@ function calculate() {
         });
 
         document.getElementById("providerResults").innerHTML = html + `</tbody></table></div>`;
-        
-        if (typeof beSplashShown === 'undefined' || !beSplashShown) {
-            window.beSplashShown = true; // Use window to ensure global scope if needed
-            setTimeout(openBeSplash, 1000); 
-        }
+        if (!beSplashShown) {
+                beSplashShown = true;
+                setTimeout(openBeSplash, 2000);
+            }
         return;
     }
 
