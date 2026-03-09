@@ -82,9 +82,7 @@
 
             <div class="help-slide">
                 <h2>Assessing Results</h2>
-                <p>Complete all fields, and the results table will automatically update.</p><p>If you're unsure what a field is asking for, click the <div class="tooltip-container">
-                <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
-                <div class="tooltip-box">Yes, just like this</div> for more information. Amend any field, and the results will auto-update.</p>
+                <p>Complete all fields, and the results table will automatically update.</p><p>If you're unsure what a field is asking for, click the💡for more information. Amend any field, and the results will auto-update.</p>
 				<p>Don't forget that a subscription lasts for an entire month, so you can use it for more than one trip during that time.</p>
                 <div class="help-footer">
                     <button class="btn" onclick="moveSlide(-1)">&lt;&nbsp;Back</button>
@@ -191,18 +189,20 @@
 <div id="breakEvenCard" class="card" style="margin-bottom: 20px; max-width: 400px; margin-left: auto; margin-right: auto;">
     <h3>Trip & Vehicle</h3>
     <div class="input-group">
-        <label for="efficiencyBE"><div class="tooltip-container">
+        <label for="efficiencyBE">Vehicle efficiency (miles per kWh)
+            <div class="tooltip-container">
                 <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
                 <div class="tooltip-box">This is likely to be between 2.5 and 5, depending on the time of year and your driving style and habits. You can either estimate it for the time of year when you will travel, or you can reset your trip counter and calculate it if your trip is imminent.</div>
-            </div>Vehicle efficiency (miles per kWh)
+            </div>
         </label>
         <input type="number" id="efficiencyBE" oninput="calculate()" placeholder="e.g., 3.5" step="0.1">
     </div>
     <div class="input-group">
-        <label for="minSpeedBE"><div class="tooltip-container">
+        <label for="minSpeedBE">Minimum desired charging speed
+            <div class="tooltip-container">
                 <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
                 <div class="tooltip-box">Filter out slower charging speeds from the results if you don't ever use them, else they will skew the results because they are cheaper (e.g., setting the value to 50kW will filter out 7kW and 22kW).</div>
-            </div>Minimum desired charging speed
+            </div>
         </label>
         <select id="minSpeedBE">
             <option value="7">7kW AC (fast)</option>
@@ -213,10 +213,11 @@
         </select>
     </div>
     <div class="input-group">
-        <label for="adhocBE"><div class="tooltip-container">
+        <label for="adhocBE">Standard PAYG rate (pence per kWh)
+            <div class="tooltip-container">
                 <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
                 <div class="tooltip-box">This is the average amount you would ordinarily expect to pay during your trip while using PAYG chargers. If you get a discount (e.g., 8% from Electroverse), input the discounted rate.</div>
-            </div>Standard PAYG rate (pence per kWh)
+            </div>
         </label>
         <input type="number" id="adhocBE" oninput="calculate()" placeholder="e.g., 62 (62p is the 50kW Lidl+ app price)" step="0.1">
     </div>
@@ -258,20 +259,23 @@
                     <input type="number" id="soc" oninput="calculate()" placeholder="e.g., 90">
                 </div>
                 <div class="input-group">
-                    <label for "efficiency"><div class="tooltip-container">
+                    <label for ">Vehicle efficiency (miles per kWh)
+                        <div class="tooltip-container">
                             <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
                         <div class="tooltip-box">This is likely to be between 2.5 and 5, depending on the time of year and your driving style and habits. You can either estimate it for the time of year when you will travel, or you can reset your trip counter and calculate it if your trip is imminent.</div>
-                        </div>Vehicle efficiency (miles per kWh)
+                        </div>
                     </label>
                     <input type="number" id="efficiency" oninput="calculate()" placeholder="e.g., 3.5">
                 </div>
             </div>
 
             <div class="input-group">
-                <label for="minSpeed"><div class="tooltip-container">
+                <label for="minSpeed">
+                    Minimum desired charging speed
+                    <div class="tooltip-container">
                         <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
                         <div class="tooltip-box">Filter out slower charging speeds from the results if you don't plan to use them during your trip, else they will skew the results because they are cheaper (e.g., setting the value to 50kW will filter out 7kW and 22kW).</div>
-                    </div>Minimum desired charging speed
+                    </div>
                 </label>
                 <select id="minSpeed">
                     <option value="7">7kW AC (fast)</option>
@@ -284,10 +288,11 @@
 
             <div class="input-row">
                 <div class="input-group">
-                    <label><div class="tooltip-container">
+                    <label>Starting charge type
+                        <div class="tooltip-container">
                             <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
                           <div class="tooltip-box">Before you begin your trip, will you have charged your battery at home or using PAYG charging?</div>
-                        </div>Starting charge type                        
+                        </div>                        
                     </label>
                     <select id="startChargeType">
                         <option value="home">Cheap home charging</option>
@@ -295,20 +300,22 @@
                     </select>
                 </div>
                 <div class="input-group">
-                    <label><div class="tooltip-container">
+                    <label>Starting rate (pence per kWh)
+                        <div class="tooltip-container">
                             <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
                           <div class="tooltip-box">When you charge your battery before the trip, how much will the rate be?</div>
-                        </div>Starting rate (pence per kWh)                       
+                        </div>                        
                     </label>
                     <input type="number" id="startChargeRate" oninput="calculate()" placeholder="e.g., 7.5">
                 </div>
             </div>
 
             <div class="input-group">
-                <label><div class="tooltip-container">
+                <label>Typical average PAYG public rate you pay (pence per kWh)
+                    <div class="tooltip-container">
                         <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
                       <div class="tooltip-box tooltip-reset-offset">This is the average amount you would ordinarily expect to pay during your trip while using PAYG chargers. If you already get a discount (e.g., 8% from Electroverse), input the discounted rate. This will be the baseline for calculating whether it is possible to make your trip cheaper.</div>
-                    </div>Typical average PAYG public rate you pay (pence per kWh)                    
+                    </div>                    
                 </label>
                 <input type="number" id="adhoc" oninput="calculate()" placeholder="e.g., 62 (62p is the 50kW Lidl+ app price)">
             </div>
