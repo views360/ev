@@ -1051,3 +1051,26 @@ function closeContact() {
         contact.style.display = 'none';
     }, 400);
 }
+
+let beSplashShown = false;
+
+function openBeSplash() {
+    const overlay = document.getElementById('beSplashOverlay');
+    overlay.style.display = 'flex';
+    setTimeout(() => { overlay.style.opacity = '1'; }, 10);
+    
+    overlay.onclick = function(e) {
+        if (e.target === overlay) closeBeSplash();
+    };
+}
+
+function closeBeSplash() {
+    const overlay = document.getElementById('beSplashOverlay');
+    overlay.style.opacity = '0';
+    setTimeout(() => { overlay.style.display = 'none'; }, 400);
+}
+
+if (!beSplashShown) {
+    beSplashShown = true; 
+    setTimeout(openBeSplash, 2000);
+}
