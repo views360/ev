@@ -92,8 +92,8 @@
         </div>
     </div>
 </div>
-<div id="privacyOverlay" class="help-overlay" style="display: none;">
-    <div class="help-modal">
+<div id="beSplashOverlay" class="help-overlay" style="display: none;" onclick="closeBeSplash()">
+    <div class="help-modal" onclick="event.stopPropagation()">
         <button class="close-x" onclick="closePrivacy()">×</button>
         <div class="standalone-slide"> 
             <h2>Privacy Policy</h2>
