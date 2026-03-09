@@ -42,7 +42,7 @@ h3 {
 
 .tooltip-container {
     position: relative;
-    display: inline-block;
+    display: inline;
     vertical-align: middle;
     cursor: pointer;
     margin: 0;
