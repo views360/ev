@@ -107,6 +107,17 @@ h3 {
     visibility: visible;
     pointer-events: auto;
 }
+ 
+.tooltip-box.tooltip-right {
+    transform: translateX(calc(50% + 50px)) translateY(10px) !important;
+}
+ 
+.tooltip-box.tooltip-right::after {
+    left: calc(-50% - 50px) !important;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
 
 .tooltip-container.active .tooltip-box.tooltip-down.tooltip-reset-offset,
 .tooltip-container.active .tooltip-box.tooltip-reset-offset,
@@ -1472,4 +1483,3 @@ body {
         white-space: nowrap; 
     }
 }
-
