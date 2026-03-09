@@ -44,7 +44,7 @@
             
             <div class="help-slide">
                 <h2>Welcome to the EV Subscription Comparison Tool (UK)</h2>
-                <p>Going on a long trip and want to know if a one-month EV charging subscription will save you money over PAYG rates? This tool will tell you!</p>
+                <p>Going on a trip and want to find out if EV charging subscriptions are better value than PAYG rates? This tool will tell you!</p>
 				<p><strong>Note:</strong> Items that glow green are there to direct you.</p>
 				<p style="text-align: center; margin: 30px 0 25px 0"><img src="ev-mg.webp" label="EV" style="height: 50px" /></p>
                 <div class="help-footer">
@@ -64,7 +64,7 @@
 
             <div class="help-slide">
                 <h2>BREAK EVEN</h2>
-                <p><strong>Break Even</strong> (default calculation type) displays a break-even-miles value for all subscription providers. This tells you how many miles you must drive using a provider's discounted rate to recoup its subscription fee.</p>                
+                <p><strong>Break Even</strong> (default calculation type) displays the break-even-miles value for all subscription providers. This tells you how many miles you must drive using a provider's discounted rate to recoup its subscription fee.</p>                
                 <div class="help-footer">
                     <button class="btn" onclick="moveSlide(-1)">&lt;&nbsp;Back</button>
                     <button class="btn secondary empty-pulse" onclick="moveSlide(1)">Next&nbsp;&gt;</button>
@@ -73,7 +73,7 @@
 
             <div class="help-slide">
                 <h2>TRIP SAVINGS</h2>
-                <p><strong>Trip Savings</strong> type calculates potential savings for a planned trip.</p>
+                <p>T<strong>Trip Savings</strong> dives deeper into your specifics to calculate potential savings for a planned trip.</p>
                 <div class="help-footer">
                     <button class="btn" onclick="moveSlide(-1)">&lt;&nbsp;Back</button>
                     <button class="btn secondary empty-pulse" onclick="moveSlide(1)">Next&nbsp;&gt;</button>
@@ -82,8 +82,8 @@
 
             <div class="help-slide">
                 <h2>Assessing Results</h2>
-                <p>After completing all fields (which you may edit on the fly), the results table at the bottom of the page will automatically update.</p><p>If you are unsure what a field is asking for, hover over (or click) the💡for more information.</p>
-				<p>Don't forget that subscriptions last for an entire month.</p>
+                <p>Complete all fields, and the results table will automatically update.</p><p>If you're unsure what a field is asking for, click the💡for more information. Amend any field, and the results will auto-update.</p>
+				<p>Don't forget that a subscription lasts for an entire month, so you can use it for more than one trip during that time.</p>
                 <div class="help-footer">
                     <button class="btn" onclick="moveSlide(-1)">&lt;&nbsp;Back</button>
                     <button class="btn secondary empty-pulse" onclick="closeHelp()">Get&nbsp;Started</button>
@@ -201,7 +201,7 @@
         <label for="adhocBE">Standard PAYG rate (pence per kWh)
             <div class="tooltip-container">
                 <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
-                <div class="tooltip-box">This is the average amount you would ordinarily expect to pay during your trip while using PAYG chargers. If you already get a discount (e.g., 8% from Electroverse), input the discounted rate.</div>
+                <div class="tooltip-box">This is the average amount you would ordinarily expect to pay during your trip while using PAYG chargers. If you get a discount (e.g., 8% from Electroverse), input the discounted rate.</div>
             </div>
         </label>
         <input type="number" id="adhocBE" oninput="calculate()" placeholder="e.g., 62 (62p is the 50kW Lidl+ app price)" step="0.1">
@@ -217,7 +217,7 @@
                     <label for "journeyMiles">Trip distance (miles)
                         <div class="tooltip-container">
                           <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
-                              <div class="tooltip-box">How far do you plan to travel? Adjust this value, and the results (at the bottom of the page) will auto-update.</div>
+                              <div class="tooltip-box">How far do you plan to travel? Adjust this value, and the results will auto-update.</div>
                         </div>
                     </label>
                     <input type="number" id="journeyMiles" oninput="calculate()" placeholder="e.g., 250">
