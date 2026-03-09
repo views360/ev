@@ -43,9 +43,10 @@ h3 {
 .tooltip-container {
     position: relative;
     display: inline;
-    vertical-align: middle;
+    vertical-align: baseline;
     cursor: pointer;
     margin: 0;
+    white-space: normal;
 }
 
 .tooltip-container:hover, 
@@ -77,6 +78,7 @@ h3 {
     transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
     box-shadow: 0 0 15px var(--accent-soft);
     animation: pulseGlow 2s infinite ease-in-out;
+    white-space: nowrap;
 }
 
 .tooltip-box::after {
