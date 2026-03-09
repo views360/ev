@@ -354,7 +354,7 @@ function calculate() {
                         <thead>
                             <tr>
                                 <th>Provider (click hyperlink to view subscription info)</th>
-                                <th>Speed<div class="tooltip-container">
+                                <th>Charging Speed<div class="tooltip-container">
                             <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
                           <div class="tooltip-box tooltip-down">If the provider's discounted charge rate is tied to a charging speed (selected in the form above), it will be specified in this column. If the provider offers more than one speed at the same discounted charge rate, you will see <strong>'Max. available'</strong>.</div></th>
                                 <th>Sub. Fee<div class="tooltip-container">
