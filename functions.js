@@ -1071,19 +1071,19 @@ function showBeReminder() {
     const overlay = document.getElementById('beReminderOverlay');
     if (overlay) {
         overlay.style.display = 'flex';
-
-        setTimeout(() => {
-            overlay.style.opacity = '1';
-        }, 10);
+        void overlay.offsetWidth; 
+        overlay.classList.add('active');
+        overlay.style.opacity = '1';
     }
 }
 
 function closeBeReminder() {
     const overlay = document.getElementById('beReminderOverlay');
     if (overlay) {
+        overlay.classList.remove('active');
         overlay.style.opacity = '0';
         setTimeout(() => {
             overlay.style.display = 'none';
-        }, 400);
+        }, 400); 
     }
 }
