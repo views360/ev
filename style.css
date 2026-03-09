@@ -42,8 +42,8 @@ h3 {
 
 .tooltip-container {
     position: relative;
-    display: inline-flex; 
-    vertical-align: middle; 
+    display: inline;
+    vertical-align: 2px; 
     cursor: pointer;
     margin: 0;
 }
@@ -1499,4 +1499,3 @@ body {
         white-space: nowrap; 
     }
 }
-
