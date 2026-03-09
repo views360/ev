@@ -256,24 +256,6 @@ function calculate() {
         "adhoc", "startChargeRate", "efficiencyBE", "adhocBE"
     ];
 
-    let beSplashShown = false;
-
-    function openBeSplash() {
-        const overlay = document.getElementById('beSplashOverlayReminder');
-        if (!overlay) return;
-        overlay.style.display = 'flex';
-        setTimeout(() => { overlay.style.opacity = '1'; }, 10);
-    }
-    
-    function closeBeSplash() {
-        const overlay = document.getElementById('beSplashOverlayReminder');
-        if (!overlay) return;
-        overlay.style.opacity = '0';
-        setTimeout(() => { 
-            overlay.style.display = 'none'; 
-        }, 400);
-    }
-
     fieldIds.forEach(id => {
         const el = document.getElementById(id);
         if (el) {
@@ -406,11 +388,7 @@ function calculate() {
         });
 
         document.getElementById("providerResults").innerHTML = html + `</tbody></table></div>`;
-        if (!beSplashShown) {
-                beSplashShown = true;
-                setTimeout(openBeSplash, 2000);
-            }
-        return;
+        return; 
     }
 
     if (uiPreText) uiPreText.style.display = "block";
