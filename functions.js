@@ -259,14 +259,14 @@ function calculate() {
     let beSplashShown = false;
 
     function openBeSplash() {
-        const overlay = document.getElementById('beSplashOverlay');
+        const overlay = document.getElementById('beSplashOverlayReminder');
         if (!overlay) return;
         overlay.style.display = 'flex';
         setTimeout(() => { overlay.style.opacity = '1'; }, 10);
     }
     
     function closeBeSplash() {
-        const overlay = document.getElementById('beSplashOverlay');
+        const overlay = document.getElementById('beSplashOverlayReminder');
         if (!overlay) return;
         overlay.style.opacity = '0';
         setTimeout(() => { 
