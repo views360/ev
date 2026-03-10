@@ -93,69 +93,6 @@ h3 {
     border-color: var(--accent) transparent transparent transparent;
 }
 
-.tooltip-box.tooltip-down {
-    bottom: auto;
-    top: 140%; 
-    transform: translateX(-50%) translateY(-10px) !important;
-}
-
-.tooltip-box.tooltip-down::after {
-    top: auto;
-    bottom: 100%;
-    border-color: transparent transparent var(--accent) transparent !important;
-}
-
-.tooltip-box.tooltip-down.tooltip-reset-offset, 
-.tooltip-box.tooltip-reset-offset {
-    transform: translateX(calc(-50% - 50px)) translateY(10px) !important;
-}
-
-.tooltip-box.tooltip-down.tooltip-reset-offset::after, 
-.tooltip-box.tooltip-reset-offset::after,
-.tooltip-box.tooltip-down.tooltip-right::after {
-    top: auto;
-    bottom: 100%;
-    border-color: transparent transparent var(--accent) transparent !important;
-}
- 
-.tooltip-box.tooltip-right {
-    transform: translateX(calc(-50% + 70px)) translateY(10px) !important;
-}
- 
-.tooltip-box.tooltip-right::after {
-    left: calc(50% - 70px) !important;
-    opacity: 1;
-    visibility: visible;
-    pointer-events: auto;
-}
-
-.tooltip-container.active .tooltip-box.tooltip-right,
-.tooltip-container:hover .tooltip-box.tooltip-right,
-.tooltip-container.active .tooltip-box.tooltip-down.tooltip-right,
-.tooltip-container:hover .tooltip-box.tooltip-down.tooltip-right {
-    transform: translateX(calc(-50% + 70px)) translateY(0) !important;
-    opacity: 1;
-    visibility: visible;
-}
-
-.tooltip-container.active .tooltip-box.tooltip-down.tooltip-reset-offset,
-.tooltip-container.active .tooltip-box.tooltip-reset-offset,
-.tooltip-container:hover .tooltip-box.tooltip-down.tooltip-reset-offset,
-.tooltip-container:hover .tooltip-box.tooltip-reset-offset {
-    transform: translateX(calc(-50% - 50px)) translateY(0) !important;
-    opacity: 1;
-    visibility: visible;
-    pointer-events: auto;
-}
-
-.tooltip-container.active .tooltip-box.tooltip-down,
-.tooltip-container:hover .tooltip-box.tooltip-down {
-    transform: translateX(-50%) translateY(0) !important;
-    opacity: 1;
-    visibility: visible;
-    pointer-events: auto;
-}
-
 .preset-select-pulse {
     border: 1px solid var(--accent) !important;
     background-color: var(--panel-alt);
