@@ -191,14 +191,14 @@
 <div id="breakEvenCard" class="card" style="margin-bottom: 20px; max-width: 400px; margin-left: auto; margin-right: auto;">
     <h3>Trip & Vehicle</h3>
     <div class="input-group">
-        <label for="efficiencyBE"><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡</span><span class="tooltip-box">This is likely 
+        <label for="efficiencyBE"><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡</span><span class="tooltip-box tooltip-right">This is likely 
 			to be between 2.5 and 5, depending on the time of year and your driving style and habits. You can either estimate it for the time of year when you will travel, 
 			or you can reset your trip counter and calculate it if your trip is imminent.</span></span>Vehicle efficiency (miles per kWh)</label>
         <input type="number" id="efficiencyBE" oninput="calculate()" placeholder="e.g., 3.5" step="0.1">
     </div>
     <div class="input-group">
         <label for="minSpeedBE">
-            <span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡</span><span class="tooltip-box">Filter out slower 
+            <span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡</span><span class="tooltip-box tooltip-right">Filter out slower 
 				charging speeds from the results if you don't ever use them, else they will skew the results because they are cheaper 
 				(e.g., setting the value to 50kW will filter out 7kW and 22kW).</span></span>Minimum desired charging speed</label>
         <select id="minSpeedBE">
@@ -225,7 +225,7 @@
             <div class="input-row">
                 <div class="input-group">
                     <label for "journeyMiles">
-                        <span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡</span><span class="tooltip-box">How far 
+                        <span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡</span><span class="tooltip-box tooltip-right">How far 
 							do you plan to travel? Adjust this value, and the results will auto-update.</span></span>Trip distance (miles)
                     </label>
                     <input type="number" id="journeyMiles" oninput="calculate()" placeholder="e.g., 250">
@@ -242,7 +242,7 @@
             <div class="input-row">
                 <div class="input-group">
                     <label for "soc">
-                        <span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡</span><span class="tooltip-box">How much 
+                        <span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡</span><span class="tooltip-box tooltip-right">How much 
 							charge will your EV have when you begin your trip?</span></span>Starting state of charge (%)</label>
                     <input type="number" id="soc" oninput="calculate()" placeholder="e.g., 90">
                 </div>
@@ -258,7 +258,7 @@
 
             <div class="input-group">
                 <label for="minSpeed">         
-                    <span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡</span><span class="tooltip-box">Filter out slower 
+                    <span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡</span><span class="tooltip-box tooltip-right">Filter out slower 
 						charging speeds from the results if you don't plan to use them during your trip, else they will 
 						skew the results because they are cheaper (e.g., setting the value to 50kW will filter out 7kW and 22kW).</span></span>Minimum desired 
 					charging speed</label>
@@ -274,7 +274,7 @@
             <div class="input-row">
                 <div class="input-group">
                     <label>
-                        <span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡</span><span class="tooltip-box">Before you 
+                        <span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡</span><span class="tooltip-box tooltip-right">Before you 
 							begin your trip, will you have charged your battery at home or using PAYG charging?</span></span>Starting charge type           
                     </label>
                     <select id="startChargeType">
@@ -293,7 +293,7 @@
 
             <div class="input-group">
                 <label>
-                    <span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡</span><span class="tooltip-box tooltip-reset-offset">This is the 
+                    <span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡</span><span class="tooltip-box  tooltip-right">This is the 
 						average amount you would ordinarily expect to pay during your trip while using PAYG chargers.
 						If you already get a discount (e.g., 8% from Electroverse), input the discounted rate. This will be the 
 						baseline for calculating whether it is possible to make your trip cheaper.</span></span>Typical average PAYG public rate you pay (pence per kWh)                    
