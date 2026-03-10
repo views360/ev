@@ -375,8 +375,8 @@ function calculate() {
 
             html += `<tr>
                 <td>
-                    <span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡</span><span class="tooltip-box">${row.comments}</span>
-                    </span> ${providerLink}
+                    <span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">${row.comments}</span>
+                    </span></span> ${providerLink}
                 </td>
                 <td>${row.speedDisplay}</td>
                 <td>£${row.subCost.toFixed(2)}</td>
