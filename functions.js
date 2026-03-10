@@ -940,6 +940,7 @@ document.body.appendChild(_ftDiv);
 
 let _ftActive = null;
 let _ftTimer  = null;
+let _ftObserver = null;
 
 function _ftPosition(iconEl) {
     const ir     = iconEl.getBoundingClientRect();
@@ -1003,10 +1004,22 @@ function toggleTooltip(iconEl) {
     }
     _ftJustOpened = true;
     clearTimeout(_ftTimer);
+    if (_ftObserver) _ftObserver.disconnect();
     requestAnimationFrame(() => {
         _ftPosition(iconEl);
         _ftDiv.style.visibility = 'visible';
-        _ftTimer = setTimeout(() => _ftHide(), 4000);
+        // On mobile (touch device), use IntersectionObserver to detect when the
+        // icon moves due to scrolling — hide the tooltip the moment it shifts.
+        if (window.matchMedia('(hover: none)').matches) {
+            const startRect = iconEl.getBoundingClientRect();
+            _ftObserver = new IntersectionObserver((entries) => {
+                const r = entries[0].boundingClientRect;
+                if (Math.abs(r.top - startRect.top) > 2 || Math.abs(r.left - startRect.left) > 2) {
+                    _ftHide();
+                }
+            }, { threshold: Array.from({length: 101}, (_, i) => i / 100) });
+            _ftObserver.observe(iconEl);
+        }
     });
 }
 
@@ -1035,6 +1048,7 @@ document.addEventListener('mouseout', (e) => {
 
 function _ftHide() {
     clearTimeout(_ftTimer);
+    if (_ftObserver) { _ftObserver.disconnect(); _ftObserver = null; }
     _ftDiv.style.visibility = 'hidden';
     _ftActive = null;
 }
