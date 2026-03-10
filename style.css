@@ -43,9 +43,10 @@ h3 {
 /* 1. The Anchor: Changed to inline-block to provide a stable coordinate system */
 .tooltip-container {
     position: relative;
-    display: inline-block; 
-    vertical-align: middle;
+    display: inline-block; /* Changed from inline */
+    vertical-align: middle; /* Better alignment with text */
     cursor: pointer;
+    margin: 0 2px;
     line-height: 1; /* Prevents parent line-height from pushing the icon */
 }
 
@@ -56,6 +57,7 @@ h3 {
     bottom: 150%; /* Positioned above the icon */
     left: 50%;
     transform: translateX(-50%) translateY(10px);
+    text-align: center; 
     
     /* STYLE RESETS - These stop the bold/caps/large font issues */
     font-size: 0.85rem !important;
