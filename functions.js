@@ -1033,33 +1033,34 @@ document.addEventListener('scroll', () => {
     if (_ftActive) _ftPosition(_ftActive);
 }, true);
 
-// Mobile: hide on touchstart outside an icon
+// Desktop: hide on click outside an icon (already handled above, this is a safety net)
+
+// ---- Mobile touch handling ----
+// On mobile Chrome, momentum/native scroll suppresses touchmove and scroll events
+// from reaching global listeners. Instead we track the touch lifecycle directly:
+//
+//  touchstart  → record start position, note if on an icon
+//  touchend    → if finger barely moved (= a tap), keep tooltip; otherwise hide
+//
+// This reliably distinguishes a tap (show/dismiss tooltip) from a scroll (hide tooltip).
+
+let _ftTouchStartX = 0;
+let _ftTouchStartY = 0;
+
 window.addEventListener('touchstart', (e) => {
+    _ftTouchStartX = e.touches[0].clientX;
+    _ftTouchStartY = e.touches[0].clientY;
+    // If touching outside an icon, hide immediately
     if (_ftActive && !e.target.closest('.info-icon')) _ftHide();
 }, { passive: true });
 
-// Mobile: hide on any touchmove (page scroll)
-window.addEventListener('touchmove', () => {
-    if (_ftActive) _ftHide();
+window.addEventListener('touchend', (e) => {
+    if (!_ftActive) return;
+    const dx = Math.abs((e.changedTouches[0].clientX) - _ftTouchStartX);
+    const dy = Math.abs((e.changedTouches[0].clientY) - _ftTouchStartY);
+    // If the finger moved more than 8px in any direction, treat as scroll — hide tooltip
+    if (dx > 8 || dy > 8) _ftHide();
 }, { passive: true });
-
-// Mobile: the page body itself scrolls — listen on window scroll event too
-window.addEventListener('scroll', () => {
-    if (_ftActive) _ftHide();
-}, { passive: true });
-
-// Mobile: .results-scroll containers are created dynamically — use MutationObserver
-// to attach a scroll listener the moment each one appears in the DOM
-const _ftObserver = new MutationObserver(() => {
-    document.querySelectorAll('.results-scroll').forEach(el => {
-        if (!el._ftScrollBound) {
-            el._ftScrollBound = true;
-            el.addEventListener('scroll', () => { if (_ftActive) _ftHide(); }, { passive: true });
-            el.addEventListener('touchmove', () => { if (_ftActive) _ftHide(); }, { passive: true });
-        }
-    });
-});
-_ftObserver.observe(document.body, { childList: true, subtree: true });
 
 // Reposition on resize
 window.addEventListener('resize', () => {
