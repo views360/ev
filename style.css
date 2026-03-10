@@ -35,18 +35,18 @@ h3 {
 }
 
 .info-icon {
-    display: inline-block; 
     line-height: 1;
     cursor: pointer;
     vertical-align: middle;
     position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.2em;
 }
 
 .tooltip-container {
-    position: relative;
-    margin-right: 6px;
-    display: inline-flex;
-    align-items: center;
+    display: inline-block;
 }
 
 .tooltip-box {
@@ -54,24 +54,28 @@ h3 {
     position: absolute;
     bottom: 140%;
     left: 50%;
-    transform: translateX(-50%) translateY(10px);
+    transform: translate(-50%, 10px);
+
     background-color: var(--panel-alt);
     color: var(--text);
     padding: 10px 14px;
     border-radius: 8px;
     width: 200px;
     text-align: center;
+
     z-index: 100;
     font-size: 0.85rem;
     font-weight: normal;
     text-transform: none;
     line-height: 1.4;
+
     border: 1px solid var(--accent);
-    
+
     opacity: 0;
     visibility: hidden;
+
     transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
-    
+
     box-shadow: 0 0 15px var(--accent-soft);
     animation: pulseGlow 2s infinite ease-in-out;
 }
@@ -81,7 +85,6 @@ h3 {
     position: absolute;
     top: 100%;
     left: 50%;
-    margin-left: -6px;
     border-width: 6px;
     border-style: solid;
     border-color: var(--accent) transparent transparent transparent;
