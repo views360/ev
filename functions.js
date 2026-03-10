@@ -904,7 +904,7 @@ document.body.appendChild(_ftDiv);
 let _ftActive = null;
 
 function toggleTooltip(iconEl) {
-    console.log('[TT] called. inDOM:', document.body.contains(_ftDiv), 'src:', iconEl.querySelector('.tooltip-box')?.textContent?.trim().substring(0,30));
+    // If already showing for this icon, hide it
     if (_ftActive === iconEl) {
         _ftDiv.style.visibility = 'hidden';
         _ftActive = null;
@@ -914,7 +914,7 @@ function toggleTooltip(iconEl) {
     if (!src) return;
     _ftActive = iconEl;
     _ftDiv.textContent = src.textContent;
-    _ftDiv.style.visibility = 'visible';
+    // Position and show inside rAF so offsetHeight is measurable
     requestAnimationFrame(() => {
         const ir = iconEl.getBoundingClientRect();
         const W = 200, MARGIN = 8;
@@ -924,20 +924,18 @@ function toggleTooltip(iconEl) {
         if (top < MARGIN) top = ir.bottom + 8;
         _ftDiv.style.left = left + 'px';
         _ftDiv.style.top  = top  + 'px';
-        console.log('[TT] positioned. left:', left, 'top:', top, 'h:', _ftDiv.offsetHeight, 'vis:', _ftDiv.style.visibility, 'inDOM:', document.body.contains(_ftDiv));
-        console.log('[TT] computed:', getComputedStyle(_ftDiv).display, getComputedStyle(_ftDiv).visibility, getComputedStyle(_ftDiv).opacity, getComputedStyle(_ftDiv).zIndex);
-        console.log('[TT] rect:', JSON.stringify(_ftDiv.getBoundingClientRect()));
+        _ftDiv.style.visibility = 'visible';
     });
 }
 
+// Use capture:true so this fires BEFORE the onclick handler on the icon,
+// letting us close any previously open tooltip without interfering with opening a new one
 document.addEventListener('click', (e) => {
-    // Use closest() so clicking anywhere on the icon span (including the emoji text node)
-    // is not treated as an outside click
     if (_ftActive && !e.target.closest('.info-icon')) {
         _ftDiv.style.visibility = 'hidden';
         _ftActive = null;
     }
-});
+}, true);
 
 function toggleProviders() {
     const container = document.getElementById("collapsibleProviders");
