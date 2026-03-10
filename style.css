@@ -101,9 +101,7 @@ h3 {
 
 /* Tooltip visibility is now handled entirely by JS via #floatingTooltip */
 
-document.querySelectorAll(".tooltip-box.show").forEach(t => {
-    if (t !== tooltip) t.classList.remove("show");
-});
+
 
 .preset-select-pulse {
     border: 1px solid var(--accent) !important;
@@ -562,13 +560,7 @@ tr.bad td { color: var(--danger); }
     flex-wrap: wrap;
 }
 
-@media (hover: hover) {
-    .tooltip-container:hover .tooltip-box {
-        opacity: 1;
-        visibility: visible;
-        transform: translateX(-50%) translateY(0);
-    }
-}
+/* Inline .tooltip-box spans are kept hidden at all times — display is handled by #floatingTooltip */
 
 .jump-btn {
     text-decoration: none;
