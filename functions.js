@@ -905,11 +905,12 @@ function closeHelp() {
     const CARET_HEIGHT = 6;      // border-width of the ::before caret (px)
     const GAP = 6;               // space between icon top and tooltip bottom (px)
 
-    // Create the floating tooltip element once
+    // Create the floating tooltip element once and append immediately
+    // (this script runs at end of body, so document.body exists)
     const float = document.createElement('div');
     float.id = 'floatingTooltip';
-    // Inline base styles – overridden by .tooltip-box in style.css via the class
-    float.className = 'tooltip-box';
+    // Styled entirely via inline styles to avoid any class-based visibility:hidden overrides.
+    // CSS variable values are resolved at show-time via getComputedStyle (see toggleTooltip).
     float.style.cssText = `
         position: fixed;
         width: ${TOOLTIP_WIDTH}px;
@@ -919,8 +920,22 @@ function closeHelp() {
         transition: opacity 0.2s ease;
         pointer-events: none;
         z-index: 9999;
+        padding: 10px 14px;
+        border-radius: 8px;
+        text-align: center;
+        font-size: 0.85rem;
+        font-weight: normal;
+        line-height: 1.4;
     `;
-    document.addEventListener('DOMContentLoaded', () => document.body.appendChild(float));
+    document.body.appendChild(float);
+
+    function applyThemeStyles() {
+        const cs = getComputedStyle(document.documentElement);
+        float.style.backgroundColor = cs.getPropertyValue('--panel-alt').trim();
+        float.style.color = cs.getPropertyValue('--text').trim();
+        float.style.border = `1px solid ${cs.getPropertyValue('--accent').trim()}`;
+        float.style.boxShadow = `0 0 15px ${cs.getPropertyValue('--accent-soft').trim()}`;
+    }
 
     // Track which icon is currently active
     let activeIcon = null;
@@ -928,28 +943,29 @@ function closeHelp() {
     function positionFloat(iconEl) {
         const iconRect = iconEl.getBoundingClientRect();
         const vw = window.innerWidth;
-        const vh = window.innerHeight;
 
         // Ideal: centred on the icon, above it
         let left = iconRect.left + iconRect.width / 2 - TOOLTIP_WIDTH / 2;
-        const tooltipHeight = float.offsetHeight || 60; // measure after content set
+        const tooltipHeight = float.offsetHeight || 60;
         let top = iconRect.top - tooltipHeight - CARET_HEIGHT - GAP;
 
-        // Clamp horizontally
+        // Clamp horizontally within viewport
         left = Math.max(TOOLTIP_MARGIN, Math.min(left, vw - TOOLTIP_WIDTH - TOOLTIP_MARGIN));
 
         // If it would go above the viewport, flip below the icon instead
+        const caret = document.getElementById('floatingTooltipCaret');
+        const accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#38bdf8';
         if (top < TOOLTIP_MARGIN) {
             top = iconRect.bottom + CARET_HEIGHT + GAP;
-            float.classList.add('tooltip-below');
+            if (caret) { caret.style.borderColor = `transparent transparent ${accentColor} transparent`; caret.style.top = 'auto'; caret.style.bottom = '100%'; }
         } else {
-            float.classList.remove('tooltip-below');
+            if (caret) { caret.style.borderColor = `${accentColor} transparent transparent transparent`; caret.style.top = '100%'; caret.style.bottom = 'auto'; }
         }
 
         // Position the caret to always point at the icon centre
         const iconCentreX = iconRect.left + iconRect.width / 2;
         const caretLeft = Math.max(12, Math.min(iconCentreX - left, TOOLTIP_WIDTH - 12));
-        float.style.setProperty('--caret-left', caretLeft + 'px');
+        if (caret) caret.style.left = caretLeft + 'px';
 
         float.style.left = left + 'px';
         float.style.top = top + 'px';
@@ -967,7 +983,28 @@ function closeHelp() {
         if (!tooltipBox) return;
 
         activeIcon = iconEl;
-        float.innerHTML = tooltipBox.innerHTML;
+
+        // Apply current theme colours (resolves CSS variables into real values)
+        applyThemeStyles();
+
+        // Set text content
+        float.textContent = tooltipBox.textContent || tooltipBox.innerText;
+
+        // Add caret element - get the actual computed accent colour so it works in inline styles
+        const accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#38bdf8';
+        const caret = document.createElement('span');
+        caret.id = 'floatingTooltipCaret';
+        caret.style.cssText = `
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            border-width: 6px;
+            border-style: solid;
+            border-color: ${accentColor} transparent transparent transparent;
+            transform: translateX(-50%);
+        `;
+        float.appendChild(caret);
+
         float.style.display = 'block';
 
         // Measure after content is set, then position
@@ -980,6 +1017,7 @@ function closeHelp() {
     function hideFloat() {
         float.style.opacity = '0';
         float.style.display = 'none';
+        float.textContent = '';
         activeIcon = null;
     }
 
