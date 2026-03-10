@@ -954,8 +954,9 @@ function _ftPosition(iconEl) {
     _ftDiv.style.left = left + 'px';
     _ftDiv.style.top  = top  + 'px';
 
-    // Caret points at icon centre regardless of tooltip shift
-    const iconCentreX = ir.left + ir.width / 2;
+    // Emoji glyphs sit slightly right of the span's geometric centre — correct for this.
+    const EMOJI_OFFSET = -2;
+    const iconCentreX = ir.left + ir.width / 2 + EMOJI_OFFSET;
     const caretLeft   = Math.max(12, Math.min(iconCentreX - left, W - 12));
     _ftCaret.style.left = caretLeft + 'px';
 
@@ -1021,10 +1022,20 @@ document.addEventListener('scroll', () => {
     if (_ftActive) _ftPosition(_ftActive);
 }, true);
 
+// On mobile, touch scroll doesn't fire 'scroll' until it stops.
+// Hide immediately on touchmove so the tooltip doesn't hang in mid-air.
+document.addEventListener('touchmove', () => {
+    if (_ftActive) {
+        _ftDiv.style.visibility = 'hidden';
+        _ftActive = null;
+    }
+}, { passive: true });
+
 // Reposition on resize
 window.addEventListener('resize', () => {
     if (_ftActive) _ftPosition(_ftActive);
 });
+
 
 function toggleProviders() {
     const container = document.getElementById("collapsibleProviders");
