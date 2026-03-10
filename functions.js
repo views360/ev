@@ -937,6 +937,21 @@ document.addEventListener('click', (e) => {
     }
 }, true);
 
+// Show on hover
+document.addEventListener('mouseover', (e) => {
+    const icon = e.target.closest('.info-icon');
+    if (icon && icon !== _ftActive) toggleTooltip(icon);
+});
+
+// Hide when mouse leaves the icon
+document.addEventListener('mouseout', (e) => {
+    const icon = e.target.closest('.info-icon');
+    if (icon && !icon.contains(e.relatedTarget)) {
+        _ftDiv.style.visibility = 'hidden';
+        _ftActive = null;
+    }
+});
+
 function toggleProviders() {
     const container = document.getElementById("collapsibleProviders");
     const controls = document.getElementById("providerControls"); 
