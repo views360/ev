@@ -398,7 +398,7 @@ function calculate() {
                     showBeReminder();
                     beReminderShown = true; 
                 }
-            }, 2000);
+            }, 5000);
         }
         return; 
     }
