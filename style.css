@@ -703,10 +703,11 @@ tr.bad td { color: var(--danger); }
     backdrop-filter: blur(4px);
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     z-index: 2000;
     opacity: 1;
     transition: opacity 0.3s ease;
+    padding-top: 10px;
 }
 
 .help-modal {
@@ -718,6 +719,7 @@ tr.bad td { color: var(--danger); }
     position: relative;
     overflow: hidden;
     box-shadow: var(--glow-strong);
+    margin-top: 10px;
 }
 
 .close-x {
