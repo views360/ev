@@ -42,44 +42,36 @@ h3 {
 
 .tooltip-container {
     position: relative;
-    display: inline;
-    vertical-align: 1px; 
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
-    margin: 0;
-    white-space: normal;
-}
-
-.tooltip-container:hover, 
-.tooltip-container.active {
-    z-index: 999;
+    vertical-align: middle;
+    margin: 0 4px;
 }
 
 .tooltip-box {
     display: block;
     position: absolute;
-    bottom: 140%;
+    bottom: calc(100% + 10px);
     left: 50%;
     transform: translateX(-50%) translateY(10px);
+    
+    width: 200px;
+    padding: 10px 14px;
     background-color: var(--panel-alt);
     color: var(--text);
-    padding: 10px 14px;
+    border: 1px solid var(--accent);
     border-radius: 8px;
-    width: 200px;
     text-align: center;
     z-index: 6000;
     font-size: 0.85rem;
-    font-weight: normal;
-    text-transform: none;
     line-height: 1.4;
-    border: 1px solid var(--accent);
-    pointer-events: none;
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
-    box-shadow: 0 0 15px var(--accent-soft);
-    animation: pulseGlow 2s infinite ease-in-out;
-    white-space: normal;
-    word-wrap: break-word;
+    pointer-events: none;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
 }
 
 .tooltip-box::after {
@@ -91,6 +83,13 @@ h3 {
     border-width: 6px;
     border-style: solid;
     border-color: var(--accent) transparent transparent transparent;
+}
+
+.tooltip-container:hover .tooltip-box,
+.tooltip-container.active .tooltip-box {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
 }
 
 .preset-select-pulse {
