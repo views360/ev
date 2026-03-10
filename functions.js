@@ -348,7 +348,7 @@ function calculate() {
         });
 
         let html = `<h2 class="results-heading" style="text-align: center">BREAK-EVEN ANALYSIS</h2>
-                    <div class="mobile-only-text" style="font-size: 0.8em; margin-left: 10px">Slide table left to view hidden columns.</div>
+                    <div class="mobile-only-text" style="font-size: 0.8em; margin-left: 10px; color: var(--neon-green-soft)">Slide table left to view hidden columns.</div>
                     <div class="results-scroll">
                     <table>
                         <thead>
@@ -505,7 +505,7 @@ function calculate() {
         if (sortVal === "za") return b.name.localeCompare(a.name);
         return 0;
     });
-    let html = `<div class="mobile-only-text" style="font-size: 0.8em; margin-left: 10px">Slide table left to view hidden columns.</div><div class="results-scroll"><table><thead><tr>
+    let html = `<div class="mobile-only-text" style="font-size: 0.8em; margin-left: 10px; color: var(--neon-green-soft)">Slide table left to view hidden columns.</div><div class="results-scroll"><table><thead><tr>
         <th>Provider (click hyperlink to view subscription info)</th>
         <th><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is the provider's subscription fee, which gives you access to their discounted charge rate for ONE MONTH.</span></span></span>Sub. Fee</th>
         <th><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is the provider's discounted charge rate (per kWh) that is available after subscribing for one month. Note that some providers have variable charge rates depending on location and time of day. The rate listed here may be an average. Click the provider's link to confirm pricing.</span></span></span>Disc. Rate</th>
