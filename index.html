@@ -94,7 +94,7 @@
         </div>
     </div>
 </div>
-<div id="privacyOverlay" class="help-overlay" style="display: none;" onclick="closePrivacy()">
+<div id="privacyOverlay" class="help-overlay" style="display: none;">
     <div class="help-modal" onclick="event.stopPropagation()">
         <button class="close-x" onclick="closePrivacy()">×</button>
         <div class="standalone-slide"> 
@@ -103,6 +103,19 @@
             <p>It uses <strong>cookies</strong> solely to save the values you enter into the input fields. This is done for your convenience so your data is available for subsequent visits.</p>
             <div class="help-footer">
                 <button class="btn secondary" onclick="closePrivacy()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="contactOverlay" class="help-overlay" style="display: none;">
+    <div class="help-modal">
+        <button class="close-x" onclick="closeContact()">×</button>
+        <div class="standalone-slide"> 
+            <h2>Contact Author</h2>
+            <p>If you have any feedback, bug reports, or suggestions for new providers (or rate changes), please feel free to get in touch.</p>
+            <p>Email: <a href="mailto:evsubscompare@gmail.com" style="color: var(--accent); font-weight: bold;">evsubscompare@gmail.com</a></p>
+            <div class="help-footer">
+                <button class="btn secondary" onclick="closeContact()">Close</button>
             </div>
         </div>
     </div>
@@ -118,19 +131,6 @@
 				not when you set off from home with a pre-charged battery.</p>
             <div class="help-footer">
                 <button class="btn secondary" onclick="closeBeReminder()">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-<div id="contactOverlay" class="help-overlay" style="display: none;">
-    <div class="help-modal">
-        <button class="close-x" onclick="closeContact()">×</button>
-        <div class="standalone-slide"> 
-            <h2>Contact Author</h2>
-            <p>If you have any feedback, bug reports, or suggestions for new providers (or rate changes), please feel free to get in touch.</p>
-            <p>Email: <a href="mailto:evsubscompare@gmail.com" style="color: var(--accent); font-weight: bold;">evsubscompare@gmail.com</a></p>
-            <div class="help-footer">
-                <button class="btn secondary" onclick="closeContact()">Close</button>
             </div>
         </div>
     </div>
