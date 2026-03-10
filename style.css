@@ -239,6 +239,7 @@ h1 {
     padding: 20px;
     box-sizing: border-box;
     border-radius: 12px;
+    margin-top: -10px;
 }
 
 .card {
