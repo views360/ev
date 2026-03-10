@@ -61,11 +61,14 @@
             background: var(--panel);
             border-bottom: 1px solid var(--border);
         }
+        
+        h1 {font-size: 2rem;
+        }
+        
         /* Ensure 30px side margins on mobile devices */
         @media (max-width: 700px) {
             body {
-                padding-left: 30px !important;
-                padding-right: 30px !important;
+                padding: 30px !important;
             }
             
             .content-section {
@@ -76,6 +79,9 @@
             .app {
                 width: 100%;
                 margin: 0;
+            }
+
+            h1 {font-size: 2rem;
             }
         }
     </style>
