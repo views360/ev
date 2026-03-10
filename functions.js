@@ -954,10 +954,16 @@ function _ftPosition(iconEl) {
     _ftDiv.style.left = left + 'px';
     _ftDiv.style.top  = top  + 'px';
 
-    // Emoji glyphs sit slightly right of the span's geometric centre — correct for this.
-    const EMOJI_OFFSET = -2;
-    const iconCentreX = ir.left + ir.width / 2 + EMOJI_OFFSET;
-    const caretLeft   = Math.max(12, Math.min(iconCentreX - left, W - 12));
+    // Measure the actual visual centre of the emoji text node via a Range,
+    // which is precise regardless of browser glyph spacing quirks.
+    let iconCentreX = ir.left + ir.width / 2; // fallback
+    try {
+        const range = document.createRange();
+        range.selectNode(iconEl.firstChild);
+        const tr = range.getBoundingClientRect();
+        if (tr.width > 0) iconCentreX = tr.left + tr.width / 2;
+    } catch(e) {}
+    const caretLeft = Math.max(12, Math.min(iconCentreX - left, W - 12));
     _ftCaret.style.left = caretLeft + 'px';
 
     if (flipped) {
@@ -1022,9 +1028,15 @@ document.addEventListener('scroll', () => {
     if (_ftActive) _ftPosition(_ftActive);
 }, true);
 
-// On mobile, touch scroll doesn't fire 'scroll' until it stops.
-// Hide immediately on touchmove so the tooltip doesn't hang in mid-air.
-document.addEventListener('touchmove', () => {
+// On mobile: hide on touchstart outside an icon (handles scroll-away and tap-away).
+window.addEventListener('touchstart', (e) => {
+    if (_ftActive && !e.target.closest('.info-icon')) {
+        _ftDiv.style.visibility = 'hidden';
+        _ftActive = null;
+    }
+}, { passive: true });
+// Also hide if the finger moves at all — catches scrolling even within an icon.
+window.addEventListener('touchmove', () => {
     if (_ftActive) {
         _ftDiv.style.visibility = 'hidden';
         _ftActive = null;
