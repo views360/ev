@@ -898,6 +898,7 @@ function closeHelp() {
 // Uses position:fixed so viewport-edge clamping is simple and reliable.
 const _ftDiv = document.createElement('div');
 _ftDiv.id = 'floatingTooltip';
+_ftDiv.style.cssText = 'position:fixed;z-index:9999;width:200px;padding:10px 14px;border-radius:8px;text-align:center;font-size:0.85rem;line-height:1.4;pointer-events:none;background:#1e293b;color:#f1f5f9;border:1px solid #38bdf8;box-shadow:0 0 12px rgba(56,189,248,0.3);visibility:hidden;';
 document.body.appendChild(_ftDiv);
 
 let _ftActive = null;
@@ -905,7 +906,7 @@ let _ftActive = null;
 function toggleTooltip(iconEl) {
     console.log('[TT] called. inDOM:', document.body.contains(_ftDiv), 'src:', iconEl.querySelector('.tooltip-box')?.textContent?.trim().substring(0,30));
     if (_ftActive === iconEl) {
-        _ftDiv.style.display = 'none';
+        _ftDiv.style.visibility = 'hidden';
         _ftActive = null;
         return;
     }
@@ -913,7 +914,7 @@ function toggleTooltip(iconEl) {
     if (!src) return;
     _ftActive = iconEl;
     _ftDiv.textContent = src.textContent;
-    _ftDiv.style.display = 'block';
+    _ftDiv.style.visibility = 'visible';
     requestAnimationFrame(() => {
         const ir = iconEl.getBoundingClientRect();
         const W = 200, MARGIN = 8;
@@ -923,7 +924,7 @@ function toggleTooltip(iconEl) {
         if (top < MARGIN) top = ir.bottom + 8;
         _ftDiv.style.left = left + 'px';
         _ftDiv.style.top  = top  + 'px';
-        console.log('[TT] positioned. left:', left, 'top:', top, 'h:', _ftDiv.offsetHeight, 'display:', _ftDiv.style.display, 'inDOM:', document.body.contains(_ftDiv));
+        console.log('[TT] positioned. left:', left, 'top:', top, 'h:', _ftDiv.offsetHeight, 'vis:', _ftDiv.style.visibility, 'inDOM:', document.body.contains(_ftDiv));
         console.log('[TT] computed:', getComputedStyle(_ftDiv).display, getComputedStyle(_ftDiv).visibility, getComputedStyle(_ftDiv).opacity, getComputedStyle(_ftDiv).zIndex);
         console.log('[TT] rect:', JSON.stringify(_ftDiv.getBoundingClientRect()));
     });
@@ -933,7 +934,7 @@ document.addEventListener('click', (e) => {
     // Use closest() so clicking anywhere on the icon span (including the emoji text node)
     // is not treated as an outside click
     if (_ftActive && !e.target.closest('.info-icon')) {
-        _ftDiv.style.display = 'none';
+        _ftDiv.style.visibility = 'hidden';
         _ftActive = null;
     }
 });

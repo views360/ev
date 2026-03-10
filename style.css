@@ -1,5 +1,5 @@
 #floatingTooltip {
-    display: none;
+    visibility: hidden;
     position: fixed;
     z-index: 9999;
     width: 200px;
