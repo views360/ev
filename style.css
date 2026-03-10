@@ -40,33 +40,28 @@ h3 {
     cursor: pointer;
 }
 
-/* 1. The Anchor: Changed to inline-block to provide a stable coordinate system */
+/* 1. The Anchor: Must be inline-block to lock the 'left: 50%' calculation to the icon itself */
 .tooltip-container {
     position: relative;
-    /* This forces the container to only be as wide as the icon */
-    display: inline-block; 
-    vertical-align: middle;
+    display: inline-block; /* Critical: This makes the container the width of the icon only */
+    vertical-align: middle; 
     cursor: pointer;
     line-height: 1; /* Prevents cell height from affecting icon position */
-    margin: 0 3px;
-    white-space: nowrap; /* Keeps icon and text together if needed */
+    margin: 0 4px;
 }
 
-/* 2. The Box: Added "Resets" to stop inheritance from labels/headers */
+/* 2. The Box: Standardized centering resets */
 .tooltip-box {
     display: block;
     position: absolute;
-    bottom: 150%; /* Positioned above the icon */
+    bottom: 140%; /* Positioned above the icon */
     left: 50%;
     transform: translateX(-50%) translateY(10px);
-    text-align: center; 
     
-    /* STYLE RESETS - These stop the bold/caps/large font issues */
+    /* Style Resets: Stop inheritance of bold/caps from TH/Labels */
     font-size: 0.85rem !important;
     font-weight: normal !important;
     text-transform: none !important;
-    font-style: normal !important;
-    letter-spacing: normal !important;
     color: var(--text) !important;
     
     width: 200px;
@@ -76,24 +71,25 @@ h3 {
     border-radius: 8px;
     text-align: center;
     line-height: 1.4;
-    z-index: 9999;
+    z-index: 6000;
     
     /* Visibility */
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
-    transition: opacity 0.3s ease, transform 0.3s ease;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+    box-shadow: 0 0 15px var(--accent-soft);
     white-space: normal;
+    word-wrap: break-word;
 }
 
-/* 3. The Arrow: Locked to the center of the box */
+/* 3. The Arrow: Locked to the mathematical center of the icon-based box */
 .tooltip-box::after {
     content: "";
     position: absolute;
-    top: 100%; /* Bottom of the box */
+    top: 100%;
     left: 50%;
-    margin-left: -6px; /* Half of border width to center perfectly */
+    margin-left: -6px; /* Half of the border width to center perfectly */
     border-width: 6px;
     border-style: solid;
     border-color: var(--accent) transparent transparent transparent;
