@@ -1023,25 +1023,43 @@ document.addEventListener('mouseout', (e) => {
     }
 });
 
-// Reposition on ANY scroll (handles table scroll, page scroll, etc.)
+function _ftHide() {
+    _ftDiv.style.visibility = 'hidden';
+    _ftActive = null;
+}
+
+// Desktop: reposition on any scroll
 document.addEventListener('scroll', () => {
     if (_ftActive) _ftPosition(_ftActive);
 }, true);
 
-// On mobile: hide on touchstart outside an icon (handles scroll-away and tap-away).
+// Mobile: hide on touchstart outside an icon
 window.addEventListener('touchstart', (e) => {
-    if (_ftActive && !e.target.closest('.info-icon')) {
-        _ftDiv.style.visibility = 'hidden';
-        _ftActive = null;
-    }
+    if (_ftActive && !e.target.closest('.info-icon')) _ftHide();
 }, { passive: true });
-// Also hide if the finger moves at all — catches scrolling even within an icon.
+
+// Mobile: hide on any touchmove (page scroll)
 window.addEventListener('touchmove', () => {
-    if (_ftActive) {
-        _ftDiv.style.visibility = 'hidden';
-        _ftActive = null;
-    }
+    if (_ftActive) _ftHide();
 }, { passive: true });
+
+// Mobile: the page body itself scrolls — listen on window scroll event too
+window.addEventListener('scroll', () => {
+    if (_ftActive) _ftHide();
+}, { passive: true });
+
+// Mobile: .results-scroll containers are created dynamically — use MutationObserver
+// to attach a scroll listener the moment each one appears in the DOM
+const _ftObserver = new MutationObserver(() => {
+    document.querySelectorAll('.results-scroll').forEach(el => {
+        if (!el._ftScrollBound) {
+            el._ftScrollBound = true;
+            el.addEventListener('scroll', () => { if (_ftActive) _ftHide(); }, { passive: true });
+            el.addEventListener('touchmove', () => { if (_ftActive) _ftHide(); }, { passive: true });
+        }
+    });
+});
+_ftObserver.observe(document.body, { childList: true, subtree: true });
 
 // Reposition on resize
 window.addEventListener('resize', () => {
