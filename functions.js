@@ -898,7 +898,7 @@ function closeHelp() {
 // Uses position:fixed so viewport-edge clamping is simple and reliable.
 const _ftDiv = document.createElement('div');
 _ftDiv.id = 'floatingTooltip';
-document.addEventListener('DOMContentLoaded', () => document.body.appendChild(_ftDiv));
+document.body.appendChild(_ftDiv);
 
 let _ftActive = null;
 
