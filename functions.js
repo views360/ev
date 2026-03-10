@@ -894,17 +894,85 @@ function closeHelp() {
     }
 }
 
-// Floating tooltip div — lives on <body> so no parent can clip it.
-// Uses position:fixed so viewport-edge clamping is simple and reliable.
+// ---------------------------------------------------------------------------
+// Floating viewport-safe tooltip
+// ---------------------------------------------------------------------------
 const _ftDiv = document.createElement('div');
 _ftDiv.id = 'floatingTooltip';
-_ftDiv.style.cssText = 'position:fixed;z-index:9999;width:200px;padding:10px 14px;border-radius:8px;text-align:center;font-size:0.85rem;line-height:1.4;pointer-events:none;background:#1e293b;color:#f1f5f9;border:1px solid #38bdf8;box-shadow:0 0 12px rgba(56,189,248,0.3);visibility:hidden;';
+_ftDiv.style.cssText = [
+    'position:fixed',
+    'z-index:9999',
+    'width:200px',
+    'padding:10px 14px 16px',
+    'border-radius:8px',
+    'text-align:center',
+    'font-size:0.85rem',
+    'line-height:1.4',
+    'pointer-events:none',
+    'background:#1e293b',
+    'color:#f1f5f9',
+    'border:1px solid #38bdf8',
+    'box-shadow:0 0 12px rgba(56,189,248,0.3)',
+    'visibility:hidden',
+].join(';') + ';';
+
+// Caret arrow
+const _ftCaret = document.createElement('div');
+_ftCaret.style.cssText = [
+    'position:absolute',
+    'bottom:-6px',
+    'left:50%',
+    'width:0',
+    'height:0',
+    'border-left:6px solid transparent',
+    'border-right:6px solid transparent',
+    'border-top:6px solid #38bdf8',
+    'transform:translateX(-50%)',
+].join(';') + ';';
+_ftDiv.appendChild(_ftCaret);
 document.body.appendChild(_ftDiv);
 
 let _ftActive = null;
 
+function _ftPosition(iconEl) {
+    const ir     = iconEl.getBoundingClientRect();
+    const vw     = window.innerWidth;
+    const W      = _ftDiv.offsetWidth  || 200;
+    const H      = _ftDiv.offsetHeight || 60;
+    const MARGIN = 12;
+
+    let left = ir.left + ir.width / 2 - W / 2;
+    let top  = ir.top - H - 6;
+
+    // Clamp using actual rendered width
+    left = Math.max(MARGIN, Math.min(left, vw - W - MARGIN));
+
+    // Flip below if not enough room above
+    const flipped = top < MARGIN;
+    if (flipped) top = ir.bottom + 6;
+
+    _ftDiv.style.left = left + 'px';
+    _ftDiv.style.top  = top  + 'px';
+
+    // Caret points at icon centre regardless of tooltip shift
+    const iconCentreX = ir.left + ir.width / 2;
+    const caretLeft   = Math.max(12, Math.min(iconCentreX - left, W - 12));
+    _ftCaret.style.left = caretLeft + 'px';
+
+    if (flipped) {
+        _ftCaret.style.bottom        = 'auto';
+        _ftCaret.style.top           = '-6px';
+        _ftCaret.style.borderTop     = 'none';
+        _ftCaret.style.borderBottom  = '6px solid #38bdf8';
+    } else {
+        _ftCaret.style.top           = 'auto';
+        _ftCaret.style.bottom        = '-6px';
+        _ftCaret.style.borderBottom  = 'none';
+        _ftCaret.style.borderTop     = '6px solid #38bdf8';
+    }
+}
+
 function toggleTooltip(iconEl) {
-    // If already showing for this icon, hide it
     if (_ftActive === iconEl) {
         _ftDiv.style.visibility = 'hidden';
         _ftActive = null;
@@ -913,23 +981,19 @@ function toggleTooltip(iconEl) {
     const src = iconEl.querySelector('.tooltip-box');
     if (!src) return;
     _ftActive = iconEl;
-    _ftDiv.textContent = src.textContent;
-    // Position and show inside rAF so offsetHeight is measurable
+    // Update text node, preserving the caret child element
+    if (_ftDiv.firstChild && _ftDiv.firstChild.nodeType === 3) {
+        _ftDiv.firstChild.textContent = src.textContent;
+    } else {
+        _ftDiv.insertBefore(document.createTextNode(src.textContent), _ftCaret);
+    }
     requestAnimationFrame(() => {
-        const ir = iconEl.getBoundingClientRect();
-        const W = 200, MARGIN = 8;
-        let left = ir.left + ir.width / 2 - W / 2;
-        let top  = ir.top - _ftDiv.offsetHeight - 8;
-        left = Math.max(MARGIN, Math.min(left, window.innerWidth - W - MARGIN));
-        if (top < MARGIN) top = ir.bottom + 8;
-        _ftDiv.style.left = left + 'px';
-        _ftDiv.style.top  = top  + 'px';
+        _ftPosition(iconEl);
         _ftDiv.style.visibility = 'visible';
     });
 }
 
-// Use capture:true so this fires BEFORE the onclick handler on the icon,
-// letting us close any previously open tooltip without interfering with opening a new one
+// Close on click outside an icon (capture so it runs before onclick)
 document.addEventListener('click', (e) => {
     if (_ftActive && !e.target.closest('.info-icon')) {
         _ftDiv.style.visibility = 'hidden';
@@ -943,13 +1007,23 @@ document.addEventListener('mouseover', (e) => {
     if (icon && icon !== _ftActive) toggleTooltip(icon);
 });
 
-// Hide when mouse leaves the icon
+// Hide when mouse leaves icon
 document.addEventListener('mouseout', (e) => {
     const icon = e.target.closest('.info-icon');
     if (icon && !icon.contains(e.relatedTarget)) {
         _ftDiv.style.visibility = 'hidden';
         _ftActive = null;
     }
+});
+
+// Reposition on ANY scroll (handles table scroll, page scroll, etc.)
+document.addEventListener('scroll', () => {
+    if (_ftActive) _ftPosition(_ftActive);
+}, true);
+
+// Reposition on resize
+window.addEventListener('resize', () => {
+    if (_ftActive) _ftPosition(_ftActive);
 });
 
 function toggleProviders() {
