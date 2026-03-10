@@ -903,6 +903,7 @@ document.body.appendChild(_ftDiv);
 let _ftActive = null;
 
 function toggleTooltip(iconEl) {
+    console.log('[TT] called. inDOM:', document.body.contains(_ftDiv), 'src:', iconEl.querySelector('.tooltip-box')?.textContent?.trim().substring(0,30));
     if (_ftActive === iconEl) {
         _ftDiv.style.display = 'none';
         _ftActive = null;
@@ -922,6 +923,9 @@ function toggleTooltip(iconEl) {
         if (top < MARGIN) top = ir.bottom + 8;
         _ftDiv.style.left = left + 'px';
         _ftDiv.style.top  = top  + 'px';
+        console.log('[TT] positioned. left:', left, 'top:', top, 'h:', _ftDiv.offsetHeight, 'display:', _ftDiv.style.display, 'inDOM:', document.body.contains(_ftDiv));
+        console.log('[TT] computed:', getComputedStyle(_ftDiv).display, getComputedStyle(_ftDiv).visibility, getComputedStyle(_ftDiv).opacity, getComputedStyle(_ftDiv).zIndex);
+        console.log('[TT] rect:', JSON.stringify(_ftDiv.getBoundingClientRect()));
     });
 }
 
