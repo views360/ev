@@ -1260,10 +1260,12 @@ body {
 }
 
 @keyframes intro-sequence {
-    0% { transform: translateX(0); } 
-    15% { transform: translateX(-14.5%); } 
-    60% { transform: translateX(-15%); }
-    75%, 100% { transform: translateX(-28.5714285714%); } 
+    0% { 
+        transform: translateX(0); 
+    }
+    100% { 
+        transform: translateX(-28.5714285714%); 
+    }
 }
 
 .intro-animation {
