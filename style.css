@@ -678,7 +678,7 @@ tr.bad td { color: var(--danger); }
     gap: 15px;
     animation: none; 
     margin-top: 10px !important;
-    margin-bottom: 10px !important;
+    margin-bottom: 20px !important;
 }
 
 .comparison-label {
