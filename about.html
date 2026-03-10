@@ -61,6 +61,23 @@
             background: var(--panel);
             border-bottom: 1px solid var(--border);
         }
+        /* Ensure 30px side margins on mobile devices */
+        @media (max-width: 700px) {
+            body {
+                padding-left: 30px !important;
+                padding-right: 30px !important;
+            }
+            
+            .content-section {
+                padding-left: 0;
+                padding-right: 0;
+            }
+        
+            .app {
+                width: 100%;
+                margin: 0;
+            }
+        }
     </style>
     <script>
         /* Theme persistence check */
