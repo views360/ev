@@ -719,7 +719,7 @@ tr.bad td { color: var(--danger); }
     position: relative;
     overflow: hidden;
     box-shadow: var(--glow-strong);
-    margin-top: 80px !important;
+    margin-top: 75px !important;
 }
 
 .close-x {
@@ -1224,7 +1224,7 @@ body {
 }
 
 .intro-animation {
-    animation: intro-sequence 3s linear forwards; 
+    animation: intro-sequence 2s linear forwards; 
 }
 
 #helpSlides {
