@@ -894,84 +894,106 @@ function closeHelp() {
     }
 }
 
-function toggleTooltip(el) {
-    const container = el.closest('.tooltip-container');
-    if (!container) return;
+// --- Floating viewport-safe tooltip ---
+// A single <div id="floatingTooltip"> is appended to <body> and repositioned
+// on each click. This escapes all parent clipping/overflow constraints and
+// makes it trivial to keep the tooltip fully within the viewport.
 
-    const wasActive = container.classList.contains('active');
+(function () {
+    const TOOLTIP_WIDTH = 200;   // must match CSS width on .tooltip-box
+    const TOOLTIP_MARGIN = 8;    // min gap from viewport edge (px)
+    const CARET_HEIGHT = 6;      // border-width of the ::before caret (px)
+    const GAP = 6;               // space between icon top and tooltip bottom (px)
 
-    // Close all open tooltips first, resetting any inline position overrides
-    document.querySelectorAll('.tooltip-container.active').forEach(openTooltip => {
-        openTooltip.classList.remove('active');
-        const t = openTooltip.querySelector('.tooltip-box');
-        if (t) {
-            t.style.left = '';
-            t.style.transform = '';
-            t.style.removeProperty('--caret-left');
-        }
-    });
+    // Create the floating tooltip element once
+    const float = document.createElement('div');
+    float.id = 'floatingTooltip';
+    // Inline base styles – overridden by .tooltip-box in style.css via the class
+    float.className = 'tooltip-box';
+    float.style.cssText = `
+        position: fixed;
+        width: ${TOOLTIP_WIDTH}px;
+        display: none;
+        opacity: 0;
+        visibility: visible;
+        transition: opacity 0.2s ease;
+        pointer-events: none;
+        z-index: 9999;
+    `;
+    document.addEventListener('DOMContentLoaded', () => document.body.appendChild(float));
 
-    if (wasActive) return; // Was already open — just close it
+    // Track which icon is currently active
+    let activeIcon = null;
 
-    container.classList.add('active');
+    function positionFloat(iconEl) {
+        const iconRect = iconEl.getBoundingClientRect();
+        const vw = window.innerWidth;
+        const vh = window.innerHeight;
 
-    const tooltip = container.querySelector('.tooltip-box');
-    if (!tooltip) return;
+        // Ideal: centred on the icon, above it
+        let left = iconRect.left + iconRect.width / 2 - TOOLTIP_WIDTH / 2;
+        const tooltipHeight = float.offsetHeight || 60; // measure after content set
+        let top = iconRect.top - tooltipHeight - CARET_HEIGHT - GAP;
 
-    // Reset to default position first so getBoundingClientRect is accurate
-    tooltip.style.left = '50%';
-    tooltip.style.transform = 'translateX(-50%) translateY(0)';
+        // Clamp horizontally
+        left = Math.max(TOOLTIP_MARGIN, Math.min(left, vw - TOOLTIP_WIDTH - TOOLTIP_MARGIN));
 
-    // Allow the browser to apply the position before measuring
-    requestAnimationFrame(() => {
-        const rect = tooltip.getBoundingClientRect();
-        const viewportWidth = window.innerWidth;
-        const PADDING = 8; // minimum gap from screen edge in px
-
-        let shiftX = 0;
-
-        if (rect.left < PADDING) {
-            // Tooltip overflows left edge — push it right
-            shiftX = PADDING - rect.left;
-        } else if (rect.right > viewportWidth - PADDING) {
-            // Tooltip overflows right edge — push it left
-            shiftX = (viewportWidth - PADDING) - rect.right;
-        }
-
-        if (shiftX !== 0) {
-            // Apply corrected position
-            const iconRect = container.querySelector('.info-icon').getBoundingClientRect();
-            const tooltipWidth = rect.width;
-
-            // New left offset relative to the container's own left edge
-            // Default: left=50% means centre of icon. We shift by shiftX px.
-            // Compute the caret position as % of tooltip width so it stays over the icon.
-            const defaultLeft = iconRect.left + iconRect.width / 2; // icon centre in viewport px
-            const newTooltipLeft = defaultLeft + shiftX - tooltipWidth / 2; // new left edge in viewport px
-            const caretPct = ((defaultLeft - newTooltipLeft) / tooltipWidth) * 100;
-
-            tooltip.style.left = `calc(50% + ${shiftX}px)`;
-            tooltip.style.transform = 'translateX(-50%) translateY(0)';
-            tooltip.style.setProperty('--caret-left', `${caretPct}%`);
+        // If it would go above the viewport, flip below the icon instead
+        if (top < TOOLTIP_MARGIN) {
+            top = iconRect.bottom + CARET_HEIGHT + GAP;
+            float.classList.add('tooltip-below');
         } else {
-            tooltip.style.setProperty('--caret-left', '50%');
+            float.classList.remove('tooltip-below');
+        }
+
+        // Position the caret to always point at the icon centre
+        const iconCentreX = iconRect.left + iconRect.width / 2;
+        const caretLeft = Math.max(12, Math.min(iconCentreX - left, TOOLTIP_WIDTH - 12));
+        float.style.setProperty('--caret-left', caretLeft + 'px');
+
+        float.style.left = left + 'px';
+        float.style.top = top + 'px';
+    }
+
+    window.toggleTooltip = function (iconEl) {
+        // If clicking the same icon that's already open, close it
+        if (activeIcon === iconEl) {
+            hideFloat();
+            return;
+        }
+
+        // Find tooltip text – it's the .tooltip-box child of the .info-icon span
+        const tooltipBox = iconEl.querySelector('.tooltip-box');
+        if (!tooltipBox) return;
+
+        activeIcon = iconEl;
+        float.innerHTML = tooltipBox.innerHTML;
+        float.style.display = 'block';
+
+        // Measure after content is set, then position
+        requestAnimationFrame(() => {
+            positionFloat(iconEl);
+            float.style.opacity = '1';
+        });
+    };
+
+    function hideFloat() {
+        float.style.opacity = '0';
+        float.style.display = 'none';
+        activeIcon = null;
+    }
+
+    // Close on outside click
+    document.addEventListener('click', (e) => {
+        if (activeIcon && !activeIcon.contains(e.target)) {
+            hideFloat();
         }
     });
-}
 
-document.addEventListener('click', (e) => {
-    if (!e.target.closest('.tooltip-container')) {
-        document.querySelectorAll('.tooltip-container.active').forEach(openTooltip => {
-            openTooltip.classList.remove('active');
-            const t = openTooltip.querySelector('.tooltip-box');
-            if (t) {
-                t.style.left = '';
-                t.style.transform = '';
-                t.style.removeProperty('--caret-left');
-            }
-        });
-    }
-});
+    // Reposition on scroll/resize in case the page moves
+    window.addEventListener('scroll', () => { if (activeIcon) positionFloat(activeIcon); }, true);
+    window.addEventListener('resize', () => { if (activeIcon) positionFloat(activeIcon); });
+})();
 
 function toggleProviders() {
     const container = document.getElementById("collapsibleProviders");
