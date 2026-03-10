@@ -85,11 +85,12 @@ h3 {
     content: "";
     position: absolute;
     top: 100%;
-    left: 50%;
+    left: var(--caret-left, 50%);
     border-width: 6px;
     border-style: solid;
     border-color: var(--accent) transparent transparent transparent;
     transform: translateX(-50%);
+    transition: left 0.15s ease;
 }
 
 .tooltip-container:hover .tooltip-box,
