@@ -7,34 +7,35 @@
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="stylesheet" href="style.css">
     <style>
-        /* Replicate the dark background of the .help-overlay */
+        /* (2) Fix: Allow page to scroll naturally instead of inside the panel */
         body {
             background: rgba(0, 0, 0, 0.85);
             backdrop-filter: blur(4px);
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            padding: 20px;
+            padding: 80px 20px 40px 20px; /* Space for the fixed header */
             box-sizing: border-box;
+            overflow-y: auto; /* Standard page scrolling */
         }
 
-        /* Replicate the look and feel of the .help-modal */
+        /* Replicate the look and feel of the .help-modal without the height restriction */
         .about-modal-container {
             background: var(--panel);
             width: 95%;
-            max-width: 600px; /* Slightly wider than standard modal for readability */
+            max-width: 700px;
             border-radius: 16px;
-            border: 1px solid var(--accent); /* Small border around it */
-            position: relative;
-            overflow-y: auto;
-            max-height: 90vh;
+            border: 1px solid var(--accent);
             box-shadow: var(--glow-strong);
             padding: 30px;
+            position: relative;
+            /* Fix: Remove overflow and max-height to let it expand */
+            overflow: visible; 
+            height: auto;
         }
 
-        /* Content styling within the "modal" */
         .about-modal-container h1, 
         .about-modal-container h2 {
             color: var(--accent);
@@ -54,17 +55,59 @@
             opacity: 0.9;
         }
 
-        .btn-footer {
-            margin-top: 30px;
-            text-align: center;
+        /* Ensure the settings menu trigger is visible */
+        .android-header-full {
+            background: var(--panel);
+            border-bottom: 1px solid var(--border);
         }
     </style>
+    <script>
+        /* Theme persistence check */
+        (function() {
+            const getCookie = (name) => {
+                const nameEQ = name + "=";
+                const ca = document.cookie.split(';');
+                for (let i = 0; i < ca.length; i++) {
+                    let c = ca[i].trim();
+                    if (c.indexOf(nameEQ) === 0) {
+                        try { return JSON.parse(decodeURIComponent(c.substring(nameEQ.length))); } 
+                        catch (e) { return decodeURIComponent(c.substring(nameEQ.length)).replace(/"/g, ''); }
+                    }
+                }
+                return null;
+            };
+            const theme = getCookie('themePref');
+            if (theme === 'light') document.documentElement.classList.add('light-mode');
+        })();
+    </script>
 </head>
 <body>
 
+    <div class="android-header-full">
+        <h1 class="android-title-clean">EV Subs Compare (UK)</h1>
+        <div class="android-dots-trigger" onclick="toggleMenu()">
+            <span></span><span></span><span></span>
+        </div>
+    </div>
+
+    <div id="sideMenu" class="chrome-style-menu">
+        <div class="menu-content">
+            <a class="menu-item-clean" href="index.html">
+                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cGF0aCBkPSJNMyA5bDktN2w5IDd2MTFhMiAyIDAgMCAxLTIgMmgtNHYtNGgtNHY0SDVhMiAyIDAgMCAxLTItMlY5eiIgc3Ryb2tlPSIjOTRhM2I4IiBzdHJva2Utd2lkdGg9IjIiLz4KPC9zdmc+" class="menu-icon-svg">
+                <span>Calculator Home</span>
+            </a>
+            <a class="menu-item-clean" onclick="toggleTheme(); toggleMenu();">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z'/%3E%3C/svg%3E" class="menu-icon-svg">
+                <span>Light/Dark Mode</span>
+            </a>
+            <a class="menu-item-clean" onclick="resetAll()">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8'/%3E%3Cpath d='M21 3v5h-5'/%3E%3Cpath d='M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16'/%3E%3Cpath d='M3 21v-5h5'/%3E%3C/svg%3E" class="menu-icon-svg">
+                <span>Reset All Data</span>
+            </a>
+        </div>
+    </div>
+
     <div class="about-modal-container">
-        <a href="index.html" class="btn secondary" style="margin-bottom: 20px;">&larr; Back to Tool</a>
-        
         <h1>About This Tool</h1>
         <p>Deciding between a Pay-As-You-Go (PAYG) rate and a monthly subscription can be difficult without accurate data. We provide a data-driven approach to help you decide if a one-month subscription is a savvy financial move for your specific driving habits.</p>
 
@@ -80,8 +123,8 @@
         <h2>Designed for Privacy</h2>
         <p>We believe in a <i>privacy-first</i> approach. This tool does not collect or store any personally identifiable information. We use local cookies solely to remember your vehicle settings so that the tool is ready to use immediately upon your next visit.</p>
 
-        <div class="btn-footer">
-            <button class="btn secondary" onclick="window.location.href='index.html'">Close & Return</button>
+        <div style="margin-top: 30px; text-align: center;">
+            <a href="index.html" class="btn secondary">Return to Calculator</a>
         </div>
     </div>
 
