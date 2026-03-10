@@ -43,11 +43,11 @@ h3 {
 /* 1. The Anchor: Changed to inline-block to provide a stable coordinate system */
 .tooltip-container {
     position: relative;
-    display: inline-block; /* Changed from inline */
-    vertical-align: middle; /* Better alignment with text */
+    display: inline-block; 
+    vertical-align: middle;
     cursor: pointer;
-    margin: 0 2px;
-    line-height: 1; /* Prevents parent line-height from pushing the icon */
+    line-height: 1; /* Prevents cell height from affecting icon position */
+    margin: 0 3px;
 }
 
 /* 2. The Box: Added "Resets" to stop inheritance from labels/headers */
