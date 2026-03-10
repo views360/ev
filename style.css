@@ -35,7 +35,7 @@ h3 {
 }
 
 .info-icon {
-    display: inline-block; /* Changed back from block to stay next to text */
+    display: inline-block; 
     line-height: 1;
     cursor: pointer;
     vertical-align: middle;
@@ -43,48 +43,54 @@ h3 {
 
 .tooltip-container {
     position: relative;
-    /* This is the missing link: inline-flex at 0 width ensures 
-       the tooltip center is the icon center, not the cell center */
-    display: inline-flex;
-    width: 0; 
-    overflow: visible;
-    vertical-align: middle;
-    justify-content: center;
-    align-items: center;
+    display: inline-flex; 
+    width: max-content;
+    vertical-align: middle; 
     cursor: pointer;
-    margin-right: 18px; /* Offset to make room for the 16px icon */
+    line-height: 1; 
+    margin: 0 4px;
 }
 
+/* 3. The Box: Resets for Bold/Caps and precise centering */
 .tooltip-box {
+    display: block;
     position: absolute;
-    bottom: 125%;
+    bottom: 150%; 
     left: 50%;
-    transform: translateX(-50%);
-    width: 200px;
-    /* Resets to stop the TH "Bold/Caps" look */
+    transform: translateX(-50%) translateY(10px);
+    
+    /* STYLE RESETS: Force normal appearance inside TH */
+    font-size: 0.85rem !important;
     font-weight: normal !important;
     text-transform: none !important;
-    font-size: 0.85rem !important;
     color: var(--text) !important;
-    background: var(--panel-alt);
+    
+    width: 200px;
+    padding: 10px 14px;
+    background-color: var(--panel-alt);
     border: 1px solid var(--accent);
-    padding: 10px;
-    border-radius: 6px;
-    z-index: 10000;
+    border-radius: 8px;
     text-align: center;
-    visibility: hidden;
+    line-height: 1.4;
+    z-index: 9999;
+    
+    /* Visibility */
     opacity: 0;
-    transition: opacity 0.2s;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+    white-space: normal;
 }
 
-/* The Arrow */
+/* 4. The Arrow: Locked to the 50% mark of the icon-sized container */
 .tooltip-box::after {
     content: "";
     position: absolute;
     top: 100%;
     left: 50%;
-    margin-left: -5px;
-    border-width: 5px;
+    margin-left: -6px; /* Half of border width */
+    border-width: 6px;
     border-style: solid;
     border-color: var(--accent) transparent transparent transparent;
 }
