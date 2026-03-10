@@ -1,3 +1,26 @@
+#floatingTooltip {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    width: 200px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 0.85rem;
+    line-height: 1.4;
+    pointer-events: none;
+    background: #1e293b;
+    color: #f1f5f9;
+    border: 1px solid #38bdf8;
+    box-shadow: 0 0 12px rgba(56,189,248,0.3);
+}
+.light-mode #floatingTooltip {
+    background: #f1f5f9;
+    color: #0f172a;
+    border: 1px solid #0284c7;
+    box-shadow: 0 0 12px rgba(2,132,199,0.2);
+}
+
 html {
     scroll-behavior: smooth;
 }
@@ -50,32 +73,6 @@ h3 {
     display: inline-block;
 }
 
-#floatingTooltip {
-    display: none;
-    position: fixed;
-    width: 200px;
-    padding: 10px 14px;
-    border-radius: 8px;
-    text-align: center;
-    font-size: 0.85rem;
-    font-weight: normal;
-    line-height: 1.4;
-    z-index: 9999;
-    pointer-events: none;
-    /* Dark mode defaults */
-    background-color: #1e293b;
-    color: #f1f5f9;
-    border: 1px solid #38bdf8;
-    box-shadow: 0 0 15px rgba(56, 189, 248, 0.15);
-}
-
-.light-mode #floatingTooltip {
-    background-color: #f1f5f9;
-    color: #0f172a;
-    border: 1px solid #0284c7;
-    box-shadow: 0 0 15px rgba(2, 132, 199, 0.1);
-}
-
 .tooltip-box {
     display: block;
     position: absolute;
@@ -111,21 +108,14 @@ h3 {
     content: "";
     position: absolute;
     top: 100%;
-    left: var(--caret-left, 50%);
-    transform: translateX(-50%);
+    left: 50%;
     border-width: 6px;
     border-style: solid;
     border-color: var(--accent) transparent transparent transparent;
+    transform: translateX(-50%);
 }
 
-/* When tooltip flips below the icon, caret moves to top and points upward */
-#floatingTooltip.tooltip-below::after {
-    top: auto;
-    bottom: 100%;
-    border-color: transparent transparent var(--accent) transparent;
-}
-
-/* Tooltip visibility is now handled entirely by JS via #floatingTooltip */
+/* tooltip hover/active rules removed */
 
 
 
@@ -156,7 +146,9 @@ h3 {
     100% { box-shadow: 0 0 5px var(--accent-soft); }
 }
 
-/* (hover/active rules removed — tooltip display managed by #floatingTooltip JS) */
+/* tooltip hover/active rules removed */
+
+/* tooltip hover/active rules removed */
 
 .approxTime {
     font-size: 1.1rem;
@@ -586,7 +578,9 @@ tr.bad td { color: var(--danger); }
     flex-wrap: wrap;
 }
 
-/* Inline .tooltip-box spans are kept hidden at all times — display is handled by #floatingTooltip */
+@media (hover: hover) {
+    /* tooltip hover/active rules removed */
+}
 
 .jump-btn {
     text-decoration: none;

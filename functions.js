@@ -894,63 +894,45 @@ function closeHelp() {
     }
 }
 
-// --- Floating viewport-safe tooltip ---
-(function () {
-    const TOOLTIP_WIDTH = 200;
-    const MARGIN = 8;
+// Floating tooltip div — lives on <body> so no parent can clip it.
+// Uses position:fixed so viewport-edge clamping is simple and reliable.
+const _ftDiv = document.createElement('div');
+_ftDiv.id = 'floatingTooltip';
+document.addEventListener('DOMContentLoaded', () => document.body.appendChild(_ftDiv));
 
-    const float = document.createElement('div');
-    float.id = 'floatingTooltip';
-    document.body.appendChild(float);
+let _ftActive = null;
 
-    let activeIcon = null;
-
-    window.toggleTooltip = function (iconEl) {
-        if (activeIcon === iconEl) {
-            hideFloat();
-            return;
-        }
-
-        const tooltipBox = iconEl.querySelector('.tooltip-box');
-        if (!tooltipBox) return;
-
-        activeIcon = iconEl;
-        float.textContent = tooltipBox.textContent;
-        float.style.display = 'block';
-
-        requestAnimationFrame(() => {
-            const iconRect = iconEl.getBoundingClientRect();
-            const floatH = float.offsetHeight;
-            const vw = window.innerWidth;
-
-            // Default: centred above the icon
-            let left = iconRect.left + iconRect.width / 2 - TOOLTIP_WIDTH / 2;
-            let top = iconRect.top - floatH - 10;
-
-            // Clamp horizontally
-            left = Math.max(MARGIN, Math.min(left, vw - TOOLTIP_WIDTH - MARGIN));
-
-            // Flip below if not enough space above
-            if (top < MARGIN) top = iconRect.bottom + 10;
-
-            float.style.left = left + 'px';
-            float.style.top = top + 'px';
-        });
-    };
-
-    function hideFloat() {
-        float.style.display = 'none';
-        float.textContent = '';
-        activeIcon = null;
+function toggleTooltip(iconEl) {
+    if (_ftActive === iconEl) {
+        _ftDiv.style.display = 'none';
+        _ftActive = null;
+        return;
     }
-
-    document.addEventListener('click', (e) => {
-        if (activeIcon && !activeIcon.contains(e.target)) hideFloat();
+    const src = iconEl.querySelector('.tooltip-box');
+    if (!src) return;
+    _ftActive = iconEl;
+    _ftDiv.textContent = src.textContent;
+    _ftDiv.style.display = 'block';
+    requestAnimationFrame(() => {
+        const ir = iconEl.getBoundingClientRect();
+        const W = 200, MARGIN = 8;
+        let left = ir.left + ir.width / 2 - W / 2;
+        let top  = ir.top - _ftDiv.offsetHeight - 8;
+        left = Math.max(MARGIN, Math.min(left, window.innerWidth - W - MARGIN));
+        if (top < MARGIN) top = ir.bottom + 8;
+        _ftDiv.style.left = left + 'px';
+        _ftDiv.style.top  = top  + 'px';
     });
+}
 
-    window.addEventListener('scroll', () => { if (activeIcon) window.toggleTooltip(activeIcon); }, true);
-    window.addEventListener('resize', () => { if (activeIcon) window.toggleTooltip(activeIcon); });
-})();
+document.addEventListener('click', (e) => {
+    // Use closest() so clicking anywhere on the icon span (including the emoji text node)
+    // is not treated as an outside click
+    if (_ftActive && !e.target.closest('.info-icon')) {
+        _ftDiv.style.display = 'none';
+        _ftActive = null;
+    }
+});
 
 function toggleProviders() {
     const container = document.getElementById("collapsibleProviders");
