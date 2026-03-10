@@ -896,18 +896,81 @@ function closeHelp() {
 
 function toggleTooltip(el) {
     const container = el.closest('.tooltip-container');
-    if (container) {
-        container.classList.toggle('active');
-    }
+    if (!container) return;
+
+    const wasActive = container.classList.contains('active');
+
+    // Close all open tooltips first, resetting any inline position overrides
+    document.querySelectorAll('.tooltip-container.active').forEach(openTooltip => {
+        openTooltip.classList.remove('active');
+        const t = openTooltip.querySelector('.tooltip-box');
+        if (t) {
+            t.style.left = '';
+            t.style.transform = '';
+            t.style.removeProperty('--caret-left');
+        }
+    });
+
+    if (wasActive) return; // Was already open — just close it
+
+    container.classList.add('active');
+
+    const tooltip = container.querySelector('.tooltip-box');
+    if (!tooltip) return;
+
+    // Reset to default position first so getBoundingClientRect is accurate
+    tooltip.style.left = '50%';
+    tooltip.style.transform = 'translateX(-50%) translateY(0)';
+
+    // Allow the browser to apply the position before measuring
+    requestAnimationFrame(() => {
+        const rect = tooltip.getBoundingClientRect();
+        const viewportWidth = window.innerWidth;
+        const PADDING = 8; // minimum gap from screen edge in px
+
+        let shiftX = 0;
+
+        if (rect.left < PADDING) {
+            // Tooltip overflows left edge — push it right
+            shiftX = PADDING - rect.left;
+        } else if (rect.right > viewportWidth - PADDING) {
+            // Tooltip overflows right edge — push it left
+            shiftX = (viewportWidth - PADDING) - rect.right;
+        }
+
+        if (shiftX !== 0) {
+            // Apply corrected position
+            const iconRect = container.querySelector('.info-icon').getBoundingClientRect();
+            const tooltipWidth = rect.width;
+
+            // New left offset relative to the container's own left edge
+            // Default: left=50% means centre of icon. We shift by shiftX px.
+            // Compute the caret position as % of tooltip width so it stays over the icon.
+            const defaultLeft = iconRect.left + iconRect.width / 2; // icon centre in viewport px
+            const newTooltipLeft = defaultLeft + shiftX - tooltipWidth / 2; // new left edge in viewport px
+            const caretPct = ((defaultLeft - newTooltipLeft) / tooltipWidth) * 100;
+
+            tooltip.style.left = `calc(50% + ${shiftX}px)`;
+            tooltip.style.transform = 'translateX(-50%) translateY(0)';
+            tooltip.style.setProperty('--caret-left', `${caretPct}%`);
+        } else {
+            tooltip.style.setProperty('--caret-left', '50%');
+        }
+    });
 }
 
 document.addEventListener('click', (e) => {
     if (!e.target.closest('.tooltip-container')) {
         document.querySelectorAll('.tooltip-container.active').forEach(openTooltip => {
             openTooltip.classList.remove('active');
+            const t = openTooltip.querySelector('.tooltip-box');
+            if (t) {
+                t.style.left = '';
+                t.style.transform = '';
+                t.style.removeProperty('--caret-left');
+            }
         });
     }
-
 });
 
 function toggleProviders() {
