@@ -39,12 +39,14 @@ h3 {
     line-height: 1;
     cursor: pointer;
     vertical-align: middle;
+    position: relative;
 }
 
 .tooltip-container {
     position: relative;
-    display: inline-block;
     margin-right: 6px;
+    display: inline-flex;
+    align-items: center;
 }
 
 .tooltip-box {
@@ -83,6 +85,7 @@ h3 {
     border-width: 6px;
     border-style: solid;
     border-color: var(--accent) transparent transparent transparent;
+    transform: translateX(-50%);
 }
 
 .tooltip-container:hover .tooltip-box,
