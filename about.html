@@ -7,172 +7,84 @@
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="stylesheet" href="style.css">
     <style>
-        .content-section {
-            padding: 40px 25px;
-            max-width: 800px;
-            margin: 0 auto;
+        /* Replicate the dark background of the .help-overlay */
+        body {
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(4px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
         }
-        .content-section h1 {
-            color: var(--accent);
-            margin-top: 0px;
-            padding-bottom: 10px;
-            font-size: 2rem;
+
+        /* Replicate the look and feel of the .help-modal */
+        .about-modal-container {
+            background: var(--panel);
+            width: 95%;
+            max-width: 600px; /* Slightly wider than standard modal for readability */
+            border-radius: 16px;
+            border: 1px solid var(--accent); /* Small border around it */
+            position: relative;
+            overflow-y: auto;
+            max-height: 90vh;
+            box-shadow: var(--glow-strong);
+            padding: 30px;
         }
-        .content-section h2 {
+
+        /* Content styling within the "modal" */
+        .about-modal-container h1, 
+        .about-modal-container h2 {
             color: var(--accent);
-            margin-top: 30px;
+            margin-top: 0;
+        }
+
+        .about-modal-container h2 {
+            margin-top: 25px;
             border-bottom: 1px solid var(--border);
             padding-bottom: 10px;
         }
-        .content-section p, .content-section li {
-            margin-bottom: 20px;
-            font-size: 1.05rem;
+
+        .about-modal-container p, 
+        .about-modal-container li {
             color: var(--text);
-            opacity: 0.9;
             line-height: 1.6;
+            opacity: 0.9;
         }
-        .btn-back-glow {
-            display: inline-block;
-            margin-bottom: 30px;
-            text-decoration: none;
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-weight: 600;
-            background: var(--panel-alt);
-            color: var(--text);
-            border: 2px solid var(--border);
-            transition: transform 0.2s ease;
+
+        .btn-footer {
+            margin-top: 30px;
+            text-align: center;
         }
     </style>
-    <script>
-        (function() {
-            const getCookie = (name) => {
-                const nameEQ = name + "=";
-                const ca = document.cookie.split(';');
-                for (let i = 0; i < ca.length; i++) {
-                    let c = ca[i].trim();
-                    if (c.indexOf(nameEQ) === 0) {
-                        try { return JSON.parse(decodeURIComponent(c.substring(nameEQ.length))); } 
-                        catch (e) { return decodeURIComponent(c.substring(nameEQ.length)).replace(/"/g, ''); }
-                    }
-                }
-                return null;
-            };
-            const theme = getCookie('themePref');
-            if (theme === 'light') document.documentElement.classList.add('light-mode');
-        })();
-
-        function resetAll() {
-            localStorage.clear();
-        
-            const cookies = document.cookie.split(";");
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i];
-                const eqPos = cookie.indexOf("=");
-                const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
-                document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
-            }
-        
-            const inputs = document.querySelectorAll('input');
-            inputs.forEach(input => {
-                if (input.type === 'number' || input.type === 'text') {
-                    input.value = '';
-                }
-            });
-        
-            const providersContainer = document.getElementById("providers");
-            if (providersContainer) {
-                providersContainer.innerHTML = "";
-            }
-            window.location.href = "index.html";
-        }    
-    </script>
 </head>
 <body>
-    <div id="privacyOverlay" class="help-overlay" style="display: none;">
-        <div class="help-modal">
-            <button class="close-x" onclick="closePrivacy()">×</button>
-            <div class="standalone-slide"> 
-                <h2>Privacy Policy</h2>
-                <p>We use local cookies solely to remember your vehicle settings and theme preferences. No personal data is stored or transmitted.</p>
-                <div class="help-footer"><button class="btn secondary" onclick="closePrivacy()">Close</button></div>
-            </div>
+
+    <div class="about-modal-container">
+        <a href="index.html" class="btn secondary" style="margin-bottom: 20px;">&larr; Back to Tool</a>
+        
+        <h1>About This Tool</h1>
+        <p>Deciding between a Pay-As-You-Go (PAYG) rate and a monthly subscription can be difficult without accurate data. We provide a data-driven approach to help you decide if a one-month subscription is a savvy financial move for your specific driving habits.</p>
+
+        <h2>Why Use This Tool?</h2>
+        <p>Public charging costs can vary wildly, from 40p/kWh to over 85p/kWh. A subscription might cost £10 but lower your rate by 20p/kWh. Our tool automates this calculation across all known UK subscription providers instantly.</p>
+
+        <h2>How the Comparisons Work</h2>
+        <ul>
+            <li><strong>Break-Even Analysis:</strong> Calculates the exact mileage required to recoup a subscription fee based on your car's efficiency.</li>
+            <li><strong>Trip Savings:</strong> Perfect for planning long-distance holidays, showing you exactly how much you'll save on a specific route.</li>
+        </ul>
+
+        <h2>Designed for Privacy</h2>
+        <p>We believe in a <i>privacy-first</i> approach. This tool does not collect or store any personally identifiable information. We use local cookies solely to remember your vehicle settings so that the tool is ready to use immediately upon your next visit.</p>
+
+        <div class="btn-footer">
+            <button class="btn secondary" onclick="window.location.href='index.html'">Close & Return</button>
         </div>
     </div>
 
-    <div id="contactOverlay" class="help-overlay" style="display: none;">
-        <div class="help-modal">
-            <button class="close-x" onclick="closeContact()">×</button>
-            <div class="standalone-slide"> 
-                <h2>Contact Author</h2>
-                <p>Have feedback or spotted a pricing error? Get in touch:</p>
-                <p>Email: <a href="mailto:evsubscompare@gmail.com" style="color: var(--accent); font-weight: bold;">evsubscompare@gmail.com</a></p>
-                <div class="help-footer"><button class="btn secondary" onclick="closeContact()">Close</button></div>
-            </div>
-        </div>
-    </div>
-
-    <div class="app">
-        <div class="android-header-full">
-            <h1 class="android-title-clean">EV Subs Compare (UK)</h1>
-            <div class="android-dots-trigger" onclick="toggleMenu()">
-                <span></span><span></span><span></span>
-            </div>
-        </div>
-
-        <div id="sideMenu" class="chrome-style-menu">
-            <div class="menu-content">
-                <a class="menu-item-clean" href="index.html">
-                    <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cGF0aCBkPSJNMyA5bDktN2w5IDd2MTFhMiAyIDAgMCAxLTIgMmgtNHYtNGgtNHY0SDVhMiAyIDAgMCAxLTItMlY5eiIgc3Ryb2tlPSIjOTRhM2I4IiBzdHJva2Utd2lkdGg9IjIiLz4KPC9zdmc+" class="menu-icon-svg">
-                    <span>Calculator Home</span>
-                </a>
-                <a class="menu-item-clean" onclick="toggleTheme(); toggleMenu();">
-                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z'/%3E%3C/svg%3E" class="menu-icon-svg">
-                    <span>Light/Dark Mode</span>
-                </a>
-                <a class="menu-item-clean" onclick="openPrivacy(); toggleMenu();">
-                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z'/%3E%3C/svg%3E" class="menu-icon-svg">
-                    <span>Privacy</span>
-                </a>
-                <a class="menu-item-clean" onclick="openContact(); toggleMenu();">
-                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z'%3E%3C/path%3E%3Cpolyline points='22,6 12,13 2,6'%3E%3C/polyline%3E%3C/svg%3E" class="menu-icon-svg">
-                    <span>Contact Author</span>
-                </a>
-                <a class="menu-item-clean" onclick="resetAll()">
-    	            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8'/%3E%3Cpath d='M21 3v5h-5'/%3E%3Cpath d='M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16'/%3E%3Cpath d='M3 21v-5h5'/%3E%3C/svg%3E" class="menu-icon-svg">
-    	            <span>Reset All<div class="tooltip-container">
-                    <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
-                    <div class="tooltip-box tooltip-down tooltip-reset-offset">Clear cookies and empty all input fields to begin again from scratch.</div>
-                </div></span>
-    	        </a>
-    			<div class="menu-footer">
-    			    Subscription Data<br />Last Updated<br /><strong>09 March 26</strong>
-    			</div>                
-            </div>
-        </div>
-
-        <div class="content-section">
-            <a href="index.html" class="btn-back-glow empty-pulse">Back to Calculator</a>
-            
-            <h1>Optimising Your EV Charging Strategy</h1>
-            <p>Welcome to <strong>EV Subs Compare</strong>, a dedicated utility designed to help UK electric vehicle drivers navigate the increasingly complex landscape of public charging costs. As the UK transitions toward electric mobility, major networks like Tesla, IONITY, and BP Pulse have introduced subscription models that offer significant discounts in exchange for a fixed monthly fee.</p>
-
-            <h2>Our Mission</h2>
-            <p>The goal of this tool is to provide total transparency. Choosing between a standard Pay-As-You-Go (PAYG) rate and a monthly subscription can be difficult without accurate data. We provide a data-driven approach to help you decide if a one-month subscription is a savvy financial move for your specific driving habits.</p>
-
-            <h2>Why Use This Tool?</h2>
-            <p>Public charging costs can vary wildly, from 40p/kWh to over 85p/kWh. A subscription might cost £10 but lower your rate by 20p/kWh. This means that if you are planning a holiday or long trip — or if you charge more than 50kWh in a month — you'll know which charging approach will save you money. Our tool automates this calculation across all known UK subscription providers instantly.</p>
-
-            <h2>How the Comparisons Work</h2>
-            <ul>
-                <li><strong>Break-Even Analysis:</strong> Calculates the exact mileage required to recoup a subscription fee based on your car's efficiency.</li>
-                <li><strong>Trip Savings:</strong> Perfect for planning long-distance holidays, showing you exactly how much you'll save on a specific route.</li>
-            </ul>
-
-            <h2>Designed for Privacy</h2>
-            <p>We believe in a <i>privacy-first</i> approach. This tool does not collect or store any personally identifiable information. We use local cookies solely to remember your vehicle settings so that the tool is ready to use immediately upon your next visit.</p>
-        </div>
-    </div>
     <script src="functions.js"></script>
 </body>
 </html>
