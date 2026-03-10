@@ -677,6 +677,7 @@ tr.bad td { color: var(--danger); }
     align-items: center;
     gap: 15px;
     animation: none; 
+    margin-top: 10px !important;
 }
 
 .comparison-label {
@@ -1369,6 +1370,9 @@ body {
     #breakEvenCard {
         max-width: 100%; 
         margin-bottom: 20px;
+    }
+    .comparison-mode-box {
+        margin-top: 10px !important;
     }
     
     .results-header, .result-row {
