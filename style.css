@@ -41,64 +41,58 @@ h3 {
     vertical-align: middle;
 }
 
-/* 1. The Anchor: Must be inline-block to lock the 'left: 50%' calculation to the icon itself */
 .tooltip-container {
     position: relative;
-    display: inline-flex; /* Use flex to tightly wrap the icon */
-    align-items: center;
+    /* This is the missing link: inline-flex at 0 width ensures 
+       the tooltip center is the icon center, not the cell center */
+    display: inline-flex;
+    width: 0; 
+    overflow: visible;
+    vertical-align: middle;
     justify-content: center;
-    vertical-align: middle; 
+    align-items: center;
     cursor: pointer;
-    line-height: 1;
-    margin-right: 8px; /* Space between lightbulb and header text */
+    margin-right: 18px; /* Offset to make room for the 16px icon */
 }
 
-/* 2. The Box: Standardized centering resets */
 .tooltip-box {
-    display: block;
     position: absolute;
-    bottom: 150%; 
-    left: 50%; /* Now correctly refers to the center of the icon */
-    transform: translateX(-50%) translateY(10px);
-    
-    /* Your existing font resets are good */
-    font-size: 0.85rem !important;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 200px;
+    /* Resets to stop the TH "Bold/Caps" look */
     font-weight: normal !important;
     text-transform: none !important;
-    
-    width: 200px;
-    padding: 10px 14px;
-    background-color: var(--panel-alt);
+    font-size: 0.85rem !important;
+    color: var(--text) !important;
+    background: var(--panel-alt);
     border: 1px solid var(--accent);
-    border-radius: 8px;
+    padding: 10px;
+    border-radius: 6px;
+    z-index: 10000;
     text-align: center;
-    z-index: 9999;
-    
-    opacity: 0;
     visibility: hidden;
-    pointer-events: none;
-    transition: opacity 0.3s ease, transform 0.3s ease;
-    box-shadow: 0 0 15px var(--accent-soft);
+    opacity: 0;
+    transition: opacity 0.2s;
 }
 
-/* 3. The Arrow: Locked to the mathematical center of the icon-based box */
+/* The Arrow */
 .tooltip-box::after {
     content: "";
     position: absolute;
     top: 100%;
     left: 50%;
-    margin-left: -6px; /* Half of the border width to center perfectly */
-    border-width: 6px;
+    margin-left: -5px;
+    border-width: 5px;
     border-style: solid;
     border-color: var(--accent) transparent transparent transparent;
 }
 
-/* 4. Show Logic */
 .tooltip-container:hover .tooltip-box,
 .tooltip-container.active .tooltip-box {
-    opacity: 1;
     visibility: visible;
-    transform: translateX(-50%) translateY(0);
+    opacity: 1;
 }
 
 .preset-select-pulse {
