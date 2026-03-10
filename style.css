@@ -91,6 +91,10 @@ h3 {
     opacity: 1;
 }
 
+document.querySelectorAll(".tooltip-box.show").forEach(t => {
+    if (t !== tooltip) t.classList.remove("show");
+});
+
 .preset-select-pulse {
     border: 1px solid var(--accent) !important;
     background-color: var(--panel-alt);
