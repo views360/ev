@@ -35,7 +35,7 @@ h3 {
 }
 
 .info-icon {
-    display: inline;
+    display: block; /* Changed from inline */
     line-height: 1;
     cursor: pointer;
 }
@@ -43,10 +43,12 @@ h3 {
 /* 1. The Anchor: Must be inline-block to lock the 'left: 50%' calculation to the icon itself */
 .tooltip-container {
     position: relative;
-    display: inline-block; /* Critical: This makes the container the width of the icon only */
+    display: inline-block; 
+    width: auto; /* Fits the icon width */
+    height: auto;
     vertical-align: middle; 
     cursor: pointer;
-    line-height: 1; /* Prevents cell height from affecting icon position */
+    line-height: 1; 
     margin: 0 4px;
 }
 
