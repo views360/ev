@@ -1000,6 +1000,7 @@ function toggleTooltip(iconEl) {
     } else {
         _ftDiv.insertBefore(document.createTextNode(src.textContent), _ftCaret);
     }
+    _ftJustOpened = true;
     requestAnimationFrame(() => {
         _ftPosition(iconEl);
         _ftDiv.style.visibility = 'visible';
@@ -1042,36 +1043,19 @@ document.addEventListener('scroll', () => {
 // Desktop: hide on click outside an icon (already handled above, this is a safety net)
 
 // ---- Mobile touch handling ----
-let _ftTouchStartX = 0;
-let _ftTouchStartY = 0;
-let _ftTouchMoved  = false;
+// Any touch after the tooltip is shown hides it immediately.
+// This includes tapping elsewhere, scrolling the page, or scrolling the table.
+let _ftJustOpened = false;
 
-window.addEventListener('touchstart', (e) => {
-    _ftTouchStartX = e.touches[0].clientX;
-    _ftTouchStartY = e.touches[0].clientY;
-    _ftTouchMoved  = false;
-    if (_ftActive && !e.target.closest('.info-icon')) _ftHide();
-}, { passive: true });
-
-window.addEventListener('touchmove', (e) => {
-    const dx = Math.abs(e.touches[0].clientX - _ftTouchStartX);
-    const dy = Math.abs(e.touches[0].clientY - _ftTouchStartY);
-    if (dx > 8 || dy > 8) {
-        _ftTouchMoved = true;
-        if (_ftActive) _ftHide();
+window.addEventListener('touchstart', () => {
+    if (_ftActive) {
+        if (_ftJustOpened) {
+            // This is the same touch that opened it — ignore
+            _ftJustOpened = false;
+        } else {
+            _ftHide();
+        }
     }
-}, { passive: true });
-
-// touchcancel fires when the browser takes over the gesture (native scroll)
-window.addEventListener('touchcancel', () => {
-    if (_ftActive) _ftHide();
-}, { passive: true });
-
-window.addEventListener('touchend', (e) => {
-    if (!_ftActive) return;
-    const dx = Math.abs(e.changedTouches[0].clientX - _ftTouchStartX);
-    const dy = Math.abs(e.changedTouches[0].clientY - _ftTouchStartY);
-    if (dx > 8 || dy > 8 || _ftTouchMoved) _ftHide();
 }, { passive: true });
 
 // Reposition on resize
