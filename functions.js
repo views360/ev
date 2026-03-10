@@ -940,7 +940,6 @@ document.body.appendChild(_ftDiv);
 
 let _ftActive = null;
 let _ftTimer  = null;
-let _ftObserver = null;
 
 function _ftPosition(iconEl) {
     const ir     = iconEl.getBoundingClientRect();
@@ -987,101 +986,68 @@ function _ftPosition(iconEl) {
     }
 }
 
+// Transparent overlay — sits over everything when tooltip is open on mobile.
+// Any touch on it (tap or start of scroll) hides the tooltip and removes itself,
+// passing the gesture through to whatever is underneath.
+const _ftOverlay = document.createElement('div');
+_ftOverlay.style.cssText = 'position:fixed;inset:0;z-index:9998;background:transparent;display:none;';
+document.body.appendChild(_ftOverlay);
+
+function _ftHide() {
+    clearTimeout(_ftTimer);
+    _ftDiv.style.visibility = 'hidden';
+    _ftOverlay.style.display = 'none';
+    _ftActive = null;
+}
+
+_ftOverlay.addEventListener('touchstart', (e) => {
+    // Hide tooltip, remove overlay, then re-dispatch the touch so the scroll proceeds
+    _ftHide();
+    // Don't call preventDefault — passive listener — scroll will continue naturally
+}, { passive: true });
+
 function toggleTooltip(iconEl) {
-    if (_ftActive === iconEl) {
-        _ftDiv.style.visibility = 'hidden';
-        _ftActive = null;
-        return;
-    }
+    if (_ftActive === iconEl) { _ftHide(); return; }
     const src = iconEl.querySelector('.tooltip-box');
     if (!src) return;
     _ftActive = iconEl;
-    // Update text node, preserving the caret child element
     if (_ftDiv.firstChild && _ftDiv.firstChild.nodeType === 3) {
         _ftDiv.firstChild.textContent = src.textContent;
     } else {
         _ftDiv.insertBefore(document.createTextNode(src.textContent), _ftCaret);
     }
-    _ftJustOpened = true;
-    clearTimeout(_ftTimer);
-    if (_ftObserver) _ftObserver.disconnect();
     requestAnimationFrame(() => {
         _ftPosition(iconEl);
         _ftDiv.style.visibility = 'visible';
-        // On mobile (touch device), use IntersectionObserver to detect when the
-        // icon moves due to scrolling — hide the tooltip the moment it shifts.
+        // Show overlay on touch devices so any subsequent touch hides the tooltip
         if (window.matchMedia('(hover: none)').matches) {
-            const startRect = iconEl.getBoundingClientRect();
-            _ftObserver = new IntersectionObserver((entries) => {
-                const r = entries[0].boundingClientRect;
-                if (Math.abs(r.top - startRect.top) > 2 || Math.abs(r.left - startRect.left) > 2) {
-                    _ftHide();
-                }
-            }, { threshold: Array.from({length: 101}, (_, i) => i / 100) });
-            _ftObserver.observe(iconEl);
+            _ftOverlay.style.display = 'block';
         }
     });
 }
 
-// Close on click outside an icon (capture so it runs before onclick)
+// Desktop: hide on click outside, show/hide on hover, reposition on scroll
 document.addEventListener('click', (e) => {
-    if (_ftActive && !e.target.closest('.info-icon')) {
-        _ftDiv.style.visibility = 'hidden';
-        _ftActive = null;
-    }
+    if (_ftActive && !e.target.closest('.info-icon')) _ftHide();
 }, true);
 
-// Show on hover
 document.addEventListener('mouseover', (e) => {
     const icon = e.target.closest('.info-icon');
     if (icon && icon !== _ftActive) toggleTooltip(icon);
 });
 
-// Hide when mouse leaves icon
 document.addEventListener('mouseout', (e) => {
     const icon = e.target.closest('.info-icon');
-    if (icon && !icon.contains(e.relatedTarget)) {
-        _ftDiv.style.visibility = 'hidden';
-        _ftActive = null;
-    }
+    if (icon && !icon.contains(e.relatedTarget)) _ftHide();
 });
 
-function _ftHide() {
-    clearTimeout(_ftTimer);
-    if (_ftObserver) { _ftObserver.disconnect(); _ftObserver = null; }
-    _ftDiv.style.visibility = 'hidden';
-    _ftActive = null;
-}
-
-// Desktop: reposition tooltip on any scroll
 document.addEventListener('scroll', () => {
     if (_ftActive) _ftPosition(_ftActive);
 }, true);
 
-// Desktop: hide on click outside an icon (already handled above, this is a safety net)
-
-// ---- Mobile touch handling ----
-// Any touch after the tooltip is shown hides it immediately.
-// This includes tapping elsewhere, scrolling the page, or scrolling the table.
-let _ftJustOpened = false;
-
-window.addEventListener('touchstart', () => {
-    if (_ftActive) {
-        if (_ftJustOpened) {
-            // This is the same touch that opened it — ignore
-            _ftJustOpened = false;
-        } else {
-            _ftHide();
-        }
-    }
-}, { passive: true });
-
-// Reposition on resize
 window.addEventListener('resize', () => {
     if (_ftActive) _ftPosition(_ftActive);
 });
-
-
 function toggleProviders() {
     const container = document.getElementById("collapsibleProviders");
     const controls = document.getElementById("providerControls"); 
