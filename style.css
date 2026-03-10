@@ -35,36 +35,36 @@ h3 {
 }
 
 .info-icon {
-    display: block; /* Changed from inline */
+    display: inline-block; /* Changed back from block to stay next to text */
     line-height: 1;
     cursor: pointer;
+    vertical-align: middle;
 }
 
 /* 1. The Anchor: Must be inline-block to lock the 'left: 50%' calculation to the icon itself */
 .tooltip-container {
     position: relative;
-    display: inline-block; 
-    width: auto; /* Fits the icon width */
-    height: auto;
+    display: inline-flex; /* Use flex to tightly wrap the icon */
+    align-items: center;
+    justify-content: center;
     vertical-align: middle; 
     cursor: pointer;
-    line-height: 1; 
-    margin: 0 4px;
+    line-height: 1;
+    margin-right: 8px; /* Space between lightbulb and header text */
 }
 
 /* 2. The Box: Standardized centering resets */
 .tooltip-box {
     display: block;
     position: absolute;
-    bottom: 140%; /* Positioned above the icon */
-    left: 50%;
+    bottom: 150%; 
+    left: 50%; /* Now correctly refers to the center of the icon */
     transform: translateX(-50%) translateY(10px);
     
-    /* Style Resets: Stop inheritance of bold/caps from TH/Labels */
+    /* Your existing font resets are good */
     font-size: 0.85rem !important;
     font-weight: normal !important;
     text-transform: none !important;
-    color: var(--text) !important;
     
     width: 200px;
     padding: 10px 14px;
@@ -72,17 +72,13 @@ h3 {
     border: 1px solid var(--accent);
     border-radius: 8px;
     text-align: center;
-    line-height: 1.4;
-    z-index: 6000;
+    z-index: 9999;
     
-    /* Visibility */
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
-    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+    transition: opacity 0.3s ease, transform 0.3s ease;
     box-shadow: 0 0 15px var(--accent-soft);
-    white-space: normal;
-    word-wrap: break-word;
 }
 
 /* 3. The Arrow: Locked to the mathematical center of the icon-based box */
