@@ -44,8 +44,7 @@ h3 {
 .tooltip-container {
     position: relative;
     display: inline-block;
-    cursor: pointer;
-    margin-left: 4px;
+    margin-right: 6px;
 }
 
 .tooltip-box {
