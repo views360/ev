@@ -43,7 +43,7 @@ h3 {
     align-items: center;
     justify-content: center;
     width: 1.2em;
-    top: -1px;
+    top: -2px;
 }
 
 .tooltip-container {
@@ -1450,4 +1450,3 @@ body {
         white-space: nowrap; 
     }
 }
-
