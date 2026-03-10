@@ -473,7 +473,7 @@ tr.bad td { color: var(--danger); }
     margin-bottom: 20px !important;
 }
 
-.toggle-container-block {
+. {
     width: 100%;
     margin: 15px 0 20px 0;
     display: flex;
@@ -1267,7 +1267,7 @@ body {
     }
     
     .toggle-container-block {
-        margin: 15px 10px !important; 
+        margin: 0px 10px 15px 10px !important; 
         width: auto; 
         display: block; 
     }
