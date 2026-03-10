@@ -816,7 +816,7 @@ tr.bad td { color: var(--danger); }
 }
 
 .android-header-full {
-    background-color: #000000;
+    background-color: #000000 !important;
     width: 100vw;
     height: 64px;
     display: flex;
