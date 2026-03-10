@@ -939,6 +939,7 @@ _ftDiv.appendChild(_ftCaret);
 document.body.appendChild(_ftDiv);
 
 let _ftActive = null;
+let _ftTimer  = null;
 
 function _ftPosition(iconEl) {
     const ir     = iconEl.getBoundingClientRect();
@@ -1001,9 +1002,11 @@ function toggleTooltip(iconEl) {
         _ftDiv.insertBefore(document.createTextNode(src.textContent), _ftCaret);
     }
     _ftJustOpened = true;
+    clearTimeout(_ftTimer);
     requestAnimationFrame(() => {
         _ftPosition(iconEl);
         _ftDiv.style.visibility = 'visible';
+        _ftTimer = setTimeout(() => _ftHide(), 4000);
     });
 }
 
@@ -1031,6 +1034,7 @@ document.addEventListener('mouseout', (e) => {
 });
 
 function _ftHide() {
+    clearTimeout(_ftTimer);
     _ftDiv.style.visibility = 'hidden';
     _ftActive = null;
 }
