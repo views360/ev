@@ -354,18 +354,10 @@ function calculate() {
                         <thead>
                             <tr>
                                 <th>Provider (click hyperlink to view subscription info)</th>
-                                <th><div class="tooltip-container">
-                            <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
-                          <div class="tooltip-box">If the provider's discounted charge rate is tied to a charging speed (selected in the form above), it will be specified in this column. If the provider offers more than one speed at the same discounted charge rate, you will see <strong>'Max. available'</strong>.</div>Charging Speed</th>
-                                <th><div class="tooltip-container">
-                            <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
-                          <div class="tooltip-box">This is the provider's subscription fee, which gives you access to their discounted charge rate for ONE MONTH.</div>Sub. Fee</th>
-                                <th><div class="tooltip-container">
-                            <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
-                          <div class="tooltip-box">This is the provider's discounted charge rate (per kWh) that is available after subscribing for one month. Note that some providers have variable charge rates depending on location and time of day. The rate listed here may be an average. Click the provider's link to confirm pricing.</div>Disc. Rate</th>
-                                <th><div class="tooltip-container">
-                            <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
-                          <div class="tooltip-box">This is the number of miles you must drive on the provider's discounted charge rate to pay off the subscription fee. <strong>Important! This is not the total miles of your journey</strong> — it is the number of miles you must drive from your first charge with this provider. Remember, a subscription lasts for an entire month.</div>Break-Even Miles</th>
+                                <th><div class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡</span><div class="tooltip-box">If the provider's discounted charge rate is tied to a charging speed (selected in the form above), it will be specified in this column. If the provider offers more than one speed at the same discounted charge rate, you will see <strong>'Max. available'</strong>.</div>Charging Speed</th>
+                                <th><div class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡</span><div class="tooltip-box">This is the provider's subscription fee, which gives you access to their discounted charge rate for ONE MONTH.</div>Sub. Fee</th>
+                                <th><div class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡</span><div class="tooltip-box">This is the provider's discounted charge rate (per kWh) that is available after subscribing for one month. Note that some providers have variable charge rates depending on location and time of day. The rate listed here may be an average. Click the provider's link to confirm pricing.</div>Disc. Rate</th>
+                                <th><div class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡</span><div class="tooltip-box">This is the number of miles you must drive on the provider's discounted charge rate to pay off the subscription fee. <strong>Important! This is not the total miles of your journey</strong> — it is the number of miles you must drive from your first charge with this provider. Remember, a subscription lasts for an entire month.</div>Break-Even Miles</th>
                             </tr>
                         </thead>
                         <tbody>`;
@@ -377,9 +369,7 @@ function calculate() {
 
             html += `<tr>
                 <td>
-                    <div class="tooltip-container">
-                        <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
-                        <div class="tooltip-box">${row.comments}</div>
+                    <div class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡</span><div class="tooltip-box">${row.comments}</div>
                     </div> ${providerLink}
                 </td>
                 <td>${row.speedDisplay}</td>
@@ -459,12 +449,8 @@ function calculate() {
     const totalAdhocCost = startChargeCost + (publicKwh * (inputs.adhoc / 100));
     
     document.getElementById("preChargeLine").innerHTML = `<h3>PAYG SUMMARY</h3>Pre-journey starting charge: <strong>${startChargeKwh.toFixed(1)} kWh</strong> (£${startChargeCost.toFixed(2)})`;
-    document.getElementById("homeRangeLine").innerHTML = `<div class="tooltip-container">
-                            <span class="info-icon" style="font-size:0.8rem" onclick="toggleTooltip(this)">💡</span>
-                          <div class="tooltip-box">This is the distance you can expect to drive before your first public charge along your route.</div>Range from pre-journey starting charge: <strong>${initialRange.toFixed(0)} miles</strong>`;
-    document.getElementById("publicMilesLine").innerHTML = `<div class="tooltip-container">
-                            <span class="info-icon" style="font-size:0.8rem" onclick="toggleTooltip(this)">💡</span>
-                          <div class="tooltip-box">This is how many miles of your trip will need to be covered by public charging.</div>PAYG public charging miles needed: <strong>${publicMiles.toFixed(0)} miles</strong> `;
+    document.getElementById("homeRangeLine").innerHTML = `<div class="tooltip-container"><span class="info-icon" style="font-size:0.8rem" onclick="toggleTooltip(this)">💡</span><div class="tooltip-box">This is the distance you can expect to drive before your first public charge along your route.</div>Range from pre-journey starting charge: <strong>${initialRange.toFixed(0)} miles</strong>`;
+    document.getElementById("publicMilesLine").innerHTML = `<div class="tooltip-container"><span class="info-icon" style="font-size:0.8rem" onclick="toggleTooltip(this)">💡</span><div class="tooltip-box">This is how many miles of your trip will need to be covered by public charging.</div>PAYG public charging miles needed: <strong>${publicMiles.toFixed(0)} miles</strong> `;
     document.getElementById("publicKwhLine").innerHTML = `PAYG public charging energy needed: <strong>${publicKwh.toFixed(1)} kWh @ ${inputs.adhoc}p</strong>`;
     document.getElementById("adhocCostLine").innerHTML = `Total journey cost (pre-charge + standard PAYG): <strong>£${totalAdhocCost.toFixed(2)}</strong>`;
     
@@ -512,27 +498,12 @@ function calculate() {
     });
     let html = `<div class="mobile-only-text" style="font-size: 0.8em; margin-left: 10px">Slide table left to view hidden columns.</div><div class="results-scroll"><table><thead><tr>
         <th>Provider (click hyperlink to view subscription info)</th>
-        <th><div class="tooltip-container">
-                            <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
-                          <div class="tooltip-box">This is the provider's subscription fee, which gives you access to their discounted charge rate for ONE MONTH.</div>Sub. Fee</th>
-        <th><div class="tooltip-container">
-                            <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
-                          <div class="tooltip-box">This is the provider's discounted charge rate (per kWh) that is available after subscribing for one month. Note that some providers have variable charge rates depending on location and time of day. The rate listed here may be an average. Click the provider's link to confirm pricing.</div>Disc. Rate</th>
-        <th><div class="tooltip-container">
-                            <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
-                          <div class="tooltip-box">This is the expected <strong>total charging cost</strong> of your trip using this provider and including your stated battery pre-charge. If it is displayed in green, it is cheaper than the equivalent journey using PAYG charging at the rate you entered above.</div>Trip Cost</th>
-        </th>
-        <th><div class="tooltip-container">
-                            <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
-                          <div class="tooltip-box">This is the amount by which the discounted charge rate will either be cheaper or more expensive than your average PAYG rate for the same distance. Green means cheaper; red means more expensive. Bear in mind that you can continue to use a provider's subscription for one full month.</div>vs. PAYG</th>
-        </th>
-        <th><div class="tooltip-container">
-                            <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
-                          <div class="tooltip-box">This is the number of miles you must drive on the provider's discounted charge rate to pay off the subscription fee. <strong>Important! This is not the total miles of your journey</strong> — it is the number of miles you must drive from your first charge with this provider. Remember, a subscription lasts for an entire month.</div>Break-Even Miles</th>
-        <th><div class="tooltip-container">
-                            <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
-                          <div class="tooltip-box">This is the break-even miles PLUS the initial number of miles your vehicle can drive based on its precharged state.</div>Break Even + Battery</th>
-        </th>
+        <th><div class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡</span><div class="tooltip-box">This is the provider's subscription fee, which gives you access to their discounted charge rate for ONE MONTH.</div>Sub. Fee</th>
+        <th><div class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡</span><div class="tooltip-box">This is the provider's discounted charge rate (per kWh) that is available after subscribing for one month. Note that some providers have variable charge rates depending on location and time of day. The rate listed here may be an average. Click the provider's link to confirm pricing.</div>Disc. Rate</th>
+        <th><div class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡</span><div class="tooltip-box">This is the expected <strong>total charging cost</strong> of your trip using this provider and including your stated battery pre-charge. If it is displayed in green, it is cheaper than the equivalent journey using PAYG charging at the rate you entered above.</div>Trip Cost</th>
+        <th><div class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡</span><div class="tooltip-box">This is the amount by which the discounted charge rate will either be cheaper or more expensive than your average PAYG rate for the same distance. Green means cheaper; red means more expensive. Bear in mind that you can continue to use a provider's subscription for one full month.</div>vs. PAYG</th>
+        <th><div class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡</span><div class="tooltip-box">This is the number of miles you must drive on the provider's discounted charge rate to pay off the subscription fee. <strong>Important! This is not the total miles of your journey</strong> — it is the number of miles you must drive from your first charge with this provider. Remember, a subscription lasts for an entire month.</div>Break-Even Miles</th>
+        <th><div class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡</span><div class="tooltip-box">This is the break-even miles PLUS the initial number of miles your vehicle can drive based on its precharged state.</div>Break Even + Battery</th>
         </tr></thead><tbody>`;
     providers.forEach(p => {
         const rowClass = p.savings > 0 ? "good" : (p.savings < 0 ? "bad" : "");
@@ -549,9 +520,7 @@ function calculate() {
             : "N/A";
         html += `<tr class="${rowClass}">
             <td>
-                <div class="tooltip-container">
-                    <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
-                    <div class="tooltip-box">${p.comments}</div>
+                <div class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡</span><div class="tooltip-box">${p.comments}</div>
                 </div> ${providerLink}
             </td>
             <td>£${p.subCost.toFixed(2)}</td>
