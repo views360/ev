@@ -40,51 +40,62 @@ h3 {
     cursor: pointer;
 }
 
+/* 1. The Anchor: Changed to inline-block to provide a stable coordinate system */
 .tooltip-container {
     position: relative;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
+    display: inline-block; 
     vertical-align: middle;
-    margin: 0 4px;
+    cursor: pointer;
+    line-height: 1; /* Prevents parent line-height from pushing the icon */
 }
 
+/* 2. The Box: Added "Resets" to stop inheritance from labels/headers */
 .tooltip-box {
     display: block;
     position: absolute;
-    bottom: calc(100% + 10px);
+    bottom: 150%; /* Positioned above the icon */
     left: 50%;
     transform: translateX(-50%) translateY(10px);
+    
+    /* STYLE RESETS - These stop the bold/caps/large font issues */
+    font-size: 0.85rem !important;
+    font-weight: normal !important;
+    text-transform: none !important;
+    font-style: normal !important;
+    letter-spacing: normal !important;
+    color: var(--text) !important;
     
     width: 200px;
     padding: 10px 14px;
     background-color: var(--panel-alt);
-    color: var(--text);
     border: 1px solid var(--accent);
     border-radius: 8px;
     text-align: center;
-    z-index: 6000;
-    font-size: 0.85rem;
     line-height: 1.4;
+    z-index: 9999;
+    
+    /* Visibility */
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
     transition: opacity 0.3s ease, transform 0.3s ease;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+    white-space: normal;
 }
 
+/* 3. The Arrow: Locked to the center of the box */
 .tooltip-box::after {
     content: "";
     position: absolute;
-    top: 100%;
+    top: 100%; /* Bottom of the box */
     left: 50%;
-    margin-left: -6px;
+    margin-left: -6px; /* Half of border width to center perfectly */
     border-width: 6px;
     border-style: solid;
     border-color: var(--accent) transparent transparent transparent;
 }
 
+/* 4. Show Logic */
 .tooltip-container:hover .tooltip-box,
 .tooltip-container.active .tooltip-box {
     opacity: 1;
