@@ -401,7 +401,7 @@ function calculate() {
                     showBeReminder();
                     beReminderShown = true; 
                 }
-            }, 2000); // 2 second delay
+            }, 2000);
         }
         return; 
     }
@@ -551,7 +551,7 @@ function calculate() {
             <td>
                 <div class="tooltip-container">
                     <span class="info-icon" onclick="toggleTooltip(this)">💡</span>
-                    <div class="tooltip-box tooltip-right">${row.comments}</div>
+                    <div class="tooltip-box tooltip-right">${p.comments}</div>
                 </div> ${providerLink}
             </td>
             <td>£${p.subCost.toFixed(2)}</td>
