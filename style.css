@@ -50,6 +50,32 @@ h3 {
     display: inline-block;
 }
 
+#floatingTooltip {
+    display: none;
+    position: fixed;
+    width: 200px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 0.85rem;
+    font-weight: normal;
+    line-height: 1.4;
+    z-index: 9999;
+    pointer-events: none;
+    /* Dark mode defaults */
+    background-color: #1e293b;
+    color: #f1f5f9;
+    border: 1px solid #38bdf8;
+    box-shadow: 0 0 15px rgba(56, 189, 248, 0.15);
+}
+
+.light-mode #floatingTooltip {
+    background-color: #f1f5f9;
+    color: #0f172a;
+    border: 1px solid #0284c7;
+    box-shadow: 0 0 15px rgba(2, 132, 199, 0.1);
+}
+
 .tooltip-box {
     display: block;
     position: absolute;
