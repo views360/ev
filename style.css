@@ -43,53 +43,44 @@ h3 {
 
 .tooltip-container {
     position: relative;
-    display: inline-flex; 
-    width: max-content;
-    vertical-align: middle; 
+    display: inline-block;
     cursor: pointer;
-    line-height: 1; 
-    margin: 0 4px;
+    margin-left: 4px;
 }
 
-/* 3. The Box: Resets for Bold/Caps and precise centering */
 .tooltip-box {
     display: block;
     position: absolute;
-    bottom: 150%; 
+    bottom: 140%;
     left: 50%;
     transform: translateX(-50%) translateY(10px);
-    
-    /* STYLE RESETS: Force normal appearance inside TH */
-    font-size: 0.85rem !important;
-    font-weight: normal !important;
-    text-transform: none !important;
-    color: var(--text) !important;
-    
-    width: 200px;
-    padding: 10px 14px;
     background-color: var(--panel-alt);
-    border: 1px solid var(--accent);
+    color: var(--text);
+    padding: 10px 14px;
     border-radius: 8px;
+    width: 200px;
     text-align: center;
+    z-index: 100;
+    font-size: 0.85rem;
+    font-weight: normal;
+    text-transform: none;
     line-height: 1.4;
-    z-index: 9999;
+    border: 1px solid var(--accent);
     
-    /* Visibility */
     opacity: 0;
     visibility: hidden;
-    pointer-events: none;
-    transition: opacity 0.3s ease, transform 0.3s ease;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-    white-space: normal;
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+    
+    box-shadow: 0 0 15px var(--accent-soft);
+    animation: pulseGlow 2s infinite ease-in-out;
 }
 
-/* 4. The Arrow: Locked to the 50% mark of the icon-sized container */
 .tooltip-box::after {
     content: "";
     position: absolute;
     top: 100%;
     left: 50%;
-    margin-left: -6px; /* Half of border width */
+    margin-left: -6px;
     border-width: 6px;
     border-style: solid;
     border-color: var(--accent) transparent transparent transparent;
