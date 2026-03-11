@@ -1297,12 +1297,7 @@ body {
     pointer-events: none;
 }
 
-/* Hide on desktop */
-@media (min-width: 701px) {
-    .mobile-bottom-ad {
-        display: none;
-    }
-}
+
 
 
 
