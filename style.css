@@ -191,6 +191,7 @@ body {
     margin: 0;
     padding: 20px;
     padding-top: 64px !important;
+    padding-bottom: 98px !important; /* clears the fixed bottom ad bar (90px + 4px padding each side) */
     line-height: 1.6;
     transition: background-color 0.3s, color 0.3s;
 }
@@ -1278,12 +1279,7 @@ body {
     background: rgba(0,255,0,0.1);
 }
 
-/* Hide on desktop */
-@media (min-width: 701px) {
-    .mobile-bottom-ad {
-        display: none;
-    }
-}
+
 
 
 
