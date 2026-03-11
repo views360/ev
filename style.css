@@ -1266,12 +1266,12 @@ body {
     position: fixed;
     top: 0;
     right: 0;
-    width: 300px; /* or 120/300 depending on your ad size */
+    width: 300px !important; /* or 120/300 depending on your ad size */
     height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 9999;
+    z-index: 9999 !important;
     background: transparent;
 }
 
@@ -1295,12 +1295,20 @@ body {
     padding: 4px 0;
 }
 
+.mobile-bottom-ad iframe {
+    background: rgba(0,255,0,0.1);
+}
+
 /* Hide on desktop */
 @media (min-width: 701px) {
     .mobile-bottom-ad {
         display: none;
     }
 }
+
+
+
+
 
 @media (max-width: 700px) {
     .right-edge-ad {
