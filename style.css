@@ -1275,6 +1275,15 @@ body {
     background: transparent;
 }
 
+.right-edge-ad {
+    pointer-events: none;
+}
+
+.right-edge-ad iframe {
+    pointer-events: auto;
+}
+
+
 
 
 
