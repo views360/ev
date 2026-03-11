@@ -1272,6 +1272,8 @@ body {
     z-index: 9999;
     text-align: center;
     padding: 4px 0;
+    border-top: 1px solid var(--accent);
+    box-shadow: 0 -4px 18px rgba(56, 189, 248, 0.25), 0 -1px 6px rgba(56, 189, 248, 0.15);
 }
 
 .mobile-bottom-ad iframe {
@@ -1281,8 +1283,7 @@ body {
 .ad-tab {
     position: absolute;
     top: -22px;
-    left: 50%;
-    transform: translateX(-50%);
+    right: 16px;
     background: var(--panel-alt);
     color: var(--muted);
     font-size: 0.65rem;
@@ -1291,10 +1292,11 @@ body {
     text-transform: uppercase;
     padding: 3px 10px;
     border-radius: 6px 6px 0 0;
-    border: 1px solid var(--border);
+    border: 1px solid var(--accent);
     border-bottom: none;
     white-space: nowrap;
     pointer-events: none;
+    box-shadow: -3px -3px 10px rgba(56, 189, 248, 0.2), 3px -3px 10px rgba(56, 189, 248, 0.2);
 }
 
 
