@@ -191,7 +191,6 @@ body {
     margin: 0;
     padding: 20px;
     padding-top: 64px !important;
-    padding-bottom: 98px !important; /* clears the fixed bottom ad bar (90px + 4px padding each side) */
     line-height: 1.6;
     transition: background-color 0.3s, color 0.3s;
 }
@@ -1269,7 +1268,7 @@ body {
     left: 0;
     width: 100%;
     height: 90px;
-    background: #1e293b;
+    background: var(--panel-alt);
     z-index: 9999;
     text-align: center;
     padding: 4px 0;
@@ -1279,7 +1278,31 @@ body {
     background: rgba(0,255,0,0.1);
 }
 
+.ad-tab {
+    position: absolute;
+    top: -22px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--panel-alt);
+    color: var(--muted);
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 6px 6px 0 0;
+    border: 1px solid var(--border);
+    border-bottom: none;
+    white-space: nowrap;
+    pointer-events: none;
+}
 
+/* Hide on desktop */
+@media (min-width: 701px) {
+    .mobile-bottom-ad {
+        display: none;
+    }
+}
 
 
 
