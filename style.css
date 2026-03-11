@@ -1266,7 +1266,7 @@ body {
     position: fixed;
     top: 0;
     right: 0;
-    width: 160px; /* or 120/300 depending on your ad size */
+    width: 300px; /* or 120/300 depending on your ad size */
     height: 100vh;
     display: flex;
     align-items: center;
