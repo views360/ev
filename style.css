@@ -1303,31 +1303,35 @@ body {
 
 
 /* DESKTOP */
+/* --- Desktop Styles (>= 700px) --- */
 @media (min-width: 700px) {
     body {
         display: flex;
         flex-direction: row;
-        padding-right: 160px !important; /* Space for the right ad sidebar */
-        padding-bottom: 20px !important; /* Reset mobile padding */
-        justify-content: center;
+        /* Reserve 160px on the right for the ad sidebar */
+        padding-right: 160px !important; 
+        padding-bottom: 20px !important; 
+        justify-content: flex-start; /* Keeps content predictable */
     }
 
-    /* Main application container */
-    .app {
+    /* Main application container occupies the space left of the ad */
+    .app, .about-modal-container {
         width: calc(100% - 160px);
         max-width: 1000px;
-        margin: 0 auto 0 0; /* Align to the left of the ad space */
+        margin-right: 0;
     }
 
-    /* Adjust the fixed header and menu icon */
+    /* Fixed Header and Settings Icon Adjustment */
+    /* This pushes the entire header bar (and the dots icon) 160px left */
     .android-header-full {
         width: calc(100% - 160px) !important;
+        right: 160px !important; /* Forces the right edge to stop where the ad starts */
         left: 0 !important;
-        right: 160px !important;
     }
 
-    /* Transform the bottom ad into a right sidebar */
+    /* Transform the bottom ad into the right sidebar */
     .mobile-bottom-ad {
+        position: fixed;
         top: 0;
         right: 0;
         bottom: 0;
@@ -1336,11 +1340,12 @@ body {
         height: 100vh;
         border-top: none;
         border-left: 1px solid var(--border);
+        z-index: 2001; /* Higher than the header/menu to stay on top */
     }
 
-    /* Adjust the ad content inside the sidebar if necessary */
-    .mobile-bottom-ad .adsbygoogle {
-        margin-top: 80px; /* Push ad down below the header line */
+    /* Content inside the ad sidebar */
+    .mobile-bottom-ad .ad-tab {
+        display: none; /* Hide the 'Ads Area' tab on desktop if it clutters the sidebar */
     }
 }
 
