@@ -1284,8 +1284,8 @@ body {
 
 .ad-tab {
     position: absolute;
-    top: -22px;
-    right: 16px;
+    top: -23px;
+    right: -5px;
     background: var(--panel-alt);
     color: var(--muted);
     font-size: 0.65rem;
@@ -1298,7 +1298,7 @@ body {
     border-bottom: none;
     white-space: nowrap;
     pointer-events: none;
-    box-shadow: -3px -3px 10px rgba(56, 189, 248, 0.2), 3px -3px 10px rgba(56, 189, 248, 0.2);
+    /*box-shadow: -3px -3px 10px rgba(56, 189, 248, 0.2), 3px -3px 10px rgba(56, 189, 248, 0.2);*/
 }
 
 .desktop-sidebar-ad {
@@ -1378,7 +1378,7 @@ body {
         transform-origin: bottom right;
         
         /* Match the tab's glow */
-        box-shadow: -3px -3px 10px rgba(56, 189, 248, 0.2);
+        /*box-shadow: -3px -3px 10px rgba(56, 189, 248, 0.2);*/
     }
 }
 
