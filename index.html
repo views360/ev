@@ -182,15 +182,13 @@
 
 
 	
-<div class="tabs-container">
+<div class="tabs-container">Calculation Type: 
     <div class="tabs-wrapper">
-        <button class="tab-item active" onclick="switchMode('break-even', this)">
+        <button id="btn-break-even" class="tab-item active" onclick="setToggle('break-even', this); updateTabUI(this)">
             Break-Even
-            <span class="tab-label">MODE</span>
         </button>
-        <button class="tab-item" onclick="switchMode('trip-savings', this)">
+        <button id="btn-trip-savings" class="tab-item" onclick="setToggle('trip-savings', this); updateTabUI(this)">
             Trip-Savings
-            <span class="tab-label">MODE</span>
         </button>
     </div>
     <div class="tabs-divider"></div>
