@@ -18,7 +18,7 @@
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            padding: 80px 20px 40px 20px; /* Space for the fixed header */
+            padding: 80px 20px 98px 20px; /* Space for the fixed header and bottom ad bar */
             box-sizing: border-box;
             overflow-y: auto; /* Standard page scrolling */
         }
@@ -68,6 +68,7 @@
         @media (max-width: 700px) {
             body {
                 padding: 30px !important;
+                padding-bottom: 98px !important; /* clears the fixed bottom ad bar */
             }
             
             .content-section {
@@ -149,6 +150,46 @@
         </div>
     </div>
 
-    <script src="functions.js"></script>
+    <script>
+        // Standalone versions of only the functions needed by this page
+        const setCookie = (name, value) => {
+            const date = new Date();
+            date.setTime(date.getTime() + (30 * 24 * 60 * 60 * 1000));
+            document.cookie = `${name}=${encodeURIComponent(JSON.stringify(value))};expires=${date.toUTCString()};path=/;SameSite=Lax`;
+        };
+
+        function toggleTheme() {
+            const isLight = document.documentElement.classList.toggle('light-mode');
+            setCookie('themePref', isLight ? 'light' : 'dark');
+        }
+
+        function toggleMenu() {
+            document.getElementById('sideMenu').classList.toggle('active');
+        }
+
+        document.addEventListener('click', (e) => {
+            const menu = document.getElementById('sideMenu');
+            const trigger = document.querySelector('.android-dots-trigger');
+            if (menu.classList.contains('active')) {
+                if (!menu.contains(e.target) && !trigger.contains(e.target)) {
+                    menu.classList.remove('active');
+                }
+            }
+        });
+    </script>
+<div class="mobile-bottom-ad">
+    <div class="ad-tab">Ads Area</div>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2944414800646015"
+         crossorigin="anonymous"></script>
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-2944414800646015"
+         data-ad-slot="auto"
+         data-ad-format="horizontal"
+         data-full-width-responsive="true"></ins>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+</div>
 </body>
 </html>
