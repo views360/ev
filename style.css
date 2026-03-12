@@ -1368,9 +1368,9 @@ body {
         letter-spacing: 0.08em;
         text-transform: uppercase;
         padding: 3px 10px;
-        border-radius: 6px 6px 0 0;
+        border-radius: 6px 0 0 6px; /* left side rounded — corrected for vertical rotation */
         border: 1px solid var(--accent);
-        border-bottom: none;
+        border-right: none; /* open side faces the panel — corrected for vertical rotation */
         white-space: nowrap;
         
         /* Vertical rotation */
