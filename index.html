@@ -182,16 +182,23 @@
 
 
 	
-<div class="mode-container">
-    <div class="mode-selector">
-        <div class="mode-glider"></div>
-        <button class="mode-tab active" onclick="switchMode('break-even', this)">Break-Even</button>
-        <button class="mode-tab" onclick="switchMode('trip-savings', this)">Trip-Savings</button>
+<div class="tabs-container">
+    <div class="tabs-wrapper">
+        <button class="tab-item active" onclick="switchMode('break-even', this)">
+            Break-Even
+            <span class="tab-label">MODE</span>
+        </button>
+        <button class="tab-item" onclick="switchMode('trip-savings', this)">
+            Trip-Savings
+            <span class="tab-label">MODE</span>
+        </button>
     </div>
+    <div class="tabs-divider"></div>
 </div>
 
-<div id="break-even-inputs"></div>
-<div id="trip-savings-inputs" style="display: none;"></div>
+
+
+	
 
 	
 <div class="toggle-container-block">
