@@ -1291,7 +1291,7 @@ body {
     font-size: 0.65rem;
     font-weight: 600;
     letter-spacing: 0.08em;
-    /*text-transform: uppercase;*/
+    text-transform: uppercase;
     padding: 3px 10px;
     border-radius: 6px 6px 0 0;
     border: 1px solid var(--accent);
@@ -1305,60 +1305,75 @@ body {
     display: none; /* Hidden by default (mobile first) */
 }
 
-.mode-container {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 2rem;
-}
 
-.mode-selector {
+
+.tabs-container {
+    width: 100%;
+    margin-bottom: 30px;
     position: relative;
+}
+
+.tabs-wrapper {
     display: flex;
-    background: rgba(15, 23, 42, 0.6); /* Darker slate to contrast panels */
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 4px;
-    width: 320px; /* Fixed width looks more "pro" on desktop */
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+    gap: 10px;
+    padding-left: 10px; /* Aligns tabs to the left like the Ad Area */
 }
 
-.mode-tab {
-    position: relative;
-    z-index: 2;
-    flex: 1;
-    background: none;
-    border: none;
-    color: var(--muted);
-    padding: 10px 0;
-    font-size: 0.85rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: color 0.3s ease;
-}
-
-.mode-tab.active {
-    color: var(--accent);
-}
-
-/* The sliding blue highlight */
-.mode-glider {
-    position: absolute;
-    height: calc(100% - 8px);
-    width: calc(50% - 4px);
+.tab-item {
     background: var(--panel-alt);
-    border: 1px solid rgba(56, 189, 248, 0.3);
-    box-shadow: 0 0 15px rgba(56, 189, 248, 0.15);
-    border-radius: 8px;
-    top: 4px;
-    left: 4px;
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    z-index: 1;
+    border: 1px solid var(--border);
+    border-bottom: none; /* Keeps it connected to the line */
+    color: var(--muted);
+    padding: 8px 20px;
+    border-radius: 8px 8px 0 0;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    position: relative;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 }
 
-/* When second tab is active, slide the glider */
-.mode-selector:has(.mode-tab:last-child.active) .mode-glider {
-    transform: translateX(100%);
+.tab-label {
+    font-size: 0.6rem;
+    color: var(--accent);
+    opacity: 0.6;
+    letter-spacing: 0.1em;
 }
+
+/* The neon line across the width */
+.tabs-divider {
+    height: 1px;
+    width: 100%;
+    background: var(--accent);
+    box-shadow: 0 0 12px rgba(56, 189, 248, 0.6), 0 0 4px rgba(56, 189, 248, 0.4);
+}
+
+/* Active State - Lights up the tab and connects it to the line */
+.tab-item.active {
+    color: #fff;
+    border-color: var(--accent);
+    background: rgba(15, 23, 42, 0.8);
+    box-shadow: 0 -4px 15px rgba(56, 189, 248, 0.15);
+}
+
+/* Hide the bottom border of the active tab so it looks fused to the line */
+.tab-item.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--panel-alt);
+    z-index: 2;
+}
+
+
+
+
 
 
 
@@ -1422,7 +1437,7 @@ body {
         font-size: 0.65rem;
         font-weight: 600;
         letter-spacing: 0.08em;
-        /*text-transform: uppercase;*/
+        text-transform: uppercase;
         padding: 3px 10px;
         border-radius: 6px 6px 0 0;
         border: 1px solid var(--accent);
