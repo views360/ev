@@ -653,18 +653,6 @@ function getProviderColor(name, index) {
     return palette[index % palette.length];
 }
 
-function setToggle(mode, btn) {
-    const slider = document.getElementById('pill-slider');
-    document.querySelectorAll('.pill-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    if(slider) {
-        slider.style.transform = mode === 'break-even' ? 'translateX(0)' : 'translateX(100%)';
-    }
-    setCookie('calcMode', mode);
-    setCookie('comparisonMode', mode);
-    calculate();
-}
-
 function init() {
     const savedValues = getCookie("ev_trip_values");
     const urlParams = new URLSearchParams(window.location.search);
@@ -1208,11 +1196,27 @@ function closeBeReminder() {
     }
 }
 
+function setToggle(mode) {
+    const breakEvenCards = document.getElementById('break-even-mode');
+    const tripSavingsCards = document.getElementById('trip-savings-mode');
+
+    if (mode === 'break-even') {
+        breakEvenCards.style.display = 'block';
+        tripSavingsCards.style.display = 'none';
+    } else {
+        breakEvenCards.style.display = 'none';
+        tripSavingsCards.style.display = 'block';
+    }
+
+    // This ensures the calculations run for the new mode immediately
+    calculate();
+}
+
 function updateTabUI(clickedElement) {
-    // Remove 'active' class from both tabs
+    // Remove active class from all tabs
     document.querySelectorAll('.tab-item').forEach(tab => {
         tab.classList.remove('active');
     });
-    // Add 'active' class to the one we just clicked
+    // Add active class to the one we just clicked
     clickedElement.classList.add('active');
 }
