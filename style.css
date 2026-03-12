@@ -1360,10 +1360,9 @@ body {
     .desktop-sidebar-ad .ad-tab {
         position: absolute;
         top: 84px;
-        left: 0;
-        /* Rotate -90deg CCW around top-left corner, then shift left by full element width */
-        transform: rotate(-90deg) translateX(-100%);
-        transform-origin: top left;
+        left: -22px;             /* sit outside the panel to the left */
+        writing-mode: vertical-rl;
+        transform: rotate(180deg); /* text reads bottom-to-top */
         background: var(--panel-alt);
         color: var(--muted);
         font-size: 0.65rem;
@@ -1371,15 +1370,13 @@ body {
         letter-spacing: 0.08em;
         text-transform: uppercase;
         padding: 3px 10px;
-        border-radius: 6px 6px 0 0;
+        border-radius: 6px 0 0 6px; /* rounded on left (top & bottom of pre-rotation box) */
         border: 1px solid var(--accent);
-        border-right: none;
+        border-right: none;          /* open right edge flush against panel */
         white-space: nowrap;
         pointer-events: none;
-        /* Uniform glow on all three exposed sides using filter instead of box-shadow */
-        filter: drop-shadow(-2px 0px 6px rgba(56, 189, 248, 0.5))
-                drop-shadow(0px -2px 6px rgba(56, 189, 248, 0.5))
-                drop-shadow(0px 2px 6px rgba(56, 189, 248, 0.5));
+        /* glow on bottom, left, top — matching mobile's glow on right, top, left */
+        box-shadow: -3px -3px 10px rgba(56, 189, 248, 0.2), -3px 3px 10px rgba(56, 189, 248, 0.2);
     }
 }
 
