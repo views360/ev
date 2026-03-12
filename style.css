@@ -1331,23 +1331,43 @@ body {
         margin-right: 0;
     }
 
-    /* 4. Transform bottom ad into right sidebar */
-    .mobile-bottom-ad {
+    .chrome-style-menu {
+        right: 168px !important; /* 160px + 8px original offset */
+    }
+
+    .mobile-bottom-ad { display: none; }
+    .desktop-sidebar-ad {
+        display: flex;
         position: fixed;
         top: 0;
         right: 0;
-        bottom: 0;
-        left: auto;
         width: 160px;
         height: 100vh;
-        border-top: none;
+        background: var(--panel);
         border-left: 1px solid var(--border);
-        z-index: 2001; /* Higher than header/menu to remain on top */
+        z-index: 2100;
+        flex-direction: column;
+        align-items: center;
+        padding-top: 80px;
     }
 
-    /* Optional: Hide the 'Ads Area' tab label in sidebar mode */
-    .mobile-bottom-ad .ad-tab {
-        display: none;
+.desktop-sidebar-ad .ad-tab {
+        position: absolute;
+        top: 20px;
+        left: -31px;
+        width: 30px;
+        height: 100px;
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-right: none;
+        border-radius: 8px 0 0 8px;
+        writing-mode: vertical-rl;
+        transform: rotate(180deg);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.7rem;
+        color: var(--muted);
     }
 }
 
@@ -1357,6 +1377,22 @@ body {
 
 /* MOBILE */
 @media (max-width: 700px) {
+
+    .desktop-sidebar-ad {
+        display: none; /* Hide vertical ad on mobile */
+    }
+
+    .mobile-bottom-ad {
+        display: block;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 90px;
+        background: var(--panel-alt);
+        z-index: 9999;
+        border-top: 1px solid var(--accent);
+    }
 
     .cookie-banner {
         width: 75%;
