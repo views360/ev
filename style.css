@@ -1359,7 +1359,7 @@ body {
 
     .desktop-sidebar-ad .ad-tab {
         position: absolute;
-        top: 84px;        /* below the 64px header + comfortable gap */
+        top: 84px;        /* below 64px header + comfortable gap */
         left: -22px;      /* protrudes left of the panel */
         writing-mode: vertical-rl;
         transform: rotate(180deg); /* text reads bottom-to-top */
@@ -1369,13 +1369,13 @@ body {
         font-weight: 600;
         letter-spacing: 0.08em;
         text-transform: uppercase;
-        padding: 10px 3px;
+        padding: 3px 10px; /* same as mobile — writing-mode handles the rotation */
         border-radius: 6px 0 0 6px; /* rounded on left side */
         border: 1px solid var(--accent);
         border-right: none;         /* open edge flush with panel */
         white-space: nowrap;
         pointer-events: none;
-        /* shadow on top, left, and bottom — not right (that's the panel edge) */
+        /* shadow on top, left, bottom — X is negative to push glow leftward */
         box-shadow: -3px -3px 10px rgba(56, 189, 248, 0.2), -3px 3px 10px rgba(56, 189, 248, 0.2);
     }
 }
