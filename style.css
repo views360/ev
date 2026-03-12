@@ -1359,7 +1359,7 @@ body {
     .ad-tab-vertical {
         position: absolute;
         top: 100px; /* Position from top */
-        left: -23px; /* Pull it over the border line */
+        left: -77px; /* Pull it over the border line */
         background: var(--panel-alt);
         color: var(--muted);
         font-size: 0.65rem;
