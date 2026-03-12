@@ -1360,23 +1360,24 @@ body {
     .desktop-sidebar-ad .ad-tab {
         position: absolute;
         top: 84px;        /* below 64px header + comfortable gap */
-        left: -22px;      /* protrudes left of the panel */
-        writing-mode: vertical-rl;
-        transform: rotate(180deg); /* text reads bottom-to-top */
+        left: -22px;      /* protrudes left; width = tab height on mobile (~20px) */
+        writing-mode: vertical-lr; /* text runs top-to-bottom, no rotate needed */
         background: var(--panel-alt);
         color: var(--muted);
         font-size: 0.65rem;
         font-weight: 600;
         letter-spacing: 0.08em;
         text-transform: uppercase;
-        padding: 3px 10px; /* same as mobile — writing-mode handles the rotation */
-        border-radius: 6px 0 0 6px; /* rounded on left side */
+        padding: 10px 3px; /* 10px top/bottom = length of tab; 3px left/right = tab width */
+        border-radius: 6px 0 0 6px; /* rounded on exposed left side */
         border: 1px solid var(--accent);
-        border-right: none;         /* open edge flush with panel */
+        border-right: none;  /* open right edge sits flush against panel */
         white-space: nowrap;
         pointer-events: none;
-        /* shadow on top, left, bottom — X is negative to push glow leftward */
-        box-shadow: -3px -3px 10px rgba(56, 189, 248, 0.2), -3px 3px 10px rgba(56, 189, 248, 0.2);
+        /* glow on top, left, bottom — positive X pushes right but no rotate so stays left */
+        box-shadow: -3px 0 10px rgba(56, 189, 248, 0.2),
+                     0 -3px 10px rgba(56, 189, 248, 0.2),
+                     0  3px 10px rgba(56, 189, 248, 0.2);
     }
 }
 
