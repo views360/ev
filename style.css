@@ -191,8 +191,7 @@ body {
     margin: 0;
     padding: 20px;
     padding-top: 64px !important;
-    padding-right: calc(var(--ad-side-width) + 20px) !important; /* clears desktop side ad */
-    padding-bottom: 20px !important; /* base bottom padding */
+    padding-bottom: 98px !important; /* clears the fixed bottom ad bar */
     line-height: 1.6;
     transition: background-color 0.3s, color 0.3s;
 }
@@ -823,7 +822,7 @@ tr.bad td { color: var(--danger); }
 
 .android-header-full {
     background-color: #000000 !important;
-    width: calc(100vw - var(--ad-side-width)); /* stop short of desktop side ad */
+    width: 100vw;
     height: 64px;
     display: flex;
     align-items: center; 
@@ -863,7 +862,7 @@ tr.bad td { color: var(--danger); }
 .chrome-style-menu {
     position: fixed;
     top: 8px; 
-    right: 8px;
+    right: calc(var(--ad-side-width) + 8px); /* clear of desktop side ad */
     width: 200px;
     background: #2d2e30; 
     box-shadow: 0 8px 24px rgba(0,0,0,0.4);
@@ -1265,95 +1264,41 @@ body {
     transform: translateY(0);
 }
 
-/* ── Ad panel variables ──────────────────────────────── */
-:root {
-    --ad-side-width: 160px;
-    --ad-bottom-height: 90px;
-}
-
-/* ── Desktop: side ad (≥700px) — bottom ad hidden ───── */
 .mobile-bottom-ad {
-    display: none;
-}
-
-.desktop-side-ad {
     position: fixed;
-    top: 0;
-    right: 0;
-    width: var(--ad-side-width);
-    height: 100vh;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 90px;
     background: var(--panel-alt);
     z-index: 9999;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    border-left: 1px solid var(--accent);
-    box-shadow: -4px 0 18px rgba(56, 189, 248, 0.25), -1px 0 6px rgba(56, 189, 248, 0.15);
+    text-align: center;
+    padding: 4px 0;
+    border-top: 1px solid var(--accent);
+    box-shadow: 0 -4px 18px rgba(56, 189, 248, 0.25), 0 -1px 6px rgba(56, 189, 248, 0.15);
 }
 
-.desktop-side-ad .ad-tab {
+.mobile-bottom-ad iframe {
+    background: rgba(0,255,0,0.1);
+}
+
+.ad-tab {
     position: absolute;
-    top: 64px;
-    left: -1px;
-    writing-mode: vertical-rl;
-    transform: rotate(180deg);
+    top: -22px;
+    right: 16px;
     background: var(--panel-alt);
     color: var(--muted);
     font-size: 0.65rem;
     font-weight: 600;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    padding: 10px 3px;
-    border-radius: 0 6px 6px 0;
+    padding: 3px 10px;
+    border-radius: 6px 6px 0 0;
     border: 1px solid var(--accent);
-    border-left: none;
+    border-bottom: none;
     white-space: nowrap;
     pointer-events: none;
-    box-shadow: 3px -3px 10px rgba(56, 189, 248, 0.2), 3px 3px 10px rgba(56, 189, 248, 0.2);
-}
-
-/* ── Mobile: bottom ad (<700px) — side ad hidden ─────── */
-@media (max-width: 699px) {
-    .desktop-side-ad {
-        display: none;
-    }
-
-    .mobile-bottom-ad {
-        display: block;
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        height: var(--ad-bottom-height);
-        background: var(--panel-alt);
-        z-index: 9999;
-        text-align: center;
-        padding: 4px 0;
-        border-top: 1px solid var(--accent);
-        box-shadow: 0 -4px 18px rgba(56, 189, 248, 0.25), 0 -1px 6px rgba(56, 189, 248, 0.15);
-    }
-
-    .mobile-bottom-ad .ad-tab {
-        position: absolute;
-        top: -22px;
-        right: 16px;
-        writing-mode: horizontal-tb;
-        transform: none;
-        background: var(--panel-alt);
-        color: var(--muted);
-        font-size: 0.65rem;
-        font-weight: 600;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        padding: 3px 10px;
-        border-radius: 6px 6px 0 0;
-        border: 1px solid var(--accent);
-        border-bottom: none;
-        white-space: nowrap;
-        pointer-events: none;
-        box-shadow: -3px -3px 10px rgba(56, 189, 248, 0.2), 3px -3px 10px rgba(56, 189, 248, 0.2);
-    }
+    box-shadow: -3px -3px 10px rgba(56, 189, 248, 0.2), 3px -3px 10px rgba(56, 189, 248, 0.2);
 }
 
 
@@ -1384,12 +1329,14 @@ body {
 
     body {
         padding: 0;
-        padding-right: 0 !important; /* no side ad on mobile */
-        padding-bottom: calc(var(--ad-bottom-height) + 20px) !important; /* clears bottom ad + gap */
     }
 
     .android-header-full {
-        width: 100vw; /* restore full width on mobile */
+        width: 100vw; /* restore full width — side ad hidden on mobile */
+    }
+
+    .chrome-style-menu {
+        right: 8px; /* restore to viewport edge — side ad hidden on mobile */
     }
     .app {
         padding: 0 10px 15px 15px; 
