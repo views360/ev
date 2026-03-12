@@ -1557,7 +1557,7 @@ body {
     #providerResults tr:hover {
         z-index: 100;
     }
-    
+
     #providerResults tr:hover,
     #providerResults tr:has(.tooltip-container:hover),
     #providerResults tr:has(.tooltip-container.active) {
