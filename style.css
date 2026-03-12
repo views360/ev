@@ -1358,11 +1358,15 @@ body {
     }
 
     .desktop-sidebar-ad .ad-tab {
+        /* No writing-mode — this is a normal horizontal element, rotated into place */
         position: absolute;
         top: 84px;
-        left: -22px;             /* sit outside the panel to the left */
-        writing-mode: vertical-rl;
-        transform: rotate(180deg); /* text reads bottom-to-top */
+        left: 0;
+        /* Rotate -90deg. transform-origin top left means the top-left corner stays fixed.
+           After rotation the element hangs downward from that point — then translateX(-100%)
+           shifts it left by its own width so it sits fully outside the panel. */
+        transform: rotate(-90deg) translateX(-100%);
+        transform-origin: top left;
         background: var(--panel-alt);
         color: var(--muted);
         font-size: 0.65rem;
@@ -1370,13 +1374,18 @@ body {
         letter-spacing: 0.08em;
         text-transform: uppercase;
         padding: 3px 10px;
-        border-radius: 6px 0 0 6px; /* rounded on left (top & bottom of pre-rotation box) */
+        /* Rounded corners on what will be the top of the rotated tab (left and right of original) */
+        border-radius: 6px 6px 0 0;
         border: 1px solid var(--accent);
-        border-right: none;          /* open right edge flush against panel */
+        /* No bottom border — after rotation this becomes the right edge, flush with panel */
+        border-bottom: none;
         white-space: nowrap;
         pointer-events: none;
-        /* glow on bottom, left, top — matching mobile's glow on right, top, left */
-        box-shadow: -3px -3px 10px rgba(56, 189, 248, 0.2), -3px 3px 10px rgba(56, 189, 248, 0.2);
+        /* Same shadow as mobile tab — after -90deg rotation:
+           mobile's top-left glow (-3px -3px) becomes left-bottom glow
+           mobile's top-right glow (3px -3px) becomes left-top glow
+           Combined: glow on top, left, bottom of the rotated element */
+        box-shadow: -3px -3px 10px rgba(56, 189, 248, 0.2), 3px -3px 10px rgba(56, 189, 248, 0.2);
     }
 }
 
