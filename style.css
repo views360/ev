@@ -191,7 +191,8 @@ body {
     margin: 0;
     padding: 20px;
     padding-top: 64px !important;
-    padding-bottom: 98px !important; /* clears the fixed bottom ad bar */
+    padding-right: calc(var(--ad-side-width) + 20px) !important; /* clears desktop side ad */
+    padding-bottom: 98px !important; /* clears mobile bottom ad bar */
     line-height: 1.6;
     transition: background-color 0.3s, color 0.3s;
 }
@@ -1264,41 +1265,95 @@ body {
     transform: translateY(0);
 }
 
+/* ── Ad panel shared variables ───────────────────────── */
+:root {
+    --ad-side-width: 160px;   /* desktop side panel width */
+    --ad-bottom-height: 90px; /* mobile bottom bar height */
+}
+
+/* ── Desktop side ad (≥700px) ────────────────────────── */
 .mobile-bottom-ad {
+    display: none; /* hidden on desktop; shown in mobile media query below */
+}
+
+.desktop-side-ad {
     position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 90px;
+    top: 0;
+    right: 0;
+    width: var(--ad-side-width);
+    height: 100vh;
     background: var(--panel-alt);
     z-index: 9999;
-    text-align: center;
-    padding: 4px 0;
-    border-top: 1px solid var(--accent);
-    box-shadow: 0 -4px 18px rgba(56, 189, 248, 0.25), 0 -1px 6px rgba(56, 189, 248, 0.15);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-left: 1px solid var(--accent);
+    box-shadow: -4px 0 18px rgba(56, 189, 248, 0.25), -1px 0 6px rgba(56, 189, 248, 0.15);
 }
 
-.mobile-bottom-ad iframe {
-    background: rgba(0,255,0,0.1);
-}
-
-.ad-tab {
+.desktop-side-ad .ad-tab {
     position: absolute;
-    top: -22px;
-    right: 16px;
+    top: 64px; /* clears the fixed header */
+    left: -1px;
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
     background: var(--panel-alt);
     color: var(--muted);
     font-size: 0.65rem;
     font-weight: 600;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    padding: 3px 10px;
-    border-radius: 6px 6px 0 0;
+    padding: 10px 3px;
+    border-radius: 0 6px 6px 0;
     border: 1px solid var(--accent);
-    border-bottom: none;
+    border-left: none;
     white-space: nowrap;
     pointer-events: none;
-    box-shadow: -3px -3px 10px rgba(56, 189, 248, 0.2), 3px -3px 10px rgba(56, 189, 248, 0.2);
+    box-shadow: 3px -3px 10px rgba(56, 189, 248, 0.2), 3px 3px 10px rgba(56, 189, 248, 0.2);
+}
+
+/* ── Mobile bottom ad (<700px) ───────────────────────── */
+@media (max-width: 699px) {
+    .desktop-side-ad {
+        display: none;
+    }
+
+    .mobile-bottom-ad {
+        display: block;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: var(--ad-bottom-height);
+        background: var(--panel-alt);
+        z-index: 9999;
+        text-align: center;
+        padding: 4px 0;
+        border-top: 1px solid var(--accent);
+        box-shadow: 0 -4px 18px rgba(56, 189, 248, 0.25), 0 -1px 6px rgba(56, 189, 248, 0.15);
+    }
+
+    .mobile-bottom-ad .ad-tab {
+        position: absolute;
+        top: -22px;
+        right: 16px;
+        writing-mode: horizontal-tb;
+        transform: none;
+        background: var(--panel-alt);
+        color: var(--muted);
+        font-size: 0.65rem;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        padding: 3px 10px;
+        border-radius: 6px 6px 0 0;
+        border: 1px solid var(--accent);
+        border-bottom: none;
+        white-space: nowrap;
+        pointer-events: none;
+        box-shadow: -3px -3px 10px rgba(56, 189, 248, 0.2), 3px -3px 10px rgba(56, 189, 248, 0.2);
+    }
 }
 
 
@@ -1329,6 +1384,7 @@ body {
 
     body {
         padding: 0;
+        padding-bottom: var(--ad-bottom-height) !important; /* clears mobile bottom ad */
     }
     .app {
         padding: 0 10px 15px 15px; 
