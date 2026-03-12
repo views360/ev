@@ -1285,7 +1285,7 @@ body {
 .ad-tab {
     position: absolute;
     top: -22px;
-    right: 160px;
+    right: 16px;
     background: var(--panel-alt);
     color: var(--muted);
     font-size: 0.65rem;
@@ -1321,7 +1321,7 @@ body {
     /* 2. Shift the Floating Settings Menu left by 160px */
     /* This ensures the menu opens aligned with the dots icon, not against the screen edge */
     #sideMenu {
-        right: 168px !important;
+        right: 160px !important;
     }
 
     /* 3. Main content containers */
@@ -1331,53 +1331,23 @@ body {
         margin-right: 0;
     }
 
-    .chrome-style-menu {
-        right: 168px !important; /* 160px + 8px original offset */
-    }
-
-    .mobile-bottom-ad { display: none; }
-    .desktop-sidebar-ad {
-        display: flex;
+    /* 4. Transform bottom ad into right sidebar */
+    .mobile-bottom-ad {
         position: fixed;
-        top: 64px; /* Moved down to clear the 64px header */
+        top: 0;
         right: 0;
+        bottom: 0;
+        left: auto;
         width: 160px;
-        height: calc(100vh - 64px); /* Adjust height for the top offset */
-        background: var(--panel-alt); /* Matches mobile background */
-        
-        /* 2. Fix Glow Alignment: Glow to the left instead of right */
-        /* Changed from '0 -4px 18px' to '-4px 0 18px' to shift shadow left */
-        box-shadow: -4px 0 18px rgba(56, 189, 248, 0.25), -1px 0 6px rgba(56, 189, 248, 0.15); 
-        
-        border-left: 1px solid var(--accent); /* Matches mobile top border */
-        z-index: 2100;
-        flex-direction: column;
-        align-items: center;
-        padding-top: 20px;
-        box-sizing: border-box;
+        height: 100vh;
+        border-top: none;
+        border-left: 1px solid var(--border);
+        z-index: 2001; /* Higher than header/menu to remain on top */
     }
 
-    .desktop-sidebar-ad .ad-tab {
-        position: absolute;
-        top: 20px;
-        left: -27px;
-        background: var(--panel-alt);
-        color: var(--muted);
-        font-size: 0.65rem;
-        font-weight: 600;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        padding: 3px 10px;
-        border-radius: 6px 6px 0 0;
-        border: 1px solid var(--accent);
-        border-bottom: none;
-        white-space: nowrap;
-        
-        /* Vertical rotation */
-        writing-mode: vertical-lr;
-        
-        /* Matches mobile shadow intensity */
-        box-shadow: -3px 0 10px rgba(56, 189, 248, 0.2); 
+    /* Optional: Hide the 'Ads Area' tab label in sidebar mode */
+    .mobile-bottom-ad .ad-tab {
+        display: none;
     }
 }
 
@@ -1387,22 +1357,6 @@ body {
 
 /* MOBILE */
 @media (max-width: 700px) {
-
-    .desktop-sidebar-ad {
-        display: none; /* Hide vertical ad on mobile */
-    }
-
-    .mobile-bottom-ad {
-        display: block;
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        height: 90px;
-        background: var(--panel-alt);
-        z-index: 9999;
-        border-top: 1px solid var(--accent);
-    }
 
     .cookie-banner {
         width: 75%;
@@ -1499,7 +1453,7 @@ body {
     }
     
     .menu-trigger:hover {
-        left: -27px; 
+        left: auto; 
     }
 
     .header-row {
