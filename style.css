@@ -1285,7 +1285,7 @@ body {
 .ad-tab {
     position: absolute;
     top: -22px;
-    right: 16px;
+    right: 160px;
     background: var(--panel-alt);
     color: var(--muted);
     font-size: 0.65rem;
@@ -1339,10 +1339,10 @@ body {
     .desktop-sidebar-ad {
         display: flex;
         position: fixed;
-        top: 0;
+        top: 64px; /* Moved down to clear the 64px header */
         right: 0;
         width: 160px;
-        height: 100vh;
+        height: calc(100vh - 64px); /* Adjust height for the top offset */
         background: var(--panel-alt); /* Matches mobile background */
         
         /* 2. Fix Glow Alignment: Glow to the left instead of right */
@@ -1360,22 +1360,22 @@ body {
     .desktop-sidebar-ad .ad-tab {
         position: absolute;
         top: 84px;
-        right: 0;
-        transform: rotate(-90deg);
-        transform-origin: top right;
+        left: -22px;             /* protrude 22px outside the left edge of the panel */
+        width: 22px;             /* explicit narrow width — same as mobile tab height */
         background: var(--panel-alt);
         color: var(--muted);
         font-size: 0.65rem;
         font-weight: 600;
         letter-spacing: 0.08em;
         text-transform: uppercase;
-        padding: 3px 10px;
+        padding: 10px 3px;       /* 10px on text-flow axis, 3px on narrow axis */
         border-radius: 6px 0 0 6px;
         border: 1px solid var(--accent);
         border-right: none;
         white-space: nowrap;
         pointer-events: none;
-        box-shadow: -3px 3px 10px rgba(56, 189, 248, 0.2), -3px -3px 10px rgba(56, 189, 248, 0.2);
+        writing-mode: vertical-rl;
+        box-shadow: -3px -3px 10px rgba(56, 189, 248, 0.2), -3px 3px 10px rgba(56, 189, 248, 0.2);
     }
 }
 
