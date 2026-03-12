@@ -862,7 +862,7 @@ tr.bad td { color: var(--danger); }
 .chrome-style-menu {
     position: fixed;
     top: 8px; 
-    right: calc(var(--ad-side-width) + 8px); /* clear of desktop side ad */
+    right: 8px;
     width: 200px;
     background: #2d2e30; 
     box-shadow: 0 8px 24px rgba(0,0,0,0.4);
@@ -1329,14 +1329,6 @@ body {
 
     body {
         padding: 0;
-    }
-
-    .android-header-full {
-        width: 100vw; /* restore full width — side ad hidden on mobile */
-    }
-
-    .chrome-style-menu {
-        right: 8px; /* restore to viewport edge — side ad hidden on mobile */
     }
     .app {
         padding: 0 10px 15px 15px; 
