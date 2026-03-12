@@ -1361,9 +1361,7 @@ body {
         position: absolute;
         top: 84px;
         left: 0;
-        /* Rotate the whole element -90deg so it lies against the left edge of the panel.
-           transform-origin: top left means it pivots from its top-left corner,
-           then we nudge it left by its own height (22px) using translateX */
+        /* Rotate -90deg CCW around top-left corner, then shift left by full element width */
         transform: rotate(-90deg) translateX(-100%);
         transform-origin: top left;
         background: var(--panel-alt);
@@ -1373,19 +1371,15 @@ body {
         letter-spacing: 0.08em;
         text-transform: uppercase;
         padding: 3px 10px;
-        /* After -90deg rotation: top becomes left, right becomes top, bottom becomes right, left becomes bottom.
-           Mobile had: border-radius 6px 6px 0 0 (round top-left, top-right), border-bottom none.
-           After -90deg: round bottom-left, top-left = round left side → border-radius: 6px 6px 0 0 stays
-           but open edge rotates from bottom to right → border-right: none */
         border-radius: 6px 6px 0 0;
         border: 1px solid var(--accent);
         border-right: none;
         white-space: nowrap;
         pointer-events: none;
-        /* Shadow: mobile has glow top-left and top-right (above the bar).
-           After -90deg CCW rotation: top → left, so glow goes left-left and left... 
-           Simply: glow on the three exposed sides: top, left, bottom of the rotated element */
-        box-shadow: -3px -3px 10px rgba(56, 189, 248, 0.2), 3px -3px 10px rgba(56, 189, 248, 0.2);
+        /* Uniform glow on all three exposed sides using filter instead of box-shadow */
+        filter: drop-shadow(-2px 0px 6px rgba(56, 189, 248, 0.5))
+                drop-shadow(0px -2px 6px rgba(56, 189, 248, 0.5))
+                drop-shadow(0px 2px 6px rgba(56, 189, 248, 0.5));
     }
 }
 
