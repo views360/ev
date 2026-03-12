@@ -1305,6 +1305,63 @@ body {
     display: none; /* Hidden by default (mobile first) */
 }
 
+.mode-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2rem;
+}
+
+.mode-selector {
+    position: relative;
+    display: flex;
+    background: rgba(15, 23, 42, 0.6); /* Darker slate to contrast panels */
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 4px;
+    width: 320px; /* Fixed width looks more "pro" on desktop */
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.mode-tab {
+    position: relative;
+    z-index: 2;
+    flex: 1;
+    background: none;
+    border: none;
+    color: var(--muted);
+    padding: 10px 0;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.mode-tab.active {
+    color: var(--accent);
+}
+
+/* The sliding blue highlight */
+.mode-glider {
+    position: absolute;
+    height: calc(100% - 8px);
+    width: calc(50% - 4px);
+    background: var(--panel-alt);
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    box-shadow: 0 0 15px rgba(56, 189, 248, 0.15);
+    border-radius: 8px;
+    top: 4px;
+    left: 4px;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1;
+}
+
+/* When second tab is active, slide the glider */
+.mode-selector:has(.mode-tab:last-child.active) .mode-glider {
+    transform: translateX(100%);
+}
+
+
+
 
 /* DESKTOP */
 /* --- Desktop Layout (>= 700px) --- */
