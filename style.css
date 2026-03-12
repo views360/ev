@@ -192,7 +192,7 @@ body {
     padding: 20px;
     padding-top: 64px !important;
     padding-right: calc(var(--ad-side-width) + 20px) !important; /* clears desktop side ad */
-    padding-bottom: 98px !important; /* clears mobile bottom ad bar */
+    padding-bottom: 20px !important; /* base bottom padding */
     line-height: 1.6;
     transition: background-color 0.3s, color 0.3s;
 }
@@ -823,7 +823,7 @@ tr.bad td { color: var(--danger); }
 
 .android-header-full {
     background-color: #000000 !important;
-    width: 100vw;
+    width: calc(100vw - var(--ad-side-width)); /* stop short of desktop side ad */
     height: 64px;
     display: flex;
     align-items: center; 
@@ -1265,15 +1265,15 @@ body {
     transform: translateY(0);
 }
 
-/* ── Ad panel shared variables ───────────────────────── */
+/* ── Ad panel variables ──────────────────────────────── */
 :root {
-    --ad-side-width: 160px;   /* desktop side panel width */
-    --ad-bottom-height: 90px; /* mobile bottom bar height */
+    --ad-side-width: 160px;
+    --ad-bottom-height: 90px;
 }
 
-/* ── Desktop side ad (≥700px) ────────────────────────── */
+/* ── Desktop: side ad (≥700px) — bottom ad hidden ───── */
 .mobile-bottom-ad {
-    display: none; /* hidden on desktop; shown in mobile media query below */
+    display: none;
 }
 
 .desktop-side-ad {
@@ -1294,7 +1294,7 @@ body {
 
 .desktop-side-ad .ad-tab {
     position: absolute;
-    top: 64px; /* clears the fixed header */
+    top: 64px;
     left: -1px;
     writing-mode: vertical-rl;
     transform: rotate(180deg);
@@ -1313,7 +1313,7 @@ body {
     box-shadow: 3px -3px 10px rgba(56, 189, 248, 0.2), 3px 3px 10px rgba(56, 189, 248, 0.2);
 }
 
-/* ── Mobile bottom ad (<700px) ───────────────────────── */
+/* ── Mobile: bottom ad (<700px) — side ad hidden ─────── */
 @media (max-width: 699px) {
     .desktop-side-ad {
         display: none;
@@ -1384,7 +1384,12 @@ body {
 
     body {
         padding: 0;
-        padding-bottom: var(--ad-bottom-height) !important; /* clears mobile bottom ad */
+        padding-right: 0 !important; /* no side ad on mobile */
+        padding-bottom: calc(var(--ad-bottom-height) + 20px) !important; /* clears bottom ad + gap */
+    }
+
+    .android-header-full {
+        width: 100vw; /* restore full width on mobile */
     }
     .app {
         padding: 0 10px 15px 15px; 
