@@ -1321,7 +1321,7 @@ body {
     /* 2. Shift the Floating Settings Menu left by 160px */
     /* This ensures the menu opens aligned with the dots icon, not against the screen edge */
     #sideMenu {
-        right: 160px !important;
+        right: 168px !important;
     }
 
     /* 3. Main content containers */
@@ -1339,35 +1339,46 @@ body {
     .desktop-sidebar-ad {
         display: flex;
         position: fixed;
-        top: 0;
+        top: 64px; /* Moved down to clear the 64px header */
         right: 0;
         width: 160px;
-        height: 100vh;
-        background: var(--panel);
-        border-left: 1px solid var(--border);
+        height: calc(100vh - 64px); /* Adjust height for the top offset */
+        background: var(--panel-alt); /* Matches mobile background */
+        
+        /* 2. Fix Glow Alignment: Glow to the left instead of right */
+        /* Changed from '0 -4px 18px' to '-4px 0 18px' to shift shadow left */
+        box-shadow: -4px 0 18px rgba(56, 189, 248, 0.25), -1px 0 6px rgba(56, 189, 248, 0.15); 
+        
+        border-left: 1px solid var(--accent); /* Matches mobile top border */
         z-index: 2100;
         flex-direction: column;
         align-items: center;
-        padding-top: 80px;
+        padding-top: 20px;
+        box-sizing: border-box;
     }
 
-.desktop-sidebar-ad .ad-tab {
+    .desktop-sidebar-ad .ad-tab {
         position: absolute;
         top: 20px;
-        left: -31px;
-        width: 30px;
-        height: 100px;
-        background: var(--panel);
-        border: 1px solid var(--border);
-        border-right: none;
-        border-radius: 8px 0 0 8px;
+        left: -26px; /* Adjusted to sit flush against the left border */
+        background: var(--panel-alt);
+        color: var(--muted);
+        font-size: 0.65rem;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        padding: 3px 10px;
+        border-radius: 6px 6px 0 0;
+        border: 1px solid var(--accent);
+        border-bottom: none;
+        white-space: nowrap;
+        
+        /* Vertical rotation */
         writing-mode: vertical-rl;
         transform: rotate(180deg);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 0.7rem;
-        color: var(--muted);
+        
+        /* Matches mobile shadow intensity */
+        box-shadow: -3px 0 10px rgba(56, 189, 248, 0.2); 
     }
 }
 
