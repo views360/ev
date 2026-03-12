@@ -1330,7 +1330,7 @@ body {
 
     /* 3. Main content containers */
     .app, .about-modal-container {
-        width: calc(100% - 160px);
+        width: calc(100% - 180px);
         max-width: 1000px;
         margin-right: 0;
     }
@@ -1358,7 +1358,7 @@ body {
 
     .ad-tab-vertical {
         position: absolute;
-        top: 38px; /* Position from top */
+        top: 100px; /* Position from top */
         left: -77px; /* Pull it over the border line */
         background: var(--panel-alt);
         color: var(--muted);
