@@ -12,7 +12,7 @@
         /* (2) Fix: Allow page to scroll naturally instead of inside the panel */
         body {
             background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(4px);
+            /* backdrop-filter removed: causes position:fixed children to scroll with page */
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -20,8 +20,9 @@
             margin: 0;
             padding: 80px 20px 98px 20px; /* Space for the fixed header and bottom ad bar */
             box-sizing: border-box;
-            /* overflow-y: auto; -- removed: setting overflow on body breaks position:fixed on the ad bar */
+            /* overflow-y removed: same issue as backdrop-filter with position:fixed */
         }
+        /* DEBUG-V2 */
 
         /* Replicate the look and feel of the .help-modal without the height restriction */
         .about-modal-container {
