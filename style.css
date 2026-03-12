@@ -1359,26 +1359,24 @@ body {
 
     .desktop-sidebar-ad .ad-tab {
         position: absolute;
-        top: 20px;
-        left: -26px; /* Adjusted to sit flush against the left border */
+        top: 84px;        /* below the 64px header + comfortable gap */
+        left: -22px;      /* protrudes left of the panel */
+        writing-mode: vertical-rl;
+        transform: rotate(180deg); /* text reads bottom-to-top */
         background: var(--panel-alt);
         color: var(--muted);
         font-size: 0.65rem;
         font-weight: 600;
         letter-spacing: 0.08em;
         text-transform: uppercase;
-        padding: 3px 10px;
-        border-radius: 6px 0 0 6px; /* left side rounded — corrected for vertical rotation */
+        padding: 10px 3px;
+        border-radius: 6px 0 0 6px; /* rounded on left side */
         border: 1px solid var(--accent);
-        border-right: none; /* open side faces the panel — corrected for vertical rotation */
+        border-right: none;         /* open edge flush with panel */
         white-space: nowrap;
-        
-        /* Vertical rotation */
-        writing-mode: vertical-rl;
-        transform: rotate(180deg);
-        
-        /* Matches mobile shadow intensity */
-        box-shadow: -3px 0 10px rgba(56, 189, 248, 0.2); 
+        pointer-events: none;
+        /* shadow on top, left, and bottom — not right (that's the panel edge) */
+        box-shadow: -3px -3px 10px rgba(56, 189, 248, 0.2), -3px 3px 10px rgba(56, 189, 248, 0.2);
     }
 }
 
