@@ -1207,3 +1207,12 @@ function closeBeReminder() {
         }, 400); 
     }
 }
+
+function updateTabUI(clickedElement) {
+    // Remove 'active' class from both tabs
+    document.querySelectorAll('.tab-item').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    // Add 'active' class to the one we just clicked
+    clickedElement.classList.add('active');
+}
