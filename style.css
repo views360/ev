@@ -1285,7 +1285,7 @@ body {
 .ad-tab {
     position: absolute;
     top: -22px;
-    right: 16px;
+    right: 160px;
     background: var(--panel-alt);
     color: var(--muted);
     font-size: 0.65rem;
@@ -1359,10 +1359,8 @@ body {
 
     .desktop-sidebar-ad .ad-tab {
         position: absolute;
-        top: 84px;
-        left: -22px;
-        transform: rotate(-90deg);
-        transform-origin: bottom right;
+        top: 20px;
+        left: auto;
         background: var(--panel-alt);
         color: var(--muted);
         font-size: 0.65rem;
@@ -1374,8 +1372,13 @@ body {
         border: 1px solid var(--accent);
         border-bottom: none;
         white-space: nowrap;
-        pointer-events: none;
-        box-shadow: -3px -3px 10px rgba(56, 189, 248, 0.2), 3px -3px 10px rgba(56, 189, 248, 0.2);
+        
+        /* Vertical rotation */
+        writing-mode: vertical-rl;
+        transform: rotate(180deg);
+        
+        /* Matches mobile shadow intensity */
+        box-shadow: -3px 0 10px rgba(56, 189, 248, 0.2); 
     }
 }
 
