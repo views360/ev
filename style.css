@@ -1285,7 +1285,7 @@ body {
 .ad-tab {
     position: absolute;
     top: -22px;
-    right: 155px;
+    right: 160px;
     background: var(--panel-alt);
     color: var(--muted);
     font-size: 0.65rem;
@@ -1344,11 +1344,13 @@ body {
         width: 160px;
         height: calc(100vh - 64px); /* Adjust height for the top offset */
         background: var(--panel-alt); /* Matches mobile background */
+        
         /* 2. Fix Glow Alignment: Glow to the left instead of right */
         /* Changed from '0 -4px 18px' to '-4px 0 18px' to shift shadow left */
         box-shadow: -4px 0 18px rgba(56, 189, 248, 0.25), -1px 0 6px rgba(56, 189, 248, 0.15); 
+        
         border-left: 1px solid var(--accent); /* Matches mobile top border */
-        z-index: 5000;
+        z-index: 2100;
         flex-direction: column;
         align-items: center;
         padding-top: 20px;
@@ -1357,7 +1359,10 @@ body {
 
     .desktop-sidebar-ad .ad-tab {
         position: absolute;
-        left: auto;
+        top: 84px;           /* clear of 64px header + gap */
+        right: 0;            /* anchor to right edge of tab's containing space */
+        transform: rotate(-90deg);
+        transform-origin: top right;
         background: var(--panel-alt);
         color: var(--muted);
         font-size: 0.65rem;
@@ -1365,17 +1370,15 @@ body {
         letter-spacing: 0.08em;
         text-transform: uppercase;
         padding: 3px 10px;
-        border-radius: 0 6px 6px 0;
+        border-radius: 6px 0 0 6px; /* rounded left corners after rotation */
         border: 1px solid var(--accent);
-        border-bottom: none;
+        border-right: none;          /* open right edge flush with panel */
         white-space: nowrap;
-        
-        /* Vertical rotation */
-        writing-mode: vertical-rl;
-        transform: rotate(180deg);
-        
-        /* Matches mobile shadow intensity */
-        box-shadow: -3px 0 10px rgba(56, 189, 248, 0.2); 
+        pointer-events: none;
+        /* mobile shadow rotated 90deg CCW:
+           (-3px,-3px) rotated CCW → (-3px, 3px)
+           ( 3px,-3px) rotated CCW → (-3px,-3px) */
+        box-shadow: -3px 3px 10px rgba(56, 189, 248, 0.2), -3px -3px 10px rgba(56, 189, 248, 0.2);
     }
 }
 
