@@ -1231,7 +1231,7 @@ body {
 }
 
 #beReminderOverlay .help-modal {
-    margin-top: 50px !important;
+    margin-top: 80px !important;
     transform: translateY(20px);
     transition: transform 0.4s ease;
 }
