@@ -947,10 +947,10 @@ body {
 
 .cookie-banner {
     position: fixed;
-    top: 50px;
+    top: 230px;
     left: calc(50% - 80px);
     transform: translateX(-50%);
-    max-width: 500px;
+    max-width: 460px;
     background: var(--panel-alt);
     border: 1px solid var(--neon-green);
     border-top: 2px solid var(--neon-green);
@@ -1361,6 +1361,7 @@ body {
 
     .cookie-banner {
         width: 75%;
+        left: calc(50%);
     }
         
     .mobile-only-text {
