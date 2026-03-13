@@ -1100,8 +1100,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     } else {
         if (!getCookie('cookiesAccepted')) {
-            const banner = document.getElementById('cookieBanner');
-            if (banner) banner.style.display = 'block';
+            setTimeout(function() {
+                const banner = document.getElementById('cookieBanner');
+                if (banner) banner.style.display = 'block';
+            }, 4000);
         }
     }
 });
