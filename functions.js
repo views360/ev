@@ -573,7 +573,7 @@ function calculate() {
                 </table>
             </div>`;
         
-        const locationDisclaimer = `<p style="font-size:0.85rem; margin-top:12px; opacity:0.8;">* Charging times exclude the "80-100%" charging slowdown. Also, you will need to ensure that this provider has charging stations in your planned area of travel.</p>`;
+        const locationDisclaimer = `<p style="font-size:0.85rem; margin-top:12px; opacity:0.8;">* Before purchasing a subscription, check that your chosen provider has charging stations in your planned area of travel, else your subscription will be wasted.</p><p>** Charging times exclude the "80-100%" charging slowdown.</p>`;
     
             let conclusionHTML = `<div class="conclusion-white-border">`; 
             
