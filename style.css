@@ -190,7 +190,7 @@ body {
     font-family: 'Inter', -apple-system, system-ui, sans-serif;
     margin: 0;
     padding: 20px;
-    padding-top: 64px !important;
+    padding-top: 54px !important;
     padding-bottom: 98px !important; /* clears the fixed bottom ad bar */
     line-height: 1.6;
     transition: background-color 0.3s, color 0.3s;
@@ -693,7 +693,7 @@ tr.bad td { color: var(--danger); }
     position: relative;
     overflow: hidden;
     box-shadow: var(--glow-strong);
-    margin-top: 0px !important;
+    margin-top: 68px !important;
 }
 
 .close-x {
@@ -733,6 +733,10 @@ tr.bad td { color: var(--danger); }
     padding: 40px;
     box-sizing: border-box;
     text-align: center;
+}
+
+.help-slide {
+    width: calc(90% - 160px);
 }
 
 .help-slide h2 {
@@ -1333,8 +1337,7 @@ body {
 
     /* 4. Fixed overlays: anchor right edge to the ad column so
        justify-content:center centres modals within the content area */
-    .help-overlay,
-    #beReminderOverlay {
+    .help-overlay {
         right: 160px;
         width: auto;
     }
