@@ -947,10 +947,10 @@ body {
 
 .cookie-banner {
     position: fixed;
-    top: 230px;
+    top: 232px;
     left: calc(50% - 80px);
     transform: translateX(-50%);
-    max-width: 460px;
+    max-width: 456px;
     background: var(--panel-alt);
     border: 1px solid var(--neon-green);
     border-top: 2px solid var(--neon-green);
