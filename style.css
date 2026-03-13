@@ -1260,7 +1260,6 @@ body {
     font-size: 0.65rem;
     font-weight: 600;
     letter-spacing: 0.08em;
-    text-transform: uppercase;
     padding: 3px 10px;
     border-radius: 6px 6px 0 0;
     border: 1px solid var(--accent);
@@ -1278,14 +1277,13 @@ body {
 /* Rotated tab on the left edge of the desktop sidebar */
 .ad-tab-vertical {
     position: absolute;
-    top: 80px;
-    left: 0;
+    top: 200px;
+    left: 54;
     background: var(--panel-alt);
     color: var(--muted);
     font-size: 0.65rem;
     font-weight: 600;
     letter-spacing: 0.08em;
-    text-transform: uppercase;
     padding: 3px 10px;
     border-radius: 6px 6px 0 0;
     border: 1px solid var(--accent);
