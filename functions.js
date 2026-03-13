@@ -237,23 +237,23 @@ function calculate() {
     const beModeDiv = document.getElementById("break-even-mode");
     const tripModeDiv = document.getElementById("trip-savings-mode");
     const conclusionsBox = document.getElementById("conclusionsBox");
-    const beCard = document.getElementById("breakEvenCard");
     const conclusionsBox = document.getElementById("conclusionsBox");
     const beCard = document.getElementById("breakEvenCard");
-    const tripGrid = document.querySelector(".grid");
-    const resultsHeader = document.getElementById("resultsHeader");
     const uiResults = document.getElementById("results");
     const sortContainer = document.getElementById("sortContainer");
     const uiPreText = document.getElementById("preConclusionsText");
+    const beCard = document.getElementById("breakEvenCard");
+    const tripGrid = document.querySelector(".grid");
+    const resultsHeader = document.getElementById("resultsHeader");
    
     if (beModeDiv) beModeDiv.style.display = isTripMode ? "none" : "block";
     if (tripModeDiv) tripModeDiv.style.display = isTripMode ? "block" : "none";
-    if (tripGrid) tripGrid.style.display = isTripMode ? "grid" : "none";
     if (sortContainer) sortContainer.style.display = isTripMode ? "block" : "none";
-    if (tripGrid) tripGrid.style.display = isTripMode ? "grid" : "none";
-    if (resultsHeader) resultsHeader.style.display = isTripMode ? "flex" : "none";
     if (uiResults) uiResults.style.display = isTripMode ? "flex" : "none";
     if (btnRow) btnRow.style.display = isTripMode ? "flex" : "none";
+    if (beCard) beCard.style.display = isTripMode ? "none" : "block";
+    if (tripGrid) tripGrid.style.display = isTripMode ? "grid" : "none";
+    if (resultsHeader) resultsHeader.style.display = isTripMode ? "flex" : "none";
 
     const fieldIds = [
         "journeyMiles", "batteryKwh", "soc", "efficiency", 
