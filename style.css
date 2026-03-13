@@ -158,7 +158,7 @@ h3 {
     color: var(--danger);
     font-weight: bold;
     text-align: center;
-    margin: 20px auto; 
+    margin: 0px auto 50px auto; 
     padding: 15px;
     border: 1px solid var(--danger);
     border-radius: 12px; 
@@ -1284,8 +1284,8 @@ body {
 
 .ad-tab {
     position: absolute;
-    top: -22px;
-    right: 16px;
+    top: -23px;
+    right: -5px;
     background: var(--panel-alt);
     color: var(--muted);
     font-size: 0.65rem;
@@ -1298,7 +1298,11 @@ body {
     border-bottom: none;
     white-space: nowrap;
     pointer-events: none;
-    box-shadow: -3px -3px 10px rgba(56, 189, 248, 0.2), 3px -3px 10px rgba(56, 189, 248, 0.2);
+    /*box-shadow: -3px -3px 10px rgba(56, 189, 248, 0.2), 3px -3px 10px rgba(56, 189, 248, 0.2);*/
+}
+
+.desktop-sidebar-ad {
+    display: none; /* Hidden by default (mobile first) */
 }
 
 
@@ -1326,28 +1330,55 @@ body {
 
     /* 3. Main content containers */
     .app, .about-modal-container {
-        width: calc(100% - 160px);
+        width: calc(100% - 180px);
         max-width: 1000px;
         margin-right: 0;
     }
 
     /* 4. Transform bottom ad into right sidebar */
     .mobile-bottom-ad {
+        display: none !important;
+    }
+
+    .desktop-sidebar-ad {
+        display: block;
         position: fixed;
         top: 0;
         right: 0;
         bottom: 0;
-        left: auto;
         width: 160px;
-        height: 100vh;
-        border-top: none;
-        border-left: 1px solid var(--border);
-        z-index: 2001; /* Higher than header/menu to remain on top */
+        background: var(--panel-alt);
+        z-index: 9999;
+        border-left: 1px solid var(--accent);
+        /* Matches your mobile blue glow */
+        box-shadow: -4px 0 18px rgba(56, 189, 248, 0.25), -1px 0 6px rgba(56, 189, 248, 0.15);
+        padding: 20px 5px;
+        box-sizing: border-box;
     }
 
-    /* Optional: Hide the 'Ads Area' tab label in sidebar mode */
-    .mobile-bottom-ad .ad-tab {
-        display: none;
+    .ad-tab-vertical {
+        position: absolute;
+        top: 100px; /* Position from top */
+        left: -77px; /* Pull it over the border line */
+        background: var(--panel-alt);
+        color: var(--muted);
+        font-size: 0.65rem;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        padding: 3px 10px;
+        border-radius: 6px 6px 0 0;
+        border: 1px solid var(--accent);
+        border-bottom: none;
+        white-space: nowrap;
+        pointer-events: none;
+        
+        /* The Magic: Rotate 90 degrees counter-clockwise */
+        transform: rotate(-90deg);
+        transform-origin: bottom right;
+        
+        /* Match the tab's glow */
+        /*box-shadow: -3px -3px 10px rgba(56, 189, 248, 0.2);*/
     }
 }
 
@@ -1468,7 +1499,7 @@ body {
     .card,
     #breakEvenCard {
         max-width: 100%; 
-        margin-bottom: 20px;
+        /*margin-bottom: 20px;*/
     }
     .comparison-mode-box {
         margin-top: 0px !important;
