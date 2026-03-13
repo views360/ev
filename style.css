@@ -693,7 +693,7 @@ tr.bad td { color: var(--danger); }
     position: relative;
     overflow: hidden;
     box-shadow: var(--glow-strong);
-    margin-top: 50px !important;
+    margin-top: 30px !important;
 }
 
 .close-x {
