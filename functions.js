@@ -232,35 +232,24 @@ function enforceSpeedRules() {
 }
 
 function calculate() {
-    const activeTab = document.querySelector('.tab-item.active');
-    const isTripMode = activeTab && activeTab.textContent.trim().includes("Trip-Savings");
-    const beModeDiv = document.getElementById("break-even-mode");
-    const tripModeDiv = document.getElementById("trip-savings-mode");
-    const conclusionsBox = document.getElementById("conclusionsBox");
+    const activePill = document.querySelector('.pill-btn.active');
+    const isTripMode = activePill && activePill.textContent.trim() === "Trip Savings";
     const conclusionsBox = document.getElementById("conclusionsBox");
     const beCard = document.getElementById("breakEvenCard");
-    const uiResults = document.getElementById("results");
-    const sortContainer = document.getElementById("sortContainer");
-    const uiPreText = document.getElementById("preConclusionsText");
-    if (uiPreText) {
-        uiPreText.style.display = isTripMode ? "none" : "block";
-    }
-    const calcLines = document.querySelector(".calc-lines");
-    if (calcLines) {
-        calcLines.style.display = isTripMode ? "block" : "none";
-    }
-    const beCard = document.getElementById("breakEvenCard");
+    if (beCard) beCard.style.display = isTripMode ? "none" : "block";
+    
     const tripGrid = document.querySelector(".grid");
     const resultsHeader = document.getElementById("resultsHeader");
-   
-    if (beModeDiv) beModeDiv.style.display = isTripMode ? "none" : "block";
-    if (tripModeDiv) tripModeDiv.style.display = isTripMode ? "block" : "none";
+    const btnRow = document.querySelector(".btn-row");
+    const uiResults = document.getElementById("results");
+    const uiPreText = document.getElementById("preConclusionsText");
+    const sortContainer = document.getElementById("sortContainer");
+
     if (sortContainer) sortContainer.style.display = isTripMode ? "block" : "none";
-    if (uiResults) uiResults.style.display = isTripMode ? "flex" : "none";
-    if (btnRow) btnRow.style.display = isTripMode ? "flex" : "none";
-    if (beCard) beCard.style.display = isTripMode ? "none" : "block";
     if (tripGrid) tripGrid.style.display = isTripMode ? "grid" : "none";
     if (resultsHeader) resultsHeader.style.display = isTripMode ? "flex" : "none";
+    if (uiResults) uiResults.style.display = isTripMode ? "flex" : "none";
+    if (btnRow) btnRow.style.display = isTripMode ? "flex" : "none";
 
     const fieldIds = [
         "journeyMiles", "batteryKwh", "soc", "efficiency", 
@@ -404,8 +393,8 @@ function calculate() {
         if (!beReminderShown) {
             setTimeout(() => {
                 // Double check we are still in break-even mode before showing
-                const tripTab = document.getElementById('btn-trip-savings');
-                const isTripMode = tripTab && tripTab.classList.contains('active');
+                const activePill = document.querySelector('.pill-btn.active');
+                const isTripMode = activePill && activePill.textContent.trim() === "Trip Savings";
                 
                 if (!isTripMode) {
                     showBeReminder();
@@ -664,6 +653,18 @@ function getProviderColor(name, index) {
     return palette[index % palette.length];
 }
 
+function setToggle(mode, btn) {
+    const slider = document.getElementById('pill-slider');
+    document.querySelectorAll('.pill-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    if(slider) {
+        slider.style.transform = mode === 'break-even' ? 'translateX(0)' : 'translateX(100%)';
+    }
+    setCookie('calcMode', mode);
+    setCookie('comparisonMode', mode);
+    calculate();
+}
+
 function init() {
     const savedValues = getCookie("ev_trip_values");
     const urlParams = new URLSearchParams(window.location.search);
@@ -746,22 +747,17 @@ function init() {
 
         const modeParam = urlParams.get("mode");
         if (modeParam === "trip-savings") {
-            // Manually trigger the trip savings tab
-            const tripBtn = document.getElementById('btn-trip-savings');
-            if (tripBtn) {
-                updateTabUI(tripBtn);
-                setToggle('trip-savings');
-            }
+            const tripBtn = document.querySelector('.pill-btn:nth-child(3)'); 
+            if (tripBtn) setToggle('trip-savings', tripBtn);
         } else {
-            // Default to break-even or check which tab is currently active
-            const tripBtn = document.getElementById('btn-trip-savings');
-            const isTripActive = tripBtn && tripBtn.classList.contains('active');
-            const currentMode = isTripActive ? 'trip-savings' : 'break-even';
-            
-            // Find the button to pass to the UI update if needed
-            const activeBtn = document.getElementById(isTripActive ? 'btn-trip-savings' : 'btn-break-even');
-            if (activeBtn) updateTabUI(activeBtn);
-            setToggle(currentMode);
+            const activePill = document.querySelector('.pill-btn.active');
+            const currentMode = activePill.textContent.trim() === "Trip Savings" ? 'trip-savings' : 'break-even';
+            setToggle(currentMode, activePill);
+        }
+
+        const provEl = document.getElementById("provider");
+        if (provEl && savedValues && savedValues.provider) {
+            provEl.value = savedValues.provider;
         }
 
         updateProviderInfo();
@@ -1092,14 +1088,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const savedMode = getCookie('calcMode');
 
     if (savedMode) {
-        // Look for your new Tab IDs: btn-break-even or btn-trip-savings
-        const tabId = savedMode === 'trip-savings' ? 'btn-trip-savings' : 'btn-break-even';
-        const modeBtn = document.getElementById(tabId);
-        
+        const modeBtn = document.querySelector(`.pill-btn[onclick*="${savedMode}"]`);
         if (modeBtn) {
-            // Update the UI styling and trigger the toggle logic
-            updateTabUI(modeBtn); 
-            setToggle(savedMode);
+            modeBtn.click();
         }
 
         const helpOverlay = document.getElementById('helpOverlay');
@@ -1215,19 +1206,4 @@ function closeBeReminder() {
             overlay.style.display = 'none';
         }, 400); 
     }
-}
-
-function setToggle(mode) {
-    setCookie('calcMode', mode);
-    setCookie('comparisonMode', mode);
-
-    // This ensures the calculations run for the new mode immediately
-    calculate();
-}
-
-function updateTabUI(btn) {
-    // Remove 'active' class from all tabs
-    document.querySelectorAll('.tab-item').forEach(el => el.classList.remove('active'));
-    // Add it to the clicked one
-    btn.classList.add('active');
 }
