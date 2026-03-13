@@ -733,6 +733,9 @@ tr.bad td { color: var(--danger); }
     padding: 40px;
     box-sizing: border-box;
     text-align: center;
+}
+
+.help-slide {
     width: calc(90% - 160px);
 }
 
@@ -767,6 +770,8 @@ tr.bad td { color: var(--danger); }
 .standalone-slide {
     width: 100%;
     display: block;
+    box-sizing: border-box;
+    text-align: left;
 }
 
 #providerResults table th:first-child,
