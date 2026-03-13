@@ -232,13 +232,18 @@ function enforceSpeedRules() {
 }
 
 function calculate() {
-    const activePill = document.querySelector('.pill-btn.active');
-    const isTripMode = activePill && activePill.textContent.trim() === "Trip Savings";
+    const tripTab = document.getElementById('btn-trip-savings');
+    const isTripMode = tripTab && tripTab.classList.contains('active');
     const conclusionsBox = document.getElementById("conclusionsBox");
     const beCard = document.getElementById("breakEvenCard");
-    if (beCard) beCard.style.display = isTripMode ? "none" : "block";
+    const beModeDiv = document.getElementById("break-even-mode");
+    const tripModeDiv = document.getElementById("trip-savings-mode");
+
+    if (beModeDiv) beModeDiv.style.display = isTripMode ? "none" : "block";
+    if (tripModeDiv) tripModeDiv.style.display = isTripMode ? "block" : "none";
     
     const tripGrid = document.querySelector(".grid");
+    if (tripGrid) tripGrid.style.display = isTripMode ? "grid" : "none";
     const resultsHeader = document.getElementById("resultsHeader");
     const btnRow = document.querySelector(".btn-row");
     const uiResults = document.getElementById("results");
@@ -1197,26 +1202,15 @@ function closeBeReminder() {
 }
 
 function setToggle(mode) {
-    const breakEvenCards = document.getElementById('break-even-mode');
-    const tripSavingsCards = document.getElementById('trip-savings-mode');
-
-    if (mode === 'break-even') {
-        breakEvenCards.style.display = 'block';
-        tripSavingsCards.style.display = 'none';
-    } else {
-        breakEvenCards.style.display = 'none';
-        tripSavingsCards.style.display = 'block';
-    }
+    setCookie('calcMode', mode);
+    setCookie('comparisonMode', mode);
 
     // This ensures the calculations run for the new mode immediately
     calculate();
 }
 
-function updateTabUI(clickedElement) {
-    // Remove active class from all tabs
-    document.querySelectorAll('.tab-item').forEach(tab => {
-        tab.classList.remove('active');
-    });
-    // Add active class to the one we just clicked
-    clickedElement.classList.add('active');
+function updateTabUI(btn) {
+    // Handle the visual switching of the 'active' class
+    document.querySelectorAll('.tab-item').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
 }
