@@ -735,10 +735,6 @@ tr.bad td { color: var(--danger); }
     text-align: center;
 }
 
-.help-slide {
-    width: calc(90% - 160px);
-}
-
 .help-slide h2 {
     color: var(--accent);
     margin-bottom: 20px;
@@ -1337,7 +1333,8 @@ body {
 
     /* 4. Fixed overlays: anchor right edge to the ad column so
        justify-content:center centres modals within the content area */
-    .help-overlay {
+    .help-overlay,
+    #beReminderOverlay {
         right: 160px;
         width: auto;
     }
