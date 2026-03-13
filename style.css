@@ -947,7 +947,7 @@ body {
 
 .cookie-banner {
     position: fixed;
-    top: 20px;
+    top: 50px;
     left: 50%;
     transform: translateX(-50%);
     width: 90%;
@@ -960,6 +960,7 @@ body {
     box-shadow: 0 0 5px var(--neon-green-soft);
     animation: neonPulse 1.5s infinite ease-in-out;
     z-index: 2000;
+    right: 160px;
 }
 
 .cookie-content {
