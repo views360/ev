@@ -735,10 +735,6 @@ tr.bad td { color: var(--danger); }
     text-align: center;
 }
 
-.help-slide {
-    width: calc(90% - 160px);
-}
-
 .help-slide h2 {
     color: var(--accent);
     margin-bottom: 20px;
