@@ -234,22 +234,21 @@ function enforceSpeedRules() {
 function calculate() {
     const tripTab = document.getElementById('btn-trip-savings');
     const isTripMode = tripTab && tripTab.classList.contains('active');
-    const conclusionsBox = document.getElementById("conclusionsBox");
-    const beCard = document.getElementById("breakEvenCard");
     const beModeDiv = document.getElementById("break-even-mode");
     const tripModeDiv = document.getElementById("trip-savings-mode");
-
+    const conclusionsBox = document.getElementById("conclusionsBox");
+    const beCard = document.getElementById("breakEvenCard");
+    const conclusionsBox = document.getElementById("conclusionsBox");
+    const beCard = document.getElementById("breakEvenCard");
+    const tripGrid = document.querySelector(".grid");
+    const resultsHeader = document.getElementById("resultsHeader");
+    const uiResults = document.getElementById("results");
+    const sortContainer = document.getElementById("sortContainer");
+    const uiPreText = document.getElementById("preConclusionsText");
+   
     if (beModeDiv) beModeDiv.style.display = isTripMode ? "none" : "block";
     if (tripModeDiv) tripModeDiv.style.display = isTripMode ? "block" : "none";
-    
-    const tripGrid = document.querySelector(".grid");
     if (tripGrid) tripGrid.style.display = isTripMode ? "grid" : "none";
-    const resultsHeader = document.getElementById("resultsHeader");
-    const btnRow = document.querySelector(".btn-row");
-    const uiResults = document.getElementById("results");
-    const uiPreText = document.getElementById("preConclusionsText");
-    const sortContainer = document.getElementById("sortContainer");
-
     if (sortContainer) sortContainer.style.display = isTripMode ? "block" : "none";
     if (tripGrid) tripGrid.style.display = isTripMode ? "grid" : "none";
     if (resultsHeader) resultsHeader.style.display = isTripMode ? "flex" : "none";
