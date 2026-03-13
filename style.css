@@ -1311,10 +1311,17 @@ body {
         z-index: 2001; /* Higher than header/menu to remain on top */
     }
 
-    /* Optional: Hide the 'Ads Area' tab label in sidebar mode */
+    /* Reposition ad-tab for sidebar mode — appears at top-left of the sidebar */
     .mobile-bottom-ad .ad-tab {
-        display: none;
+        top: 8px;
+        bottom: auto;
+        left: 0;
+        right: auto;
+        border-radius: 0 6px 6px 0;
+        border: 1px solid var(--accent);
+        border-left: none;
     }
+
 }
 
 
