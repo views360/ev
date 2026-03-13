@@ -182,29 +182,14 @@
 	<div class="tabs-container">
     <div class="tabs-wrapper">
         <span class="calculation-label">Calculation Type:</span>        
-        <button id="btn-break-even" class="tab-item active" onclick="setToggle('break-even'); updateTabUI(this)">
-            Break Even
-        </button>        
-        <button id="btn-trip-savings" class="tab-item" onclick="setToggle('trip-savings'); updateTabUI(this)">
-            Trip Savings
-        </button>
+	    <button class="tab-item active" id="btn-break-even" onclick="updateTabUI(this); setToggle('break-even')">Break-Even Analysis</button>
+	    <button class="tab-item" id="btn-trip-savings" onclick="updateTabUI(this); setToggle('trip-savings')">Trip-Savings Analysis</button>
     </div>
     <div class="tabs-divider"></div>
 </div>
 <div id="break-even-mode"></div>
 <div id="trip-savings-mode" style="display: none;"></div>
-	
 
-<div class="toggle-container-block">
-    <div class="comparison-mode-box">
-        <span class="comparison-label">Calculation Type</span>
-        <div class="pill-toggle">
-            <div id="pill-slider" class="pill-slider"></div>
-            <button type="button" class="pill-btn active" onclick="setToggle('break-even', this)">Break Even</button>
-            <button type="button" class="pill-btn" onclick="setToggle('trip-savings', this)">Trip Savings</button>
-        </div>
-    </div>
-</div>
 
 <div id="breakEvenCard" class="card" style="margin-bottom: 20px; max-width: 400px; margin-left: auto; margin-right: auto;">
     <h3>Trip & Vehicle</h3>
