@@ -1320,9 +1320,14 @@ body {
     }
 
     /* 3. Main content containers */
+    /* body already has padding-right:160px reserving the ad space.
+       .app must NOT use margin: 0 auto here — that would centre it
+       within the full body width (incl. the ad zone) and look lopsided.
+       Instead, left-align it so it sits flush in the content area. */
     .app, .about-modal-container {
-        width: calc(100% - 160px);
+        width: 100%;
         max-width: 1000px;
+        margin-left: 0;
         margin-right: 0;
     }
 
