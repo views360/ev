@@ -397,8 +397,8 @@ function calculate() {
         if (!beReminderShown) {
             setTimeout(() => {
                 // Double check we are still in break-even mode before showing
-                const activePill = document.querySelector('.pill-btn.active');
-                const isTripMode = activePill && activePill.textContent.trim() === "Trip Savings";
+                const tripTab = document.getElementById('btn-trip-savings');
+                const isTripMode = tripTab && tripTab.classList.contains('active');
                 
                 if (!isTripMode) {
                     showBeReminder();
@@ -739,17 +739,22 @@ function init() {
 
         const modeParam = urlParams.get("mode");
         if (modeParam === "trip-savings") {
-            const tripBtn = document.querySelector('.pill-btn:nth-child(3)'); 
-            if (tripBtn) setToggle('trip-savings', tripBtn);
+            // Manually trigger the trip savings tab
+            const tripBtn = document.getElementById('btn-trip-savings');
+            if (tripBtn) {
+                updateTabUI(tripBtn);
+                setToggle('trip-savings');
+            }
         } else {
-            const activePill = document.querySelector('.pill-btn.active');
-            const currentMode = activePill.textContent.trim() === "Trip Savings" ? 'trip-savings' : 'break-even';
-            setToggle(currentMode, activePill);
-        }
-
-        const provEl = document.getElementById("provider");
-        if (provEl && savedValues && savedValues.provider) {
-            provEl.value = savedValues.provider;
+            // Default to break-even or check which tab is currently active
+            const tripBtn = document.getElementById('btn-trip-savings');
+            const isTripActive = tripBtn && tripBtn.classList.contains('active');
+            const currentMode = isTripActive ? 'trip-savings' : 'break-even';
+            
+            // Find the button to pass to the UI update if needed
+            const activeBtn = document.getElementById(isTripActive ? 'btn-trip-savings' : 'btn-break-even');
+            if (activeBtn) updateTabUI(activeBtn);
+            setToggle(currentMode);
         }
 
         updateProviderInfo();
@@ -1080,9 +1085,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const savedMode = getCookie('calcMode');
 
     if (savedMode) {
-        const modeBtn = document.querySelector(`.pill-btn[onclick*="${savedMode}"]`);
+        // Look for your new Tab IDs: btn-break-even or btn-trip-savings
+        const tabId = savedMode === 'trip-savings' ? 'btn-trip-savings' : 'btn-break-even';
+        const modeBtn = document.getElementById(tabId);
+        
         if (modeBtn) {
-            modeBtn.click();
+            // Update the UI styling and trigger the toggle logic
+            updateTabUI(modeBtn); 
+            setToggle(savedMode);
         }
 
         const helpOverlay = document.getElementById('helpOverlay');
@@ -1209,7 +1219,8 @@ function setToggle(mode) {
 }
 
 function updateTabUI(btn) {
-    // Handle the visual switching of the 'active' class
-    document.querySelectorAll('.tab-item').forEach(b => b.classList.remove('active'));
+    // Remove 'active' class from all tabs
+    document.querySelectorAll('.tab-item').forEach(el => el.classList.remove('active'));
+    // Add it to the clicked one
     btn.classList.add('active');
 }
