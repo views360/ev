@@ -513,8 +513,8 @@ tr.bad td { color: var(--danger); }
 .calc-tabs-bar {
     display: flex;
     border-bottom: 2px solid var(--border);
-    max-width: 420px;
-    margin: 10px auto 0 auto;
+    max-width: 410px;
+    margin: 0 auto 20px auto;
 }
 
 .calc-tab {
@@ -789,7 +789,7 @@ tr.bad td { color: var(--danger); }
 .android-header-full {
     background-color: #000000 !important;
     width: 100vw;
-    height: 64px;
+    height: 50px;
     display: flex;
     align-items: center; 
     justify-content: space-between;
