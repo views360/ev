@@ -283,7 +283,7 @@ function calculate() {
         const minSpeedSelection = parseFloat(document.getElementById("minSpeedBE").value) || 0;
 
         if (isNaN(efficiency) || efficiency <= 0 || isNaN(adhocRate) || adhocRate <= 0) {
-            uiPreText.innerHTML = "Please enter valid <strong>Efficiency</strong> and <strong>PAYG Rate</strong> values, or use the <strong>navigation tabs</strong> at the top to switch to TRIP SAVINGS calculation type.";
+            uiPreText.innerHTML = "Please attend to all flashing green fields, or use the navigation tab at the top to switch between BREAK EVEN and TRIP SAVINGS calcuation types.";
             uiPreText.style.display = "block";
             uiResults.style.display = "none";
             return;
@@ -423,7 +423,7 @@ function calculate() {
     const providerBoxes = document.querySelectorAll(".provider-box");
 
     if (tripIncomplete) {
-        uiPreText.innerHTML = "Please complete all fields in the <strong>Trip & Vehicle</strong> section.";
+        uiPreText.innerHTML = "Please attend to all flashing green fields, or use the navigation tab at the top to switch between BREAK EVEN and TRIP SAVINGS calcuation types.";
         uiPreText.style.display = "block";
         uiResults.style.display = "none";
         if (resultsHeader) resultsHeader.style.display = "none";
