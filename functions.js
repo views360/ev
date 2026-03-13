@@ -232,7 +232,7 @@ function enforceSpeedRules() {
 }
 
 function calculate() {
-    const activePill = document.querySelector('.pill-btn.active');
+    const activePill = document.querySelector('.calc-tab.active');
     const isTripMode = activePill && activePill.textContent.trim() === "Trip Savings";
     const conclusionsBox = document.getElementById("conclusionsBox");
     const beCard = document.getElementById("breakEvenCard");
@@ -393,7 +393,7 @@ function calculate() {
         if (!beReminderShown) {
             setTimeout(() => {
                 // Double check we are still in break-even mode before showing
-                const activePill = document.querySelector('.pill-btn.active');
+                const activePill = document.querySelector('.calc-tab.active');
                 const isTripMode = activePill && activePill.textContent.trim() === "Trip Savings";
                 
                 if (!isTripMode) {
@@ -654,12 +654,8 @@ function getProviderColor(name, index) {
 }
 
 function setToggle(mode, btn) {
-    const slider = document.getElementById('pill-slider');
-    document.querySelectorAll('.pill-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.calc-tab').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-    if(slider) {
-        slider.style.transform = mode === 'break-even' ? 'translateX(0)' : 'translateX(100%)';
-    }
     setCookie('calcMode', mode);
     setCookie('comparisonMode', mode);
     calculate();
@@ -747,12 +743,12 @@ function init() {
 
         const modeParam = urlParams.get("mode");
         if (modeParam === "trip-savings") {
-            const tripBtn = document.querySelector('.pill-btn:nth-child(3)'); 
+            const tripBtn = document.querySelector('.calc-tab:nth-child(2)'); 
             if (tripBtn) setToggle('trip-savings', tripBtn);
         } else {
-            const activePill = document.querySelector('.pill-btn.active');
-            const currentMode = activePill.textContent.trim() === "Trip Savings" ? 'trip-savings' : 'break-even';
-            setToggle(currentMode, activePill);
+            const activeTab = document.querySelector('.calc-tab.active');
+            const currentMode = activeTab.textContent.trim() === "Trip Savings" ? 'trip-savings' : 'break-even';
+            setToggle(currentMode, activeTab);
         }
 
         const provEl = document.getElementById("provider");
@@ -1088,7 +1084,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const savedMode = getCookie('calcMode');
 
     if (savedMode) {
-        const modeBtn = document.querySelector(`.pill-btn[onclick*="${savedMode}"]`);
+        const modeBtn = document.querySelector(`.calc-tab[onclick*="${savedMode}"]`);
         if (modeBtn) {
             modeBtn.click();
         }

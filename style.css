@@ -158,7 +158,7 @@ h3 {
     color: var(--danger);
     font-weight: bold;
     text-align: center;
-    margin: 0px auto 50px auto; 
+    margin: 20px auto; 
     padding: 15px;
     border: 1px solid var(--danger);
     border-radius: 12px; 
@@ -230,8 +230,7 @@ h1 {
     margin-bottom: 30px;
 }
 
-.comparison-mode-box, 
-.card, 
+.card,
 #breakEvenCard {
     max-width: 420px !important; 
     width: 100%;
@@ -510,50 +509,36 @@ tr.bad td { color: var(--danger); }
     box-shadow: var(--glow);
 }
 
-.pill-toggle {
-    position: relative;
+/* calc tabs */
+.calc-tabs-bar {
     display: flex;
-    width: 100%; 
-    max-width: 100%; 
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 50px;
-    padding: 4px;
-    overflow: hidden;
-    box-sizing: border-box;
+    border-bottom: 2px solid var(--border);
+    max-width: 420px;
+    margin: 10px auto 0 auto;
 }
 
-.pill-slider {
-    position: absolute;
-    top: 4px;
-    left: 4px;
-    width: calc(50% - 4px);
-    height: calc(100% - 8px);
-    background: var(--accent);
-    border-radius: 50px;
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: var(--glow);
-    z-index: 1;
-}
-
-.pill-btn {
-    position: relative;
+.calc-tab {
     flex: 1;
     background: none;
     border: none;
-    color: var(--text);
-    padding: 10px 5px; 
-    font-weight: 600;
-    cursor: pointer;
-    z-index: 2;
-    transition: color 0.3s ease;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    padding: 10px 5px;
     font-family: inherit;
-    font-size: 0.85rem; 
-    white-space: nowrap; 
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--muted);
+    cursor: pointer;
+    transition: color 0.2s ease, border-color 0.2s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
 }
 
-.pill-btn.active {
-    color: var(--bg);
+.calc-tab.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+    text-shadow: 0 0 8px rgba(56, 189, 248, 0.5);
 }
 
 .header-row {
@@ -669,26 +654,7 @@ tr.bad td { color: var(--danger); }
     transform: translateY(-3px);
 }
 
-.comparison-mode-box {
-    border: 1px solid var(--border); 
-    background: var(--panel-alt);
-    box-shadow: none; 
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 15px;
-    animation: none; 
-    margin-top: 10px !important;
-    margin-bottom: 20px !important;
-}
 
-.comparison-label {
-    font-size: 1rem;
-    font-weight: 800;
-    color: var(--accent);
-    text-transform: uppercase;
-    letter-spacing: 0.2em;
-}
 
 @keyframes boxPulse {
     0%, 100% { box-shadow: var(--glow); border-color: var(--accent); }
@@ -1284,8 +1250,8 @@ body {
 
 .ad-tab {
     position: absolute;
-    top: -23px;
-    right: -5px;
+    top: -22px;
+    right: 16px;
     background: var(--panel-alt);
     color: var(--muted);
     font-size: 0.65rem;
@@ -1298,11 +1264,7 @@ body {
     border-bottom: none;
     white-space: nowrap;
     pointer-events: none;
-    /*box-shadow: -3px -3px 10px rgba(56, 189, 248, 0.2), 3px -3px 10px rgba(56, 189, 248, 0.2);*/
-}
-
-.desktop-sidebar-ad {
-    display: none; /* Hidden by default (mobile first) */
+    box-shadow: -3px -3px 10px rgba(56, 189, 248, 0.2), 3px -3px 10px rgba(56, 189, 248, 0.2);
 }
 
 
@@ -1330,55 +1292,28 @@ body {
 
     /* 3. Main content containers */
     .app, .about-modal-container {
-        width: calc(100% - 180px);
+        width: calc(100% - 160px);
         max-width: 1000px;
         margin-right: 0;
     }
 
     /* 4. Transform bottom ad into right sidebar */
     .mobile-bottom-ad {
-        display: none !important;
-    }
-
-    .desktop-sidebar-ad {
-        display: block;
         position: fixed;
         top: 0;
         right: 0;
         bottom: 0;
+        left: auto;
         width: 160px;
-        background: var(--panel-alt);
-        z-index: 9999;
-        border-left: 1px solid var(--accent);
-        /* Matches your mobile blue glow */
-        box-shadow: -4px 0 18px rgba(56, 189, 248, 0.25), -1px 0 6px rgba(56, 189, 248, 0.15);
-        padding: 20px 5px;
-        box-sizing: border-box;
+        height: 100vh;
+        border-top: none;
+        border-left: 1px solid var(--border);
+        z-index: 2001; /* Higher than header/menu to remain on top */
     }
 
-    .ad-tab-vertical {
-        position: absolute;
-        top: 100px; /* Position from top */
-        left: -77px; /* Pull it over the border line */
-        background: var(--panel-alt);
-        color: var(--muted);
-        font-size: 0.65rem;
-        font-weight: 600;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        padding: 3px 10px;
-        border-radius: 6px 6px 0 0;
-        border: 1px solid var(--accent);
-        border-bottom: none;
-        white-space: nowrap;
-        pointer-events: none;
-        
-        /* The Magic: Rotate 90 degrees counter-clockwise */
-        transform: rotate(-90deg);
-        transform-origin: bottom right;
-        
-        /* Match the tab's glow */
-        /*box-shadow: -3px -3px 10px rgba(56, 189, 248, 0.2);*/
+    /* Optional: Hide the 'Ads Area' tab label in sidebar mode */
+    .mobile-bottom-ad .ad-tab {
+        display: none;
     }
 }
 
@@ -1397,17 +1332,7 @@ body {
         display: block;
     }
     
-    .toggle-container-block {
-        margin: 0px 10px 15px 10px !important; 
-        width: auto; 
-        display: block; 
-    }
-
-    .pill-toggle {
-        max-width: 100%;
-    }
-
-    body {
+body {
         padding: 0;
     }
     .app {
@@ -1495,14 +1420,10 @@ body {
         font-size: 1.2rem;
     }
     
-    .comparison-mode-box,
     .card,
     #breakEvenCard {
         max-width: 100%; 
-        /*margin-bottom: 20px;*/
-    }
-    .comparison-mode-box {
-        margin-top: 0px !important;
+        margin-bottom: 20px;
     }
     
     .results-header, .result-row {
