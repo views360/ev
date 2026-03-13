@@ -539,17 +539,12 @@ tr.bad td { color: var(--danger); }
     color: var(--accent);
     border-bottom-color: var(--accent);
     text-shadow: 0 0 8px rgba(56, 189, 248, 0.5);
+    animation: tabBorderPulse 1.5s infinite ease-in-out;
 }
 
-.calc-tab.active::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 2px; /* adjust thickness to taste */
-    background: var(--neon-green);
-    animation: neonPulse 1.5s infinite ease-in-out;
+@keyframes tabBorderPulse {
+    0%, 100% { border-bottom-color: var(--accent); }
+    50% { border-bottom-color: var(--neon-green); }
 }
 
 .header-row {
