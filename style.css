@@ -1326,7 +1326,12 @@ body {
         margin-right: 0;
     }
 
-    /* 4. Hide mobile bottom ad, show desktop sidebar */
+    /* 4. Offset fixed overlays so modals centre within the content area (not behind the ad sidebar) */
+    .help-overlay {
+        padding-right: 160px;
+    }
+
+    /* 5. Hide mobile bottom ad, show desktop sidebar */
     .mobile-bottom-ad {
         display: none;
     }
