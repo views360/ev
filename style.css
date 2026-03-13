@@ -1226,7 +1226,7 @@ body {
     background: rgba(0, 0, 0, 0.7);
     z-index: 2000;
     justify-content: center;
-    align-items: flex-start;
+    align-items: center;
 }
 
 #beReminderOverlay.active {
@@ -1235,7 +1235,6 @@ body {
 }
 
 #beReminderOverlay .help-modal {
-    margin-top: 50px;
     transform: translateY(20px);
     transition: transform 0.4s ease;
 }
@@ -1338,7 +1337,8 @@ body {
 
     /* 4. Fixed overlays: anchor right edge to the ad column so
        justify-content:center centres modals within the content area */
-    .help-overlay {
+    .help-overlay,
+    #beReminderOverlay {
         right: 160px;
         width: auto;
     }
