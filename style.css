@@ -733,6 +733,7 @@ tr.bad td { color: var(--danger); }
     padding: 40px;
     box-sizing: border-box;
     text-align: center;
+    width: calc(90% - 160px);
 }
 
 .help-slide h2 {
@@ -764,7 +765,7 @@ tr.bad td { color: var(--danger); }
 }
 
 .standalone-slide {
-    width: calc(90% - 160px);
+    width: 100%;
     display: block;
 }
 
