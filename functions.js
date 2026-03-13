@@ -398,8 +398,8 @@ if (!el._ftScrollBound) { el._ftScrollBound = true; el.addEventListener("scroll"
 if (!beReminderShown) {
 setTimeout(() => {
 // Double check we are still in break-even mode before showing
-const activePill = document.querySelector('.pill-btn.active');
-const isTripMode = activePill && activePill.textContent.trim() === "Trip Savings";
+const activeTab = document.querySelector('.tab-item.active');
+const isTripMode = activeTab && activeTab.textContent.trim().toLowerCase().includes("trip-savings");
 
 if (!isTripMode) {
 showBeReminder();
@@ -1224,13 +1224,9 @@ function setToggle(mode) {
     calculate();
 }
 
-function updateTabUI(clickedElement) {
-    // Remove 'active' class from both tabs
+function updateTabUI(btn) {
     // Remove active class from all tabs
-document.querySelectorAll('.tab-item').forEach(tab => {
-tab.classList.remove('active');
-});
-    // Add 'active' class to the one we just clicked
-    // Add active class to the one we just clicked
-clickedElement.classList.add('active');
+    document.querySelectorAll('.tab-item').forEach(el => el.classList.remove('active'));
+    // Add active class to the clicked tab
+    btn.classList.add('active');
 }
