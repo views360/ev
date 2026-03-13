@@ -764,7 +764,7 @@ tr.bad td { color: var(--danger); }
 }
 
 .standalone-slide {
-    width: calc(90%-160px);
+    width: calc(90% - 160px);
     display: block;
 }
 
