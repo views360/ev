@@ -523,7 +523,7 @@ tr.bad td { color: var(--danger); }
     border: none;
     border-bottom: 3px solid transparent;
     margin-bottom: -2px;
-    padding: 10px 5px;
+    padding: 0px 5px 10px 5px;
     font-family: inherit;
     font-size: 0.85rem;
     font-weight: 600;
