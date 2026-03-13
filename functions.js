@@ -283,7 +283,7 @@ function calculate() {
         const minSpeedSelection = parseFloat(document.getElementById("minSpeedBE").value) || 0;
 
         if (isNaN(efficiency) || efficiency <= 0 || isNaN(adhocRate) || adhocRate <= 0) {
-            uiPreText.innerHTML = "Please enter valid <strong>Efficiency</strong> and <strong>PAYG Rate</strong> values, or use the toggle at the top to switch to TRIP SAVINGS calculation type.";
+            uiPreText.innerHTML = "Please enter valid <strong>Efficiency</strong> and <strong>PAYG Rate</strong> values, or use the <strong>navigation tabs</strong> at the top to switch to TRIP SAVINGS calculation type.";
             uiPreText.style.display = "block";
             uiResults.style.display = "none";
             return;
