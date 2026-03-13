@@ -950,8 +950,7 @@ body {
     top: 50px;
     left: 50%;
     transform: translateX(-50%);
-    width: 90%;
-    max-width: 600px;
+    max-width: 500px;
     background: var(--panel-alt);
     border: 1px solid var(--neon-green);
     border-top: 2px solid var(--neon-green);
@@ -961,6 +960,7 @@ body {
     animation: neonPulse 1.5s infinite ease-in-out;
     z-index: 2000;
     right: 160px;
+    width: auto;
 }
 
 .cookie-content {
