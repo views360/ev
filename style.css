@@ -458,7 +458,7 @@ tr.good td { color: var(--good); }
 tr.bad td { color: var(--danger); }
 
 .chart-wrapper {
-    margin: 30px 0 30px 0;
+    margin-top: 30px;
     background: var(--panel-alt);
     padding: 20px;
     border-radius: 12px;
@@ -881,7 +881,7 @@ tr.bad td { color: var(--danger); }
 }
 
 body {
-    padding-top: 54px !important; 
+    padding-top: 64px !important; 
     margin: 0;
     padding: 0 30px 30px 30px;
 }
@@ -1226,7 +1226,7 @@ body {
     background: rgba(0, 0, 0, 0.7);
     z-index: 2000;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
 }
 
 #beReminderOverlay.active {
@@ -1235,6 +1235,7 @@ body {
 }
 
 #beReminderOverlay .help-modal {
+    margin-top: 50px;
     transform: translateY(20px);
     transition: transform 0.4s ease;
 }
