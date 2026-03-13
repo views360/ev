@@ -1305,20 +1305,6 @@ body {
     display: none; /* Hidden by default (mobile first) */
 }
 
-.tab-item.active {
-    background: var(--accent) !important;
-    color: var(--bg) !important;
-    box-shadow: var(--glow); /* Restores the neon glow from the old pills */
-    border-bottom: none; 
-}
-
-/* Ensure tabs look interactive */
-.tab-item {
-    transition: all 0.3s ease;
-    cursor: pointer;
-    border-radius: 8px 8px 0 0; /* Optional: rounds the top corners */
-}
-
 
 /* DESKTOP */
 /* --- Desktop Layout (>= 700px) --- */
