@@ -27,7 +27,7 @@
         /* Replicate the look and feel of the .help-modal without the height restriction */
         .about-modal-container {
             background: var(--panel);
-            width: 95%;
+            width: 75%;
             max-width: 700px;
             border-radius: 16px;
             border: 1px solid var(--accent);
@@ -83,7 +83,8 @@
             }
 
             .about-modal-container {
-                margin: 50px 50px 0px 50px !important;
+				width: 90% !important;
+                margin: 50px 50px 30px 50px !important;
             }
         }
     </style>
@@ -178,19 +179,32 @@
             }
         });
     </script>
-<div class="mobile-bottom-ad">
-    <div class="ad-tab">Ads Area</div>
+<div class="desktop-sidebar-ad">
+    <div class="ad-tab-vertical">Ads Area</div>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2944414800646015"
          crossorigin="anonymous"></script>
     <ins class="adsbygoogle"
          style="display:block"
          data-ad-client="ca-pub-2944414800646015"
-         data-ad-slot="auto"
-         data-ad-format="horizontal"
+         data-ad-slot="DESKTOP_SLOT_ID" 
+         data-ad-format="vertical"
          data-full-width-responsive="true"></ins>
     <script>
          (adsbygoogle = window.adsbygoogle || []).push({});
     </script>
+</div>
+<div class="mobile-bottom-ad">
+    <div class="ad-tab">Ads Area</div>
+	<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2944414800646015"
+	     crossorigin="anonymous"></script>
+	<ins class="adsbygoogle"
+	     style="display:block"
+	     data-ad-format="autorelaxed"
+	     data-ad-client="ca-pub-2944414800646015"
+	     data-ad-slot="3754204567"></ins>
+	<script>
+	     (adsbygoogle = window.adsbygoogle || []).push({});
+	</script>
 </div>
 </body>
 </html>
