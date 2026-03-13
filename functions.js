@@ -232,8 +232,8 @@ function enforceSpeedRules() {
 }
 
 function calculate() {
-    const tripTab = document.getElementById('btn-trip-savings');
-    const isTripMode = tripTab && tripTab.classList.contains('active');
+    const activeTab = document.querySelector('.tab-item.active');
+    const isTripMode = activeTab && activeTab.textContent.trim().includes("Trip-Savings");
     const beModeDiv = document.getElementById("break-even-mode");
     const tripModeDiv = document.getElementById("trip-savings-mode");
     const conclusionsBox = document.getElementById("conclusionsBox");
@@ -242,6 +242,13 @@ function calculate() {
     const uiResults = document.getElementById("results");
     const sortContainer = document.getElementById("sortContainer");
     const uiPreText = document.getElementById("preConclusionsText");
+    if (uiPreText) {
+        uiPreText.style.display = isTripMode ? "none" : "block";
+    }
+    const calcLines = document.querySelector(".calc-lines");
+    if (calcLines) {
+        calcLines.style.display = isTripMode ? "block" : "none";
+    }
     const beCard = document.getElementById("breakEvenCard");
     const tripGrid = document.querySelector(".grid");
     const resultsHeader = document.getElementById("resultsHeader");
