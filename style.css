@@ -1277,8 +1277,8 @@ body {
 /* Rotated tab on the left edge of the desktop sidebar */
 .ad-tab-vertical {
     position: absolute;
-    top: 200px;
-    left: 54;
+    top: 185px;
+    left: 48px;
     background: var(--panel-alt);
     color: var(--muted);
     font-size: 0.65rem;
