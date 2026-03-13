@@ -1307,19 +1307,24 @@ body {
         width: 160px;
         height: 100vh;
         border-top: none;
-        border-left: 1px solid var(--border);
+        border-left: 1px solid var(--accent);
+        box-shadow: -4px 0 18px rgba(56, 189, 248, 0.25), -1px 0 6px rgba(56, 189, 248, 0.15);
         z-index: 2001; /* Higher than header/menu to remain on top */
     }
 
-    /* Reposition ad-tab for sidebar mode — appears at top-left of the sidebar */
+    /* Reposition ad-tab for sidebar mode — rotated 90deg CCW, sits on the left edge */
     .mobile-bottom-ad .ad-tab {
-        top: 8px;
+        top: 80px;
         bottom: auto;
         left: 0;
         right: auto;
-        border-radius: 0 6px 6px 0;
+        transform: rotate(-90deg);
+        transform-origin: top left;
+        translate: -100% 0;
+        border-radius: 6px 6px 0 0;
         border: 1px solid var(--accent);
-        border-left: none;
+        border-bottom: none;
+        box-shadow: -3px -3px 10px rgba(56, 189, 248, 0.2), 3px -3px 10px rgba(56, 189, 248, 0.2);
     }
 
 }
