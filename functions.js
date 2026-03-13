@@ -232,24 +232,29 @@ updateProviderFields(id);
 }
 
 function calculate() {
-const activePill = document.querySelector('.pill-btn.active');
-const isTripMode = activePill && activePill.textContent.trim() === "Trip Savings";
+const tripTab = document.getElementById('btn-trip-savings');
+const isTripMode = tripTab && tripTab.classList.contains('active');
+const beModeDiv = document.getElementById("break-even-mode");
+const tripModeDiv = document.getElementById("trip-savings-mode");
 const conclusionsBox = document.getElementById("conclusionsBox");
 const beCard = document.getElementById("breakEvenCard");
-if (beCard) beCard.style.display = isTripMode ? "none" : "block";
-
 const tripGrid = document.querySelector(".grid");
+
+
 const resultsHeader = document.getElementById("resultsHeader");
 const btnRow = document.querySelector(".btn-row");
 const uiResults = document.getElementById("results");
 const uiPreText = document.getElementById("preConclusionsText");
 const sortContainer = document.getElementById("sortContainer");
 
-if (sortContainer) sortContainer.style.display = isTripMode ? "block" : "none";
+if (beCard) beCard.style.display = isTripMode ? "none" : "block";
 if (tripGrid) tripGrid.style.display = isTripMode ? "grid" : "none";
+if (sortContainer) sortContainer.style.display = isTripMode ? "block" : "none";
 if (resultsHeader) resultsHeader.style.display = isTripMode ? "flex" : "none";
 if (uiResults) uiResults.style.display = isTripMode ? "flex" : "none";
 if (btnRow) btnRow.style.display = isTripMode ? "flex" : "none";
+if (beModeDiv) beModeDiv.style.display = isTripMode ? "none" : "block";
+if (tripModeDiv) tripModeDiv.style.display = isTripMode ? "block" : "none";
 
 const fieldIds = [
 "journeyMiles", "batteryKwh", "soc", "efficiency", 
@@ -653,15 +658,10 @@ const palette = ["#38bdf8", "#22c55e", "#a855f7", "#ec4899", "#eab308"];
 return palette[index % palette.length];
 }
 
-function setToggle(mode, btn) {
-    const slider = document.getElementById('pill-slider');
-    document.querySelectorAll('.pill-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    if(slider) {
-        slider.style.transform = mode === 'break-even' ? 'translateX(0)' : 'translateX(100%)';
-    }
+function setToggle(mode) {
     setCookie('calcMode', mode);
     setCookie('comparisonMode', mode);
+    // Force the calculation to run immediately after the mode switch
     calculate();
 }
 
