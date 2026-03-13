@@ -1301,39 +1301,32 @@ body {
 /* --- Desktop Layout (>= 700px) --- */
 @media (min-width: 700px) {
     body {
-        /* Reserve 160px on the right for the ad sidebar */
-        padding-right: 160px !important;
         padding-bottom: 20px !important;
     }
 
-    /* 1. Shift the Top Header bar left by 160px */
+    /* 1. content-wrap gives margin:auto children a right boundary that
+       excludes the 160px ad column, so they centre within the content area */
+    .content-wrap {
+        margin-right: 160px;
+    }
+
+    /* 2. Shift the Top Header bar left by 160px */
     .android-header-full {
         width: calc(100% - 160px) !important;
         right: 160px !important;
         left: 0 !important;
     }
 
-    /* 2. Shift the Floating Settings Menu left by 160px */
-    /* This ensures the menu opens aligned with the dots icon, not against the screen edge */
+    /* 3. Shift the Floating Settings Menu left by 160px */
     #sideMenu {
         right: 160px !important;
     }
 
-    /* 3. Main content containers */
-    /* body already has padding-right:160px reserving the ad space.
-       .app must NOT use margin: 0 auto here — that would centre it
-       within the full body width (incl. the ad zone) and look lopsided.
-       Instead, left-align it so it sits flush in the content area. */
-    .app, .about-modal-container {
-        width: 100%;
-        max-width: 1000px;
-        margin-left: 0;
-        margin-right: 0;
-    }
-
-    /* 4. Offset fixed overlays so modals centre within the content area (not behind the ad sidebar) */
+    /* 4. Fixed overlays: anchor right edge to the ad column so
+       justify-content:center centres modals within the content area */
     .help-overlay {
-        padding-right: 160px;
+        right: 160px;
+        width: auto;
     }
 
     /* 5. Hide mobile bottom ad, show desktop sidebar */
