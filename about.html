@@ -13,15 +13,13 @@
         /* (2) Fix: Allow page to scroll naturally instead of inside the panel */
         body {
             background: rgba(0, 0, 0, 0.85);
-            /* backdrop-filter removed: causes position:fixed children to scroll with page */
             display: flex;
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            padding: 80px 20px 98px 20px; /* Space for the fixed header and bottom ad bar */
+            padding: 80px 20px 98px 20px;
             box-sizing: border-box;
-            /* overflow-y removed: same issue as backdrop-filter with position:fixed */
         }
         /* DEBUG-V2 */
 
@@ -86,6 +84,7 @@
             .about-modal-container {
                 width: 90% !important;
                 margin: 50px auto 30px auto !important;
+                align-self: center;
             }
         }
 
