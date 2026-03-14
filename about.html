@@ -67,8 +67,8 @@
         /* Ensure 30px side margins on mobile devices */
         @media (max-width: 700px) {
             body {
-                padding: 30px !important;
-                padding-bottom: 98px !important; /* clears the fixed bottom ad bar */
+                padding: 0 !important;
+                padding-bottom: 98px !important;
             }
             
             .content-section {
@@ -82,9 +82,10 @@
             }
 
             .about-modal-container {
-                width: 90% !important;
-                margin: 50px auto 30px auto !important;
-                align-self: center;
+                display: block;
+                width: calc(100% - 60px) !important;
+                margin: 60px 30px 30px 30px !important;
+                align-self: unset;
             }
         }
 
