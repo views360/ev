@@ -1,103 +1,240 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2944414800646015"
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2944414800646015"
      crossorigin="anonymous"></script>
     <meta charset="UTF-8">
-	<meta name="google-adsense-account" content="ca-pub-2696934198267016">
-    <title>About Us - EV Subs Compare</title>
+    <meta name="google-adsense-account" content="ca-pub-2696934198267016">
+    <title>About This Tool - EV Subs Compare</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
     <style>
-        /* (2) Fix: Allow page to scroll naturally instead of inside the panel */
+        /* ── Page reset ── */
         body {
-            background: rgba(0, 0, 0, 0.85);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
+            padding: 0 !important;
             margin: 0;
-            padding: 80px 20px 98px 20px;
-            box-sizing: border-box;
+            background: var(--bg);
+            overflow-x: hidden;
         }
-        /* DEBUG-V2 */
 
-        /* Replicate the look and feel of the .help-modal without the height restriction */
-        .about-modal-container {
-            background: var(--panel);
-            width: 75%;
-            max-width: 700px;
-            border-radius: 16px;
-            border: 1px solid var(--accent);
-            box-shadow: var(--glow-strong);
-            padding: 5px 30px 30px 30px;
+        /* ── Parallax hero ── */
+        .hero-parallax {
             position: relative;
-            /* Fix: Remove overflow and max-height to let it expand */
-            overflow: visible; 
-            height: auto;
-	    margin-top: 16px !important;
+            height: 480px;
+            overflow: hidden;
+            margin-top: 48px;
         }
 
-        .about-modal-container h1, 
-        .about-modal-container h2 {
+        .hero-bg {
+            position: absolute;
+            inset: -80px 0 -80px 0;
+            background-image: url('about.webp');
+            background-size: cover;
+            background-position: right bottom;
+            will-change: transform;
+        }
+
+        /* dark gradient over the image */
+        .hero-bg::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                to bottom,
+                rgba(2, 6, 23, 0.15) 0%,
+                rgba(2, 6, 23, 0.40) 55%,
+                rgba(2, 6, 23, 0.82) 100%
+            );
+        }
+
+        .hero-text {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 0 40px 48px;
+            z-index: 2;
+        }
+
+        .hero-eyebrow {
+            font-family: 'Syne', sans-serif;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
             color: var(--accent);
-            margin-top: 0;
+            text-shadow: var(--glow);
+            margin-bottom: 10px;
         }
 
-        .about-modal-container h2 {
-            margin-top: 25px;
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 10px;
+        .hero-title {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(2.4rem, 7vw, 4.8rem);
+            font-weight: 800;
+            color: #f1f5f9;
+            line-height: 1.05;
+            margin: 0 0 14px;
+            text-shadow: 0 2px 40px rgba(0,0,0,0.7);
         }
 
-        .about-modal-container p, 
-        .about-modal-container li {
-            color: var(--text);
-            line-height: 1.6;
-            opacity: 0.9;
+        .hero-title span {
+            color: var(--accent);
+            text-shadow: var(--glow-strong);
         }
 
-        /* Ensure the settings menu trigger is visible */
-        .android-header-full {
+        .hero-sub {
+            font-size: 1.05rem;
+            color: rgba(241,245,249,0.78);
+            max-width: 520px;
+            line-height: 1.55;
+            margin: 0;
+        }
+
+        /* ── Scan-line accent strip ── */
+        .hero-strip {
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            box-shadow: var(--glow);
+        }
+
+        /* ── Page body layout ── */
+        .about-wrap {
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 56px 40px 120px;
+        }
+
+        /* ── Content card ── */
+        .about-card {
             background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 48px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3), var(--glow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* subtle corner accent */
+        .about-card::before {
+            content: '';
+            position: absolute;
+            top: 0; right: 0;
+            width: 180px; height: 180px;
+            background: radial-gradient(circle at top right, var(--accent-soft), transparent 70%);
+            pointer-events: none;
+        }
+
+        .about-card h2 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--accent);
+            margin: 0 0 36px;
+        }
+
+        /* ── Section blocks ── */
+        .about-section {
+            margin-bottom: 36px;
+            padding-bottom: 36px;
             border-bottom: 1px solid var(--border);
         }
-        
-        /* Ensure 30px side margins on mobile devices */
-        @media (max-width: 700px) {
-            body {
-                padding: 0 !important;
-                padding-bottom: 98px !important;
-            }
-            
-            .content-section {
-                padding-left: 0;
-                padding-right: 0;
-            }
-        
-            .app {
-                width: 100%;
-                margin: 0;
-            }
 
-            .about-modal-container {
-                display: block;
-                width: calc(100% - 60px) !important;
-                margin: 60px 30px 30px 30px !important;
-                padding: 20px !important;
-                align-self: unset;
-            }
+        .about-section:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
         }
 
+        .about-section-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 14px;
+        }
+
+        .about-icon-box {
+            flex-shrink: 0;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: var(--accent-soft);
+            border: 1px solid var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--glow);
+        }
+
+        .about-icon-box svg {
+            width: 18px;
+            height: 18px;
+            stroke: var(--accent);
+        }
+
+        .about-section h3 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text);
+            margin: 0;
+        }
+
+        .about-section p,
+        .about-section li {
+            color: var(--muted);
+            font-size: 0.93rem;
+            line-height: 1.75;
+            margin: 0 0 10px;
+        }
+
+        .about-section ul {
+            padding-left: 20px;
+            margin: 10px 0 0;
+        }
+
+        .about-section li {
+            margin-bottom: 6px;
+        }
+
+        .about-section strong {
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        /* ── Light mode overrides ── */
+        .light-mode .hero-bg::after {
+            background: linear-gradient(
+                to bottom,
+                rgba(248,250,252,0.10) 0%,
+                rgba(248,250,252,0.38) 55%,
+                rgba(248,250,252,0.82) 100%
+            );
+        }
+
+        .light-mode .hero-title { color: #0f172a; text-shadow: none; }
+        .light-mode .hero-sub   { color: rgba(15,23,42,0.75); }
+
+        /* ── Desktop ad offset ── */
         @media (min-width: 700px) {
             body {
-                margin-right: 160px;
+                margin-right: 160px !important;
             }
+        }
+
+        /* ── Mobile ── */
+        @media (max-width: 700px) {
+            .hero-parallax { height: 360px; margin-top: 48px; }
+            .hero-text { padding: 0 24px 36px; }
+            .about-wrap { padding: 36px 20px 110px; }
+            .about-card { padding: 24px; }
         }
     </style>
     <script>
-        /* Theme persistence check */
         (function() {
             const getCookie = (name) => {
                 const nameEQ = name + "=";
@@ -105,7 +242,7 @@
                 for (let i = 0; i < ca.length; i++) {
                     let c = ca[i].trim();
                     if (c.indexOf(nameEQ) === 0) {
-                        try { return JSON.parse(decodeURIComponent(c.substring(nameEQ.length))); } 
+                        try { return JSON.parse(decodeURIComponent(c.substring(nameEQ.length))); }
                         catch (e) { return decodeURIComponent(c.substring(nameEQ.length)).replace(/"/g, ''); }
                     }
                 }
@@ -122,19 +259,11 @@
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-
-  gtag('config', 'G-6B2B03YZ17');
-</script><!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-6B2B03YZ17"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
   gtag('config', 'G-6B2B03YZ17');
 </script>
 <body>
 
+    <!-- Fixed top header -->
     <div class="android-header-full">
         <h1 class="android-title-clean">EV Subs Compare (UK)</h1>
         <div class="android-dots-trigger" onclick="toggleMenu()">
@@ -142,58 +271,166 @@
         </div>
     </div>
 
+    <!-- Slide-out menu -->
     <div id="sideMenu" class="chrome-style-menu">
         <div class="menu-content">
-            <a class="menu-item-clean" href="index.html">
-                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cGF0aCBkPSJNMyA5bDktN2w5IDd2MTFhMiAyIDAgMCAxLTIgMmgtNHYtNGgtNHY0SDVhMiAyIDAgMCAxLTItMlY5eiIgc3Ryb2tlPSIjOTRhM2I4IiBzdHJva2Utd2lkdGg9IjIiLz4KPC9zdmc+" class="menu-icon-svg">
-                <span>Calculator Home</span>
+            <a class="menu-item-clean" href="about.html">
+                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIgc3Ryb2tlPSIjOTRhM2I4IiBzdHJva2Utd2lkdGg9IjIiLz4KICA8cGF0aCBkPSJNMTIgMTZWMTEiIHN0cm9rZT0iIzk0YTNiOCIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICA8Y2lyY2xlIGN4PSIxMiIgY3k9IjgiIHI9IjEiIGZpbGw9IiM5NGEzYjgiLz4KPC9zdmc+" class="menu-icon-svg" alt="About Icon">
+                <span>About This Tool</span>
             </a>
             <a class="menu-item-clean" onclick="toggleTheme(); toggleMenu();">
                 <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z'/%3E%3C/svg%3E" class="menu-icon-svg">
                 <span>Light/Dark Mode</span>
             </a>
+            <a class="menu-item-clean" href="privacy.html">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z'/%3E%3C/svg%3E" class="menu-icon-svg">
+                <span>Privacy</span>
+            </a>
+            <a class="menu-item-clean" href="contact.html">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='4'/%3E%3Cpath d='M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-4 8'/%3E%3C/svg%3E" class="menu-icon-svg">
+                <span>Contact Author</span>
+            </a>
+            <a class="menu-item-clean" href="index.html">
+                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cGF0aCBkPSJNMyA5bDktN2w5IDd2MTFhMiAyIDAgMCAxLTIgMmgtNHYtNGgtNHY0SDVhMiAyIDAgMCAxLTItMlY5eiIgc3Ryb2tlPSIjOTRhM2I4IiBzdHJva2Utd2lkdGg9IjIiLz4KPC9zdmc+" class="menu-icon-svg">
+                <span>Calculator Home</span>
+            </a>
+            <div class="menu-footer">
+                Subscription Data<br />Last Updated<br /><strong>09 March 26</strong>
+            </div>
         </div>
     </div>
 
-    <div class="about-modal-container">
-		<a href="index.html" class="close-x" style="text-decoration: none;">&times;</a>
-        <h2>About This Tool</strong></h2>
-        <p>Deciding between a Pay-As-You-Go (PAYG) rate and a monthly subscription can be difficult without accurate data. We provide a data-driven approach to help you decide if a one-month subscription is a savvy financial move for your specific driving habits.</p>
-
-        <h3>Why Use This Tool?</h3>
-        <p>Public charging costs can vary wildly, from 40p/kWh to over 85p/kWh. A subscription might cost £10 but lower your rate by 20p/kWh. Our tool automates this calculation across all known UK subscription providers instantly.</p>
-
-        <h3>How the Comparisons Work</h3>
-        <ul>
-            <li><strong>Break-Even Analysis:</strong> Calculates the exact mileage required to recoup a subscription fee based on your car's efficiency.</li>
-            <li><strong>Trip Savings:</strong> Perfect for planning long-distance holidays, showing you exactly how much you'll save on a specific route.</li>
-        </ul>
-
-        <h3>Designed for Privacy</h3>
-        <p>We believe in a <i>privacy-first</i> approach. This tool does not collect or store any personally identifiable information. We use local cookies solely to remember your vehicle settings so that the tool is ready to use immediately upon your next visit.</p>
-
-        <div style="margin-top: 30px; text-align: center;">
-            <a href="index.html" class="btn secondary">Return to Calculator</a>
+    <!-- ── Parallax hero banner ── -->
+    <div class="hero-parallax" id="heroParallax">
+        <div class="hero-bg" id="heroBg"></div>
+        <div class="hero-text">
+            <p class="hero-eyebrow">&#x26A1; EV Subs Compare &mdash; UK</p>
+            <h1 class="hero-title">About <span>This Tool</span></h1>
+            <p class="hero-sub">A data-driven, privacy-first calculator built by UK EV enthusiasts to help you decide whether a charging subscription is worth it for your driving habits.</p>
         </div>
+    </div>
+    <div class="hero-strip"></div>
+
+    <!-- ── Page content ── -->
+    <div class="about-wrap">
+        <div class="about-card">
+
+            <h2>About EV Subs Compare</h2>
+
+            <!-- 1. What it does -->
+            <div class="about-section">
+                <div class="about-section-header">
+                    <div class="about-icon-box">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/>
+                        </svg>
+                    </div>
+                    <h3>What This Tool Does</h3>
+                </div>
+                <p>Deciding between a <strong>Pay-As-You-Go (PAYG)</strong> rate and a monthly subscription can be difficult without accurate, personalised data. Public charging costs vary wildly — from 40p/kWh to over 85p/kWh — and a subscription might cost £10/month but reduce your rate by 20p/kWh.</p>
+                <p>EV Subs Compare automates this calculation across all known UK subscription providers instantly, giving you a clear answer based on your own vehicle and driving habits.</p>
+            </div>
+
+            <!-- 2. How it works -->
+            <div class="about-section">
+                <div class="about-section-header">
+                    <div class="about-icon-box">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                        </svg>
+                    </div>
+                    <h3>How the Comparisons Work</h3>
+                </div>
+                <p>The tool offers two calculation modes:</p>
+                <ul>
+                    <li><strong>Break-Even Analysis</strong> — calculates the exact mileage required to recoup a subscription fee, based on your car's efficiency and your typical PAYG rate. Results update live as you adjust any input.</li>
+                    <li><strong>Trip Savings</strong> — perfect for planning a long-distance journey. Enter your route distance and see exactly how much you'd save with each provider's subscription rate versus paying as you go.</li>
+                </ul>
+                <p>All calculations run entirely in your browser — no data is sent to a server, and results are instant.</p>
+            </div>
+
+            <!-- 3. Coverage -->
+            <div class="about-section">
+                <div class="about-section-header">
+                    <div class="about-icon-box">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="3"/>
+                        </svg>
+                    </div>
+                    <h3>Coverage &amp; Data</h3>
+                </div>
+                <p>This tool covers <strong>UK public charging networks</strong> only. Subscription pricing data is reviewed and updated periodically to keep comparisons accurate, with the last update date shown in the settings menu.</p>
+                <p>If you spot a rate that looks out of date, or know of a provider we haven't included yet, please <a href="contact.html" style="color: var(--accent); font-weight: 600;">let us know</a> — community reports are how we keep the data fresh.</p>
+            </div>
+
+            <!-- 4. Privacy -->
+            <div class="about-section">
+                <div class="about-section-header">
+                    <div class="about-icon-box">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        </svg>
+                    </div>
+                    <h3>Designed for Privacy</h3>
+                </div>
+                <p>We believe in a <strong>privacy-first</strong> approach. This tool does not collect or store any personally identifiable information. We use local cookies solely to remember your vehicle settings and input values so the calculator is ready to use immediately on your next visit.</p>
+                <p>No account is required. No data leaves your browser. Read our full <a href="privacy.html" style="color: var(--accent); font-weight: 600;">Privacy Policy</a> for complete details.</p>
+            </div>
+
+            <!-- 5. Get involved -->
+            <div class="about-section">
+                <div class="about-section-header">
+                    <div class="about-icon-box">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="4"/><path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-4 8"/>
+                        </svg>
+                    </div>
+                    <h3>Get Involved</h3>
+                </div>
+                <p>EV Subs Compare is a free, independent tool maintained by a small team of EV enthusiasts. If you find it useful, the best way to support it is to share it with other EV drivers.</p>
+                <p>Have feedback, spotted a bug, or want to suggest a new provider? <a href="contact.html" style="color: var(--accent); font-weight: 600;">Get in touch</a> — we read every message.</p>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Ad slots -->
+    <div class="desktop-sidebar-ad">
+        <div class="ad-tab-vertical">Ads Area</div>
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2944414800646015" crossorigin="anonymous"></script>
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-2944414800646015" data-ad-slot="DESKTOP_SLOT_ID" data-ad-format="vertical" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+    <div class="mobile-bottom-ad">
+        <div class="ad-tab">Ads Area</div>
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2944414800646015" crossorigin="anonymous"></script>
+        <ins class="adsbygoogle" style="display:block" data-ad-format="autorelaxed" data-ad-client="ca-pub-2944414800646015" data-ad-slot="3754204567"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
     </div>
 
     <script>
-        // Standalone versions of only the functions needed by this page
+        /* ── Parallax scroll ── */
+        const heroBg = document.getElementById('heroBg');
+        function applyParallax() {
+            const scrollY = window.scrollY;
+            heroBg.style.transform = `translateY(${scrollY * 0.45}px)`;
+        }
+        window.addEventListener('scroll', applyParallax, { passive: true });
+        applyParallax();
+
+        /* ── Theme & menu helpers ── */
         const setCookie = (name, value) => {
             const date = new Date();
             date.setTime(date.getTime() + (30 * 24 * 60 * 60 * 1000));
             document.cookie = `${name}=${encodeURIComponent(JSON.stringify(value))};expires=${date.toUTCString()};path=/;SameSite=Lax`;
         };
-
         function toggleTheme() {
             const isLight = document.documentElement.classList.toggle('light-mode');
             setCookie('themePref', isLight ? 'light' : 'dark');
         }
-
         function toggleMenu() {
             document.getElementById('sideMenu').classList.toggle('active');
         }
-
         document.addEventListener('click', (e) => {
             const menu = document.getElementById('sideMenu');
             const trigger = document.querySelector('.android-dots-trigger');
@@ -204,32 +441,5 @@
             }
         });
     </script>
-<div class="desktop-sidebar-ad">
-    <div class="ad-tab-vertical">Ads Area</div>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2944414800646015"
-         crossorigin="anonymous"></script>
-    <ins class="adsbygoogle"
-         style="display:block"
-         data-ad-client="ca-pub-2944414800646015"
-         data-ad-slot="DESKTOP_SLOT_ID" 
-         data-ad-format="vertical"
-         data-full-width-responsive="true"></ins>
-    <script>
-         (adsbygoogle = window.adsbygoogle || []).push({});
-    </script>
-</div>
-<div class="mobile-bottom-ad">
-    <div class="ad-tab">Ads Area</div>
-	<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2944414800646015"
-	     crossorigin="anonymous"></script>
-	<ins class="adsbygoogle"
-	     style="display:block"
-	     data-ad-format="autorelaxed"
-	     data-ad-client="ca-pub-2944414800646015"
-	     data-ad-slot="3754204567"></ins>
-	<script>
-	     (adsbygoogle = window.adsbygoogle || []).push({});
-	</script>
-</div>
 </body>
 </html>
