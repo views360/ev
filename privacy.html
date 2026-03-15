@@ -5,7 +5,7 @@
      crossorigin="anonymous"></script>
     <meta charset="UTF-8">
     <meta name="google-adsense-account" content="ca-pub-2696934198267016">
-    <title>Contact Us - EV Subs Compare</title>
+    <title>Privacy Policy - EV Subs Compare</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="stylesheet" href="style.css">
@@ -26,19 +26,19 @@
             position: relative;
             height: 480px;
             overflow: hidden;
-            margin-top: 48px; /* clear the fixed header */
+            margin-top: 48px;
         }
 
         .hero-bg {
             position: absolute;
-            inset: -80px 0 -80px 0;   /* extra height enables the parallax travel */
-            background-image: url('contact.webp');
+            inset: -80px 0 -80px 0;
+            background-image: url('privacy.webp');
             background-size: cover;
-            background-position: right bottom; /* anchor to bottom-right where the car/figure is */
+            background-position: right bottom;
             will-change: transform;
         }
 
-        /* dark gradient over the image — lighter so the image reads clearly in dark mode */
+        /* dark gradient over the image */
         .hero-bg::after {
             content: '';
             position: absolute;
@@ -102,44 +102,71 @@
         }
 
         /* ── Page body layout ── */
-        .contact-wrap {
+        .privacy-wrap {
             max-width: 860px;
             margin: 0 auto;
             padding: 56px 40px 120px;
         }
 
-        /* ── Two-column layout ── */
-        .contact-grid {
-            display: grid;
-            grid-template-columns: 1fr 1.6fr;
-            gap: 48px;
-            align-items: start;
+        /* ── Policy card ── */
+        .policy-card {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 48px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3), var(--glow);
+            position: relative;
+            overflow: hidden;
         }
 
-        /* ── Info sidebar ── */
-        .contact-info h2 {
+        /* subtle corner accent */
+        .policy-card::before {
+            content: '';
+            position: absolute;
+            top: 0; right: 0;
+            width: 180px; height: 180px;
+            background: radial-gradient(circle at top right, var(--accent-soft), transparent 70%);
+            pointer-events: none;
+        }
+
+        .policy-card h2 {
             font-family: 'Syne', sans-serif;
-            font-size: 1.5rem;
-            font-weight: 700;
+            font-size: 1.6rem;
+            font-weight: 800;
             color: var(--accent);
-            margin: 0 0 16px;
+            margin: 0 0 8px;
         }
 
-        .contact-info p {
+        .policy-last-updated {
+            font-size: 0.78rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
             color: var(--muted);
-            font-size: 0.93rem;
-            line-height: 1.7;
-            margin: 0 0 28px;
+            margin: 0 0 36px;
         }
 
-        .info-item {
+        /* ── Section blocks ── */
+        .policy-section {
+            margin-bottom: 36px;
+            padding-bottom: 36px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .policy-section:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .policy-section-header {
             display: flex;
-            align-items: flex-start;
+            align-items: center;
             gap: 14px;
-            margin-bottom: 22px;
+            margin-bottom: 14px;
         }
 
-        .info-icon-box {
+        .policy-icon-box {
             flex-shrink: 0;
             width: 40px;
             height: 40px;
@@ -152,146 +179,40 @@
             box-shadow: var(--glow);
         }
 
-        .info-icon-box svg {
+        .policy-icon-box svg {
             width: 18px;
             height: 18px;
             stroke: var(--accent);
         }
 
-        .info-item-text strong {
-            display: block;
-            font-size: 0.82rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            color: var(--muted);
-            margin-bottom: 3px;
-        }
-
-        .info-item-text span {
-            color: var(--text);
-            font-size: 0.95rem;
-        }
-
-        /* ── Form card ── */
-        .contact-form-card {
-            background: var(--panel);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 36px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3), var(--glow);
-            position: relative;
-            overflow: hidden;
-        }
-
-        /* subtle corner accent */
-        .contact-form-card::before {
-            content: '';
-            position: absolute;
-            top: 0; right: 0;
-            width: 120px; height: 120px;
-            background: radial-gradient(circle at top right, var(--accent-soft), transparent 70%);
-            pointer-events: none;
-        }
-
-        .form-title {
+        .policy-section h3 {
             font-family: 'Syne', sans-serif;
-            font-size: 1.2rem;
+            font-size: 1.05rem;
             font-weight: 700;
             color: var(--text);
-            margin: 0 0 24px;
+            margin: 0;
         }
 
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-        }
-
-        .field {
-            margin-bottom: 18px;
-        }
-
-        .field label {
-            display: block;
-            font-size: 0.68rem;
-            font-weight: 600;
+        .policy-section p,
+        .policy-section li {
             color: var(--muted);
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            margin-bottom: 7px;
+            font-size: 0.93rem;
+            line-height: 1.75;
+            margin: 0 0 10px;
         }
 
-        .field input,
-        .field textarea,
-        .field select {
-            width: 100%;
-            padding: 12px 14px;
-            background: var(--bg);
-            border: 1px solid var(--border);
-            border-radius: 9px;
+        .policy-section ul {
+            padding-left: 20px;
+            margin: 10px 0 0;
+        }
+
+        .policy-section li {
+            margin-bottom: 6px;
+        }
+
+        .policy-section strong {
             color: var(--text);
-            font-size: 0.95rem;
-            box-sizing: border-box;
-            transition: border-color 0.2s, box-shadow 0.2s;
-            font-family: inherit;
-            resize: none;
-        }
-
-        .field input:focus,
-        .field textarea:focus,
-        .field select:focus {
-            outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px var(--accent-soft);
-        }
-
-        .field textarea {
-            height: 120px;
-        }
-
-        /* ── Submit button ── */
-        .submit-btn {
-            width: 100%;
-            height: 48px;
-            border: none;
-            border-radius: 10px;
-            background: var(--accent);
-            color: var(--bg);
-            font-family: 'Syne', sans-serif;
-            font-size: 0.95rem;
-            font-weight: 700;
-            letter-spacing: 0.06em;
-            cursor: pointer;
-            transition: opacity 0.2s, box-shadow 0.2s, transform 0.15s;
-            box-shadow: var(--glow);
-            margin-top: 6px;
-        }
-
-        .submit-btn:hover {
-            opacity: 0.88;
-            box-shadow: var(--glow-strong);
-            transform: translateY(-1px);
-        }
-
-        .submit-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        /* ── Success state ── */
-        .success-msg {
-            display: none;
-            text-align: center;
-            padding: 20px;
-            color: var(--good);
             font-weight: 600;
-            font-size: 1rem;
-            border: 1px solid var(--good);
-            border-radius: 10px;
-            background: rgba(34,197,94,0.08);
-            margin-top: 14px;
         }
 
         /* ── Light mode overrides ── */
@@ -310,7 +231,7 @@
         /* ── Desktop ad offset ── */
         @media (min-width: 700px) {
             .hero-parallax,
-            .contact-wrap {
+            .privacy-wrap {
                 margin-right: 160px;
             }
             .android-header-full {
@@ -322,10 +243,8 @@
         @media (max-width: 700px) {
             .hero-parallax { height: 360px; margin-top: 48px; }
             .hero-text { padding: 0 24px 36px; }
-            .contact-wrap { padding: 36px 20px 110px; }
-            .contact-grid { grid-template-columns: 1fr; gap: 32px; }
-            .form-row { grid-template-columns: 1fr; }
-            .contact-form-card { padding: 24px; }
+            .privacy-wrap { padding: 36px 20px 110px; }
+            .policy-card { padding: 24px; }
         }
     </style>
     <script>
@@ -399,106 +318,132 @@
         <div class="hero-bg" id="heroBg"></div>
         <div class="hero-text">
             <p class="hero-eyebrow">&#x26A1; EV Subs Compare &mdash; UK</p>
-            <h1 class="hero-title">Get in <span>Touch</span></h1>
-            <p class="hero-sub">Found a pricing error, a new subscription tier, or something else that needs attention? Get in touch!</p>
+            <h1 class="hero-title">Privacy <span>Policy</span></h1>
+            <p class="hero-sub">We built this tool with a privacy-first philosophy. Here's exactly what we do — and don't — store about you.</p>
         </div>
     </div>
     <div class="hero-strip"></div>
 
     <!-- ── Page content ── -->
-    <div class="contact-wrap">
-        <div class="contact-grid">
+    <div class="privacy-wrap">
+        <div class="policy-card">
 
-            <!-- Left: info sidebar -->
-            <aside class="contact-info">
-                <h2>How Can We Help?</h2>
-                <p>The primary focus of <strong>EV Subs Compare</strong> is an enthusiast service that aims to offer a cost comparison between public PAYG EV charging and a subscription basis for which discounted rates are available for a monthly fee. Pricing data is checked periodically, but please let us know if you spot an anomaly.</p>
+            <h2>Privacy Policy</h2>
+            <p class="policy-last-updated">Last updated: March 2026</p>
 
-                <div class="info-item">
-                    <div class="info-icon-box">
+            <!-- 1. Overview -->
+            <div class="policy-section">
+                <div class="policy-section-header">
+                    <div class="policy-icon-box">
                         <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="3"/>
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
                         </svg>
                     </div>
-                    <div class="info-item-text">
-                        <strong>Coverage</strong>
-                        <span>United Kingdom only</span>
-                    </div>
+                    <h3>Our Commitment</h3>
                 </div>
+                <p>EV Subs Compare is a free, independent tool built by EV enthusiasts in the UK. We are committed to handling your data with transparency and respect. This policy explains precisely what information is stored, how it is stored, and why.</p>
+                <p>The short version: <strong>we do not collect, transmit, or store any personally identifiable information on our servers.</strong> Everything that makes the calculator work is kept locally in your own browser.</p>
+            </div>
 
-                <div class="info-item">
-                    <div class="info-icon-box">
+            <!-- 2. Cookies -->
+            <div class="policy-section">
+                <div class="policy-section-header">
+                    <div class="policy-icon-box">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/>
+                        </svg>
+                    </div>
+                    <h3>What We Store in Cookies</h3>
+                </div>
+                <p>We use browser cookies <strong>solely to remember the values you enter into the calculator's input fields</strong> between visits. This means when you return to the tool, your vehicle efficiency, PAYG rate, and other preferences are already populated and ready to use — saving you from re-entering them each time.</p>
+                <p>The following calculator inputs may be saved:</p>
+                <ul>
+                    <li>Vehicle efficiency (miles per kWh)</li>
+                    <li>Your average PAYG charging rate (p/kWh)</li>
+                    <li>Trip distance and other calculation preferences</li>
+                    <li>Your light/dark mode display preference</li>
+                </ul>
+                <p>These cookies are stored locally on your device only. They are <strong>never transmitted to our servers</strong> or shared with any third party for targeting or tracking purposes.</p>
+            </div>
+
+            <!-- 3. What we do NOT store -->
+            <div class="policy-section">
+                <div class="policy-section-header">
+                    <div class="policy-icon-box">
                         <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
                         </svg>
                     </div>
-                    <div class="info-item-text">
-                        <strong>Privacy</strong>
-                        <span>We never store your data</span>
-                    </div>
+                    <h3>What We Do Not Store</h3>
                 </div>
+                <p>We do not collect, store, or process any of the following:</p>
+                <ul>
+                    <li>Your name, email address, or any contact details</li>
+                    <li>Your location or IP address</li>
+                    <li>Your vehicle registration, make, or model</li>
+                    <li>Any payment or financial information</li>
+                    <li>Any data that could be used to identify you personally</li>
+                </ul>
+            </div>
 
-                <div class="info-item">
-                    <div class="info-icon-box">
+            <!-- 4. Analytics -->
+            <div class="policy-section">
+                <div class="policy-section-header">
+                    <div class="policy-icon-box">
                         <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
                         </svg>
                     </div>
-                    <div class="info-item-text">
-                        <strong>Response Time</strong>
-                        <span>Typically within 48 hours</span>
-                    </div>
+                    <h3>Analytics</h3>
                 </div>
+                <p>This site uses <strong>Google Analytics</strong> to collect anonymous, aggregated usage statistics — for example, how many visitors the site receives and which pages are most popular. This data contains no personally identifiable information and is used solely to understand how the tool is being used so we can improve it.</p>
+                <p>Google Analytics may set its own cookies in accordance with <a href="https://policies.google.com/privacy" target="_blank" rel="noopener" style="color: var(--accent);">Google's Privacy Policy</a>. You can opt out of Google Analytics tracking using the <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener" style="color: var(--accent);">Google Analytics Opt-out Browser Add-on</a>.</p>
+            </div>
 
-                <p style="margin-top:8px; font-size:0.85rem;">Common reasons to contact us include reporting outdated subscription rates, suggesting a new charging network, or flagging a bug in the calculator.</p>
-            </aside>
-
-            <!-- Right: form -->
-            <div class="contact-form-card">
-                <p class="form-title">Send a Message</p>
-                <form id="contactForm" action="https://api.web3forms.com/submit" method="POST">
-                    <input type="hidden" name="access_key" value="84becc32-33ce-4060-85b6-28bd955b9836">
-                    <input type="hidden" name="redirect" value=""><!-- prevent default redirect -->
-
-                    <div class="form-row">
-                        <div class="field">
-                            <label for="name">Your Name</label>
-                            <input type="text" id="name" name="name" placeholder="Jane Smith" required>
-                        </div>
-                        <div class="field">
-                            <label for="email">Email Address</label>
-                            <input type="email" id="email" name="email" placeholder="jane@example.com" required>
-                        </div>
+            <!-- 5. Advertising -->
+            <div class="policy-section">
+                <div class="policy-section-header">
+                    <div class="policy-icon-box">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+                        </svg>
                     </div>
-
-                    <div class="field">
-                        <label for="subject">Subject</label>
-                        <select id="subject" name="subject">
-                            <option value="pricing">Pricing update / correction</option>
-                            <option value="new-network">New charging network</option>
-                            <option value="bug">Bug report</option>
-                            <option value="feedback">General feedback</option>
-                            <option value="other">Other</option>
-                        </select>
-                    </div>
-
-                    <div class="field">
-                        <label for="message">Message</label>
-                        <textarea id="message" name="message" placeholder="Tell us what's on your mind…" required></textarea>
-                    </div>
-
-                    <button type="submit" class="submit-btn" id="submitBtn">Send Message</button>
-                </form>
-
-                <div class="success-msg" id="successMsg">
-                    ✓ &nbsp;Message sent — thank you! We'll be in touch soon.
+                    <h3>Advertising</h3>
                 </div>
+                <p>This site displays adverts served by <strong>Google AdSense</strong>. Google may use cookies to serve ads based on your prior visits to this and other websites. You can opt out of personalised advertising by visiting <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener" style="color: var(--accent);">Google's Ad Settings</a>.</p>
+            </div>
+
+            <!-- 6. Managing cookies -->
+            <div class="policy-section">
+                <div class="policy-section-header">
+                    <div class="policy-icon-box">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/>
+                        </svg>
+                    </div>
+                    <h3>Managing &amp; Clearing Cookies</h3>
+                </div>
+                <p>You can clear all cookies set by this site at any time using the <strong>Reset All</strong> option in the settings menu on the calculator page, or by clearing your browser's cookies and site data through your browser settings.</p>
+                <p>Clearing the calculator cookies will simply mean your input values are no longer pre-loaded on your next visit — there are no other consequences.</p>
+            </div>
+
+            <!-- 7. Contact -->
+            <div class="policy-section">
+                <div class="policy-section-header">
+                    <div class="policy-icon-box">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="4"/><path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-4 8"/>
+                        </svg>
+                    </div>
+                    <h3>Questions or Concerns</h3>
+                </div>
+                <p>If you have any questions about this privacy policy or how your data is handled, please <a href="contact.html" style="color: var(--accent); font-weight: 600;">get in touch</a> and we'll be happy to help.</p>
             </div>
 
         </div>
     </div>
 
-    <!-- Ad slots (unchanged) -->
+    <!-- Ad slots -->
     <div class="desktop-sidebar-ad">
         <div class="ad-tab-vertical">Ads Area</div>
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2944414800646015" crossorigin="anonymous"></script>
@@ -521,54 +466,6 @@
         }
         window.addEventListener('scroll', applyParallax, { passive: true });
         applyParallax();
-
-        /* ── Neon-green pulse on empty required fields ── */
-        function updateFieldPulse() {
-            document.querySelectorAll('#contactForm input[required], #contactForm textarea[required]').forEach(el => {
-                if (!el.value.trim()) {
-                    el.classList.add('empty-pulse');
-                } else {
-                    el.classList.remove('empty-pulse');
-                }
-            });
-        }
-        // Apply on page load
-        updateFieldPulse();
-        // Update whenever the user types / changes a field
-        document.getElementById('contactForm').addEventListener('input', updateFieldPulse);
-
-        /* ── Form submission (AJAX, no page redirect) ── */
-        const form = document.getElementById('contactForm');
-        const submitBtn = document.getElementById('submitBtn');
-        const successMsg = document.getElementById('successMsg');
-
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const formData = new FormData(form);
-            formData.set('redirect', '');
-            const originalText = submitBtn.textContent;
-            submitBtn.textContent = 'Sending…';
-            submitBtn.disabled = true;
-            try {
-                const response = await fetch('https://api.web3forms.com/submit', {
-                    method: 'POST',
-                    body: formData
-                });
-                const data = await response.json();
-                if (response.ok) {
-                    form.style.display = 'none';
-                    successMsg.style.display = 'block';
-                } else {
-                    alert('Error: ' + data.message);
-                    submitBtn.textContent = originalText;
-                    submitBtn.disabled = false;
-                }
-            } catch {
-                alert('Something went wrong. Please try again.');
-                submitBtn.textContent = originalText;
-                submitBtn.disabled = false;
-            }
-        });
 
         /* ── Theme & menu helpers ── */
         const setCookie = (name, value) => {
