@@ -279,6 +279,37 @@
             flex-shrink: 0;
         }
 
+        /* ── App icon images ── */
+        .guide-section-body {
+            display: flex;
+            gap: 24px;
+            align-items: flex-start;
+        }
+
+        .guide-section-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .app-icon-wrap {
+            flex-shrink: 0;
+            width: 80px;
+        }
+
+        .app-icon-wrap img {
+            width: 80px;
+            height: 80px;
+            border-radius: 18px;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.04);
+            display: block;
+        }
+
+        @media (max-width: 480px) {
+            .app-icon-wrap { width: 60px; }
+            .app-icon-wrap img { width: 60px; height: 60px; border-radius: 14px; }
+        }
+
         /* ── Light mode overrides ── */
         .light-mode .hero-bg::after {
             background: linear-gradient(
@@ -415,93 +446,121 @@
 
             <!-- 1. Zapmap -->
             <div class="guide-section">
-                <div class="guide-section-header">
-                    <div class="guide-icon-box">
-                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-                        </svg>
+                <div class="guide-section-body">
+                    <div class="app-icon-wrap">
+                        <img src="images/zapmap.webp" alt="Zapmap app icon">
                     </div>
-                    <h3>Zapmap &mdash; The UK's Search Engine</h3>
-                </div>
-                <p>Zapmap is the industry standard for the UK. While they offer a paid "Premium" tier for in-car screens, the <strong>free version provides the most accurate live status of the UK's 115,000+ chargers</strong>.</p>
-                <div class="app-links">
-                    <a class="app-link-btn" href="https://apps.apple.com/gb/app/zapmap-ev-charging-in-the-uk/id964082746" target="_blank" rel="noopener">
-                        <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 1 10 10 10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2m0 2a8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8 8 8 0 0 0-8-8"/></svg>
-                        App Store
-                    </a>
-                    <a class="app-link-btn" href="https://play.google.com/store/apps/details?id=com.zapmap.zapmap" target="_blank" rel="noopener">
-                        <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-                        Google Play
-                    </a>
+                    <div class="guide-section-content">
+                        <div class="guide-section-header">
+                            <div class="guide-icon-box">
+                                <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                                </svg>
+                            </div>
+                            <h3>Zapmap &mdash; The UK's Search Engine</h3>
+                        </div>
+                        <p>Zapmap is the industry standard for the UK. While they offer a paid "Premium" tier for in-car screens, the <strong>free version provides the most accurate live status of the UK's 115,000+ chargers</strong>.</p>
+                        <div class="app-links">
+                            <a class="app-link-btn" href="https://apps.apple.com/gb/app/zapmap-ev-charging-in-the-uk/id964082746" target="_blank" rel="noopener">
+                                <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 1 10 10 10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2m0 2a8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8 8 8 0 0 0-8-8"/></svg>
+                                App Store
+                            </a>
+                            <a class="app-link-btn" href="https://play.google.com/store/apps/details?id=com.zapmap.zapmap" target="_blank" rel="noopener">
+                                <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                                Google Play
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <!-- 2. Octopus Electroverse -->
             <div class="guide-section">
-                <div class="guide-section-header">
-                    <div class="guide-icon-box">
-                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/>
-                        </svg>
+                <div class="guide-section-body">
+                    <div class="app-icon-wrap">
+                        <img src="images/electroverse.webp" alt="Octopus Electroverse app icon">
                     </div>
-                    <h3>Octopus Electroverse &mdash; The All-Access Pass</h3>
-                </div>
-                <p>You don't need to be an Octopus Energy customer to use this. It <strong>aggregates hundreds of networks</strong> — including IONITY, Osprey, and MFG — into one map and one payment method.</p>
-                <div class="app-links">
-                    <a class="app-link-btn" href="https://apps.apple.com/gb/app/octopus-electroverse/id1535444463" target="_blank" rel="noopener">
-                        <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 1 10 10 10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2m0 2a8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8 8 8 0 0 0-8-8"/></svg>
-                        App Store
-                    </a>
-                    <a class="app-link-btn" href="https://play.google.com/store/apps/details?id=energy.octopus.electricjuice.android" target="_blank" rel="noopener">
-                        <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-                        Google Play
-                    </a>
+                    <div class="guide-section-content">
+                        <div class="guide-section-header">
+                            <div class="guide-icon-box">
+                                <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/>
+                                </svg>
+                            </div>
+                            <h3>Octopus Electroverse &mdash; The All-Access Pass</h3>
+                        </div>
+                        <p>You don't need to be an Octopus Energy customer to use this. It <strong>aggregates hundreds of networks</strong> — including IONITY, Osprey, and MFG — into one map and one payment method.</p>
+                        <div class="app-links">
+                            <a class="app-link-btn" href="https://apps.apple.com/gb/app/octopus-electroverse/id1535444463" target="_blank" rel="noopener">
+                                <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 1 10 10 10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2m0 2a8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8 8 8 0 0 0-8-8"/></svg>
+                                App Store
+                            </a>
+                            <a class="app-link-btn" href="https://play.google.com/store/apps/details?id=energy.octopus.electricjuice.android" target="_blank" rel="noopener">
+                                <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                                Google Play
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <!-- 3. ABRP -->
             <div class="guide-section">
-                <div class="guide-section-header">
-                    <div class="guide-icon-box">
-                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
-                        </svg>
+                <div class="guide-section-body">
+                    <div class="app-icon-wrap">
+                        <img src="images/abrp.webp" alt="ABRP app icon">
                     </div>
-                    <h3>ABRP &mdash; The Brains</h3>
-                </div>
-                <p>A Better Routeplanner is the world's most powerful EV trip planner. Unlike Google Maps, it <strong>calculates your battery percentage based on your specific car model</strong>, the weight you're carrying, and even UK wind speeds.</p>
-                <div class="app-links">
-                    <a class="app-link-btn" href="https://apps.apple.com/gb/app/a-better-routeplanner-abrp/id1490860521" target="_blank" rel="noopener">
-                        <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 1 10 10 10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2m0 2a8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8 8 8 0 0 0-8-8"/></svg>
-                        App Store
-                    </a>
-                    <a class="app-link-btn" href="https://play.google.com/store/apps/details?id=com.iternio.abrpapp" target="_blank" rel="noopener">
-                        <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-                        Google Play
-                    </a>
+                    <div class="guide-section-content">
+                        <div class="guide-section-header">
+                            <div class="guide-icon-box">
+                                <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                                </svg>
+                            </div>
+                            <h3>ABRP &mdash; The Brains</h3>
+                        </div>
+                        <p>A Better Routeplanner is the world's most powerful EV trip planner. Unlike Google Maps, it <strong>calculates your battery percentage based on your specific car model</strong>, the weight you're carrying, and even UK wind speeds.</p>
+                        <div class="app-links">
+                            <a class="app-link-btn" href="https://apps.apple.com/gb/app/a-better-routeplanner-abrp/id1490860521" target="_blank" rel="noopener">
+                                <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 1 10 10 10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2m0 2a8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8 8 8 0 0 0-8-8"/></svg>
+                                App Store
+                            </a>
+                            <a class="app-link-btn" href="https://play.google.com/store/apps/details?id=com.iternio.abrpapp" target="_blank" rel="noopener">
+                                <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                                Google Play
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <!-- 4. Tesla App -->
             <div class="guide-section">
-                <div class="guide-section-header">
-                    <div class="guide-icon-box">
-                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
-                        </svg>
+                <div class="guide-section-body">
+                    <div class="app-icon-wrap">
+                        <img src="images/tesla.webp" alt="Tesla app icon">
                     </div>
-                    <h3>Tesla App &mdash; For Non-Teslas</h3>
-                </div>
-                <p>In 2026, a large portion of the Tesla Supercharger network in the UK is <strong>open to all brands</strong> with a CCS charging port. They are often the most reliable and fastest chargers in the country.</p>
-                <div class="app-links">
-                    <a class="app-link-btn" href="https://apps.apple.com/gb/app/tesla/id582007913" target="_blank" rel="noopener">
-                        <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 1 10 10 10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2m0 2a8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8 8 8 0 0 0-8-8"/></svg>
-                        App Store
-                    </a>
-                    <a class="app-link-btn" href="https://play.google.com/store/apps/details?id=com.teslamotors.tesla" target="_blank" rel="noopener">
-                        <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-                        Google Play
-                    </a>
+                    <div class="guide-section-content">
+                        <div class="guide-section-header">
+                            <div class="guide-icon-box">
+                                <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                                </svg>
+                            </div>
+                            <h3>Tesla App &mdash; For Non-Teslas</h3>
+                        </div>
+                        <p>In 2026, a large portion of the Tesla Supercharger network in the UK is <strong>open to all brands</strong> with a CCS charging port. They are often the most reliable and fastest chargers in the country.</p>
+                        <div class="app-links">
+                            <a class="app-link-btn" href="https://apps.apple.com/gb/app/tesla/id582007913" target="_blank" rel="noopener">
+                                <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 1 10 10 10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2m0 2a8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8 8 8 0 0 0-8-8"/></svg>
+                                App Store
+                            </a>
+                            <a class="app-link-btn" href="https://play.google.com/store/apps/details?id=com.teslamotors.tesla" target="_blank" rel="noopener">
+                                <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                                Google Play
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
 
