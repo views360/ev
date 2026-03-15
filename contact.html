@@ -528,7 +528,9 @@
         /* ── Show success message if redirected back with ?success=1 ── */
         if (new URLSearchParams(window.location.search).get('success') === '1') {
             document.getElementById('contactForm').style.display = 'none';
-            document.getElementById('successMsg').style.display = 'block';
+            const msg = document.getElementById('successMsg');
+            msg.style.display = 'block';
+            msg.scrollIntoView({ behavior: 'smooth', block: 'center' });
         } else {
             // Only apply pulse and input listener when form is visible
             updateFieldPulse();
