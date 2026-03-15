@@ -1139,34 +1139,6 @@ document.addEventListener('click', (e) => {
     }
 });
 
-function openPrivacy() {
-    const privacy = document.getElementById('privacyOverlay');
-    privacy.style.display = 'flex';
-    setTimeout(() => {
-        privacy.style.opacity = '1';
-    }, 10);
-}
-
-function closePrivacy() {
-    const privacy = document.getElementById('privacyOverlay');
-    privacy.style.opacity = '0';
-    setTimeout(() => {
-        privacy.style.display = 'none';
-    }, 400); 
-}
-
-function openAbout() {
-    const about = document.getElementById('aboutOverlay');
-    about.style.display = 'flex';
-    setTimeout(() => { about.style.opacity = '1'; }, 10);
-}
-
-function closeAbout() {
-    const about = document.getElementById('aboutOverlay');
-    about.style.opacity = '0';
-    setTimeout(() => { about.style.display = 'none'; }, 400); 
-}
-
 
 let beReminderShown = false;
 

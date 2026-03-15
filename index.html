@@ -106,20 +106,6 @@
         </div>
     </div>
 </div>
-<div id="privacyOverlay" class="help-overlay" style="display: none;">
-    <div class="help-modal" onclick="event.stopPropagation()">
-        <button class="close-x" onclick="closePrivacy()">×</button>
-        <div class="standalone-slide"> 
-            <h2>Privacy Policy</h2>
-            <p>Your privacy is important. No personally identifiable information (PII) is collected or stored by this tool.</p>
-            <p>It uses <strong>cookies</strong> solely to save the values you enter into the input fields. This is done for your convenience so your data is available for subsequent visits.</p>
-            <div class="help-footer">
-                <button class="btn secondary" onclick="closePrivacy()">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 <div id="beReminderOverlay" class="help-overlay" style="display: none;" onclick="closeBeReminder()">
     <div class="help-modal">
         <button class="close-x" onclick="closeBeReminder()">×</button>
@@ -156,7 +142,7 @@
 	            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z'/%3E%3C/svg%3E" class="menu-icon-svg">
 	            <span>Light/Dark Mode</span>
 	        </a>
-			<a class="menu-item-clean" onclick="openPrivacy(); toggleMenu();">
+			<a class="menu-item-clean" href="privacy.html">
 			    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z'/%3E%3C/svg%3E" class="menu-icon-svg">
 			    <span>Privacy</span>
 			</a>
@@ -369,7 +355,7 @@
     <div class="cookie-content">
         <p>
             We use cookies to save your vehicle settings and preferences for your next visit. ⚡ 
-            <a href="javascript:void(0)" onclick="openPrivacy()" style="color: var(--accent); text-decoration: underline; margin-left: 5px;">Privacy Policy</a>
+            <a href="privacy.html" style="color: var(--accent); text-decoration: underline; margin-left: 5px;">Privacy Policy</a>
         </p>
         <div class="cookie-actions">
             <button class="btn primary" onclick="acceptCookies()">Accept</button>
