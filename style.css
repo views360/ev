@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&display=swap');
+
 #floatingTooltip {
     visibility: hidden;
     position: fixed;
@@ -55,6 +57,9 @@ html {
 
 h3 {
     margin: 0px 0px 10px 0px;
+    font-family: 'Syne', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 700;
 }
 
 .info-icon {
@@ -211,6 +216,13 @@ h1 {
     margin: 0 0 10px 0;
     color: var(--accent);
     text-shadow: var(--glow);
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+}
+
+h2 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
 }
 
 .subtitle {
