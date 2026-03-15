@@ -27,9 +27,6 @@
             height: 480px;
             overflow: hidden;
             margin-top: 48px; /* clear the fixed header */
-            border: 1px solid var(--neon-green);
-            box-shadow: 0 0 5px var(--neon-green-soft);
-            animation: neonPulse 1.5s infinite ease-in-out;
         }
 
         .hero-bg {
@@ -509,6 +506,21 @@
         }
         window.addEventListener('scroll', applyParallax, { passive: true });
         applyParallax();
+
+        /* ── Neon-green pulse on empty required fields ── */
+        function updateFieldPulse() {
+            document.querySelectorAll('#contactForm input[required], #contactForm textarea[required]').forEach(el => {
+                if (!el.value.trim()) {
+                    el.classList.add('empty-pulse');
+                } else {
+                    el.classList.remove('empty-pulse');
+                }
+            });
+        }
+        // Apply on page load
+        updateFieldPulse();
+        // Update whenever the user types / changes a field
+        document.getElementById('contactForm').addEventListener('input', updateFieldPulse);
 
         /* ── Form submission (AJAX, no page redirect) ── */
         const form = document.getElementById('contactForm');
