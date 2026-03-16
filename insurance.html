@@ -359,6 +359,11 @@
             gap: 2px !important; /* Adds a tiny bit of breathing room without the bulk */
         }
 
+        .menu-separator-muted {
+            margin: 6px 16px;
+            border-top: 1px solid rgba(0, 191, 255, 0.3); /* Muted blue */
+        }
+
     </style>
     <script>
         (function() {
@@ -424,8 +429,13 @@
             </a>
 
             <!-- ── Section divider: EV Guides ── -->
-            <div style="margin: 10px 16px 4px; border-top: 1px solid #00bfff; padding-top: 10px;">
-                <span style="font-size: 0.62rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); padding-left: 4px;">EV Guides</span>
+            <div style="margin: 10px 16px 4px; border-top: 1px solid #00bfff; padding-top: 10px;"></div>
+            
+            <div class="menu-section-toggle" id="guidesToggle" onclick="toggleMenuSection('guidesToggle', 'guidesItems')">
+                <span>EV Guides</span>
+                <svg class="menu-chevron" viewBox="0 0 24 24" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:12px; height:12px; fill:none; stroke:var(--muted);">
+                    <polyline points="6 9 12 15 18 9"/>
+                </svg>
             </div>
 
             <!-- ── Section 2: EV Guides ── -->
@@ -451,7 +461,7 @@
             </a>
 
             <!-- ── Section divider: Day 2 Issues ── -->
-            <div style="margin: 10px 16px 4px; border-top: 1px solid #00bfff; padding-top: 10px;"></div>
+            <div class="menu-separator-muted"></div>
             
             <div class="menu-section-toggle" id="day2Toggle" onclick="toggleMenuSection('day2Toggle', 'day2Items')">
                 <span>Day 2 Issues</span>
@@ -466,7 +476,7 @@
                 </a>
             </div>
             
-            <div class="menu-section-toggle" style="border-top: 1px solid #00bfff; cursor: default; padding-top: 10px;"></div>
+            <div style="margin: 10px 16px 4px; border-top: 1px solid #00bfff; padding-top: 10px;"></div>
             <div class="menu-footer">
                 Subscription Data<br />Last Updated<br /><strong>09 March 26</strong>
             </div>
