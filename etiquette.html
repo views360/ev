@@ -241,7 +241,51 @@
             .guide-wrap { padding: 36px 20px 110px; }
             .guide-card { padding: 24px; }
         }
-    </style>
+    
+        /* ── Table of contents ── */
+        .toc {
+            margin: 0 0 36px;
+            padding: 20px 24px;
+            background: rgba(0, 191, 165, 0.05);
+            border: 1px solid rgba(0, 191, 165, 0.25);
+            border-radius: 12px;
+        }
+
+        .toc-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin: 0 0 12px;
+        }
+
+        .toc ol {
+            margin: 0;
+            padding: 0 0 0 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .toc li {
+            font-size: 0.88rem;
+            color: var(--muted);
+            line-height: 1.4;
+        }
+
+        .toc a {
+            color: var(--muted);
+            text-decoration: none;
+            transition: color 0.15s;
+        }
+
+        .toc a:hover {
+            color: var(--accent);
+        }
+
+        </style>
     <script>
         (function() {
             const getCookie = (name) => {
@@ -349,9 +393,19 @@
 
             <h2>The Unspoken Rules</h2>
             <p class="guide-subtitle">As the UK reaches millions of EVs on the road, charge point etiquette has become the key to a stress-free journey for everyone.</p>
+            <nav class="toc">
+                <p class="toc-title">Contents</p>
+                <ol>
+                    <li><a href="#sec-80">The 80% Handshake</a></li>
+                    <li><a href="#sec-ice">Don't Be an "ICE-er"</a></li>
+                    <li><a href="#sec-charger">The "Right Charger" Rule</a></li>
+                    <li><a href="#sec-grace">The 10-Minute Grace Period</a></li>
+                    <li><a href="#sec-stop">Make Every Stop Count</a></li>
+                </ol>
+            </nav>
 
             <!-- 1. The 80% Handshake -->
-            <div class="guide-section">
+            <div class="guide-section" id="sec-80">
                 <div class="guide-section-header">
                     <div class="guide-icon-box">
                         <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -365,7 +419,7 @@
             </div>
 
             <!-- 2. Don't be an ICE-er -->
-            <div class="guide-section">
+            <div class="guide-section" id="sec-ice">
                 <div class="guide-section-header">
                     <div class="guide-icon-box">
                         <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -379,7 +433,7 @@
             </div>
 
             <!-- 3. The Right Charger Rule -->
-            <div class="guide-section">
+            <div class="guide-section" id="sec-charger">
                 <div class="guide-section-header">
                     <div class="guide-icon-box">
                         <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -393,7 +447,7 @@
             </div>
 
             <!-- 4. The 10-Minute Grace Period -->
-            <div class="guide-section">
+            <div class="guide-section" id="sec-grace">
                 <div class="guide-section-header">
                     <div class="guide-icon-box">
                         <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -407,7 +461,7 @@
             </div>
 
             <!-- 5. Back to calculator -->
-            <div class="guide-section">
+            <div class="guide-section" id="sec-stop">
                 <div class="guide-section-header">
                     <div class="guide-icon-box">
                         <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

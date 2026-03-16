@@ -234,7 +234,51 @@
             .guide-wrap { padding: 36px 20px 110px; }
             .guide-card { padding: 24px; }
         }
-    </style>
+    
+        /* ── Table of contents ── */
+        .toc {
+            margin: 0 0 36px;
+            padding: 20px 24px;
+            background: rgba(0, 191, 165, 0.05);
+            border: 1px solid rgba(0, 191, 165, 0.25);
+            border-radius: 12px;
+        }
+
+        .toc-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin: 0 0 12px;
+        }
+
+        .toc ol {
+            margin: 0;
+            padding: 0 0 0 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .toc li {
+            font-size: 0.88rem;
+            color: var(--muted);
+            line-height: 1.4;
+        }
+
+        .toc a {
+            color: var(--muted);
+            text-decoration: none;
+            transition: color 0.15s;
+        }
+
+        .toc a:hover {
+            color: var(--accent);
+        }
+
+        </style>
     <script>
         (function() {
             const getCookie = (name) => {
@@ -341,9 +385,22 @@
 
             <h2>EV Jargon Buster</h2>
             <p class="guide-subtitle">A quick-reference glossary of the terms, abbreviations, and acronyms every UK EV driver should know.</p>
+            <nav class="toc">
+                <p class="toc-title">Contents</p>
+                <ol>
+                    <li><a href="#sec-ev">EV (BEV)</a></li>
+                    <li><a href="#sec-kw">kW vs. kWh</a></li>
+                    <li><a href="#sec-ccs">CCS</a></li>
+                    <li><a href="#sec-type2">Type 2</a></li>
+                    <li><a href="#sec-regen">Regen</a></li>
+                    <li><a href="#sec-gom">GOM</a></li>
+                    <li><a href="#sec-icing">ICE-ing</a></li>
+                    <li><a href="#sec-v2l">V2L</a></li>
+                </ol>
+            </nav>
 
             <!-- BEV -->
-            <div class="guide-section">
+            <div class="guide-section" id="sec-ev">
                 <div class="guide-section-header">
                     <div class="guide-icon-box">
                         <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -356,7 +413,7 @@
             </div>
 
             <!-- kW vs kWh -->
-            <div class="guide-section">
+            <div class="guide-section" id="sec-kw">
                 <div class="guide-section-header">
                     <div class="guide-icon-box">
                         <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -369,7 +426,7 @@
             </div>
 
             <!-- CCS -->
-            <div class="guide-section">
+            <div class="guide-section" id="sec-ccs">
                 <div class="guide-section-header">
                     <div class="guide-icon-box">
                         <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -382,7 +439,7 @@
             </div>
 
             <!-- Type 2 -->
-            <div class="guide-section">
+            <div class="guide-section" id="sec-type2">
                 <div class="guide-section-header">
                     <div class="guide-icon-box">
                         <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -395,7 +452,7 @@
             </div>
 
             <!-- Regen -->
-            <div class="guide-section">
+            <div class="guide-section" id="sec-regen">
                 <div class="guide-section-header">
                     <div class="guide-icon-box">
                         <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -408,7 +465,7 @@
             </div>
 
             <!-- GOM -->
-            <div class="guide-section">
+            <div class="guide-section" id="sec-gom">
                 <div class="guide-section-header">
                     <div class="guide-icon-box">
                         <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -421,7 +478,7 @@
             </div>
 
             <!-- ICE-ing -->
-            <div class="guide-section">
+            <div class="guide-section" id="sec-icing">
                 <div class="guide-section-header">
                     <div class="guide-icon-box">
                         <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -434,7 +491,7 @@
             </div>
 
             <!-- V2L -->
-            <div class="guide-section">
+            <div class="guide-section" id="sec-v2l">
                 <div class="guide-section-header">
                     <div class="guide-icon-box">
                         <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
