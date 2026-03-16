@@ -301,25 +301,27 @@
             color: var(--accent);
         }
 
-        /* ── Tighter menu item spacing (~15% reduction) ── */
+        /* Further reduced vertical spacing */
         .menu-item-clean {
-            padding: 10px 16px;
+            padding: 6px 16px; /* Reduced from 10px to 6px */
+            display: flex;
+            align-items: center;
         }
-
+        
         /* ── Collapsible menu section ── */
         .menu-section-toggle {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin: 10px 16px 4px;
-            border-top: 1px solid #00bfff;
-            padding-top: 10px;
+            margin: 4px 16px 2px;
+            padding-top: 0px !important;
             cursor: pointer;
             user-select: none;
+            color: var(--muted);
         }
 
         .menu-section-toggle span {
-            font-size: 0.62rem;
+            font-size: 0.8rem;
             font-weight: 700;
             letter-spacing: 0.12em;
             text-transform: uppercase;
@@ -345,10 +347,30 @@
             overflow: hidden;
             max-height: 0;
             transition: max-height 0.25s ease;
+            border-bottom: solid 1px var(--muted) !important;
         }
 
         .menu-section-items.open {
             max-height: 400px;
+        }
+
+        .menu-content {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 2px !important; /* Adds a tiny bit of breathing room without the bulk */
+        }
+
+        #lightdarkmode {
+            padding-bottom: 10px !important;
+            border-bottom: 1px solid var(--muted) !important;
+        }
+
+        #guidesToggle, #day2Toggle {
+            padding-top: 5px !important;
+        }
+
+        #day2Items, #guidesItems {
+            padding-bottom: 7px !important;
         }
 
     </style>
@@ -410,42 +432,44 @@
                 <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z'/%3E%3C/svg%3E" class="menu-icon-svg">
                 <span>Privacy</span>
             </a>
-            <a class="menu-item-clean" onclick="toggleTheme(); toggleMenu();">
+            <a class="menu-item-clean" id="lightdarkmode" onclick="toggleTheme(); toggleMenu();">
                 <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z'/%3E%3C/svg%3E" class="menu-icon-svg">
                 <span>Light/Dark Mode</span>
             </a>
 
             <!-- ── Section divider: EV Guides ── -->
-            <div style="margin: 10px 16px 4px; border-top: 1px solid #00bfff; padding-top: 10px;">
-                <span style="font-size: 0.62rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); padding-left: 4px;">EV Guides</span>
+            <div class="menu-section-toggle" id="guidesToggle" onclick="toggleMenuSection('guidesToggle', 'guidesItems')">
+                <span>EV Guides</span>
+                <svg class="menu-chevron" viewBox="0 0 24 24" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="6 9 12 15 18 9"/>
+                </svg>
             </div>
 
             <!-- ── Section 2: EV Guides ── -->
-            <a class="menu-item-clean" href="apps.html">
-                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='5' y='2' width='14' height='20' rx='2'/%3E%3Cline x1='12' y1='18' x2='12.01' y2='18'/%3E%3C/svg%3E" class="menu-icon-svg">
-                <span>App Toolkit</span>
-            </a>
-            <a class="menu-item-clean" href="etiquette.html">
-                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2'/%3E%3Ccircle cx='9' cy='7' r='4'/%3E%3Cpath d='M23 21v-2a4 4 0 0 0-3-3.87'/%3E%3Cpath d='M16 3.13a4 4 0 0 1 0 7.75'/%3E%3C/svg%3E" class="menu-icon-svg">
-                <span>Etiquette</span>
-            </a>
-            <a class="menu-item-clean" href="jargon.html">
-                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z'/%3E%3C/svg%3E" class="menu-icon-svg">
-                <span>Jargon Buster</span>
-            </a>
-            <a class="menu-item-clean" href="mastery.html">
-                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='8' r='6'/%3E%3Cpath d='M8.21 13.89L7 23l5-3 5 3-1.21-9.12'/%3E%3C/svg%3E" class="menu-icon-svg">
-                <span>Mastery</span>
-            </a>
-            <a class="menu-item-clean" href="winter.html">
-                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='12' y1='2' x2='12' y2='22'/%3E%3Cline x1='2' y1='12' x2='22' y2='12'/%3E%3Cline x1='4.93' y1='4.93' x2='19.07' y2='19.07'/%3E%3Cline x1='19.07' y1='4.93' x2='4.93' y2='19.07'/%3E%3Cpath d='M12 6l-2-2 2-2'/%3E%3Cpath d='M12 6l2-2-2-2'/%3E%3Cpath d='M12 18l-2 2 2 2'/%3E%3Cpath d='M12 18l2 2-2 2'/%3E%3Cpath d='M6 12l-2-2-2 2'/%3E%3Cpath d='M6 12l-2 2-2-2'/%3E%3Cpath d='M18 12l2-2 2 2'/%3E%3Cpath d='M18 12l2 2 2-2'/%3E%3C/svg%3E" class="menu-icon-svg">
-                <span>Winter Range</span>
-            </a>
-            <div class="menu-footer">
-                Subscription Data<br />Last Updated<br /><strong>09 March 26</strong>
+            <div class="menu-section-items" id="guidesItems">
+                <a class="menu-item-clean" href="apps.html">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='5' y='2' width='14' height='20' rx='2'/%3E%3Cline x1='12' y1='18' x2='12.01' y2='18'/%3E%3C/svg%3E" class="menu-icon-svg">
+                    <span>App Toolkit</span>
+                </a>
+                <a class="menu-item-clean" href="etiquette.html">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2'/%3E%3Ccircle cx='9' cy='7' r='4'/%3E%3Cpath d='M23 21v-2a4 4 0 0 0-3-3.87'/%3E%3Cpath d='M16 3.13a4 4 0 0 1 0 7.75'/%3E%3C/svg%3E" class="menu-icon-svg">
+                    <span>Etiquette</span>
+                </a>
+                <a class="menu-item-clean" href="jargon.html">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z'/%3E%3C/svg%3E" class="menu-icon-svg">
+                    <span>Jargon Buster</span>
+                </a>
+                <a class="menu-item-clean" href="mastery.html">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='8' r='6'/%3E%3Cpath d='M8.21 13.89L7 23l5-3 5 3-1.21-9.12'/%3E%3C/svg%3E" class="menu-icon-svg">
+                    <span>Mastery</span>
+                </a>
+                <a class="menu-item-clean" href="winter.html">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='12' y1='2' x2='12' y2='22'/%3E%3Cline x1='2' y1='12' x2='22' y2='12'/%3E%3Cline x1='4.93' y1='4.93' x2='19.07' y2='19.07'/%3E%3Cline x1='19.07' y1='4.93' x2='4.93' y2='19.07'/%3E%3Cpath d='M12 6l-2-2 2-2'/%3E%3Cpath d='M12 6l2-2-2-2'/%3E%3Cpath d='M12 18l-2 2 2 2'/%3E%3Cpath d='M12 18l2 2-2 2'/%3E%3Cpath d='M6 12l-2-2-2 2'/%3E%3Cpath d='M6 12l-2 2-2-2'/%3E%3Cpath d='M18 12l2-2 2 2'/%3E%3Cpath d='M18 12l2 2 2-2'/%3E%3C/svg%3E" class="menu-icon-svg">
+                    <span>Winter Range</span>
+                </a>
             </div>
 
-            <!-- ── Section divider: Day 2 Issues ── -->
+            <!-- ── Section divider: Day 2 Issues ── -->            
             <div class="menu-section-toggle" id="day2Toggle" onclick="toggleMenuSection('day2Toggle', 'day2Items')">
                 <span>Day 2 Issues</span>
                 <svg class="menu-chevron" viewBox="0 0 24 24" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -457,7 +481,17 @@
                     <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z'/%3E%3Cpath d='M9 12l2 2 4-4'/%3E%3C/svg%3E" class="menu-icon-svg">
                     <span>Insurance</span>
                 </a>
+                <a class="menu-item-clean" href="towing.html">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='1' y='3' width='15' height='13' rx='2'/%3E%3Cpath d='M16 8h4l3 5v3h-7V8z'/%3E%3Ccircle cx='5.5' cy='18.5' r='2.5'/%3E%3Ccircle cx='18.5' cy='18.5' r='2.5'/%3E%3C/svg%3E" class="menu-icon-svg">
+                    <span>Towing &amp; Holidays</span>
+                </a>
             </div>
+
+            <div class="menu-footer">
+                Subscription Data<br />Last Updated<br /><strong>09 March 26</strong>
+            </div>
+
+
         </div>
     </div>
 
