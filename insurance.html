@@ -301,6 +301,56 @@
             color: var(--accent);
         }
 
+        /* ── Tighter menu item spacing (~15% reduction) ── */
+        .menu-item-clean {
+            padding: 10px 16px;
+        }
+
+        /* ── Collapsible menu section ── */
+        .menu-section-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 10px 16px 4px;
+            border-top: 1px solid #00bfff;
+            padding-top: 10px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .menu-section-toggle span {
+            font-size: 0.62rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--muted);
+            padding-left: 4px;
+        }
+
+        .menu-section-toggle .menu-chevron {
+            width: 12px;
+            height: 12px;
+            stroke: var(--muted);
+            fill: none;
+            transition: transform 0.2s ease;
+            flex-shrink: 0;
+            margin-right: 4px;
+        }
+
+        .menu-section-toggle.open .menu-chevron {
+            transform: rotate(180deg);
+        }
+
+        .menu-section-items {
+            overflow: hidden;
+            max-height: 0;
+            transition: max-height 0.25s ease;
+        }
+
+        .menu-section-items.open {
+            max-height: 400px;
+        }
+
     </style>
     <script>
         (function() {
@@ -379,10 +429,6 @@
                 <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2'/%3E%3Ccircle cx='9' cy='7' r='4'/%3E%3Cpath d='M23 21v-2a4 4 0 0 0-3-3.87'/%3E%3Cpath d='M16 3.13a4 4 0 0 1 0 7.75'/%3E%3C/svg%3E" class="menu-icon-svg">
                 <span>Etiquette</span>
             </a>
-            <a class="menu-item-clean" href="insurance.html">
-                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z'/%3E%3Cpath d='M9 12l2 2 4-4'/%3E%3C/svg%3E" class="menu-icon-svg">
-                <span>Insurance</span>
-            </a>
             <a class="menu-item-clean" href="jargon.html">
                 <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z'/%3E%3C/svg%3E" class="menu-icon-svg">
                 <span>Jargon Buster</span>
@@ -397,6 +443,20 @@
             </a>
             <div class="menu-footer">
                 Subscription Data<br />Last Updated<br /><strong>09 March 26</strong>
+            </div>
+
+            <!-- ── Section divider: Day 2 Issues ── -->
+            <div class="menu-section-toggle" id="day2Toggle" onclick="toggleMenuSection('day2Toggle', 'day2Items')">
+                <span>Day 2 Issues</span>
+                <svg class="menu-chevron" viewBox="0 0 24 24" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="6 9 12 15 18 9"/>
+                </svg>
+            </div>
+            <div class="menu-section-items" id="day2Items">
+                <a class="menu-item-clean" href="insurance.html">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z'/%3E%3Cpath d='M9 12l2 2 4-4'/%3E%3C/svg%3E" class="menu-icon-svg">
+                    <span>Insurance</span>
+                </a>
             </div>
         </div>
     </div>
@@ -577,6 +637,13 @@
             const isLight = document.documentElement.classList.toggle('light-mode');
             setCookie('themePref', isLight ? 'light' : 'dark');
         }
+        function toggleMenuSection(toggleId, itemsId) {
+            const toggle = document.getElementById(toggleId);
+            const items  = document.getElementById(itemsId);
+            toggle.classList.toggle('open');
+            items.classList.toggle('open');
+        }
+
         function toggleMenu() {
             document.getElementById('sideMenu').classList.toggle('active');
         }
