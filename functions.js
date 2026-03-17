@@ -561,51 +561,68 @@ function calculate() {
         
         // Get max charging speed for the charging times box
         const maxChargingSpeed = inputs.maxChargingSpeed;
-        const maxChargingTimeHours = maxChargingSpeed > 0 ? publicKwh / maxChargingSpeed : 0;
-        const maxChargingTimeMinutes = (maxChargingTimeHours * 60).toFixed(0);
-        const maxChargingTimeFormatted = maxChargingTimeHours >= 1 
-            ? `${maxChargingTimeHours.toFixed(1)} hours` 
-            : `${maxChargingTimeMinutes} minutes`;
-    
-        // Build charging speeds array with industry standards
-        const standardSpeeds = [7, 22, 50, 75, 100, 150, 200, 300];
-        const speedLabels = {
-            7: 'AC',
-            22: 'AC',
-            50: 'Rapid',
-            75: 'Rapid',
-            100: 'Ultra',
-            150: 'Ultra',
-            200: 'Ultra',
-            300: 'Ultra'
+        
+        // Define all available charging speeds from the CSV reference data
+        const chargingSpeeds = [
+            { speed: 7, type: 'AC', descriptor: 'Standard' },
+            { speed: 11, type: 'AC', descriptor: 'Standard Plus' },
+            { speed: 22, type: 'AC', descriptor: 'Fast' },
+            { speed: 50, type: 'DC', descriptor: 'Rapid' },
+            { speed: 60, type: 'DC', descriptor: 'Rapid' },
+            { speed: 75, type: 'DC', descriptor: 'Rapid Plus' },
+            { speed: 90, type: 'DC', descriptor: 'Rapid Plus' },
+            { speed: 100, type: 'DC', descriptor: 'Rapid Plus' },
+            { speed: 120, type: 'DC', descriptor: 'Ultra-Rapid' },
+            { speed: 150, type: 'DC', descriptor: 'Ultra-Rapid' },
+            { speed: 175, type: 'DC', descriptor: 'Ultra-Rapid' },
+            { speed: 250, type: 'DC', descriptor: 'Ultra-Rapid' },
+            { speed: 300, type: 'DC', descriptor: 'Hyper-Rapid' },
+            { speed: 350, type: 'DC', descriptor: 'Hyper-Rapid' },
+            { speed: 360, type: 'DC', descriptor: 'Hyper-Rapid' }
+        ];
+        
+        // Function to format charging time in human-friendly way
+        const formatChargingTime = (timeHours) => {
+            if (timeHours < 1) {
+                const minutes = Math.round(timeHours * 60);
+                return `${minutes} minutes`;
+            } else {
+                const hours = Math.floor(timeHours);
+                const minutes = Math.round((timeHours - hours) * 60);
+                if (minutes === 0) {
+                    return `${hours} hour${hours > 1 ? 's' : ''}`;
+                }
+                return `${hours}h ${minutes}m`;
+            }
         };
         
-        // Add max charging speed if it's not already in the standard list
-        let allSpeeds = [...standardSpeeds];
-        if (maxChargingSpeed > 0 && !allSpeeds.includes(maxChargingSpeed)) {
-            allSpeeds.push(maxChargingSpeed);
-            allSpeeds.sort((a, b) => a - b);
-            // Add label for custom speed
-            speedLabels[maxChargingSpeed] = 'Custom';
+        // Add max charging speed to the list if it's not already there
+        let speedsToDisplay = [...chargingSpeeds];
+        if (maxChargingSpeed > 0 && !speedsToDisplay.some(s => Math.abs(s.speed - maxChargingSpeed) < 0.01)) {
+            speedsToDisplay.push({
+                speed: maxChargingSpeed,
+                type: 'Custom',
+                descriptor: 'Vehicle Max'
+            });
+            speedsToDisplay.sort((a, b) => a.speed - b.speed);
         }
         
         // Generate table rows dynamically
         let tableRows = '';
-        allSpeeds.forEach(speed => {
-            const timeHours = publicKwh / speed;
-            const timeMinutes = (timeHours * 60).toFixed(0);
-            const timeFormatted = timeHours >= 1 ? `${timeHours.toFixed(1)} hours` : `${timeMinutes} minutes`;
-            const isMaxSpeed = Math.abs(maxChargingSpeed - speed) < 0.01; // Account for floating point comparison
+        speedsToDisplay.forEach(speedObj => {
+            const timeHours = publicKwh / speedObj.speed;
+            const timeFormatted = formatChargingTime(timeHours);
+            const isMaxSpeed = Math.abs(maxChargingSpeed - speedObj.speed) < 0.01;
             const highlightStyle = isMaxSpeed ? 'font-weight:bold; color:#4A9EFF;' : '';
             
-            tableRows += `<tr style="${highlightStyle}"><td>${speed}kW (${speedLabels[speed]})</td><td>${timeFormatted}</td></tr>`;
+            tableRows += `<tr style="${highlightStyle}"><td>${speedObj.speed}kW</td><td>${speedObj.type}</td><td>${speedObj.descriptor}</td><td>${timeFormatted}</td></tr>`;
         });
         
         const speedTableHtml = `
             <div class="speed-comparison-container">
                 <table class="mini-table">
                     <thead>
-                        <tr><th>Charging Speed</th><th>Journey Charging Time</th></tr>
+                        <tr><th>Charging Speed</th><th>Type</th><th>Descriptor</th><th>Journey Charging Time</th></tr>
                     </thead>
                     <tbody>
                         ${tableRows}
@@ -628,6 +645,7 @@ function calculate() {
         
         // Box 2: Charging Times
         conclusionHTML += `<div class="conclusion-white-border"><h3>CHARGING TIMES</h3>`;
+        
         
 
         
