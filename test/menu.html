@@ -84,11 +84,11 @@
 
         <!-- ── Section 1: Main nav ── -->
         <a class="menu-item-clean" href="index.html">
-            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cGF0aCBkPSJNMyA5bDktN2w5IDd2MTFhMiAyIDAgMCAxLTIgMmgtNHYtNGgtNHY0SDVhMiAyIDAgMCAxLTItMlY5eiIgc3Ryb2tlPSIjOTRhM2I4IiBzdHJva2Utd2lkdGg9IjIiLz4KPC9zdmc+" class="menu-icon-svg">
+            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKK8CiAgPHBhdGggZD0iTTMgOWw5LTdsOSA3djExYTIgMiAwIDAgMS0yIDJoLTR2LTRoLTR2NEg1YTIgMiAwIDAgMS0yLTJWOXoiIHN0cm9rZT0iIzk0YTNiOCIgc3Ryb2tlLXdpZHRoPSIyIi8+Cjwvc3ZnPg==" class="menu-icon-svg">
             <span>Home</span>
         </a>
         <a class="menu-item-clean" data-page="about" href="about.html">
-            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIgc3Ryb2tlPSIjOTRhM2I4IiBzdHJva2Utd2lkdGg9IjIiLz4KICA8cGF0aCBkPSJNMTIgMTZWMTEiIHN0cm9rZT0iIzk0YTNiOCIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICA8Y2lyY2xlIGN4PSIxMiIgY3k9IjgiIHI9IjEiIGZpbGw9IiM5NGEzYjgiLz4KPC9zdmc+" class="menu-icon-svg" alt="About Icon">
+            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKICAKK8CiAgPGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiIHN0cm9rZT0iIzk0YTNiOCIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgPHBhdGggZD0iTTEyIDE2VjExIiBzdHJva2U9IiM5NGEzYjgiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgPGNpcmNsZSBjeD0iMTIiIGN5PSI4IiByPSIxIiBmaWxsPSIjOTRhM2I4Ii8+Cjwvc3ZnPg==" class="menu-icon-svg" alt="About Icon">
             <span>About This Tool</span>
         </a>
         <a class="menu-item-clean" data-page="contact" href="contact.html">
@@ -167,22 +167,31 @@
     function getCurrentPage() {
         const path = window.location.pathname;
         const filename = path.split('/').pop() || 'index';
-        return filename.replace('.html', '');
+        const pageName = filename.replace('.html', '');
+        console.log('[Menu.js] getCurrentPage() detected:', pageName, 'from path:', path);
+        return pageName;
     }
 
     // Hide current page from menu
     function hideCurrentPageFromMenu() {
         const currentPage = getCurrentPage();
+        console.log('[Menu.js] hideCurrentPageFromMenu() called for page:', currentPage);
         
         if (currentPage && currentPage !== '') {
             // Find all menu items with data-page attribute
             const menuItems = document.querySelectorAll('.menu-item-clean[data-page]');
+            console.log('[Menu.js] Found', menuItems.length, 'menu items with data-page');
             
             menuItems.forEach(item => {
                 const itemPage = item.getAttribute('data-page');
+                console.log('[Menu.js] Checking:', itemPage, 'vs', currentPage);
                 
                 if (itemPage === currentPage) {
+                    console.log('[Menu.js] HIDING:', itemPage);
                     item.style.display = 'none';
+                } else {
+                    console.log('[Menu.js] SHOWING:', itemPage);
+                    item.style.display = 'flex';
                 }
             });
         }
@@ -193,9 +202,11 @@
 
     // Call when menu is loaded (for when menu.html is standalone or in iframe)
     if (document.readyState === 'loading') {
+        console.log('[Menu.js] DOM still loading, waiting for DOMContentLoaded');
         document.addEventListener('DOMContentLoaded', hideCurrentPageFromMenu);
     } else {
         // DOM already loaded, call directly
+        console.log('[Menu.js] DOM already loaded, calling hideCurrentPageFromMenu directly');
         hideCurrentPageFromMenu();
     }
 </script>
