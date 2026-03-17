@@ -572,29 +572,34 @@ window.addEventListener('resize', () => {
 async function loadMenu() {
     try {
         const response = await fetch('menu.html');
-        if (!response.ok) throw new Error('Network response was not ok');
+        if (!response.ok) throw new Error('Menu fetch failed');
         
         const menuHtml = await response.text();
         const placeholder = document.getElementById('menu-placeholder');
         
-        // 1. Inject the HTML
+        // 1. Inject the HTML from menu.html
         placeholder.innerHTML = menuHtml;
         
-        // 2. Small delay to ensure the DOM has processed the new elements
-        // then trigger the hiding logic defined in menu.html
+        // 2. Wait a split second for the browser to render the new HTML
+        // then manually hide the current page link
         setTimeout(() => {
-            if (window.hideCurrentPageFromMenu) {
-                console.log('Triggering menu hide logic...');
-                window.hideCurrentPageFromMenu();
+            const path = window.location.pathname;
+            const pageName = path.split('/').pop().replace('.html', '') || 'index';
+            
+            // Find the menu item with the matching data-page attribute
+            const menuItem = document.querySelector(`.menu-item-clean[data-page="${pageName}"]`);
+            
+            if (menuItem) {
+                menuItem.style.display = 'none';
             }
-        }, 50); 
+        }, 50);
 
     } catch (error) {
         console.error('Menu load failed:', error);
     }
 }
 
-// Support for the menu toggle buttons
+// These functions support the interactive parts of the menu
 function toggleMenu() {
     const menu = document.getElementById('sideMenu');
     if (menu) menu.classList.toggle('active');
@@ -609,7 +614,7 @@ function toggleMenuSection(toggleId, itemsId) {
     }
 }
 
-// Start the loading process
+// Initialize the menu loading
 loadMenu();
 </script>
 </body>
