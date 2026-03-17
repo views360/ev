@@ -286,7 +286,7 @@
 
             <div class="input-row">
                 <div class="input-group">
-                    <label>
+                    <label for="startChargeType">
                         <span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">Before you 
 							begin your trip, will you have charged your battery at home or using PAYG charging?</span></span></span>Starting charge type           
                     </label>
@@ -296,7 +296,7 @@
                     </select>
                 </div>
                 <div class="input-group">
-                    <label>
+                    <label for="startChargeRate">
                         <span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">When you 
 							charge your battery before the trip, how much will the rate be?</span></span></span>Starting rate (pence per kWh)                        
                     </label>
@@ -305,7 +305,7 @@
             </div>
 
             <div class="input-group">
-                <label>
+                <label for="adhoc">
                     <span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is the 
 						average amount you would ordinarily expect to pay during your trip while using PAYG chargers.
 						If you already get a discount (e.g., 8% from Electroverse), input the discounted rate. This will be the 
@@ -362,7 +362,7 @@
 		</div>
 
 		<div id="sortContainer" class="input-group" style="max-width:400px; margin-top: 30px; margin-left: 10px;">
-            <label>Sort results</label>
+            <label for="sortResults">Sort results</label>
             <select id="sortResults" onchange="calculate()">
                 <option value="cheapest">Cheapest first</option>
                 <option value="breakeven">Break-even PAYG public charging miles (low to high)</option>
