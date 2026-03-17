@@ -1132,8 +1132,56 @@ function closeCookieBanner() {
 
 function toggleMenu() {
     const menu = document.getElementById('sideMenu');
-    if (menu) menu.classList.toggle('active');
+    if (menu) {
+        menu.classList.toggle('active');
+        // When menu opens, expand sections containing the active page
+        if (menu.classList.contains('active')) {
+            expandActiveSections();
+        }
+    }
 }
+
+function toggleMenuSection(toggleId, itemsId) {
+    const toggle = document.getElementById(toggleId);
+    const items = document.getElementById(itemsId);
+    
+    if (toggle && items) {
+        toggle.classList.toggle('open');
+        items.classList.toggle('open');
+    }
+}
+
+function expandActiveSections() {
+    // Get the current page filename
+    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+    
+    // Check all menu items with data-page attribute or href matching current page
+    const activeItem = document.querySelector(`a[data-page][href="${currentPage}"]`) || 
+                       document.querySelector(`a[href="${currentPage}"]`);
+    
+    if (activeItem) {
+        // Add active class to the link
+        document.querySelectorAll('a.menu-item-clean').forEach(link => {
+            link.classList.remove('active-page');
+        });
+        activeItem.classList.add('active-page');
+        
+        // Find parent section and expand it
+        let parent = activeItem.closest('.menu-section-items');
+        if (parent) {
+            const toggle = parent.previousElementSibling;
+            if (toggle && toggle.classList.contains('menu-section-toggle')) {
+                toggle.classList.add('open');
+                parent.classList.add('open');
+            }
+        }
+    }
+}
+
+// Initialize page highlighting on load
+document.addEventListener('DOMContentLoaded', () => {
+    expandActiveSections();
+});
 
 document.addEventListener('click', (e) => {
     const menu = document.getElementById('sideMenu');
