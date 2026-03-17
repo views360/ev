@@ -253,6 +253,15 @@
             if (theme === 'light') document.documentElement.classList.add('light-mode');
         })();
     </script>
+</head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-6B2B03YZ17"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-6B2B03YZ17');
+</script>
 <script>
 fetch("menu.html")
     .then(res => res.text())
@@ -267,16 +276,8 @@ fetch("menu.html")
                 link.style.display = "none";
             }
         });
-    });
-</script>
-</head>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-6B2B03YZ17"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-6B2B03YZ17');
+    })
+    .catch(err => console.error("Menu failed to load:", err));
 </script>
 <body>
 
@@ -289,9 +290,7 @@ fetch("menu.html")
     </div>
 
     <!-- Slide-out menu -->
-    <div id="sideMenu" class="chrome-style-menu">
-	<div id="menuContainer"></div>
-    </div>
+    <div id="menuContainer"></div>
 
     
     <!-- ── Parallax hero banner ── -->
