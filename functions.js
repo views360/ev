@@ -688,57 +688,51 @@ function calculate() {
             stopsHTML += `<p class="main-result" style="font-size: 0.95rem;">Enter your vehicle's <strong>Max. Charging Speed</strong> above to see how many charging stops you'll need following the <a href="mastery.html#sec-8020" style="color: var(--accent); text-decoration: underline;">80/20 Rule</a>.</p></div>`;
         }
         
-        const locationDisclaimer = `<p style="font-size:0.85rem; margin-top:12px; opacity:0.8; color:var(--neon-green) !important;">Note 1: Before purchasing a subscription, check that your chosen provider has charging stations in your planned area of travel — else your subscription will be wasted.</p><p style="font-size:0.85rem; margin-top:12px; opacity:0.8;">Note 2: Charging times exclude the initial ramp-up phase and the 80-to-100% charging slowdown. For an explanation, read about <a href="mastery.html#sec-slow" style="color: var(--accent); text-decoration: underline;">Slow Charging</a>.</p>`;
+        const locationDisclaimer = `<p style="font-size:0.85rem; margin-top:12px; opacity:0.8; color:var(--neon-green) !important;">Note 1: Before purchasing a subscription, check that your chosen provider has charging stations in your planned area of travel — else your subscription will be wasted.</p><p style="font-size:0.85rem; margin-top:12px; opacity:0.8;">Note 2: Charging times exclude the initial ramp-up phase and the 80-to-100% charging slowdown.</p>`;
     
-    // --- 1. Table of Contents (appears first in conclusionsBox) ---
-    const updatedContentsHTML = `
-        <div class="conclusion-white-border" style="margin-bottom: 20px;">
-            <h3>CONTENTS</h3>
-            <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; line-height: 1.8;">
-                <li><a href="#preChargeLine" style="color: var(--accent); text-decoration: none;">PAYG Summary</a></li>
-                <li><a href="#providerResults" style="color: var(--accent); text-decoration: none;">Provider Comparison Table</a></li>
-                <li><a href="#payg-vs-subscription" style="color: var(--accent); text-decoration: none;">PAYG vs Subscription Conclusion</a></li>
-                <li><a href="#charging-times-section" style="color: var(--accent); text-decoration: none;">Charging Times</a></li>
-                <li><a href="#costChart" style="color: var(--accent); text-decoration: none;">Savings Graph</a></li>
-            </ul>
-        </div>
-    `;
-
-    // --- 2. Assemble Result Sections ---
-    const bestProvider = providers[0];
-    let conclusionSection = `<div class="conclusion-white-border" id="payg-vs-subscription">
-        <h3>PAYG vs SUBSCRIPTION CONCLUSION</h3>`;
-    if (bestProvider.savings > 0) {
-        conclusionSection += `<p class="main-result">For a trip of <strong>${inputs.journeyMiles} miles</strong>, a one-month subscription with <strong>${bestProvider.name}</strong> is cheaper than PAYG. Total saving: <strong>£${bestProvider.savings.toFixed(2)}</strong>.</p>`;
-    } else {
-        conclusionSection += `<p class="main-result"><strong>Standard PAYG</strong> rates are cheaper than a subscription for this journey.</p>`;
-    }
-    conclusionSection += `</div>`;
-
-    const maxChargingTimeHours = inputs.maxChargingSpeed > 0 ? publicKwh / inputs.maxChargingSpeed : 0;
-    const maxChargingTimeFormatted = formatChargingTime(maxChargingTimeHours);
-
-    let timesSection = `<div class="conclusion-white-border" id="charging-times-section">
-        <h3>CHARGING TIMES</h3>
-        <p class="main-result">Based on <strong>${inputs.maxChargingSpeed} kW</strong> max speed, public charging will take approx <strong>${maxChargingTimeFormatted}</strong>.</p>
-        ${speedTableHtml}${stopsHTML}${locationDisclaimer}
-    </div>`;
-
-    // --- 3. Final Screen Update & Cookie Saving ---
-    conclusionsBox.innerHTML = updatedContentsHTML + conclusionSection + timesSection;
+        // Contents/Table of Contents
+        const contentsHTML = `
+            <div class="conclusion-white-border">
+                <h3>CONTENTS</h3>
+                <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem;">
+                    <li><a href="#payg-vs-subscription" style="color: var(--accent); text-decoration: none;">PAYG vs Subscription Conclusion</a></li>
+                    <li><a href="#charging-times-section" style="color: var(--accent); text-decoration: none;">Charging Times</a></li>
+                    <li><a href="#real-world-assessment" style="color: var(--accent); text-decoration: none;">Real World Charging Assessment</a></li>
+                </ul>
+            </div>
+        `;
+        
+        let conclusionHTML = contentsHTML;
+        
+        // Box 1: PAYG vs Subscription Conclusion
+        conclusionHTML += `<div class="conclusion-white-border" id="payg-vs-subscription">`; 
+        
+        if (bestProvider.savings > 0) {
+            conclusionHTML += `<h3>PAYG vs SUBSCRIPTION CONCLUSION</h3><p class="main-result">For a trip of <strong>${inputs.journeyMiles} miles</strong>, a one-month subscription with <strong>${bestProvider.name}</strong> is cheaper than PAYG based on the selected minimum charging rate of <strong>${minSpeedLabel}</strong> and the other information entered. The total journey cost will be <strong>£${bestProvider.totalJourneyCost.toFixed(2)}</strong>, which represents a saving of <strong>£${bestProvider.savings.toFixed(2)}</strong> over PAYG rates.</p>`;
+        } else {
+            conclusionHTML += `<h3>PAYG vs SUBSCRIPTION CONCLUSION</h3><p class="main-result"><strong>Standard PAYG</strong> rates are cheaper than a subscription at the selected minimum charging rate of <strong>${minSpeedLabel}</strong> and the other information entered. The total journey cost will be <strong>£${bestProvider.totalJourneyCost.toFixed(2)}</strong>.</p>`;
+        }
+        
+        conclusionHTML += `</div>`;
+        
+        // Box 2: Charging Times
+        conclusionHTML += `<div class="conclusion-white-border" id="charging-times-section"><h3>CHARGING TIMES</h3>`;
+        
+        if (maxChargingSpeed > 0) {
+            conclusionHTML += `<p class="main-result">With your vehicle's maximum charging speed of <strong>${maxChargingSpeed} kW</strong>, the journey requiring <strong>${publicKwh.toFixed(1)} kWh</strong> of public charging would take <strong>${maxChargingTimeFormatted}</strong> at public chargers.</p>`;
+        } else {
+            conclusionHTML += `<p class="main-result">Enter your vehicle's <strong>Max. Charging Speed</strong> above to see estimated charging times for this journey.</p>`;
+        }
+        
+        conclusionHTML += `${speedTableHtml}${stopsHTML}${locationDisclaimer}</div>`;
+        conclusionsBox.innerHTML = conclusionHTML;
+        } else {
+            conclusionsBox.innerHTML = "";
+        }
     
-    drawGraph(providers, totalAdhocCost);
+    drawGraph(inputs, providers);
 
-    const dataToSave = {
-        journeyMiles: inputs.journeyMiles,
-        batteryKwh: inputs.batteryKwh,
-        soc: inputs.soc,
-        efficiency: inputs.efficiency,
-        adhoc: inputs.adhoc,
-        startChargeRate: inputs.startChargeRate,
-        maxChargingSpeed: inputs.maxChargingSpeed,
-        minSpeed: inputs.minSpeed
-    };
+    const dataToSave = getInputs();
     setCookie("ev_trip_values", dataToSave);
 }
 
