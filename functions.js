@@ -1132,14 +1132,14 @@ function closeCookieBanner() {
 
 function toggleMenu() {
     const menu = document.getElementById('sideMenu');
-    menu.classList.toggle('active');
+    if (menu) menu.classList.toggle('active');
 }
 
 document.addEventListener('click', (e) => {
     const menu = document.getElementById('sideMenu');
     const trigger = document.querySelector('.android-dots-trigger');
-    if (menu.classList.contains('active')) {
-        if (!menu.contains(e.target) && !trigger.contains(e.target)) {
+    if (menu && menu.classList.contains('active')) {
+        if (!menu.contains(e.target) && (!trigger || !trigger.contains(e.target))) {
             menu.classList.remove('active');
         }
     }
