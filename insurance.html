@@ -577,20 +577,20 @@ async function loadMenu() {
         const menuHtml = await response.text();
         const placeholder = document.getElementById('menu-placeholder');
         
+        // 1. Inject the HTML from menu.html
         placeholder.innerHTML = menuHtml;
         
-        // 1. Re-attach the Theme Toggle logic
+        // 2. RE-ATTACH THE THEME TOGGLE EVENT
         const themeBtn = document.getElementById('lightdarkmode');
         if (themeBtn) {
             themeBtn.addEventListener('click', () => {
-                // This calls the function already inside your functions.js
                 if (typeof toggleTheme === 'function') {
                     toggleTheme();
                 }
             });
         }
         
-        // 2. Hide the current page link
+        // 3. Hide the current page link
         setTimeout(() => {
             const path = window.location.pathname;
             const pageName = path.split('/').pop().replace('.html', '') || 'index';
@@ -605,7 +605,25 @@ async function loadMenu() {
     }
 }
 
-// Initialize the menu loading
+// --- ESSENTIAL INTERACTION FUNCTIONS ---
+// These allow the "three dots" and the collapsible sections to work.
+function toggleMenu() {
+    const menu = document.getElementById('sideMenu');
+    if (menu) {
+        menu.classList.toggle('active');
+    }
+}
+
+function toggleMenuSection(toggleId, itemsId) {
+    const toggle = document.getElementById(toggleId);
+    const items = document.getElementById(itemsId);
+    if (toggle && items) {
+        toggle.classList.toggle('open');
+        items.classList.toggle('open');
+    }
+}
+
+// Start the loading process
 loadMenu();
 </script>
 </body>
