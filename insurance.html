@@ -625,6 +625,30 @@ function toggleMenuSection(toggleId, itemsId) {
 
 // Start the loading process
 loadMenu();
+
+function toggleTheme() {
+    const setCookie = (name, value) => {
+        const date = new Date();
+        date.setTime(date.getTime() + (30 * 24 * 60 * 60 * 1000));
+        document.cookie = `${name}=${encodeURIComponent(JSON.stringify(value))};expires=${date.toUTCString()};path=/;SameSite=Lax`;
+    };
+    const isLight = document.documentElement.classList.toggle('light-mode');
+    setCookie('themePref', isLight ? 'light' : 'dark');
+}
+
+function toggleMenu() {
+    const menu = document.getElementById('sideMenu');
+    if (menu) menu.classList.toggle('active');
+}
+
+function toggleMenuSection(toggleId, itemsId) {
+    const toggle = document.getElementById(toggleId);
+    const items = document.getElementById(itemsId);
+    if (toggle && items) {
+        toggle.classList.toggle('open');
+        items.classList.toggle('open');
+    }
+}
 </script>
 </body>
 </html>
