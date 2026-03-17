@@ -301,78 +301,6 @@
             color: var(--accent);
         }
 
-        /* Further reduced vertical spacing */
-        .menu-item-clean {
-            padding: 6px 16px; /* Reduced from 10px to 6px */
-            display: flex;
-            align-items: center;
-        }
-        
-        /* ── Collapsible menu section ── */
-        .menu-section-toggle {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin: 4px 16px 2px;
-            padding-top: 0px !important;
-            cursor: pointer;
-            user-select: none;
-            color: var(--muted);
-        }
-
-        .menu-section-toggle span {
-            font-size: 0.8rem;
-            font-weight: 700;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            color: var(--muted);
-            padding-left: 4px;
-        }
-
-        .menu-section-toggle .menu-chevron {
-            width: 12px;
-            height: 12px;
-            stroke: var(--muted);
-            fill: none;
-            transition: transform 0.2s ease;
-            flex-shrink: 0;
-            margin-right: 4px;
-        }
-
-        .menu-section-toggle.open .menu-chevron {
-            transform: rotate(180deg);
-        }
-
-        .menu-section-items {
-            overflow: hidden;
-            max-height: 0;
-            transition: max-height 0.25s ease;
-            border-bottom: solid 1px var(--muted) !important;
-        }
-
-        .menu-section-items.open {
-            max-height: 400px;
-        }
-
-        .menu-content {
-            display: flex !important;
-            flex-direction: column !important;
-            gap: 2px !important; /* Adds a tiny bit of breathing room without the bulk */
-        }
-
-        #lightdarkmode {
-            padding-bottom: 10px !important;
-            border-bottom: 1px solid var(--muted) !important;
-        }
-
-        #guidesToggle, #day2Toggle {
-            padding-top: 5px !important;
-        }
-
-        #day2Items, #guidesItems {
-            padding-bottom: 7px !important;
-        }
-
     </style>
     <script>
         (function() {
@@ -411,89 +339,8 @@
         </div>
     </div>
 
-    <!-- Slide-out menu -->
-    <div id="sideMenu" class="chrome-style-menu">
-        <div class="menu-content">
-
-            <!-- ── Section 1: Main nav ── -->
-            <a class="menu-item-clean" href="index.html">
-                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cGF0aCBkPSJNMyA5bDktN2w5IDd2MTFhMiAyIDAgMCAxLTIgMmgtNHYtNGgtNHY0SDVhMiAyIDAgMCAxLTItMlY5eiIgc3Ryb2tlPSIjOTRhM2I4IiBzdHJva2Utd2lkdGg9IjIiLz4KPC9zdmc+" class="menu-icon-svg">
-                <span>Home</span>
-            </a>
-            <a class="menu-item-clean" href="about.html">
-                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIgc3Ryb2tlPSIjOTRhM2I4IiBzdHJva2Utd2lkdGg9IjIiLz4KICA8cGF0aCBkPSJNMTIgMTZWMTEiIHN0cm9rZT0iIzk0YTNiOCIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICA8Y2lyY2xlIGN4PSIxMiIgY3k9IjgiIHI9IjEiIGZpbGw9IiM5NGEzYjgiLz4KPC9zdmc+" class="menu-icon-svg" alt="About Icon">
-                <span>About This Tool</span>
-            </a>
-            <a class="menu-item-clean" href="contact.html">
-                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='4'/%3E%3Cpath d='M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-4 8'/%3E%3C/svg%3E" class="menu-icon-svg">
-                <span>Contact</span>
-            </a>
-            <a class="menu-item-clean" href="privacy.html">
-                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z'/%3E%3C/svg%3E" class="menu-icon-svg">
-                <span>Privacy</span>
-            </a>
-            <a class="menu-item-clean" id="lightdarkmode" onclick="toggleTheme(); toggleMenu();">
-                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z'/%3E%3C/svg%3E" class="menu-icon-svg">
-                <span>Light/Dark Mode</span>
-            </a>
-
-            <!-- ── Section divider: EV Guides ── -->
-            <div class="menu-section-toggle" id="guidesToggle" onclick="toggleMenuSection('guidesToggle', 'guidesItems')">
-                <span>EV Guides</span>
-                <svg class="menu-chevron" viewBox="0 0 24 24" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="6 9 12 15 18 9"/>
-                </svg>
-            </div>
-
-            <!-- ── Section 2: EV Guides ── -->
-            <div class="menu-section-items" id="guidesItems">
-                <a class="menu-item-clean" href="apps.html">
-                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='5' y='2' width='14' height='20' rx='2'/%3E%3Cline x1='12' y1='18' x2='12.01' y2='18'/%3E%3C/svg%3E" class="menu-icon-svg">
-                    <span>App Toolkit</span>
-                </a>
-                <a class="menu-item-clean" href="etiquette.html">
-                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2'/%3E%3Ccircle cx='9' cy='7' r='4'/%3E%3Cpath d='M23 21v-2a4 4 0 0 0-3-3.87'/%3E%3Cpath d='M16 3.13a4 4 0 0 1 0 7.75'/%3E%3C/svg%3E" class="menu-icon-svg">
-                    <span>Etiquette</span>
-                </a>
-                <a class="menu-item-clean" href="jargon.html">
-                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z'/%3E%3C/svg%3E" class="menu-icon-svg">
-                    <span>Jargon Buster</span>
-                </a>
-                <a class="menu-item-clean" href="mastery.html">
-                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='8' r='6'/%3E%3Cpath d='M8.21 13.89L7 23l5-3 5 3-1.21-9.12'/%3E%3C/svg%3E" class="menu-icon-svg">
-                    <span>Mastery</span>
-                </a>
-                <a class="menu-item-clean" href="winter.html">
-                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='12' y1='2' x2='12' y2='22'/%3E%3Cline x1='2' y1='12' x2='22' y2='12'/%3E%3Cline x1='4.93' y1='4.93' x2='19.07' y2='19.07'/%3E%3Cline x1='19.07' y1='4.93' x2='4.93' y2='19.07'/%3E%3Cpath d='M12 6l-2-2 2-2'/%3E%3Cpath d='M12 6l2-2-2-2'/%3E%3Cpath d='M12 18l-2 2 2 2'/%3E%3Cpath d='M12 18l2 2-2 2'/%3E%3Cpath d='M6 12l-2-2-2 2'/%3E%3Cpath d='M6 12l-2 2-2-2'/%3E%3Cpath d='M18 12l2-2 2 2'/%3E%3Cpath d='M18 12l2 2 2-2'/%3E%3C/svg%3E" class="menu-icon-svg">
-                    <span>Winter Range</span>
-                </a>
-            </div>
-
-            <!-- ── Section divider: Day 2 Issues ── -->            
-            <div class="menu-section-toggle" id="day2Toggle" onclick="toggleMenuSection('day2Toggle', 'day2Items')">
-                <span>Day 2 Issues</span>
-                <svg class="menu-chevron" viewBox="0 0 24 24" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="6 9 12 15 18 9"/>
-                </svg>
-            </div>
-            <div class="menu-section-items" id="day2Items">
-                <a class="menu-item-clean" href="insurance.html">
-                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z'/%3E%3Cpath d='M9 12l2 2 4-4'/%3E%3C/svg%3E" class="menu-icon-svg">
-                    <span>Insurance</span>
-                </a>
-                <a class="menu-item-clean" href="towing.html">
-                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='1' y='3' width='15' height='13' rx='2'/%3E%3Cpath d='M16 8h4l3 5v3h-7V8z'/%3E%3Ccircle cx='5.5' cy='18.5' r='2.5'/%3E%3Ccircle cx='18.5' cy='18.5' r='2.5'/%3E%3C/svg%3E" class="menu-icon-svg">
-                    <span>Towing &amp; Holidays</span>
-                </a>
-            </div>
-
-            <div class="menu-footer">
-                Subscription Data<br />Last Updated<br /><strong>09 March 26</strong>
-            </div>
-
-
-        </div>
-    </div>
+    <!-- Load menu from external file -->
+    <div id="menu-container"></div>
 
     <!-- ── Parallax hero banner ── -->
     <div class="hero-parallax" id="heroParallax">
@@ -509,69 +356,47 @@
     <!-- ── Page content ── -->
     <div class="guide-wrap">
         <div class="guide-card">
+            <h2>EV Holiday &amp; Towing Guide</h2>
+            <p class="guide-subtitle">Everything you need to know about taking your electric car on a UK holiday with a caravan or trailer in tow.</p>
 
-            <h2>Can Your EV Handle the Trip?</h2>
-            <p class="guide-subtitle">As more UK families make an EV their primary car, the question of staycations and towing has moved firmly into the mainstream. A caravan weekend in the Lakes or a bike-rack trip to the Peaks sounds simple enough — but towing dramatically changes the rules. Understanding what your car can and can't do before you leave the driveway will save you a stressful roadside education.</p>
-
-            <nav class="toc">
-                <p class="toc-title">Contents</p>
+            <!-- Table of Contents -->
+            <div class="toc">
+                <p class="toc-title">In This Guide</p>
                 <ol>
-                    <li><a href="#sec-range">The 30–50% Range Drop</a></li>
-                    <li><a href="#sec-type-approval">Type-Approval: Can Your EV Tow at All?</a></li>
-                    <li><a href="#sec-charging">Trailer-Friendly Charging Networks</a></li>
+                    <li><a href="#sec-legal">Legal &amp; Technical Essentials</a></li>
+                    <li><a href="#sec-charging">Trailer-Friendly Charging: Finding Bays You Can Use</a></li>
                     <li><a href="#sec-planning">Route Planning with a Trailer</a></li>
-                    <li><a href="#sec-checklist">Your Pre-Holiday Checklist</a></li>
+                    <li><a href="#sec-checklist">Pre-Holiday EV Towing Checklist</a></li>
                 </ol>
-            </nav>
-
-            <!-- 1. Range Drop -->
-            <div class="guide-section" id="sec-range">
-                <div class="guide-section-header">
-                    <div class="guide-icon-box">
-                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="22" y1="12" x2="2" y2="12"/><polyline points="9 18 3 12 9 6"/><line x1="3" y1="12" x2="3" y2="12"/>
-                        </svg>
-                    </div>
-                    <h3>The 30–50% Rule: Planning for Half Your Normal Range</h3>
-                </div>
-                <p>This is the single most important thing to understand before hitching a caravan or trailer to your EV: <strong>towing typically cuts your usable range by 30 to 50 percent</strong>. A car that comfortably covers 250 miles on a clear motorway run may deliver as little as 125–175 miles with a loaded caravan in tow. On a hilly route or in cold weather, the figure can fall further still.</p>
-                <p>The reason is straightforward physics. EVs are remarkably efficient on their own, but they rely heavily on aerodynamic slipperiness to achieve their headline range figures. A caravan or large trailer creates a substantial wall of drag behind the vehicle. The motor has to work significantly harder to maintain motorway speeds, drawing more energy from the battery per mile than any WLTP test ever intended to account for.</p>
-                <p>The practical consequence is that <strong>"splash and dash" charging stops become a necessity, not a luxury</strong>. Rather than aiming for a single long charge at your destination, experienced EV towers plan shorter legs — typically 80–100 miles between stops — and use rapid chargers along the route to top up to 80% (above which charging slows noticeably). This approach keeps the trip moving without the anxiety of watching the range estimate creep towards zero.</p>
-                <div class="guide-callout">
-                    <strong>Rule of thumb:</strong> Take your car's official WLTP range, halve it, and use that figure as your comfortable planning range per leg when towing. If your car shows 280 miles on a full charge, plan each towing leg around 140 miles or fewer and locate a charger at or before that point on your route.
-                </div>
-                <p>Real-world range is also affected by the <strong>weight of your trailer or caravan</strong>. A lightly loaded bike rack has far less impact than a fully laden touring caravan at the maximum tow rating. If possible, pack the caravan thoughtfully — heavy items low and forward, and nothing unnecessary — to keep the noseweight correct and reduce the aerodynamic penalty where you can.</p>
             </div>
 
-            <!-- 2. Type Approval -->
-            <div class="guide-section" id="sec-type-approval">
+            <!-- 1. Legal & Technical -->
+            <div class="guide-section" id="sec-legal">
                 <div class="guide-section-header">
                     <div class="guide-icon-box">
                         <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 12l2 2 4-4"/>
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/>
                         </svg>
                     </div>
-                    <h3>Type-Approval: Is Your EV Actually Allowed to Tow?</h3>
+                    <h3>Legal &amp; Technical Essentials: Check Your Vehicle's Towing Spec</h3>
                 </div>
-                <p>Here's a detail that catches many EV owners completely off guard: <strong>not all electric vehicles are legally approved for towing</strong>. The ability to fit a towbar is separate from whether the manufacturer has type-approved the car to pull a trailer. Attempting to tow with a vehicle that has no approved tow rating is illegal in the UK, invalidates your motor insurance, and puts you and other road users at serious risk.</p>
-                <p>The most prominent example is Tesla. <strong>Early Model 3 variants and the Model S were not type-approved for towing</strong> in the UK when first sold, meaning no towbar could legally be fitted. Tesla has since revised its position on some models, but older examples remain legally prohibited from towing anything, regardless of what aftermarket towbar suppliers might suggest. The situation with smaller city-focused EVs — such as the original Renault Zoe, the Citroën Ami, or many A-segment electric cars — is similar: their suspension, braking, and drivetrain are simply not engineered for trailer loads.</p>
-                <p>To check whether your specific vehicle is approved to tow, there are two reliable methods:</p>
+                <p>The first step in any towing plan is understanding the towing capacity of your electric vehicle. This number is critical because it determines the maximum weight you can legally and safely tow, and exceeding it voids insurance cover and may create a liability issue. For EVs, the manufacturer-approved towing weight is typically lower than an equivalent petrol car — a factor that often surprises first-time EV towers.</p>
+                <p>The key specifications to find are:</p>
                 <ul>
-                    <li><strong>The VIN plate.</strong> Every car sold in the UK has a Vehicle Identification Number plate — usually found in the engine bay or inside the driver's door frame. This plate lists the vehicle's maximum gross weight, the maximum train weight (vehicle plus trailer combined), and the maximum tow ball load. If the train weight equals or only marginally exceeds the vehicle's own kerb weight, the car has no practical tow rating. If the towing line is blank or shows zero, towing is not approved.</li>
-                    <li><strong>Manufacturer documentation.</strong> Check the owner's handbook towing section and the manufacturer's official online specifications for your exact model year and variant. Model facelifts and software updates can change tow ratings — always verify against your car's own documentation, not a generic model page.</li>
+                    <li><strong>Maximum towing capacity:</strong> The gross weight of the caravan or trailer (including contents). This is usually found in your vehicle's handbook or the VIN plate affixed inside the driver's door frame.</li>
+                    <li><strong>Tow ball nose weight:</strong> The downward force on the tow ball, typically 8–10% of the caravan's loaded weight. Your vehicle has a maximum nose weight limit, usually between 50 kg and 85 kg depending on the model.</li>
+                    <li><strong>Towing vehicle kerb weight:</strong> The weight of your EV when empty. Caravan and trailer matching rules often require the caravan weight not to exceed 85–100% of the car's kerb weight depending on your licence category.</li>
                 </ul>
-                <div class="guide-callout">
-                    <strong>Bike racks are different — but not exempt.</strong> A rear-mounted cycle carrier that hangs from the towball is still subject to the car's tow ball weight limit (typically 50–75 kg on approved vehicles). A loaded carrier with three bikes can easily approach this limit. Check the carrier's nose weight and confirm it falls within your car's rated capacity before fitting.
-                </div>
-                <p>If you are buying a second-hand EV specifically to use for towing or holidays, verify the tow rating <em>before</em> purchasing, not after. Retrofitting towing capability to a vehicle with no factory approval is not straightforward, and in many cases not legal.</p>
+                <p><strong>Know your licence category.</strong> Most EV owners hold a category B licence (cars up to 3.5 tonne) issued before December 2021. If your caravan and car exceed certain combined weights, you may legally need a category B+E licence (which allows heavier trailers). Check with DVLA if in doubt — towing without the correct licence category is an insurance-voidable offence.</p>
+                <p>Once you've confirmed your vehicle can legally tow your caravan, you'll also want to know the <strong>impact on range</strong>. Towing a caravan or trailer typically increases energy consumption by 40–100% depending on trailer aerodynamics, weight, and driving speed. Most manufacturers give a range reduction figure in the handbook; use this when calculating charging stops (see section 4, Route Planning).</p>
             </div>
 
-            <!-- 3. Trailer-Friendly Charging -->
+            <!-- 2. Trailer-Friendly Charging -->
             <div class="guide-section" id="sec-charging">
                 <div class="guide-section-header">
                     <div class="guide-icon-box">
                         <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M5 18H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h3.19M15 6h2a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-3.19"/><line x1="23" y1="13" x2="23" y2="11"/><polyline points="11 6 7 12 13 12 9 18"/>
+                            <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/>
                         </svg>
                     </div>
                     <h3>Trailer-Friendly Charging: Finding Bays You Can Actually Use</h3>
@@ -654,6 +479,14 @@
     </div>
 
     <script>
+        // Load external menu
+        fetch('menu.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('menu-container').innerHTML = html;
+            })
+            .catch(error => console.error('Error loading menu:', error));
+
         /* ── Parallax scroll ── */
         const heroBg = document.getElementById('heroBg');
         function applyParallax() {
