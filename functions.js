@@ -553,6 +553,7 @@ function calculate() {
     });
 
 
+
     if (providers.length > 0) {
         const bestProvider = providers[0];
         
@@ -561,6 +562,25 @@ function calculate() {
         
         // Get max charging speed for the charging times box
         const maxChargingSpeed = inputs.maxChargingSpeed;
+        
+        // Function to format charging time in human-friendly way
+        const formatChargingTime = (timeHours) => {
+            if (timeHours < 1) {
+                const minutes = Math.round(timeHours * 60);
+                return `${minutes} minutes`;
+            } else {
+                const hours = Math.floor(timeHours);
+                const minutes = Math.round((timeHours - hours) * 60);
+                if (minutes === 0) {
+                    return `${hours} hour${hours > 1 ? 's' : ''}`;
+                }
+                return `${hours}h ${minutes}m`;
+            }
+        };
+        
+        // Calculate formatted max charging time
+        const maxChargingTimeHours = maxChargingSpeed > 0 ? publicKwh / maxChargingSpeed : 0;
+        const maxChargingTimeFormatted = formatChargingTime(maxChargingTimeHours);
         
         // Define all available charging speeds from the CSV reference data
         const chargingSpeeds = [
@@ -580,21 +600,6 @@ function calculate() {
             { speed: 350, type: 'DC', descriptor: 'Hyper-Rapid' },
             { speed: 360, type: 'DC', descriptor: 'Hyper-Rapid' }
         ];
-        
-        // Function to format charging time in human-friendly way
-        const formatChargingTime = (timeHours) => {
-            if (timeHours < 1) {
-                const minutes = Math.round(timeHours * 60);
-                return `${minutes} minutes`;
-            } else {
-                const hours = Math.floor(timeHours);
-                const minutes = Math.round((timeHours - hours) * 60);
-                if (minutes === 0) {
-                    return `${hours} hour${hours > 1 ? 's' : ''}`;
-                }
-                return `${hours}h ${minutes}m`;
-            }
-        };
         
         // Add max charging speed to the list if it's not already there
         let speedsToDisplay = [...chargingSpeeds];
@@ -645,9 +650,6 @@ function calculate() {
         
         // Box 2: Charging Times
         conclusionHTML += `<div class="conclusion-white-border"><h3>CHARGING TIMES</h3>`;
-        
-        
-
         
         if (maxChargingSpeed > 0) {
             conclusionHTML += `<p class="main-result">With your vehicle's maximum charging speed of <strong>${maxChargingSpeed} kW</strong>, the journey requiring <strong>${publicKwh.toFixed(1)} kWh</strong> of public charging would take <strong>${maxChargingTimeFormatted}</strong> at public chargers.</p>`;
