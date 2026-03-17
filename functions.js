@@ -567,6 +567,40 @@ function calculate() {
             ? `${maxChargingTimeHours.toFixed(1)} hours` 
             : `${maxChargingTimeMinutes} minutes`;
     
+        // Build charging speeds array with industry standards
+        const standardSpeeds = [7, 22, 50, 75, 100, 150, 200, 300];
+        const speedLabels = {
+            7: 'AC',
+            22: 'AC',
+            50: 'Rapid',
+            75: 'Rapid',
+            100: 'Ultra',
+            150: 'Ultra',
+            200: 'Ultra',
+            300: 'Ultra'
+        };
+        
+        // Add max charging speed if it's not already in the standard list
+        let allSpeeds = [...standardSpeeds];
+        if (maxChargingSpeed > 0 && !allSpeeds.includes(maxChargingSpeed)) {
+            allSpeeds.push(maxChargingSpeed);
+            allSpeeds.sort((a, b) => a - b);
+            // Add label for custom speed
+            speedLabels[maxChargingSpeed] = 'Custom';
+        }
+        
+        // Generate table rows dynamically
+        let tableRows = '';
+        allSpeeds.forEach(speed => {
+            const timeHours = publicKwh / speed;
+            const timeMinutes = (timeHours * 60).toFixed(0);
+            const timeFormatted = timeHours >= 1 ? `${timeHours.toFixed(1)} hours` : `${timeMinutes} minutes`;
+            const isMaxSpeed = Math.abs(maxChargingSpeed - speed) < 0.01; // Account for floating point comparison
+            const highlightStyle = isMaxSpeed ? 'font-weight:bold; color:#4A9EFF;' : '';
+            
+            tableRows += `<tr style="${highlightStyle}"><td>${speed}kW (${speedLabels[speed]})</td><td>${timeFormatted}</td></tr>`;
+        });
+        
         const speedTableHtml = `
             <div class="speed-comparison-container">
                 <table class="mini-table">
@@ -574,15 +608,7 @@ function calculate() {
                         <tr><th>Charging Speed</th><th>Journey Charging Time</th></tr>
                     </thead>
                     <tbody>
-                        <tr style="${inputs.maxChargingSpeed == 7 ? 'font-weight:bold; color:var(--accent);' : ''}"><td>7kW (AC)</td><td>${(publicKwh / 7).toFixed(1)} hours</td></tr>
-                        <tr style="${inputs.maxChargingSpeed == 22 ? 'font-weight:bold; color:var(--accent);' : ''}"><td>22kW (AC)</td><td>${(publicKwh / 22).toFixed(1)} hours</td></tr>
-                        <tr style="${inputs.maxChargingSpeed == 35 ? 'font-weight:bold; color:var(--accent);' : ''}"><td>35kW (AC)</td><td>${(publicKwh / 35).toFixed(1)} hours</td></tr>
-                        <tr style="${inputs.maxChargingSpeed == 50 ? 'font-weight:bold; color:var(--accent);' : ''}"><td>50kW (Rapid)</td><td>${((publicKwh / 50) * 60).toFixed(0)} minutes</td></tr>
-                        <tr style="${inputs.maxChargingSpeed == 75 ? 'font-weight:bold; color:var(--accent);' : ''}"><td>75kW (Rapid)</td><td>${((publicKwh / 75) * 60).toFixed(0)} minutes</td></tr>
-                        <tr style="${inputs.maxChargingSpeed == 100 ? 'font-weight:bold; color:var(--accent);' : ''}"><td>100kW (Ultra)</td><td>${((publicKwh / 100) * 60).toFixed(0)} minutes</td></tr>
-                        <tr style="${inputs.maxChargingSpeed == 150 ? 'font-weight:bold; color:var(--accent);' : ''}"><td>150kW (Ultra)</td><td>${((publicKwh / 150) * 60).toFixed(0)} minutes</td></tr>
-                        <tr style="${inputs.maxChargingSpeed == 200 ? 'font-weight:bold; color:var(--accent);' : ''}"><td>200kW (Ultra)</td><td>${((publicKwh / 200) * 60).toFixed(0)} minutes</td></tr>
-                        <tr style="${inputs.maxChargingSpeed == 300 ? 'font-weight:bold; color:var(--accent);' : ''}"><td>300kW (Ultra)</td><td>${((publicKwh / 300) * 60).toFixed(0)} minutes</td></tr>
+                        ${tableRows}
                     </tbody>
                 </table>
             </div>`;
@@ -602,6 +628,8 @@ function calculate() {
         
         // Box 2: Charging Times
         conclusionHTML += `<div class="conclusion-white-border"><h3>CHARGING TIMES</h3>`;
+        
+
         
         if (maxChargingSpeed > 0) {
             conclusionHTML += `<p class="main-result">With your vehicle's maximum charging speed of <strong>${maxChargingSpeed} kW</strong>, the journey requiring <strong>${publicKwh.toFixed(1)} kWh</strong> of public charging would take <strong>${maxChargingTimeFormatted}</strong> at public chargers.</p>`;
