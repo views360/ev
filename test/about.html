@@ -262,23 +262,6 @@
   gtag('js', new Date());
   gtag('config', 'G-6B2B03YZ17');
 </script>
-<script>
-fetch("menu.html")
-    .then(res => res.text())
-    .then(data => {
-        document.getElementById("menuContainer").innerHTML = data;
-
-        // Hide current page link
-        const currentPage = window.location.pathname.split("/").pop();
-
-        document.querySelectorAll("#sideMenu a[href]").forEach(link => {
-            if (link.getAttribute("href") === currentPage) {
-                link.style.display = "none";
-            }
-        });
-    })
-    .catch(err => console.error("Menu failed to load:", err));
-</script>
 <body>
 
     <!-- Fixed top header -->
@@ -289,10 +272,9 @@ fetch("menu.html")
         </div>
     </div>
 
-    <!-- Slide-out menu -->
-    <div id="menuContainer"></div>
+    <!-- Load menu from external file -->
+    <div id="menu-container"></div>
 
-    
     <!-- ── Parallax hero banner ── -->
     <div class="hero-parallax" id="heroParallax">
         <div class="hero-bg" id="heroBg"></div>
@@ -402,16 +384,7 @@ fetch("menu.html")
     </div>
 
     <script>
-        /* ── Parallax scroll ── */
-        const heroBg = document.getElementById('heroBg');
-        function applyParallax() {
-            const scrollY = window.scrollY;
-            heroBg.style.transform = `translateY(${scrollY * 0.45}px)`;
-        }
-        window.addEventListener('scroll', applyParallax, { passive: true });
-        applyParallax();
-
-        /* ── Theme & menu helpers ── */
+        /* ── Theme & menu helpers - define FIRST ── */
         const setCookie = (name, value) => {
             const date = new Date();
             date.setTime(date.getTime() + (30 * 24 * 60 * 60 * 1000));
@@ -421,18 +394,50 @@ fetch("menu.html")
             const isLight = document.documentElement.classList.toggle('light-mode');
             setCookie('themePref', isLight ? 'light' : 'dark');
         }
-        function toggleMenu() {
-            document.getElementById('sideMenu').classList.toggle('active');
+        function toggleMenuSection(toggleId, itemsId) {
+            const toggle = document.getElementById(toggleId);
+            const items  = document.getElementById(itemsId);
+            toggle.classList.toggle('open');
+            items.classList.toggle('open');
         }
-        document.addEventListener('click', (e) => {
+        function toggleMenu() {
             const menu = document.getElementById('sideMenu');
-            const trigger = document.querySelector('.android-dots-trigger');
-            if (menu.classList.contains('active')) {
-                if (!menu.contains(e.target) && !trigger.contains(e.target)) {
-                    menu.classList.remove('active');
-                }
+            if (menu) {
+                menu.classList.toggle('active');
             }
-        });
+        }
+
+        // Setup menu click handlers after menu is loaded
+        function setupMenuClickHandlers() {
+            document.addEventListener('click', (e) => {
+                const menu = document.getElementById('sideMenu');
+                const trigger = document.querySelector('.android-dots-trigger');
+                if (menu && menu.classList.contains('active')) {
+                    if (!menu.contains(e.target) && !trigger.contains(e.target)) {
+                        menu.classList.remove('active');
+                    }
+                }
+            });
+        }
+
+        // Load external menu
+        fetch('menu.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('menu-container').innerHTML = html;
+                // Setup menu handlers AFTER menu is loaded
+                setupMenuClickHandlers();
+            })
+            .catch(error => console.error('Error loading menu:', error));
+
+        /* ── Parallax scroll ── */
+        const heroBg = document.getElementById('heroBg');
+        function applyParallax() {
+            const scrollY = window.scrollY;
+            heroBg.style.transform = `translateY(${scrollY * 0.45}px)`;
+        }
+        window.addEventListener('scroll', applyParallax, { passive: true });
+        applyParallax();
     </script>
 </body>
 </html>
