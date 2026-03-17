@@ -453,9 +453,17 @@ async function loadMenu() {
         placeholder.innerHTML = menuHtml;
         
         // 2. Wait a split second for the browser to render the new HTML
-        // then highlight the current page and expand its section
+        // then manually hide the current page link
         setTimeout(() => {
-            expandActiveSections();
+            const path = window.location.pathname;
+            const pageName = path.split('/').pop().replace('.html', '') || 'index';
+            
+            // Find the menu item with the matching data-page attribute
+            const menuItem = document.querySelector(`.menu-item-clean[data-page="${pageName}"]`);
+            
+            if (menuItem) {
+                menuItem.style.display = 'none';
+            }
         }, 50);
 
     } catch (error) {
@@ -463,39 +471,10 @@ async function loadMenu() {
     }
 }
 
-function expandActiveSections() {
-    // Get the current page filename
-    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-    
-    // Check all menu items with href matching current page
-    const activeItem = document.querySelector(`a[href="${currentPage}"]`);
-    
-    if (activeItem) {
-        // Add active class to highlight it
-        activeItem.classList.add('active-page');
-        
-        // Find parent section and expand it
-        let parent = activeItem.closest('.menu-section-items');
-        if (parent) {
-            const toggle = parent.previousElementSibling;
-            if (toggle && toggle.classList.contains('menu-section-toggle')) {
-                toggle.classList.add('open');
-                parent.classList.add('open');
-            }
-        }
-    }
-}
-
 // These functions support the interactive parts of the menu
 function toggleMenu() {
     const menu = document.getElementById('sideMenu');
-    if (menu) {
-        menu.classList.toggle('active');
-        // When menu opens, ensure active sections are expanded
-        if (menu.classList.contains('active')) {
-            expandActiveSections();
-        }
-    }
+    if (menu) menu.classList.toggle('active');
 }
 
 function toggleMenuSection(toggleId, itemsId) {

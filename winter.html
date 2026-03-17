@@ -550,13 +550,6 @@ function toggleTheme() {
     const isLight = document.documentElement.classList.toggle('light-mode');
     setCookie('themePref', isLight ? 'light' : 'dark');
 }
-    const toggle = document.getElementById(toggleId);
-    const items = document.getElementById(itemsId);
-    if (toggle && items) {
-        toggle.classList.toggle('open');
-        items.classList.toggle('open');
-    }
-}
 </script>
 </body>
 </html>
