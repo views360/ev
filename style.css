@@ -62,6 +62,11 @@ h3 {
     font-weight: 700;
 }
 
+.guide-section {
+    /* 48px header height + 20px of extra "padding" for aesthetics */
+    scroll-margin-top: 68px;
+}
+
 .info-icon {
     line-height: 1;
     cursor: pointer;
