@@ -635,6 +635,58 @@ function calculate() {
                 </table>
             </div>`;
         
+        // Calculate 80/20 Rule charging stops
+        // Start with usable battery at initial SOC, drain to 20%, then charge to 80% repeatedly
+        const batteryUsable = inputs.batteryKwh;
+        const initialSoC = inputs.soc / 100;
+        const initialKwh = batteryUsable * initialSoC;
+        const drainTo = 0.20 * batteryUsable; // 20% SOC
+        const chargeTo = 0.80 * batteryUsable; // 80% SOC
+        
+        // Calculate how much energy is available from initial charge before first stop
+        const initialRange = initialKwh * inputs.efficiency; // miles from pre-charge
+        let remainingJourneyMiles = inputs.journeyMiles - initialRange;
+        let stops = 0;
+        let totalStopTime = 0;
+        let stopsDetail = [];
+        
+        // Calculate stops following 80/20 rule
+        while (remainingJourneyMiles > 0 && maxChargingSpeed > 0) {
+            stops++;
+            // Each stop: charge from 20% to 80% = 60% of battery capacity
+            const kwhPerStop = chargeTo - drainTo;
+            const timePerStopHours = kwhPerStop / maxChargingSpeed;
+            const timePerStopFormatted = formatChargingTime(timePerStopHours);
+            totalStopTime += timePerStopHours;
+            
+            // Range available from one full 80% charge (minus the 20% drain point)
+            const rangePerStop = (chargeTo - drainTo) * inputs.efficiency;
+            
+            stopsDetail.push({
+                stopNum: stops,
+                kwhCharged: kwhPerStop.toFixed(1),
+                timeFormatted: timePerStopFormatted,
+                timeHours: timePerStopHours,
+                rangeAvailable: rangePerStop
+            });
+            
+            remainingJourneyMiles -= rangePerStop;
+        }
+        
+        // Generate stops description
+        let stopsHTML = '';
+        if (stops > 0 && maxChargingSpeed > 0) {
+            stopsHTML = `<h4 style="margin-top: 20px; margin-bottom: 10px; font-size: 1rem;">Real World Charging Assessment</h4>`;
+            stopsHTML += `<p class="main-result" style="font-size: 0.95rem;">Following the <a href="mastery.html#sec-8020" style="color: var(--accent); text-decoration: underline;">80/20 Rule</a>, you will need <strong>${stops} charging stop${stops > 1 ? 's' : ''}</strong> for this journey. Each stop will charge from 20% to 80% (${(chargeTo - drainTo).toFixed(1)} kWh) and will take approximately <strong>${stopsDetail[0].timeFormatted}</strong> at ${maxChargingSpeed} kW.</p>`;
+            
+            if (stops > 1) {
+                stopsHTML += `<p style="font-size: 0.9rem; color: var(--muted); margin-top: 10px;"><strong>Total charging time across all stops:</strong> ${formatChargingTime(totalStopTime)}</p>`;
+            }
+        } else if (maxChargingSpeed === 0) {
+            stopsHTML = `<h4 style="margin-top: 20px; margin-bottom: 10px; font-size: 1rem;">Real World Charging Assessment</h4>`;
+            stopsHTML = `<p class="main-result" style="font-size: 0.95rem;">Enter your vehicle's <strong>Max. Charging Speed</strong> above to see how many charging stops you'll need following the <a href="mastery.html#sec-8020" style="color: var(--accent); text-decoration: underline;">80/20 Rule</a>.</p>`;
+        }
+        
         const locationDisclaimer = `<p style="font-size:0.85rem; margin-top:12px; opacity:0.8; color:var(--neon-green) !important;">Note 1: Before purchasing a subscription, check that your chosen provider has charging stations in your planned area of travel — else your subscription will be wasted.</p><p style="font-size:0.85rem; margin-top:12px; opacity:0.8;">Note 2: Charging times exclude the initial ramp-up phase and the 80-to-100% charging slowdown.</p>`;
     
         let conclusionHTML = `<div class="conclusion-white-border">`; 
@@ -657,7 +709,7 @@ function calculate() {
             conclusionHTML += `<p class="main-result">Enter your vehicle's <strong>Max. Charging Speed</strong> above to see estimated charging times for this journey.</p>`;
         }
         
-        conclusionHTML += `${speedTableHtml}${locationDisclaimer}</div>`;
+        conclusionHTML += `${speedTableHtml}${stopsHTML}${locationDisclaimer}</div>`;
         conclusionsBox.innerHTML = conclusionHTML;
         } else {
             conclusionsBox.innerHTML = "";
