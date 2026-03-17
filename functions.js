@@ -676,22 +676,37 @@ function calculate() {
         // Generate stops description
         let stopsHTML = '';
         if (stops > 0 && maxChargingSpeed > 0) {
-            stopsHTML = `<h4 style="margin-top: 20px; margin-bottom: 10px; font-size: 1rem;">Real World Charging Assessment</h4>`;
+            stopsHTML = `<div id="real-world-assessment"><h4 style="margin-top: 20px; margin-bottom: 10px; font-size: 1rem;">Real World Charging Assessment</h4>`;
             stopsHTML += `<p class="main-result" style="font-size: 0.95rem;">Following the <a href="mastery.html#sec-8020" style="color: var(--accent); text-decoration: underline;">80/20 Rule</a>, you will need <strong>${stops} charging stop${stops > 1 ? 's' : ''}</strong> for this journey. Each stop will charge from 20% to 80% (${(chargeTo - drainTo).toFixed(1)} kWh) and will take approximately <strong>${stopsDetail[0].timeFormatted}</strong> at ${maxChargingSpeed} kW.</p>`;
             
             if (stops > 1) {
                 stopsHTML += `<p style="font-size: 0.9rem; color: var(--muted); margin-top: 10px;"><strong>Total charging time across all stops:</strong> ${formatChargingTime(totalStopTime)}</p>`;
             }
+            stopsHTML += `</div>`;
         } else if (maxChargingSpeed === 0) {
-            stopsHTML = `<h4 style="margin-top: 20px; margin-bottom: 10px; font-size: 1rem;">Real World Charging Assessment</h4>`;
-            stopsHTML = `<p class="main-result" style="font-size: 0.95rem;">Enter your vehicle's <strong>Max. Charging Speed</strong> above to see how many charging stops you'll need following the <a href="mastery.html#sec-8020" style="color: var(--accent); text-decoration: underline;">80/20 Rule</a>.</p>`;
+            stopsHTML = `<div id="real-world-assessment"><h4 style="margin-top: 20px; margin-bottom: 10px; font-size: 1rem;">Real World Charging Assessment</h4>`;
+            stopsHTML += `<p class="main-result" style="font-size: 0.95rem;">Enter your vehicle's <strong>Max. Charging Speed</strong> above to see how many charging stops you'll need following the <a href="mastery.html#sec-8020" style="color: var(--accent); text-decoration: underline;">80/20 Rule</a>.</p></div>`;
         }
         
         const locationDisclaimer = `<p style="font-size:0.85rem; margin-top:12px; opacity:0.8; color:var(--neon-green) !important;">Note 1: Before purchasing a subscription, check that your chosen provider has charging stations in your planned area of travel — else your subscription will be wasted.</p><p style="font-size:0.85rem; margin-top:12px; opacity:0.8;">Note 2: Charging times exclude the initial ramp-up phase and the 80-to-100% charging slowdown.</p>`;
     
-        let conclusionHTML = `<div class="conclusion-white-border">`; 
+        // Contents/Table of Contents
+        const contentsHTML = `
+            <div class="conclusion-white-border">
+                <h3>CONTENTS</h3>
+                <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem;">
+                    <li><a href="#payg-vs-subscription" style="color: var(--accent); text-decoration: none;">PAYG vs Subscription Conclusion</a></li>
+                    <li><a href="#charging-times-section" style="color: var(--accent); text-decoration: none;">Charging Times</a></li>
+                    <li><a href="#real-world-assessment" style="color: var(--accent); text-decoration: none;">Real World Charging Assessment</a></li>
+                </ul>
+            </div>
+        `;
+        
+        let conclusionHTML = contentsHTML;
         
         // Box 1: PAYG vs Subscription Conclusion
+        conclusionHTML += `<div class="conclusion-white-border" id="payg-vs-subscription">`; 
+        
         if (bestProvider.savings > 0) {
             conclusionHTML += `<h3>PAYG vs SUBSCRIPTION CONCLUSION</h3><p class="main-result">For a trip of <strong>${inputs.journeyMiles} miles</strong>, a one-month subscription with <strong>${bestProvider.name}</strong> is cheaper than PAYG based on the selected minimum charging rate of <strong>${minSpeedLabel}</strong> and the other information entered. The total journey cost will be <strong>£${bestProvider.totalJourneyCost.toFixed(2)}</strong>, which represents a saving of <strong>£${bestProvider.savings.toFixed(2)}</strong> over PAYG rates.</p>`;
         } else {
@@ -701,7 +716,7 @@ function calculate() {
         conclusionHTML += `</div>`;
         
         // Box 2: Charging Times
-        conclusionHTML += `<div class="conclusion-white-border"><h3>CHARGING TIMES</h3>`;
+        conclusionHTML += `<div class="conclusion-white-border" id="charging-times-section"><h3>CHARGING TIMES</h3>`;
         
         if (maxChargingSpeed > 0) {
             conclusionHTML += `<p class="main-result">With your vehicle's maximum charging speed of <strong>${maxChargingSpeed} kW</strong>, the journey requiring <strong>${publicKwh.toFixed(1)} kWh</strong> of public charging would take <strong>${maxChargingTimeFormatted}</strong> at public chargers.</p>`;
