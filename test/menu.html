@@ -166,30 +166,36 @@
     // Get current page name from URL
     function getCurrentPage() {
         const path = window.location.pathname;
-        const filename = path.split('/').pop();
+        const filename = path.split('/').pop() || 'index';
         return filename.replace('.html', '');
     }
 
-    // Hide current page from menu on load
+    // Hide current page from menu
     function hideCurrentPageFromMenu() {
         const currentPage = getCurrentPage();
-        if (currentPage) {
+        
+        if (currentPage && currentPage !== '') {
+            // Find all menu items with data-page attribute
             const menuItems = document.querySelectorAll('.menu-item-clean[data-page]');
+            
             menuItems.forEach(item => {
-                if (item.getAttribute('data-page') === currentPage) {
+                const itemPage = item.getAttribute('data-page');
+                
+                if (itemPage === currentPage) {
                     item.style.display = 'none';
                 }
             });
         }
     }
 
-    // Call when menu is loaded
-    document.addEventListener('DOMContentLoaded', hideCurrentPageFromMenu);
+    // Make function globally available so it can be called from parent page
+    window.hideCurrentPageFromMenu = hideCurrentPageFromMenu;
 
-    // Fallback in case DOM is already loaded
+    // Call when menu is loaded (for when menu.html is standalone or in iframe)
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', hideCurrentPageFromMenu);
     } else {
+        // DOM already loaded, call directly
         hideCurrentPageFromMenu();
     }
 </script>
