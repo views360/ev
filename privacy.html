@@ -494,21 +494,10 @@ async function loadMenu() {
         const menuHtml = await response.text();
         const placeholder = document.getElementById('menu-placeholder');
         
-        // 1. Inject the HTML from menu.html
         placeholder.innerHTML = menuHtml;
         
-        // 2. Wait a split second for the browser to render the new HTML
-        // then manually hide the current page link
         setTimeout(() => {
-            const path = window.location.pathname;
-            const pageName = path.split('/').pop().replace('.html', '') || 'index';
-            
-            // Find the menu item with the matching data-page attribute
-            const menuItem = document.querySelector(`.menu-item-clean[data-page="${pageName}"]`);
-            
-            if (menuItem) {
-                menuItem.style.display = 'none';
-            }
+            expandActiveSections();
         }, 50);
 
     } catch (error) {
@@ -516,10 +505,32 @@ async function loadMenu() {
     }
 }
 
-// These functions support the interactive parts of the menu
+function expandActiveSections() {
+    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+    const activeItem = document.querySelector(`a[href="${currentPage}"]`);
+    
+    if (activeItem) {
+        activeItem.classList.add('active-page');
+        
+        let parent = activeItem.closest('.menu-section-items');
+        if (parent) {
+            const toggle = parent.previousElementSibling;
+            if (toggle && toggle.classList.contains('menu-section-toggle')) {
+                toggle.classList.add('open');
+                parent.classList.add('open');
+            }
+        }
+    }
+}
+
 function toggleMenu() {
     const menu = document.getElementById('sideMenu');
-    if (menu) menu.classList.toggle('active');
+    if (menu) {
+        menu.classList.toggle('active');
+        if (menu.classList.contains('active')) {
+            expandActiveSections();
+        }
+    }
 }
 
 function toggleMenuSection(toggleId, itemsId) {
@@ -531,7 +542,6 @@ function toggleMenuSection(toggleId, itemsId) {
     }
 }
 
-// Initialize the menu loading
 loadMenu();
 
 function toggleTheme() {
@@ -543,13 +553,6 @@ function toggleTheme() {
     const isLight = document.documentElement.classList.toggle('light-mode');
     setCookie('themePref', isLight ? 'light' : 'dark');
 }
-
-function toggleMenu() {
-    const menu = document.getElementById('sideMenu');
-    if (menu) menu.classList.toggle('active');
-}
-
-function toggleMenuSection(toggleId, itemsId) {
     const toggle = document.getElementById(toggleId);
     const items = document.getElementById(itemsId);
     if (toggle && items) {
