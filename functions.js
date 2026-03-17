@@ -25,6 +25,12 @@ let PRESETS = [];
 let providerCount = 0;
 let chart = null;
 
+// Stub function - called in init() but doesn't need to do anything
+// The calculate() function handles all necessary updates
+function updateProviderInfo() {
+    // Intentionally empty - this function is called but not needed
+}
+
 function getInputs() {
     return {
         journeyMiles: parseFloat(document.getElementById("journeyMiles").value) || 0,
