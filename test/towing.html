@@ -656,7 +656,24 @@ window.addEventListener('resize', () => {
 function toggleMenu() {
     const menu = document.getElementById('sideMenu');
     if (menu) {
-        menu.classList.toggle('open');
+        menu.classList.toggle('active');
+        // Also close menu when clicking outside
+        if (menu.classList.contains('active')) {
+            document.addEventListener('click', closeMenuOnOutsideClick);
+        } else {
+            document.removeEventListener('click', closeMenuOnOutsideClick);
+        }
+    }
+}
+
+function closeMenuOnOutsideClick(e) {
+    const menu = document.getElementById('sideMenu');
+    const trigger = document.querySelector('.android-dots-trigger');
+    if (menu && menu.classList.contains('active')) {
+        if (!menu.contains(e.target) && !trigger.contains(e.target)) {
+            menu.classList.remove('active');
+            document.removeEventListener('click', closeMenuOnOutsideClick);
+        }
     }
 }
 
