@@ -572,13 +572,23 @@ window.addEventListener('resize', () => {
 async function loadMenu() {
     try {
         const response = await fetch('menu.html');
-        const menuHtml = await response.text();
-        document.getElementById('menu-placeholder').innerHTML = menuHtml;
+        if (!response.ok) throw new Error('Network response was not ok');
         
-        // Triggers the logic inside menu.html to hide the "Insurance" link
-        if (window.hideCurrentPageFromMenu) {
-            window.hideCurrentPageFromMenu();
-        }
+        const menuHtml = await response.text();
+        const placeholder = document.getElementById('menu-placeholder');
+        
+        // 1. Inject the HTML
+        placeholder.innerHTML = menuHtml;
+        
+        // 2. Small delay to ensure the DOM has processed the new elements
+        // then trigger the hiding logic defined in menu.html
+        setTimeout(() => {
+            if (window.hideCurrentPageFromMenu) {
+                console.log('Triggering menu hide logic...');
+                window.hideCurrentPageFromMenu();
+            }
+        }, 50); 
+
     } catch (error) {
         console.error('Menu load failed:', error);
     }
@@ -599,6 +609,7 @@ function toggleMenuSection(toggleId, itemsId) {
     }
 }
 
+// Start the loading process
 loadMenu();
 </script>
 </body>
