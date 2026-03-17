@@ -568,6 +568,7 @@ window.addEventListener('resize', () => {
     }, 500);
 });
 </script>
+<script>
 async function loadMenu() {
     try {
         const response = await fetch('menu.html');
@@ -576,26 +577,23 @@ async function loadMenu() {
         const menuHtml = await response.text();
         const placeholder = document.getElementById('menu-placeholder');
         
-        // 1. Inject the HTML from menu.html
         placeholder.innerHTML = menuHtml;
         
-        // 2. RE-ATTACH THE THEME TOGGLE EVENT
-        // Because the button is now dynamically loaded, we must re-link it 
-        // to the toggleTheme() function in functions.js
+        // 1. Re-attach the Theme Toggle logic
         const themeBtn = document.getElementById('lightdarkmode');
         if (themeBtn) {
             themeBtn.addEventListener('click', () => {
+                // This calls the function already inside your functions.js
                 if (typeof toggleTheme === 'function') {
                     toggleTheme();
                 }
             });
         }
         
-        // 3. Hide the current page link (e.g., "About" if on about.html)
+        // 2. Hide the current page link
         setTimeout(() => {
             const path = window.location.pathname;
             const pageName = path.split('/').pop().replace('.html', '') || 'index';
-            
             const menuItem = document.querySelector(`.menu-item-clean[data-page="${pageName}"]`);
             if (menuItem) {
                 menuItem.style.display = 'none';
@@ -606,5 +604,9 @@ async function loadMenu() {
         console.error('Menu load failed:', error);
     }
 }
+
+// Initialize the menu loading
+loadMenu();
+</script>
 </body>
 </html>
