@@ -694,15 +694,18 @@ function calculate() {
         const contentsHTML = `
             <div class="conclusion-white-border">
                 <h3>CONTENTS</h3>
-                <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem;">
-                    <li><a href="#payg-vs-subscription" style="color: var(--accent); text-decoration: none;">PAYG vs Subscription Conclusion</a></li>
-                    <li><a href="#charging-times-section" style="color: var(--accent); text-decoration: none;">Charging Times</a></li>
-                    <li><a href="#real-world-assessment" style="color: var(--accent); text-decoration: none;">Real World Charging Assessment</a></li>
+                <ul style="margin:0; padding-left:20px; font-size:0.95rem;">
+                    <li><a href="#payg-summary" style="color: var(--accent); text-decoration:none;">PAYG Summary</a></li>
+                    <li><a href="#providerResults" style="color: var(--accent); text-decoration:none;">Table of Results</a></li>
+                    <li><a href="#payg-vs-subscription" style="color: var(--accent); text-decoration:none;">PAYG vs Subscription Conclusion</a></li>
+                    <li><a href="#charging-times-section" style="color: var(--accent); text-decoration:none;">Charging Times</a></li>
+                    <li><a href="#graph-section" style="color: var(--accent); text-decoration:none;">Graph</a></li>
                 </ul>
             </div>
         `;
         
-        let conclusionHTML = contentsHTML;
+        document.getElementById("contentsBox").innerHTML = contentsHTML;
+        let conclusionHTML = "";
         
         // Box 1: PAYG vs Subscription Conclusion
         conclusionHTML += `<div class="conclusion-white-border" id="payg-vs-subscription">`; 
