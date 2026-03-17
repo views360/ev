@@ -415,28 +415,58 @@
     <div id="menuContainer"></div>
 
     <script>
+        console.log('[Towing.js] Menu loader script starting');
+        
         // Load external menu
         function loadExternalMenu() {
+            console.log('[Towing.js] loadExternalMenu() called');
+            console.log('[Towing.js] Fetching menu.html...');
+            
             fetch('menu.html')
-                .then(response => response.text())
-                .then(html => {
-                    document.getElementById('menuContainer').innerHTML = html;
-                    
-                    // Wait a tick to ensure the menu scripts have executed
-                    // and defined hideCurrentPageFromMenu globally
-                    setTimeout(() => {
-                        if (typeof window.hideCurrentPageFromMenu === 'function') {
-                            window.hideCurrentPageFromMenu();
-                        }
-                    }, 10);
+                .then(response => {
+                    console.log('[Towing.js] fetch response received, status:', response.status);
+                    if (!response.ok) {
+                        throw new Error('HTTP error, status: ' + response.status);
+                    }
+                    return response.text();
                 })
-                .catch(error => console.error('Error loading menu:', error));
+                .then(html => {
+                    console.log('[Towing.js] menu.html text received, length:', html.length);
+                    document.getElementById('menuContainer').innerHTML = html;
+                    console.log('[Towing.js] menu.html injected into page');
+                    
+                    // Wait for scripts to execute
+                    console.log('[Towing.js] Setting setTimeout(hideCurrentPageFromMenu, 50ms)');
+                    setTimeout(() => {
+                        console.log('[Towing.js] setTimeout callback executed');
+                        console.log('[Towing.js] Checking if window.hideCurrentPageFromMenu exists...');
+                        
+                        if (typeof window.hideCurrentPageFromMenu === 'function') {
+                            console.log('[Towing.js] ✓ Function exists! Calling it now...');
+                            window.hideCurrentPageFromMenu();
+                            console.log('[Towing.js] ✓ hideCurrentPageFromMenu() called successfully');
+                        } else {
+                            console.error('[Towing.js] ✗ ERROR: window.hideCurrentPageFromMenu is NOT a function!');
+                            console.error('[Towing.js] Type:', typeof window.hideCurrentPageFromMenu);
+                        }
+                    }, 50);
+                })
+                .catch(error => {
+                    console.error('[Towing.js] ✗ ERROR loading menu:', error);
+                });
         }
 
+        console.log('[Towing.js] Document readyState:', document.readyState);
+        
         // Load menu when DOM is ready
         if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', loadExternalMenu);
+            console.log('[Towing.js] DOM is loading, adding DOMContentLoaded listener');
+            document.addEventListener('DOMContentLoaded', () => {
+                console.log('[Towing.js] DOMContentLoaded fired');
+                loadExternalMenu();
+            });
         } else {
+            console.log('[Towing.js] DOM already loaded, calling loadExternalMenu immediately');
             loadExternalMenu();
         }
     </script>
