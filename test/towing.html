@@ -421,10 +421,14 @@
                 .then(response => response.text())
                 .then(html => {
                     document.getElementById('menuContainer').innerHTML = html;
-                    // Call initialization functions after menu is loaded
-                    if (typeof hideCurrentPageFromMenu === 'function') {
-                        hideCurrentPageFromMenu();
-                    }
+                    
+                    // Wait a tick to ensure the menu scripts have executed
+                    // and defined hideCurrentPageFromMenu globally
+                    setTimeout(() => {
+                        if (typeof window.hideCurrentPageFromMenu === 'function') {
+                            window.hideCurrentPageFromMenu();
+                        }
+                    }, 10);
                 })
                 .catch(error => console.error('Error loading menu:', error));
         }
