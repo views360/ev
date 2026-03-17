@@ -693,7 +693,7 @@ function calculate() {
         // Contents/Table of Contents
         const contentsHTML = `
             <div class="conclusion-white-border">
-                <h3>CONTENTS</h3>
+                <h3>RESULTS CONTENTS</h3>
                 <ul style="margin:0; padding-left:20px; font-size:0.95rem;">
                     <li><a href="#payg-summary" style="color: var(--accent); text-decoration:none;">PAYG Summary</a></li>
                     <li><a href="#providerResults" style="color: var(--accent); text-decoration:none;">Table of Results</a></li>
