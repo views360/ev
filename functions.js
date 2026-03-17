@@ -464,7 +464,7 @@ function calculate() {
     const publicKwh = publicMiles / inputs.efficiency;
     const totalAdhocCost = startChargeCost + (publicKwh * (inputs.adhoc / 100));
     
-    document.getElementById("preChargeLine").innerHTML = `<div id="payg-summary"><h3>PAYG SUMMARY</h3>Pre-journey starting charge: <strong>${startChargeKwh.toFixed(1)} kWh</strong> (£${startChargeCost.toFixed(2)})</div>`;
+    document.getElementById("preChargeLine").innerHTML = `<div class="guide-section" id="payg-summary"><h3>PAYG SUMMARY</h3>Pre-journey starting charge: <strong>${startChargeKwh.toFixed(1)} kWh</strong> (£${startChargeCost.toFixed(2)})</div>`;
     document.getElementById("homeRangeLine").innerHTML = `<span class="tooltip-container"><span class="info-icon" style="font-size:0.8rem" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is the distance you can expect to drive before your first public charge along your route.</span></span></span>Range from pre-journey starting charge: <strong>${initialRange.toFixed(0)} miles</strong></span>`;
     document.getElementById("publicMilesLine").innerHTML = `<span class="tooltip-container"><span class="info-icon" style="font-size:0.8rem" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is how many miles of your trip will need to be covered by public charging.</span></span></span>PAYG public charging miles needed: <strong>${publicMiles.toFixed(0)} miles</strong></span>`;
     document.getElementById("publicKwhLine").innerHTML = `PAYG public charging energy needed: <strong>${publicKwh.toFixed(1)} kWh @ ${inputs.adhoc}p</strong>`;
@@ -708,7 +708,7 @@ function calculate() {
         let conclusionHTML = "";
         
         // Box 1: PAYG vs Subscription Conclusion
-        conclusionHTML += `<div class="conclusion-white-border" id="payg-vs-subscription">`; 
+        conclusionHTML += `<div class="conclusion-white-border guide-section" id="payg-vs-subscription">`; 
         
         if (bestProvider.savings > 0) {
             conclusionHTML += `<h3>PAYG vs SUBSCRIPTION CONCLUSION</h3><p class="main-result">For a trip of <strong>${inputs.journeyMiles} miles</strong>, a one-month subscription with <strong>${bestProvider.name}</strong> is cheaper than PAYG based on the selected minimum charging rate of <strong>${minSpeedLabel}</strong> and the other information entered. The total journey cost will be <strong>£${bestProvider.totalJourneyCost.toFixed(2)}</strong>, which represents a saving of <strong>£${bestProvider.savings.toFixed(2)}</strong> over PAYG rates.</p>`;
@@ -719,7 +719,7 @@ function calculate() {
         conclusionHTML += `</div>`;
         
         // Box 2: Charging Times
-        conclusionHTML += `<div class="conclusion-white-border" id="charging-times-section"><h3>CHARGING TIMES</h3>`;
+        conclusionHTML += `<div class="conclusion-white-border guide-section" id="charging-times-section"><h3>CHARGING TIMES</h3>`;
         
         if (maxChargingSpeed > 0) {
             conclusionHTML += `<p class="main-result">With your vehicle's maximum charging speed of <strong>${maxChargingSpeed} kW</strong>, the journey requiring <strong>${publicKwh.toFixed(1)} kWh</strong> of public charging would take <strong>${maxChargingTimeFormatted}</strong> at public chargers.</p>`;
