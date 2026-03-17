@@ -688,7 +688,7 @@ function calculate() {
             stopsHTML += `<p class="main-result" style="font-size: 0.95rem;">Enter your vehicle's <strong>Max. Charging Speed</strong> above to see how many charging stops you'll need following the <a href="mastery.html#sec-8020" style="color: var(--accent); text-decoration: underline;">80/20 Rule</a>.</p></div>`;
         }
         
-        const locationDisclaimer = `<p style="font-size:0.85rem; margin-top:12px; opacity:0.8; color:var(--neon-green) !important;">Note 1: Before purchasing a subscription, check that your chosen provider has charging stations in your planned area of travel — else your subscription will be wasted.</p><p style="font-size:0.85rem; margin-top:12px; opacity:0.8;">Note 2: Charging times exclude the initial ramp-up phase and the 80-to-100% charging slowdown.</p>`;
+        const locationDisclaimer = `<p style="font-size:0.85rem; margin-top:12px; opacity:0.8; color:var(--neon-green) !important;">Note 1: Before purchasing a subscription, check that your chosen provider has charging stations in your planned area of travel — else your subscription will be wasted.</p><p style="font-size:0.85rem; margin-top:12px; opacity:0.8;">Note 2: Charging times exclude the initial ramp-up phase and the 80-to-100% charging slowdown. Read the section on <a href="mastery.html#sec-slow" style="color: var(--accent); text-decoration: underline;">Slow Charging</a> to find out more.</p>`;
     
         // Contents/Table of Contents
         const contentsHTML = `
