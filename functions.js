@@ -690,8 +690,7 @@ function calculate() {
         
         const locationDisclaimer = `<p style="font-size:0.85rem; margin-top:12px; opacity:0.8; color:var(--neon-green) !important;">Note 1: Before purchasing a subscription, check that your chosen provider has charging stations in your planned area of travel — else your subscription will be wasted.</p><p style="font-size:0.85rem; margin-top:12px; opacity:0.8;">Note 2: Charging times exclude the initial ramp-up phase and the 80-to-100% charging slowdown. For an explanation, read about <a href="mastery.html#sec-slow" style="color: var(--accent); text-decoration: underline;">Slow Charging</a>.</p>`;
     
-        // Contents/Table of Contents
-        // 1. Create the Table of Contents first
+// 1. Create the Table of Contents (To appear first)
         const updatedContentsHTML = `
             <div class="conclusion-white-border" style="margin-bottom: 20px;">
                 <h3>CONTENTS</h3>
@@ -715,19 +714,18 @@ function calculate() {
         }
         conclusionSection += `</div>`;
         
-        // 3. Create the Charging Times Section
+        // 3. Create the Charging Times Section (includes Speed Table and Real World Assessment)
         let timesSection = `<div class="conclusion-white-border" id="charging-times-section">
             <h3>CHARGING TIMES</h3>
             <p class="main-result">Based on <strong>${inputs.maxChargingSpeed} kW</strong> max speed, public charging will take approx <strong>${maxChargingTimeFormatted}</strong>.</p>
             ${speedTableHtml}${stopsHTML}${locationDisclaimer}
         </div>`;
         
-        // 4. Inject all parts into the conclusionsBox in order
-        conclusionsBox.innerHTML = updatedContentsHTML + conclusionSection + timesSection;
+        // 4. Update the conclusionsBox with the new combined HTML
+        // This variable name must match what you send to innerHTML
+        const finalConclusionHTML = updatedContentsHTML + conclusionSection + timesSection;
+        conclusionsBox.innerHTML = finalConclusionHTML;
 
-
-        
-        conclusionsBox.innerHTML = conclusionHTML;
         } else {
             conclusionsBox.innerHTML = "";
         }
