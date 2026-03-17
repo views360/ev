@@ -568,7 +568,6 @@ window.addEventListener('resize', () => {
     }, 500);
 });
 </script>
-<script>
 async function loadMenu() {
     try {
         const response = await fetch('menu.html');
@@ -580,15 +579,24 @@ async function loadMenu() {
         // 1. Inject the HTML from menu.html
         placeholder.innerHTML = menuHtml;
         
-        // 2. Wait a split second for the browser to render the new HTML
-        // then manually hide the current page link
+        // 2. RE-ATTACH THE THEME TOGGLE EVENT
+        // Because the button is now dynamically loaded, we must re-link it 
+        // to the toggleTheme() function in functions.js
+        const themeBtn = document.getElementById('lightdarkmode');
+        if (themeBtn) {
+            themeBtn.addEventListener('click', () => {
+                if (typeof toggleTheme === 'function') {
+                    toggleTheme();
+                }
+            });
+        }
+        
+        // 3. Hide the current page link (e.g., "About" if on about.html)
         setTimeout(() => {
             const path = window.location.pathname;
             const pageName = path.split('/').pop().replace('.html', '') || 'index';
             
-            // Find the menu item with the matching data-page attribute
             const menuItem = document.querySelector(`.menu-item-clean[data-page="${pageName}"]`);
-            
             if (menuItem) {
                 menuItem.style.display = 'none';
             }
@@ -598,24 +606,5 @@ async function loadMenu() {
         console.error('Menu load failed:', error);
     }
 }
-
-// These functions support the interactive parts of the menu
-function toggleMenu() {
-    const menu = document.getElementById('sideMenu');
-    if (menu) menu.classList.toggle('active');
-}
-
-function toggleMenuSection(toggleId, itemsId) {
-    const toggle = document.getElementById(toggleId);
-    const items = document.getElementById(itemsId);
-    if (toggle && items) {
-        toggle.classList.toggle('open');
-        items.classList.toggle('open');
-    }
-}
-
-// Initialize the menu loading
-loadMenu();
-</script>
 </body>
 </html>
