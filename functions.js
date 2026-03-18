@@ -396,6 +396,9 @@ function calculate() {
         uiPreText.innerHTML = "Please attend to all flashing green fields, or use the navigation tabs at the top to switch between BREAK EVEN and TRIP SAVINGS calcuation types.";
         uiPreText.style.display = "block";
         uiResults.style.display = "none";
+        if (resultsHeader) resultsHeader.style.display = "none";
+        if (uiShare) uiShare.style.display = "none";
+        if (uiPdf) uiPdf.style.display = "none";
         return; 
     }
     
@@ -403,26 +406,30 @@ function calculate() {
         uiPreText.innerHTML = "Before you may view a comparison, you must select at least one provider from the list of providers (above).";
         uiPreText.style.display = "block";
         uiResults.style.display = "none";
+        if (resultsHeader) resultsHeader.style.display = "none";
+        if (uiShare) uiShare.style.display = "none";
+        if (uiPdf) uiPdf.style.display = "none";
         return;
     }
 
     uiPreText.style.display = "none";
     uiResults.style.display = "block";
     conclusionsBox.style.display = "block";
-    
+    if (uiShare) uiShare.style.display = "";
+    if (uiPdf) uiPdf.style.display = "";
     document.querySelector(".calc-lines").style.display = "block";
     document.querySelector(".chart-wrapper").style.display = "block";
 
     const startChargeKwh = (inputs.soc / 100) * inputs.batteryKwh;
     const startChargeCost = startChargeKwh * (inputs.startChargeRate / 100);
-    const initialRangeFull = startChargeKwh * inputs.efficiency;
-    const publicMiles = Math.max(0, inputs.journeyMiles - initialRangeFull);
+    const initialRange = startChargeKwh * inputs.efficiency;
+    const publicMiles = Math.max(0, inputs.journeyMiles - initialRange);
     const publicKwh = publicMiles / inputs.efficiency;
     const totalAdhocCost = startChargeCost + (publicKwh * (inputs.adhoc / 100));
     
     document.getElementById("preChargeLine").innerHTML = `<div class="guide-section" id="payg-summary"><h3>PAYG SUMMARY</h3>Pre-journey starting charge: <strong>${startChargeKwh.toFixed(1)} kWh</strong> (£${startChargeCost.toFixed(2)})</div>`;
-    document.getElementById("homeRangeLine").innerHTML = `Range from pre-journey starting charge: <strong>${initialRangeFull.toFixed(0)} miles</strong>`;
-    document.getElementById("publicMilesLine").innerHTML = `PAYG public charging miles needed: <strong>${publicMiles.toFixed(0)} miles</strong>`;
+    document.getElementById("homeRangeLine").innerHTML = `<span class="tooltip-container"><span class="info-icon" style="font-size:0.8rem" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is the distance you can expect to drive before your first public charge along your route.</span></span></span>Range from pre-journey starting charge: <strong>${initialRange.toFixed(0)} miles</strong></span>`;
+    document.getElementById("publicMilesLine").innerHTML = `<span class="tooltip-container"><span class="info-icon" style="font-size:0.8rem" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is how many miles of your trip will need to be covered by public charging.</span></span></span>PAYG public charging miles needed: <strong>${publicMiles.toFixed(0)} miles</strong></span>`;
     document.getElementById("publicKwhLine").innerHTML = `PAYG public charging energy needed: <strong>${publicKwh.toFixed(1)} kWh @ ${inputs.adhoc}p</strong>`;
     document.getElementById("adhocCostLine").innerHTML = `Total journey cost (pre-charge + standard PAYG): <strong>£${totalAdhocCost.toFixed(2)}</strong>`;
     
@@ -432,14 +439,20 @@ function calculate() {
         const name = document.getElementById(`name${id}`).value || "Unnamed";
         const subCost = parseFloat(document.getElementById(`subCost${id}`).value) || 0;
         const rate = parseFloat(document.getElementById(`rate${id}`).value) || 0;
+       
         const savingPerKwh = (inputs.adhoc - rate) / 100;
-        let breakEvenMiles = savingPerKwh > 0 ? (subCost / savingPerKwh) * inputs.efficiency : 0;
+        let breakEvenMiles = 0;
+        if (savingPerKwh > 0) {
+            const kwhNeeded = subCost / savingPerKwh;
+            breakEvenMiles = kwhNeeded * inputs.efficiency;
+        }
         const totalJourneyCost = subCost + startChargeCost + (publicKwh * (rate / 100));
         const pData = PRESETS.find(p => p.name === document.getElementById(`preset${id}`).value);
 
         providers.push({ 
-            name, subCost, rate, totalJourneyCost, breakEvenMiles,
-            totalWithBattery: breakEvenMiles + initialRangeFull,
+            name, subCost, rate, totalJourneyCost, 
+            breakEvenMiles,
+            totalWithBattery: breakEvenMiles + initialRange,
             savings: totalAdhocCost - totalJourneyCost,
             url: pData?.subscription?.url,
             comments: pData?.subscription?.comments || ""
@@ -449,79 +462,123 @@ function calculate() {
     const sortVal = document.getElementById("sortResults").value;
     providers.sort((a, b) => {
         if (sortVal === "cheapest") return a.totalJourneyCost - b.totalJourneyCost;
-        if (sortVal === "breakeven") return (a.rate >= inputs.adhoc) ? 1 : a.breakEvenMiles - b.breakEvenMiles;
-        return a.name.localeCompare(b.name);
+        if (sortVal === "breakeven") {
+            const aNever = a.rate >= inputs.adhoc;
+            const bNever = b.rate >= inputs.adhoc;
+            if (aNever && !bNever) return 1;
+            if (!aNever && bNever) return -1;
+            return a.breakEvenMiles - b.breakEvenMiles;
+        }
+        if (sortVal === "az") return a.name.localeCompare(b.name);
+        if (sortVal === "za") return b.name.localeCompare(a.name);
+        return 0;
     });
 
-    let html = `<div class="mobile-only-text" style="font-size: 0.8em; text-align: center; color: var(--neon-green)">Slide table left to view hidden columns.</div><div class="results-scroll"><table><thead><tr><th>Provider</th><th>Sub. Fee</th><th>Disc. Rate</th><th>Trip Cost</th><th>vs. PAYG</th><th>Break-Even</th><th>BE + Battery</th></tr></thead><tbody>`;
+    let html = `<div class="mobile-only-text" style="font-size: 0.8em; text-align: center; color: var(--neon-green)">Slide table left to view hidden columns.</div><div class="results-scroll"><table><thead><tr>
+        <th>Provider (click hyperlink to view subscription info)</th>
+        <th>Sub. Fee</th>
+        <th>Disc. Rate</th>
+        <th>Trip Cost</th>
+        <th>vs. PAYG</th>
+        <th>Break-Even Miles</th>
+        <th>Break Even + Battery</th>
+        </tr></thead><tbody>`;
     providers.forEach(p => {
         const rowClass = p.savings > 0 ? "good" : (p.savings < 0 ? "bad" : "");
-        html += `<tr class="${rowClass}"><td><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">${p.comments}</span></span></span> ${p.name}</td><td>£${p.subCost.toFixed(2)}</td><td>${p.rate.toFixed(1)}p</td><td><strong>£${p.totalJourneyCost.toFixed(2)}</strong></td><td>${p.savings > 0 ? 'Save £' : 'Cost £'}${Math.abs(p.savings).toFixed(2)}</td><td>${p.rate < inputs.adhoc ? p.breakEvenMiles.toFixed(0) + ' miles' : 'Never'}</td><td>${p.rate < inputs.adhoc ? p.totalWithBattery.toFixed(0) + ' miles' : 'N/A'}</td></tr>`;
+        const providerLink = p.url ? `<a href="${p.url}" target="_blank" style="color:inherit; text-decoration:underline;">${p.name}</a>` : p.name;
+        const breakEvenText = p.rate < inputs.adhoc ? `${p.breakEvenMiles.toFixed(0)} miles` : "Never";
+        const totalMilesText = p.rate < inputs.adhoc ? `${p.totalWithBattery.toFixed(0)} miles` : "N/A";
+        html += `<tr class="${rowClass}">
+            <td><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">${p.comments}</span></span></span> ${providerLink}</td>
+            <td>£${p.subCost.toFixed(2)}</td>
+            <td>${p.rate.toFixed(1)}p</td>
+            <td><strong>£${p.totalJourneyCost.toFixed(2)}</strong></td>
+            <td>${p.savings > 0 ? 'Save £' : 'Cost £'}${Math.abs(p.savings).toFixed(2)}</td>
+            <td><strong>${breakEvenText}</strong></td>
+            <td><strong>${totalMilesText}</strong></td>
+        </tr>`;
     });
     document.getElementById("providerResults").innerHTML = html + `</tbody></table></div>`;
 
     if (providers.length > 0) {
         const bestProvider = providers[0];
-        const minSpeedLabel = document.getElementById("minSpeed").options[document.getElementById("minSpeed").selectedIndex].text;
+        const minSpeedSelect = document.getElementById("minSpeed");
+        const minSpeedLabel = minSpeedSelect.options[minSpeedSelect.selectedIndex].text;
         const maxChargingSpeed = inputs.maxChargingSpeed;
         
-        const formatTime = (timeHours) => {
-            const h = Math.floor(timeHours);
-            const m = Math.round((timeHours - h) * 60);
-            return h > 0 ? `${h}h ${m}m` : `${m} mins`;
+        const formatChargingTime = (timeHours) => {
+            if (timeHours < 1) {
+                return `${Math.round(timeHours * 60)} minutes`;
+            } else {
+                const hours = Math.floor(timeHours);
+                const minutes = Math.round((timeHours - hours) * 60);
+                return minutes === 0 ? `${hours} hour${hours > 1 ? 's' : ''}` : `${hours}h ${minutes}m`;
+            }
         };
-        
+
         const chargingSpeeds = [
-            { speed: 7, type: 'AC', descriptor: 'Standard' }, { speed: 50, type: 'DC', descriptor: 'Rapid' },
-            { speed: 150, type: 'DC', descriptor: 'Ultra-Rapid' }, { speed: 350, type: 'DC', descriptor: 'Hyper-Rapid' }
+            { speed: 7, type: 'AC', descriptor: 'Standard' }, { speed: 11, type: 'AC', descriptor: 'Standard Plus' },
+            { speed: 50, type: 'DC', descriptor: 'Rapid' }, { speed: 150, type: 'DC', descriptor: 'Ultra-Rapid' },
+            { speed: 350, type: 'DC', descriptor: 'Hyper-Rapid' }
         ];
         
         let tableRows = '';
-        chargingSpeeds.forEach(s => {
-            tableRows += `<tr><td>${s.speed}kW</td><td>${s.type}</td><td>${s.descriptor}</td><td>${formatTime(publicKwh / s.speed)}</td></tr>`;
+        chargingSpeeds.forEach(speedObj => {
+            const isMaxSpeed = Math.abs(maxChargingSpeed - speedObj.speed) < 0.01;
+            tableRows += `<tr style="${isMaxSpeed ? 'font-weight:bold; color:#4A9EFF;' : ''}"><td>${speedObj.speed}kW</td><td>${speedObj.type}</td><td>${speedObj.descriptor}</td><td>${formatChargingTime(publicKwh / speedObj.speed)}</td></tr>`;
         });
 
-        // --- NEW REAL WORLD LOGIC ---
+        const speedTableHtml = `<div class="speed-comparison-container"><table class="mini-table"><thead><tr><th>Charging Speed</th><th>Type</th><th>Descriptor</th><th>Journey Charging Time</th></tr></thead><tbody>${tableRows}</tbody></table></div>`;
+
+        // --- NEW REAL WORLD CALCULATIONS INTEGRATED HERE ---
         const A = inputs.journeyMiles;
         const usableKwh = inputs.batteryKwh;
         const efficiency = inputs.efficiency;
         const chargeSpeed = inputs.maxChargingSpeed || 101;
-        const initialKwh = (inputs.soc / 100) * usableKwh;
         const reserveKwh = 0.2 * usableKwh;
+        const initialKwhAtStart = (inputs.soc / 100) * usableKwh;
         
-        const B = Math.max(0, (initialKwh - reserveKwh) * efficiency);
+        const B = Math.max(0, (initialKwhAtStart - reserveKwh) * efficiency);
         const sixtyPercentKwh = 0.6 * usableKwh;
         const fullChargeRange = sixtyPercentKwh * efficiency;
         const milesRemaining = Math.max(0, A - B);
         const C = Math.floor(milesRemaining / fullChargeRange);
-        const D = formatTime(sixtyPercentKwh / chargeSpeed);
+        const D = formatChargingTime(sixtyPercentKwh / chargeSpeed);
         const F = C + 1;
         const finalLegMiles = milesRemaining % fullChargeRange;
         const H = (finalLegMiles / efficiency).toFixed(1);
         const G = Math.ceil((parseFloat(H) / usableKwh) * 100);
-        const I = formatTime(parseFloat(H) / chargeSpeed);
+        const I = formatChargingTime(parseFloat(H) / chargeSpeed);
 
-        const stopsHTML = `
-            <div id="real-world-assessment">
-                <h4 style="margin-top: 20px; margin-bottom: 10px; font-size: 1rem;">Real World Charging Assessment</h4>
-                <div class="results-scroll">
-                    <table class="real-world-table">
-                        <thead><tr><th>Event</th><th>Value</th></tr></thead>
-                        <tbody>
-                            <tr><td>First public charge at 20%</td><td><strong>${B.toFixed(0)} miles</strong></td></tr>
-                            <tr><td>${C} subsequent charges (20% to 80%)</td><td><strong>${D}</strong> (to add ${sixtyPercentKwh.toFixed(1)}kWh)</td></tr>
-                            <tr><td>Charge ${F} option 2: charge to get home</td><td>Add <strong>${G}% / ${H}kWh</strong>, taking <strong>${I}</strong></td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>`;
+        let stopsHTML = '';
+        if (maxChargingSpeed > 0) {
+            stopsHTML = `
+                <div id="real-world-assessment">
+                    <h4 style="margin-top: 20px; margin-bottom: 10px; font-size: 1rem;">Real World Charging Assessment</h4>
+                    <div class="results-scroll">
+                        <table class="real-world-table">
+                            <thead><tr><th>Event</th><th>Value</th></tr></thead>
+                            <tbody>
+                                <tr><td>First public charge at 20%</td><td><strong>${B.toFixed(0)} miles</strong></td></tr>
+                                <tr><td>${C} subsequent charges (20% to 80%)</td><td><strong>${D}</strong> (to add ${sixtyPercentKwh.toFixed(1)}kWh)</td></tr>
+                                <tr><td>Charge ${F} option 2: charge enough to get home with 20%</td><td>Add <strong>${G}%/${H}kWh</strong>, taking <strong>${I}</strong></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>`;
+        }
 
-        let conclusionHTML = `<div class="conclusion-white-border guide-section"><h3>PAYG vs SUBSCRIPTION CONCLUSION</h3><p class="main-result">${bestProvider.savings > 0 ? `Save <strong>£${bestProvider.savings.toFixed(2)}</strong> with <strong>${bestProvider.name}</strong>.` : `Standard PAYG is cheaper.`}</p></div>`;
-        conclusionHTML += `<div class="conclusion-white-border guide-section"><h3>CHARGING TIMES</h3><p class="main-result">Public charging would take <strong>${formatTime(publicKwh/maxChargingSpeed)}</strong>.</p><table class="mini-table"><thead><tr><th>Speed</th><th>Type</th><th>Desc</th><th>Time</th></tr></thead><tbody>${tableRows}</tbody></table>${stopsHTML}</div>`;
+        const locationDisclaimer = `<p style="font-size:0.85rem; margin-top:12px; opacity:0.8; color:var(--neon-green) !important;">Note 1: Check provider stations in your area. Note 2: Times exclude ramp-up/slowdown.</p>`;
         
+        document.getElementById("contentsBox").innerHTML = `<div class="conclusion-white-border"><h3>RESULTS CONTENTS</h3><ul style="margin:0; padding-left:20px; font-size:0.95rem;"><li><a href="#payg-summary" style="color: var(--accent); text-decoration:none;">PAYG Summary</a></li><li><a href="#providerResults" style="color: var(--accent); text-decoration:none;">Table of Results</a></li><li><a href="#payg-vs-subscription" style="color: var(--accent); text-decoration:none;">PAYG vs Subscription</a></li><li><a href="#charging-times-section" style="color: var(--accent); text-decoration:none;">Charging Times</a></li></ul></div>`;
+
+        let conclusionHTML = `<div class="conclusion-white-border guide-section" id="payg-vs-subscription"><h3>PAYG vs SUBSCRIPTION CONCLUSION</h3><p class="main-result">${bestProvider.savings > 0 ? `For a trip of <strong>${inputs.journeyMiles} miles</strong>, <strong>${bestProvider.name}</strong> saves you <strong>£${bestProvider.savings.toFixed(2)}</strong>.` : `Standard PAYG is cheaper.`}</p></div>`;
+        conclusionHTML += `<div class="conclusion-white-border guide-section" id="charging-times-section"><h3>CHARGING TIMES</h3><p class="main-result">Public charging would take <strong>${formatChargingTime(publicKwh / maxChargingSpeed)}</strong>.</p>${speedTableHtml}${stopsHTML}${locationDisclaimer}</div>`;
         conclusionsBox.innerHTML = conclusionHTML;
+    } else {
+        conclusionsBox.innerHTML = "";
     }
-    
+
     drawGraph(inputs, providers);
     setCookie("ev_trip_values", getInputs());
 }
