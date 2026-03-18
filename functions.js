@@ -643,12 +643,12 @@ function calculate() {
         if (maxChargingSpeed > 0) {
             assessmentBoxHTML = `
                 <div class="conclusion-white-border guide-section" id="real-world-assessment">
-                    <h3>Real-World Charging Assessment</h3>
+                    <h3>Real-World Public Charging Expectations</h3>
                     <div class="results-scroll">
                         <table style="width: 100%; border-collapse: collapse; margin-top: 10px; border: 1px solid var(--border);">
                             <thead>
                                 <tr style="background: rgba(57, 255, 20, 0.05); color: var(--text);">
-                                    <th style="padding: 10px; border: 1px solid var(--border); text-align: left;">Event</th>
+                                    <th style="padding: 10px; border: 1px solid var(--border); text-align: left;">Journey Event</th>
                                     <th style="padding: 10px; border: 1px solid var(--border); text-align: left;">Value</th>
                                 </tr>
                             </thead>
