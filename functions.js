@@ -927,52 +927,66 @@ function exportPdf() {
     pdfBtn.textContent = "Generating PDF...";
     pdfBtn.style.pointerEvents = "none";
 
-    // 1. Create a clone of the actual results container to preserve your data exactly as it is
+    // Clone the results area for a clean export
     const printContainer = resultsArea.cloneNode(true);
     printContainer.id = "pdf-render-clone";
     
-    // 2. Apply Print Styles: Forces Black text on White background for everything
     const style = document.createElement('style');
     style.innerHTML = `
         #pdf-render-clone { 
-            background: white !important; 
-            color: black !important; 
+            background: #ffffff !important; 
+            color: #000000 !important; 
             padding: 40px !important; 
-            width: 800px !important;
+            width: 1000px !important; /* Wider canvas to prevent column overlap */
             font-family: Arial, sans-serif !important;
         }
         #pdf-render-clone * { 
-            background: white !important; 
-            color: black !important; 
-            border-color: #ccc !important;
+            background: #ffffff !important; 
+            color: #000000 !important; /* Force greyscale */
+            border-color: #666666 !important;
             box-shadow: none !important;
             text-shadow: none !important;
         }
         #pdf-render-clone h3 { 
-            border-bottom: 2px solid black !important;
-            margin-top: 20px !important;
+            border-bottom: 2px solid #000000 !important;
+            margin-top: 30px !important;
             padding-bottom: 5px !important;
+            text-transform: uppercase !important;
         }
-        /* PAGE BREAK: Forces the conclusion to a new page */
-        #payg-vs-subscription { 
+        /* Tables: Full width and legible */
+        #pdf-render-clone table { 
+            width: 100% !important; 
+            border-collapse: collapse !important; 
+            margin-bottom: 25px !important;
+            table-layout: auto !important;
+        }
+        #pdf-render-clone th, #pdf-render-clone td { 
+            border: 1px solid #666666 !important; 
+            padding: 10px !important; 
+            font-size: 12px !important; 
+            text-align: left !important;
+        }
+        #pdf-render-clone th { background: #eeeeee !important; font-weight: bold !important; }
+
+        /* Page Breaks and Spacing */
+        .speed-comparison-container, #payg-vs-subscription { 
             page-break-before: always !important; 
-            margin-top: 50px !important; 
+            margin-top: 40px !important; 
         }
-        table { width: 100% !important; border-collapse: collapse !important; margin-bottom: 20px !important; }
-        th, td { border: 1px solid #ccc !important; padding: 8px !important; font-size: 11px !important; }
-        th { background: #f2f2f2 !important; }
+
+        /* Cleaning up UI elements */
         .results-scroll { overflow: visible !important; }
-        .chart-wrapper, #contentsBox, .jump-btn-pulse, .info-icon, .mobile-only-text, button { display: none !important; }
+        .chart-wrapper, #contentsBox, .jump-btn-pulse, .info-icon, .mobile-only-text, button, .results-header-container { 
+            display: none !important; 
+        }
     `;
     printContainer.prepend(style);
 
-    // 3. Position off-screen for rendering
     printContainer.style.position = "absolute";
     printContainer.style.left = "-9999px";
     printContainer.style.top = "0";
     document.body.appendChild(printContainer);
 
-    // 4. Render and Paginate
     html2canvas(printContainer, { 
         scale: 2,
         useCORS: true,
@@ -991,11 +1005,11 @@ function exportPdf() {
         let heightLeft = imgHeight;
         let position = 10; 
 
-        // Page 1
+        // Add first page
         pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
         heightLeft -= (pdfHeight - 20);
 
-        // Subsequent pages
+        // Add subsequent pages
         while (heightLeft > 0) {
             position = heightLeft - imgHeight + 10;
             pdf.addPage();
@@ -1003,9 +1017,8 @@ function exportPdf() {
             heightLeft -= (pdfHeight - 20);
         }
 
-        pdf.save(`EV-Analysis-${new Date().toISOString().slice(0,10)}.pdf`);
+        pdf.save(`EV-Analysis-Greyscale-${new Date().toISOString().slice(0,10)}.pdf`);
 
-        // Cleanup
         document.body.removeChild(printContainer);
         pdfBtn.textContent = originalText;
         pdfBtn.style.pointerEvents = "auto";
