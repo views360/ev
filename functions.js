@@ -919,98 +919,64 @@ function init() {
 
 function exportPdf() {
     const pdfBtn = document.getElementById("pdfBtn");
-    const providerRows = document.querySelectorAll("#providerResults tbody tr");
-    const paygSummary = document.querySelector(".calc-lines");
-    const conclusion = document.getElementById("conclusionsBox");
-    const realWorldTable = document.querySelector("#real-world-assessment table");
+    const resultsArea = document.getElementById("results");
 
-    if (!providerRows.length || !pdfBtn) return;
+    if (!resultsArea || !pdfBtn) return;
 
     const originalText = pdfBtn.textContent;
     pdfBtn.textContent = "Generating PDF...";
     pdfBtn.style.pointerEvents = "none";
 
-    const printContainer = document.createElement("div");
-    printContainer.style.cssText = "position:absolute; left:-9999px; width:800px; padding:40px; background:#fff; color:#000; font-family:Arial, sans-serif;";
-
-    // Optimized CSS for PDF clarity (Black & White)
-    let contentHtml = `
-        <style>
-            #pdf-wrap { color: #000 !important; line-height: 1.4; }
-            .pdf-header { text-align: center; border-bottom: 2px solid #000; margin-bottom: 20px; padding-bottom: 10px; }
-            .pdf-section { margin-top: 25px; margin-bottom: 10px; font-size: 18px; font-weight: bold; border-bottom: 1px solid #eee; }
-            table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 11px; }
-            th, td { border: 1px solid #ccc; padding: 8px; text-align: left; color: #000 !important; }
-            th { background: #f2f2f2; }
-            .summary-box { background: #f9f9f9; padding: 15px; border: 1px solid #ddd; margin-top: 10px; }
-            .be-highlight { font-weight: bold; color: #000; }
-            .footer { margin-top: 30px; font-size: 10px; text-align: center; color: #666; }
-        </style>
-        <div id="pdf-wrap">
-            <div class="pdf-header">
-                <h1 style="margin:0;">EV Subscription Analysis</h1>
-                <p>Date: ${new Date().toLocaleDateString('en-GB')}</p>
-            </div>
-
-            <div class="pdf-section">Journey Summary</div>
-            <div class="summary-box">${paygSummary ? paygSummary.innerHTML : ""}</div>
-
-            <div class="pdf-section">Provider Comparison</div>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Provider</th>
-                        <th>Sub. Fee</th>
-                        <th>Disc. Rate</th>
-                        <th>Trip Cost</th>
-                        <th>vs. PAYG</th>
-                        <th>Break Even</th>
-                    </tr>
-                </thead>
-                <tbody>`;
-
-    // 1. Capture the main Comparison Table
-    providerRows.forEach(row => {
-        const cols = row.querySelectorAll("td");
-        if (cols.length >= 6) {
-            contentHtml += `
-                <tr>
-                    <td><strong>${cols[0].innerText.split('\n')[0]}</strong></td>
-                    <td>${cols[1].innerText}</td>
-                    <td>${cols[2].innerText}</td>
-                    <td>${cols[3].innerText}</td>
-                    <td>${cols[4].innerText}</td>
-                    <td>${cols[5].innerText}</td>
-                </tr>`;
-        }
-    });
-
-    contentHtml += `</tbody></table>`;
-
-    // 2. Capture the Real-World Assessment Table (if it exists)
-    if (realWorldTable) {
-        contentHtml += `<div class="pdf-section">Real World Charging Assessment</div>`;
-        contentHtml += `<table>${realWorldTable.innerHTML}</table>`;
-    }
-
-    // 3. Capture Conclusion/Analysis
-    if (conclusion) {
-        contentHtml += `<div class="pdf-section">Analysis & Recommendations</div>`;
-        contentHtml += `<div class="summary-box">${conclusion.innerHTML}</div>`;
-    }
-
-    contentHtml += `<div class="footer">Generated via EV Subscriptions Comparison Tool</div></div>`;
+    // 1. Create a clone of the actual results container to preserve your data exactly as it is
+    const printContainer = resultsArea.cloneNode(true);
+    printContainer.id = "pdf-render-clone";
     
-    printContainer.innerHTML = contentHtml;
+    // 2. Apply Print Styles: Forces Black text on White background for everything
+    const style = document.createElement('style');
+    style.innerHTML = `
+        #pdf-render-clone { 
+            background: white !important; 
+            color: black !important; 
+            padding: 40px !important; 
+            width: 800px !important;
+            font-family: Arial, sans-serif !important;
+        }
+        #pdf-render-clone * { 
+            background: white !important; 
+            color: black !important; 
+            border-color: #ccc !important;
+            box-shadow: none !important;
+            text-shadow: none !important;
+        }
+        #pdf-render-clone h3 { 
+            border-bottom: 2px solid black !important;
+            margin-top: 20px !important;
+            padding-bottom: 5px !important;
+        }
+        /* PAGE BREAK: Forces the conclusion to a new page */
+        #payg-vs-subscription { 
+            page-break-before: always !important; 
+            margin-top: 50px !important; 
+        }
+        table { width: 100% !important; border-collapse: collapse !important; margin-bottom: 20px !important; }
+        th, td { border: 1px solid #ccc !important; padding: 8px !important; font-size: 11px !important; }
+        th { background: #f2f2f2 !important; }
+        .results-scroll { overflow: visible !important; }
+        .chart-wrapper, #contentsBox, .jump-btn-pulse, .info-icon, .mobile-only-text, button { display: none !important; }
+    `;
+    printContainer.prepend(style);
 
-    // Clean up unwanted icons or buttons inside the print container
-    printContainer.querySelectorAll(".info-icon, .jump-btn-pulse, .mobile-only-text, button").forEach(el => el.remove());
-
+    // 3. Position off-screen for rendering
+    printContainer.style.position = "absolute";
+    printContainer.style.left = "-9999px";
+    printContainer.style.top = "0";
     document.body.appendChild(printContainer);
 
+    // 4. Render and Paginate
     html2canvas(printContainer, { 
         scale: 2,
-        useCORS: true 
+        useCORS: true,
+        backgroundColor: "#ffffff"
     }).then(canvas => {
         const { jsPDF } = window.jspdf;
         const pdf = new jsPDF("p", "mm", "a4");
@@ -1019,18 +985,17 @@ function exportPdf() {
         const pdfWidth = pdf.internal.pageSize.getWidth();
         const pdfHeight = pdf.internal.pageSize.getHeight();
         
-        // Calculate dimensions (10mm margins)
         const imgWidth = pdfWidth - 20; 
         const imgHeight = (canvas.height * imgWidth) / canvas.width;
         
         let heightLeft = imgHeight;
-        let position = 10; // Top margin
+        let position = 10; 
 
-        // Add first page
+        // Page 1
         pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
         heightLeft -= (pdfHeight - 20);
 
-        // THE FIX: Pagination loop for multi-page support
+        // Subsequent pages
         while (heightLeft > 0) {
             position = heightLeft - imgHeight + 10;
             pdf.addPage();
@@ -1038,13 +1003,19 @@ function exportPdf() {
             heightLeft -= (pdfHeight - 20);
         }
 
-        pdf.save(`EV-Comparison-${new Date().toISOString().slice(0,10)}.pdf`);
+        pdf.save(`EV-Analysis-${new Date().toISOString().slice(0,10)}.pdf`);
 
+        // Cleanup
         document.body.removeChild(printContainer);
         pdfBtn.textContent = originalText;
         pdfBtn.style.pointerEvents = "auto";
     });
 }
+
+
+
+
+
 
 
 
