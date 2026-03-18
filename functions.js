@@ -923,127 +923,120 @@ function init() {
 
 function exportPdf() {
     const pdfBtn = document.getElementById("pdfBtn");
-    const providerRows = document.querySelectorAll("#providerResults tbody tr");
-    const paygSummary = document.querySelector(".calc-lines");
-    const conclusion = document.getElementById("conclusionsBox");
-    const realWorldTable = document.querySelector("#real-world-assessment table");
-
-    if (!providerRows.length || !pdfBtn) return;
+    if (!pdfBtn) return;
 
     const originalText = pdfBtn.textContent;
-    pdfBtn.textContent = "Generating PDF...";
+    pdfBtn.textContent = "Processing...";
     pdfBtn.style.pointerEvents = "none";
 
+    // 1. Get the raw data sections
+    const journeyData = document.querySelector(".calc-lines")?.innerText || "";
+    const providerRows = document.querySelectorAll("#providerResults tbody tr");
+    const realWorldContent = document.querySelector("#real-world-assessment table")?.innerHTML || "";
+    const conclusionContent = document.getElementById("conclusionsBox")?.innerHTML || "";
+
+    // 2. Create the standalone print container
     const printContainer = document.createElement("div");
-    // Force a fixed wide width and grayscale filter to ensure no green/neon leaks in
-    printContainer.style.cssText = "position:absolute; left:-9999px; width:900px; padding:40px; background:#fff; color:#000; font-family:Arial, sans-serif; filter: grayscale(100%);";
+    printContainer.style.cssText = "position:absolute; left:-9999px; width:750px; padding:30px; background:#fff; color:#000; font-family:Arial, sans-serif;";
 
-    let contentHtml = `
-        <style>
-            .pdf-body { color: #000 !important; background: #fff !important; }
-            .pdf-header { text-align: center; border-bottom: 2px solid #000; margin-bottom: 30px; padding-bottom: 10px; }
-            .pdf-section-title { font-size: 20px; font-weight: bold; margin-top: 40px; border-bottom: 1px solid #000; padding-bottom: 5px; text-transform: uppercase; }
-            
-            /* Table Fixes: Force full width and center alignment */
-            .pdf-table { width: 100% !important; border-collapse: collapse !important; margin: 20px 0 !important; table-layout: auto !important; }
-            .pdf-table th, .pdf-table td { border: 1px solid #000 !important; padding: 10px !important; text-align: left !important; color: #000 !important; background: #fff !important; }
-            .pdf-table th { background: #f0f0f0 !important; font-weight: bold; }
-            
-            /* Force the specific page break before Charging Times and Conclusion */
-            .page-break { height: 100px; border: none; margin: 0; }
-            
-            .summary-text { font-size: 14px; line-height: 1.6; margin-bottom: 20px; }
-            .summary-text b, .summary-text strong { color: #000 !important; }
-        </style>
-        
-        <div class="pdf-body">
-            <div class="pdf-header">
-                <h1 style="margin:0;">EV SUBSCRIPTION ANALYSIS REPORT</h1>
-                <p>Generated: ${new Date().toLocaleDateString('en-GB')}</p>
-            </div>
+    // 3. Build the HTML from scratch (Avoiding all site classes)
+    let html = `
+    <style>
+        .pdf-body { background: #ffffff !important; color: #000000 !important; }
+        h1, h2, h3 { color: #000000 !important; border-bottom: 1px solid #000; padding-bottom: 5px; text-transform: uppercase; }
+        .data-text { font-size: 13px; line-height: 1.6; margin-bottom: 20px; white-space: pre-line; color: #000 !important; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; table-layout: fixed; }
+        th, td { border: 1px solid #000 !important; padding: 8px; text-align: left; font-size: 11px; color: #000 !important; background: #fff !important; word-wrap: break-word; }
+        th { background: #f2f2f2 !important; font-weight: bold; }
+        /* Forces the page break */
+        .page-spacer { height: 50px; border: none; }
+        .break-here { page-break-before: always; border-top: 1px dashed #ccc; margin-top: 40px; padding-top: 20px; }
+    </style>
+    <div class="pdf-body">
+        <h1>EV Subscription Analysis</h1>
+        <p>Generated: ${new Date().toLocaleDateString('en-GB')}</p>
 
-            <div class="pdf-section-title">Journey Summary</div>
-            <div class="summary-text">${paygSummary ? paygSummary.innerHTML : ""}</div>
+        <h2>Journey Summary</h2>
+        <div class="data-text">${journeyData}</div>
 
-            <div class="pdf-section-title">Providers & Subscriptions</div>
-            <table class="pdf-table">
-                <thead>
-                    <tr>
-                        <th>Provider</th>
-                        <th>Sub. Fee</th>
-                        <th>Disc. Rate</th>
-                        <th>Trip Cost</th>
-                        <th>vs. PAYG</th>
-                        <th>Break Even</th>
-                    </tr>
-                </thead>
-                <tbody>`;
+        <h2>Providers & Subscriptions</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 25%;">Provider</th>
+                    <th>Sub. Fee</th>
+                    <th>Disc. Rate</th>
+                    <th>Trip Cost</th>
+                    <th>vs. PAYG</th>
+                    <th>Break Even</th>
+                </tr>
+            </thead>
+            <tbody>`;
 
     providerRows.forEach(row => {
         const cols = row.querySelectorAll("td");
         if (cols.length >= 6) {
-            contentHtml += `
-                <tr>
-                    <td><strong>${cols[0].innerText.split('\n')[0]}</strong></td>
-                    <td>${cols[1].innerText}</td>
-                    <td>${cols[2].innerText}</td>
-                    <td>${cols[3].innerText}</td>
-                    <td>${cols[4].innerText}</td>
-                    <td>${cols[5].innerText}</td>
-                </tr>`;
+            html += `<tr>
+                <td><b>${cols[0].innerText.split('\n')[0]}</b></td>
+                <td>${cols[1].innerText}</td>
+                <td>${cols[2].innerText}</td>
+                <td>${cols[3].innerText}</td>
+                <td>${cols[4].innerText}</td>
+                <td>${cols[5].innerText}</td>
+            </tr>`;
         }
     });
 
-    contentHtml += `</tbody></table>`;
+    html += `</tbody></table>`;
 
-    // PAGE BREAK BEFORE CHARGING TIMES
-    if (realWorldTable) {
-        contentHtml += `
-            <div style="page-break-before: always; height: 1px;"></div>
-            <div class="pdf-section-title">Real World Charging Assessment</div>
-            <table class="pdf-table">${realWorldTable.innerHTML}</table>`;
+    // ADDING THE CHARGING TIMES WITH A GUARANTEED BREAK
+    if (realWorldContent) {
+        html += `<div class="break-here"></div>
+                 <h2>Real World Charging Assessment</h2>
+                 <table>${realWorldContent}</table>`;
     }
 
-    // PAGE BREAK BEFORE CONCLUSION
-    if (conclusion) {
-        contentHtml += `
-            <div style="page-break-before: always; height: 1px;"></div>
-            <div class="pdf-section-title">Analysis & Conclusion</div>
-            <div class="summary-text">${conclusion.innerHTML}</div>`;
+    // ADDING CONCLUSION WITH A GUARANTEED BREAK
+    if (conclusionContent) {
+        // Remove buttons/icons from the HTML string before adding
+        const cleanConclusion = conclusionContent.replace(/<button.*?<\/button>/g, '').replace(/<i.*?<\/i>/g, '');
+        html += `<div class="break-here"></div>
+                 <h2>Analysis & Conclusion</h2>
+                 <div class="data-text">${cleanConclusion}</div>`;
     }
 
-    contentHtml += `</div>`;
-    printContainer.innerHTML = contentHtml;
+    html += `</div>`;
+    printContainer.innerHTML = html;
 
-    // Clean up elements that might have leaked from innerHTML (like icons or buttons)
-    printContainer.querySelectorAll(".info-icon, .jump-btn-pulse, .mobile-only-text, button, .results-header-container").forEach(el => el.remove());
+    // Final purge of any rogue colors/styles inside the container
+    printContainer.querySelectorAll('*').forEach(el => {
+        el.style.color = '#000';
+        el.style.backgroundColor = '#fff';
+    });
 
     document.body.appendChild(printContainer);
 
+    // 4. Render to Canvas and PDF
     html2canvas(printContainer, { 
-        scale: 2,
+        scale: 2, 
         useCORS: true,
-        backgroundColor: "#ffffff",
-        width: 900
+        logging: false,
+        width: 800 // Hard-coded capture width to stop cropping
     }).then(canvas => {
         const { jsPDF } = window.jspdf;
         const pdf = new jsPDF("p", "mm", "a4");
-        
         const imgData = canvas.toDataURL("image/png");
         const pdfWidth = pdf.internal.pageSize.getWidth();
         const pdfHeight = pdf.internal.pageSize.getHeight();
-        
-        const imgWidth = pdfWidth - 20; 
+        const imgWidth = pdfWidth - 20;
         const imgHeight = (canvas.height * imgWidth) / canvas.width;
         
         let heightLeft = imgHeight;
-        let position = 10; 
+        let position = 10;
 
-        // Initial Page
         pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
         heightLeft -= (pdfHeight - 20);
 
-        // Subsequent Pages - The offset is strictly calculated to avoid repeat rows
         while (heightLeft > 0) {
             position = heightLeft - imgHeight + 10;
             pdf.addPage();
@@ -1051,14 +1044,12 @@ function exportPdf() {
             heightLeft -= (pdfHeight - 20);
         }
 
-        pdf.save(`EV-Comparison-Report.pdf`);
-
+        pdf.save("EV-Analysis-Report.pdf");
         document.body.removeChild(printContainer);
         pdfBtn.textContent = originalText;
         pdfBtn.style.pointerEvents = "auto";
     });
 }
-
 
 
 
