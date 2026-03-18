@@ -917,6 +917,10 @@ function init() {
 
 
 
+
+
+
+
 function exportPdf() {
     const pdfBtn = document.getElementById("pdfBtn");
     const resultsArea = document.getElementById("results");
@@ -927,7 +931,7 @@ function exportPdf() {
     pdfBtn.textContent = "Generating PDF...";
     pdfBtn.style.pointerEvents = "none";
 
-    // Clone the results area for a clean export
+    // Clone the results
     const printContainer = resultsArea.cloneNode(true);
     printContainer.id = "pdf-render-clone";
     
@@ -937,46 +941,38 @@ function exportPdf() {
             background: #ffffff !important; 
             color: #000000 !important; 
             padding: 40px !important; 
-            width: 1000px !important; /* Wider canvas to prevent column overlap */
+            width: 1050px !important; /* Forces tables to expand fully */
             font-family: Arial, sans-serif !important;
+            filter: grayscale(100%) !important; /* Kills the Green Note 1 and all other colors */
         }
         #pdf-render-clone * { 
-            background: #ffffff !important; 
-            color: #000000 !important; /* Force greyscale */
-            border-color: #666666 !important;
+            color: #000000 !important; 
+            background: #ffffff !important;
+            border-color: #000000 !important;
             box-shadow: none !important;
             text-shadow: none !important;
+            visibility: visible !important;
         }
-        #pdf-render-clone h3 { 
-            border-bottom: 2px solid #000000 !important;
-            margin-top: 30px !important;
-            padding-bottom: 5px !important;
-            text-transform: uppercase !important;
-        }
-        /* Tables: Full width and legible */
+        /* Fix Table Widths */
         #pdf-render-clone table { 
             width: 100% !important; 
-            border-collapse: collapse !important; 
-            margin-bottom: 25px !important;
-            table-layout: auto !important;
+            margin: 20px 0 !important;
+            table-layout: fixed !important; /* Prevents right-align squashing */
         }
         #pdf-render-clone th, #pdf-render-clone td { 
-            border: 1px solid #666666 !important; 
-            padding: 10px !important; 
-            font-size: 12px !important; 
-            text-align: left !important;
+            border: 1px solid #000 !important; 
+            padding: 12px !important; 
+            word-wrap: break-word !important;
         }
-        #pdf-render-clone th { background: #eeeeee !important; font-weight: bold !important; }
-
-        /* Page Breaks and Spacing */
+        /* Insert massive gaps for manual page breaks */
         .speed-comparison-container, #payg-vs-subscription { 
-            page-break-before: always !important; 
-            margin-top: 40px !important; 
+            margin-top: 100px !important; 
+            padding-top: 50px !important;
+            border-top: 2px solid #000 !important;
         }
-
-        /* Cleaning up UI elements */
+        /* Hide UI fluff */
         .results-scroll { overflow: visible !important; }
-        .chart-wrapper, #contentsBox, .jump-btn-pulse, .info-icon, .mobile-only-text, button, .results-header-container { 
+        .chart-wrapper, #contentsBox, .jump-btn-pulse, .info-icon, .mobile-only-text, button { 
             display: none !important; 
         }
     `;
@@ -990,41 +986,43 @@ function exportPdf() {
     html2canvas(printContainer, { 
         scale: 2,
         useCORS: true,
-        backgroundColor: "#ffffff"
+        backgroundColor: "#ffffff",
+        width: 1100 // Hard-set the capture width
     }).then(canvas => {
         const { jsPDF } = window.jspdf;
         const pdf = new jsPDF("p", "mm", "a4");
         
-        const imgData = canvas.toDataURL("image/png");
         const pdfWidth = pdf.internal.pageSize.getWidth();
         const pdfHeight = pdf.internal.pageSize.getHeight();
         
-        const imgWidth = pdfWidth - 20; 
+        const imgData = canvas.toDataURL("image/png");
+        const imgWidth = pdfWidth - 20; // 10mm margins
         const imgHeight = (canvas.height * imgWidth) / canvas.width;
         
         let heightLeft = imgHeight;
-        let position = 10; 
+        let position = 10; // Start at top margin
 
-        // Add first page
+        // Page 1
         pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
         heightLeft -= (pdfHeight - 20);
 
-        // Add subsequent pages
+        // Subsequent Pages - Improved offset to prevent row duplication
         while (heightLeft > 0) {
-            position = heightLeft - imgHeight + 10;
             pdf.addPage();
+            // We subtract the full usable page height (pdfHeight - 20) 
+            // from the previous position to "slide" the image up perfectly
+            position = heightLeft - imgHeight + 10; 
             pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
             heightLeft -= (pdfHeight - 20);
         }
 
-        pdf.save(`EV-Analysis-Greyscale-${new Date().toISOString().slice(0,10)}.pdf`);
+        pdf.save(`EV-Trip-Report.pdf`);
 
         document.body.removeChild(printContainer);
         pdfBtn.textContent = originalText;
         pdfBtn.style.pointerEvents = "auto";
     });
 }
-
 
 
 
