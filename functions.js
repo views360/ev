@@ -683,7 +683,7 @@ function calculate() {
 
         let assessmentBoxHTML = `
             <div class="conclusion-white-border guide-section" id="real-world-assessment">
-                <h3>Real-World Charging Itinerary (${inputs.journeyMiles})</h3>
+                <h3>Real-World Charging Itinerary (${inputs.journeyMiles} miles)</h3>
                 <div class="results-scroll">
                     <table style="width: 100%; border-collapse: collapse; margin-top: 10px; border: 1px solid var(--border); font-size: 0.8rem;">
                         <thead>
@@ -712,7 +712,7 @@ function calculate() {
                     <li><a href="#providerResults" style="color: var(--accent); text-decoration:none;">Providers & Subscriptions</a></li>
                     <li><a href="#payg-vs-subscription" style="color: var(--accent); text-decoration:none;"><i>Theoretical</i> PAYG vs Subscription Conclusion</a></li>
                     <li><a href="#charging-times-section" style="color: var(--accent); text-decoration:none;"><i>Theoretical</i> Charging Times</a></li>
-                    <li><a href="#real-world-assessment" style="color: var(--accent); text-decoration:none;">Real-World Charging Itinerary</a></li>
+                    <li><a href="#real-world-assessment" style="color: var(--accent); text-decoration:none;">Real-World Charging Itinerary (${inputs.journeyMiles} miles)</a></li>
                     <li><a href="#graph-section" style="color: var(--accent); text-decoration:none;">Subscription Graph</a></li>
                 </ul>
             </div>
