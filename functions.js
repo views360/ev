@@ -923,106 +923,60 @@ function init() {
 
 function exportPdf() {
     const pdfBtn = document.getElementById("pdfBtn");
-    if (!pdfBtn) return;
+    const journeySummary = document.getElementById("payg-summary");
+    const providersTable = document.querySelector("#providerResults table");
+    const assessmentTable = document.querySelector("#real-world-assessment table");
+    const conclusion = document.getElementById("conclusionsBox");
 
+    if (!pdfBtn) return;
     const originalText = pdfBtn.textContent;
-    pdfBtn.textContent = "Processing...";
+    pdfBtn.textContent = "Generating...";
     pdfBtn.style.pointerEvents = "none";
 
-    // 1. Get the raw data sections
-    const journeyData = document.querySelector(".calc-lines")?.innerText || "";
-    const providerRows = document.querySelectorAll("#providerResults tbody tr");
-    const realWorldContent = document.querySelector("#real-world-assessment table")?.innerHTML || "";
-    const conclusionContent = document.getElementById("conclusionsBox")?.innerHTML || "";
-
-    // 2. Create the standalone print container
     const printContainer = document.createElement("div");
-    printContainer.style.cssText = "position:absolute; left:-9999px; width:750px; padding:30px; background:#fff; color:#000; font-family:Arial, sans-serif;";
+    printContainer.style.cssText = "position:absolute; left:-9999px; width:800px; padding:40px; background:#fff; color:#000; font-family:Arial, sans-serif;";
 
-    // 3. Build the HTML from scratch (Avoiding all site classes)
     let html = `
     <style>
-        .pdf-body { background: #ffffff !important; color: #000000 !important; }
-        h1, h2, h3 { color: #000000 !important; border-bottom: 1px solid #000; padding-bottom: 5px; text-transform: uppercase; }
-        .data-text { font-size: 13px; line-height: 1.6; margin-bottom: 20px; white-space: pre-line; color: #000 !important; }
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; table-layout: fixed; }
-        th, td { border: 1px solid #000 !important; padding: 8px; text-align: left; font-size: 11px; color: #000 !important; background: #fff !important; word-wrap: break-word; }
-        th { background: #f2f2f2 !important; font-weight: bold; }
-        /* Forces the page break */
-        .page-spacer { height: 50px; border: none; }
-        .break-here { page-break-before: always; border-top: 1px dashed #ccc; margin-top: 40px; padding-top: 20px; }
+        * { color: #000 !important; background: transparent !important; }
+        .pdf-wrap { background: #fff !important; }
+        .header { text-align: center; border-bottom: 2px solid #000; margin-bottom: 20px; padding-bottom: 10px; }
+        .section-title { font-size: 18px; font-weight: bold; margin: 30px 0 10px 0; text-transform: uppercase; border-bottom: 1px solid #000; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; table-layout: fixed; }
+        th, td { border: 1px solid #000; padding: 10px; text-align: left; font-size: 11px; word-wrap: break-word; }
+        th { background: #eee !important; }
+        .text-block { font-size: 13px; line-height: 1.6; margin-bottom: 20px; white-space: pre-line; }
+        .page-break { page-break-before: always; margin-top: 50px; }
     </style>
-    <div class="pdf-body">
-        <h1>EV Subscription Analysis</h1>
-        <p>Generated: ${new Date().toLocaleDateString('en-GB')}</p>
+    <div class="pdf-wrap">
+        <div class="header">
+            <h1>EV SUBSCRIPTION ANALYSIS</h1>
+            <p>Report Date: ${new Date().toLocaleDateString('en-GB')}</p>
+        </div>
 
-        <h2>Journey Summary</h2>
-        <div class="data-text">${journeyData}</div>
+        <div class="section-title">1. Journey Summary</div>
+        <div class="text-block">${journeySummary ? journeySummary.innerText : "No data"}</div>
 
-        <h2>Providers & Subscriptions</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th style="width: 25%;">Provider</th>
-                    <th>Sub. Fee</th>
-                    <th>Disc. Rate</th>
-                    <th>Trip Cost</th>
-                    <th>vs. PAYG</th>
-                    <th>Break Even</th>
-                </tr>
-            </thead>
-            <tbody>`;
+        <div class="section-title">2. Provider Comparison</div>
+        ${providersTable ? `<table>${providersTable.innerHTML}</table>` : "<p>No table found</p>"}
 
-    providerRows.forEach(row => {
-        const cols = row.querySelectorAll("td");
-        if (cols.length >= 6) {
-            html += `<tr>
-                <td><b>${cols[0].innerText.split('\n')[0]}</b></td>
-                <td>${cols[1].innerText}</td>
-                <td>${cols[2].innerText}</td>
-                <td>${cols[3].innerText}</td>
-                <td>${cols[4].innerText}</td>
-                <td>${cols[5].innerText}</td>
-            </tr>`;
-        }
-    });
+        <div class="page-break"></div>
+        <div class="section-title">3. Real World Charging Assessment</div>
+        ${assessmentTable ? `<table>${assessmentTable.innerHTML}</table>` : "<p>No data</p>"}
 
-    html += `</tbody></table>`;
+        <div class="page-break"></div>
+        <div class="section-title">4. Analysis & Conclusion</div>
+        <div class="text-block">${conclusion ? conclusion.innerText : "No data"}</div>
+    </div>`;
 
-    // ADDING THE CHARGING TIMES WITH A GUARANTEED BREAK
-    if (realWorldContent) {
-        html += `<div class="break-here"></div>
-                 <h2>Real World Charging Assessment</h2>
-                 <table>${realWorldContent}</table>`;
-    }
-
-    // ADDING CONCLUSION WITH A GUARANTEED BREAK
-    if (conclusionContent) {
-        // Remove buttons/icons from the HTML string before adding
-        const cleanConclusion = conclusionContent.replace(/<button.*?<\/button>/g, '').replace(/<i.*?<\/i>/g, '');
-        html += `<div class="break-here"></div>
-                 <h2>Analysis & Conclusion</h2>
-                 <div class="data-text">${cleanConclusion}</div>`;
-    }
-
-    html += `</div>`;
     printContainer.innerHTML = html;
-
-    // Final purge of any rogue colors/styles inside the container
-    printContainer.querySelectorAll('*').forEach(el => {
-        el.style.color = '#000';
-        el.style.backgroundColor = '#fff';
-    });
-
+    
+    // Final check: Remove web-specific UI elements that might have been carried over in .innerHTML
+    printContainer.querySelectorAll(".info-icon, .jump-btn-pulse, .mobile-only-text, button").forEach(el => el.remove());
+    
     document.body.appendChild(printContainer);
 
-    // 4. Render to Canvas and PDF
-    html2canvas(printContainer, { 
-        scale: 2, 
-        useCORS: true,
-        logging: false,
-        width: 800 // Hard-coded capture width to stop cropping
-    }).then(canvas => {
+    html2canvas(printContainer, { scale: 2, useCORS: true }).then(canvas => {
         const { jsPDF } = window.jspdf;
         const pdf = new jsPDF("p", "mm", "a4");
         const imgData = canvas.toDataURL("image/png");
@@ -1050,7 +1004,6 @@ function exportPdf() {
         pdfBtn.style.pointerEvents = "auto";
     });
 }
-
 
 
 
