@@ -462,7 +462,7 @@ function calculate() {
     const publicKwh = publicMiles / inputs.efficiency;
     const totalAdhocCost = startChargeCost + (publicKwh * (inputs.adhoc / 100));
     
-    document.getElementById("preChargeLine").innerHTML = `<div class="guide-section" id="payg-summary"><h3><i>Theoretical</i> PAYG Summary</h3>Pre-journey starting charge: <strong>${startChargeKwh.toFixed(1)} kWh</strong> (£${startChargeCost.toFixed(2)})</div>`;
+    document.getElementById("preChargeLine").innerHTML = `<div class="guide-section" id="payg-summary"><h3>PAYG SUMMARY</h3>Pre-journey starting charge: <strong>${startChargeKwh.toFixed(1)} kWh</strong> (£${startChargeCost.toFixed(2)})</div>`;
     document.getElementById("homeRangeLine").innerHTML = `<span class="tooltip-container"><span class="info-icon" style="font-size:0.8rem" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is the distance you can expect to drive before your first public charge along your route.</span></span></span>Range from pre-journey starting charge: <strong>${initialRange.toFixed(0)} miles</strong></span>`;
     document.getElementById("publicMilesLine").innerHTML = `<span class="tooltip-container"><span class="info-icon" style="font-size:0.8rem" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is how many miles of your trip will need to be covered by public charging.</span></span></span>PAYG public charging miles needed: <strong>${publicMiles.toFixed(0)} miles</strong></span>`;
     document.getElementById("publicKwhLine").innerHTML = `PAYG public charging energy needed: <strong>${publicKwh.toFixed(1)} kWh @ ${inputs.adhoc}p</strong>`;
@@ -625,7 +625,6 @@ function calculate() {
         const chargeSpeed = inputs.maxChargingSpeed || 101;
         const reserveKwh = 0.2 * usableKwh;
         const initialKwhAtStart = (inputs.soc / 100) * usableKwh;
-        
         const sixtyPercentKwh = 0.6 * usableKwh;
         const fullChargeRange = sixtyPercentKwh * efficiency;
         const firstStopMile = Math.max(0, (initialKwhAtStart - reserveKwh) * efficiency);
@@ -635,20 +634,10 @@ function calculate() {
         let currentMileMark = firstStopMile;
 
         if (inputs.journeyMiles > firstStopMile) {
-            stopCount++;
-            stopsRows += `<tr>
-                <td style="padding: 10px; border: 1px solid var(--border); text-align: center;">${stopCount}</td>
-                <td style="padding: 10px; border: 1px solid var(--border); color: var(--muted);">Public charge (when battery reaches 20%)</td>
-                <td style="padding: 10px; border: 1px solid var(--border); text-align: center;">${currentMileMark.toFixed(0)}</td>
-                <td style="padding: 10px; border: 1px solid var(--border);">Add 60% / ${sixtyPercentKwh.toFixed(1)}kWh</td>
-                <td style="padding: 10px; border: 1px solid var(--border); text-align: center;">${formatChargingTime(sixtyPercentKwh / chargeSpeed)}</td>
-            </tr>`;
-
-            // CRITICAL BUG FIX: Ensure fullChargeRange > 0 to avoid infinite loop
+            // intermediate stops loop (Corrected logic)
             if (fullChargeRange > 0) {
                 while (currentMileMark + fullChargeRange < inputs.journeyMiles) {
                     stopCount++;
-                    currentMileMark += fullChargeRange;
                     stopsRows += `<tr>
                         <td style="padding: 10px; border: 1px solid var(--border); text-align: center;">${stopCount}</td>
                         <td style="padding: 10px; border: 1px solid var(--border); color: var(--muted);">Public charge (when battery reaches 20%)</td>
@@ -656,9 +645,11 @@ function calculate() {
                         <td style="padding: 10px; border: 1px solid var(--border);">Add 60% / ${sixtyPercentKwh.toFixed(1)}kWh</td>
                         <td style="padding: 10px; border: 1px solid var(--border); text-align: center;">${formatChargingTime(sixtyPercentKwh / chargeSpeed)}</td>
                     </tr>`;
+                    currentMileMark += fullChargeRange;
                 }
             }
 
+            // Final stop logic (Option a and b)
             const finalStopNum = stopCount + 1;
             const milesRemainingAfterLastStop = inputs.journeyMiles - currentMileMark;
             const kwhNeededForFinalLeg = (milesRemainingAfterLastStop / efficiency);
@@ -683,7 +674,7 @@ function calculate() {
 
         let assessmentBoxHTML = `
             <div class="conclusion-white-border guide-section" id="real-world-assessment">
-                <h3>Real-World Charging Itinerary (${inputs.journeyMiles} miles)</h3>
+                <h3>REAL WORLD CHARGING ASSESSMENT</h3>
                 <div class="results-scroll">
                     <table style="width: 100%; border-collapse: collapse; margin-top: 10px; border: 1px solid var(--border); font-size: 0.8rem;">
                         <thead>
@@ -708,12 +699,12 @@ function calculate() {
             <div class="conclusion-white-border">
                 <h3>RESULTS CONTENTS</h3>
                 <ul style="margin:0; padding-left:20px; font-size:0.95rem;">
-                    <li><a href="#payg-summary" style="color: var(--accent); text-decoration:none;"><i>Theoretical</i> PAYG Summary</a></li>
-                    <li><a href="#providerResults" style="color: var(--accent); text-decoration:none;">Providers & Subscriptions</a></li>
-                    <li><a href="#payg-vs-subscription" style="color: var(--accent); text-decoration:none;"><i>Theoretical</i> PAYG vs Subscription Conclusion</a></li>
-                    <li><a href="#charging-times-section" style="color: var(--accent); text-decoration:none;"><i>Theoretical</i> Charging Times</a></li>
-                    <li><a href="#real-world-assessment" style="color: var(--accent); text-decoration:none;">Real-World Charging Itinerary (${inputs.journeyMiles} miles)</a></li>
-                    <li><a href="#graph-section" style="color: var(--accent); text-decoration:none;">Subscription Graph</a></li>
+                    <li><a href="#payg-summary" style="color: var(--accent); text-decoration:none;">PAYG Summary</a></li>
+                    <li><a href="#providerResults" style="color: var(--accent); text-decoration:none;">Table of Results</a></li>
+                    <li><a href="#payg-vs-subscription" style="color: var(--accent); text-decoration:none;">PAYG vs Subscription Conclusion</a></li>
+                    <li><a href="#charging-times-section" style="color: var(--accent); text-decoration:none;">Charging Times</a></li>
+                    <li><a href="#real-world-assessment" style="color: var(--accent); text-decoration:none;">Real World Charging Assessment</a></li>
+                    <li><a href="#graph-section" style="color: var(--accent); text-decoration:none;">Graph</a></li>
                 </ul>
             </div>
         `;
@@ -723,13 +714,13 @@ function calculate() {
         
         conclusionHTML += `<div class="conclusion-white-border guide-section" id="payg-vs-subscription">`; 
         if (bestProvider.savings > 0) {
-            conclusionHTML += `<h3><i>Theoretical</i> PAYG vs Subscription Conclusion</h3><p class="main-result">For a trip of <strong>${inputs.journeyMiles} miles</strong>, a one-month subscription with <strong>${bestProvider.name}</strong> is cheaper than PAYG based on the selected minimum charging rate of <strong>${minSpeedLabel}</strong> and the other information entered. The total journey cost will be <strong>£${bestProvider.totalJourneyCost.toFixed(2)}</strong>, which represents a saving of <strong>£${bestProvider.savings.toFixed(2)}</strong> over PAYG rates.</p>`;
+            conclusionHTML += `<h3>PAYG vs SUBSCRIPTION CONCLUSION</h3><p class="main-result">For a trip of <strong>${inputs.journeyMiles} miles</strong>, a one-month subscription with <strong>${bestProvider.name}</strong> is cheaper than PAYG based on the selected minimum charging rate of <strong>${minSpeedLabel}</strong> and the other information entered. The total journey cost will be <strong>£${bestProvider.totalJourneyCost.toFixed(2)}</strong>, which represents a saving of <strong>£${bestProvider.savings.toFixed(2)}</strong> over PAYG rates.</p>`;
         } else {
-            conclusionHTML += `<h3><i>Theoretical</i> PAYG vs Subscription Conclusion</h3><p class="main-result"><strong>Standard PAYG</strong> rates are cheaper than a subscription at the selected minimum charging rate of <strong>${minSpeedLabel}</strong> and the other information entered. The total journey cost will be <strong>£${bestProvider.totalJourneyCost.toFixed(2)}</strong>.</p>`;
+            conclusionHTML += `<h3>PAYG vs SUBSCRIPTION CONCLUSION</h3><p class="main-result"><strong>Standard PAYG</strong> rates are cheaper than a subscription at the selected minimum charging rate of <strong>${minSpeedLabel}</strong> and the other information entered. The total journey cost will be <strong>£${bestProvider.totalJourneyCost.toFixed(2)}</strong>.</p>`;
         }
         conclusionHTML += `</div>`;
         
-        conclusionHTML += `<div class="conclusion-white-border guide-section" id="charging-times-section"><h3><i>Theoretical</i> Charging Times</h3>`;
+        conclusionHTML += `<div class="conclusion-white-border guide-section" id="charging-times-section"><h3>CHARGING TIMES</h3>`;
         if (maxChargingSpeed > 0) {
             conclusionHTML += `<p class="main-result">With your vehicle's maximum charging speed of <strong>${maxChargingSpeed} kW</strong>, the journey requiring <strong>${publicKwh.toFixed(1)} kWh</strong> of public charging would take <strong>${maxChargingTimeFormatted}</strong> at public chargers.</p>`;
         } else {
