@@ -923,100 +923,135 @@ function init() {
 
 function exportPdf() {
     const pdfBtn = document.getElementById("pdfBtn");
-    const resultsArea = document.getElementById("results");
+    const providerRows = document.querySelectorAll("#providerResults tbody tr");
+    const paygSummary = document.querySelector(".calc-lines");
+    const conclusion = document.getElementById("conclusionsBox");
+    const realWorldTable = document.querySelector("#real-world-assessment table");
 
-    if (!resultsArea || !pdfBtn) return;
+    if (!providerRows.length || !pdfBtn) return;
 
     const originalText = pdfBtn.textContent;
     pdfBtn.textContent = "Generating PDF...";
     pdfBtn.style.pointerEvents = "none";
 
-    // Clone the results
-    const printContainer = resultsArea.cloneNode(true);
-    printContainer.id = "pdf-render-clone";
-    
-    const style = document.createElement('style');
-    style.innerHTML = `
-        #pdf-render-clone { 
-            background: #ffffff !important; 
-            color: #000000 !important; 
-            padding: 40px !important; 
-            width: 1050px !important; /* Forces tables to expand fully */
-            font-family: Arial, sans-serif !important;
-            filter: grayscale(100%) !important; /* Kills the Green Note 1 and all other colors */
-        }
-        #pdf-render-clone * { 
-            color: #000000 !important; 
-            background: #ffffff !important;
-            border-color: #000000 !important;
-            box-shadow: none !important;
-            text-shadow: none !important;
-            visibility: visible !important;
-        }
-        /* Fix Table Widths */
-        #pdf-render-clone table { 
-            width: 100% !important; 
-            margin: 20px 0 !important;
-            table-layout: fixed !important; /* Prevents right-align squashing */
-        }
-        #pdf-render-clone th, #pdf-render-clone td { 
-            border: 1px solid #000 !important; 
-            padding: 12px !important; 
-            word-wrap: break-word !important;
-        }
-        /* Insert massive gaps for manual page breaks */
-        .speed-comparison-container, #payg-vs-subscription { 
-            margin-top: 100px !important; 
-            padding-top: 50px !important;
-            border-top: 2px solid #000 !important;
-        }
-        /* Hide UI fluff */
-        .results-scroll { overflow: visible !important; }
-        .chart-wrapper, #contentsBox, .jump-btn-pulse, .info-icon, .mobile-only-text, button { 
-            display: none !important; 
-        }
-    `;
-    printContainer.prepend(style);
+    const printContainer = document.createElement("div");
+    // Force a fixed wide width and grayscale filter to ensure no green/neon leaks in
+    printContainer.style.cssText = "position:absolute; left:-9999px; width:900px; padding:40px; background:#fff; color:#000; font-family:Arial, sans-serif; filter: grayscale(100%);";
 
-    printContainer.style.position = "absolute";
-    printContainer.style.left = "-9999px";
-    printContainer.style.top = "0";
+    let contentHtml = `
+        <style>
+            .pdf-body { color: #000 !important; background: #fff !important; }
+            .pdf-header { text-align: center; border-bottom: 2px solid #000; margin-bottom: 30px; padding-bottom: 10px; }
+            .pdf-section-title { font-size: 20px; font-weight: bold; margin-top: 40px; border-bottom: 1px solid #000; padding-bottom: 5px; text-transform: uppercase; }
+            
+            /* Table Fixes: Force full width and center alignment */
+            .pdf-table { width: 100% !important; border-collapse: collapse !important; margin: 20px 0 !important; table-layout: auto !important; }
+            .pdf-table th, .pdf-table td { border: 1px solid #000 !important; padding: 10px !important; text-align: left !important; color: #000 !important; background: #fff !important; }
+            .pdf-table th { background: #f0f0f0 !important; font-weight: bold; }
+            
+            /* Force the specific page break before Charging Times and Conclusion */
+            .page-break { height: 100px; border: none; margin: 0; }
+            
+            .summary-text { font-size: 14px; line-height: 1.6; margin-bottom: 20px; }
+            .summary-text b, .summary-text strong { color: #000 !important; }
+        </style>
+        
+        <div class="pdf-body">
+            <div class="pdf-header">
+                <h1 style="margin:0;">EV SUBSCRIPTION ANALYSIS REPORT</h1>
+                <p>Generated: ${new Date().toLocaleDateString('en-GB')}</p>
+            </div>
+
+            <div class="pdf-section-title">Journey Summary</div>
+            <div class="summary-text">${paygSummary ? paygSummary.innerHTML : ""}</div>
+
+            <div class="pdf-section-title">Providers & Subscriptions</div>
+            <table class="pdf-table">
+                <thead>
+                    <tr>
+                        <th>Provider</th>
+                        <th>Sub. Fee</th>
+                        <th>Disc. Rate</th>
+                        <th>Trip Cost</th>
+                        <th>vs. PAYG</th>
+                        <th>Break Even</th>
+                    </tr>
+                </thead>
+                <tbody>`;
+
+    providerRows.forEach(row => {
+        const cols = row.querySelectorAll("td");
+        if (cols.length >= 6) {
+            contentHtml += `
+                <tr>
+                    <td><strong>${cols[0].innerText.split('\n')[0]}</strong></td>
+                    <td>${cols[1].innerText}</td>
+                    <td>${cols[2].innerText}</td>
+                    <td>${cols[3].innerText}</td>
+                    <td>${cols[4].innerText}</td>
+                    <td>${cols[5].innerText}</td>
+                </tr>`;
+        }
+    });
+
+    contentHtml += `</tbody></table>`;
+
+    // PAGE BREAK BEFORE CHARGING TIMES
+    if (realWorldTable) {
+        contentHtml += `
+            <div style="page-break-before: always; height: 1px;"></div>
+            <div class="pdf-section-title">Real World Charging Assessment</div>
+            <table class="pdf-table">${realWorldTable.innerHTML}</table>`;
+    }
+
+    // PAGE BREAK BEFORE CONCLUSION
+    if (conclusion) {
+        contentHtml += `
+            <div style="page-break-before: always; height: 1px;"></div>
+            <div class="pdf-section-title">Analysis & Conclusion</div>
+            <div class="summary-text">${conclusion.innerHTML}</div>`;
+    }
+
+    contentHtml += `</div>`;
+    printContainer.innerHTML = contentHtml;
+
+    // Clean up elements that might have leaked from innerHTML (like icons or buttons)
+    printContainer.querySelectorAll(".info-icon, .jump-btn-pulse, .mobile-only-text, button, .results-header-container").forEach(el => el.remove());
+
     document.body.appendChild(printContainer);
 
     html2canvas(printContainer, { 
         scale: 2,
         useCORS: true,
         backgroundColor: "#ffffff",
-        width: 1100 // Hard-set the capture width
+        width: 900
     }).then(canvas => {
         const { jsPDF } = window.jspdf;
         const pdf = new jsPDF("p", "mm", "a4");
         
+        const imgData = canvas.toDataURL("image/png");
         const pdfWidth = pdf.internal.pageSize.getWidth();
         const pdfHeight = pdf.internal.pageSize.getHeight();
         
-        const imgData = canvas.toDataURL("image/png");
-        const imgWidth = pdfWidth - 20; // 10mm margins
+        const imgWidth = pdfWidth - 20; 
         const imgHeight = (canvas.height * imgWidth) / canvas.width;
         
         let heightLeft = imgHeight;
-        let position = 10; // Start at top margin
+        let position = 10; 
 
-        // Page 1
+        // Initial Page
         pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
         heightLeft -= (pdfHeight - 20);
 
-        // Subsequent Pages - Improved offset to prevent row duplication
+        // Subsequent Pages - The offset is strictly calculated to avoid repeat rows
         while (heightLeft > 0) {
+            position = heightLeft - imgHeight + 10;
             pdf.addPage();
-            // We subtract the full usable page height (pdfHeight - 20) 
-            // from the previous position to "slide" the image up perfectly
-            position = heightLeft - imgHeight + 10; 
             pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
             heightLeft -= (pdfHeight - 20);
         }
 
-        pdf.save(`EV-Trip-Report.pdf`);
+        pdf.save(`EV-Comparison-Report.pdf`);
 
         document.body.removeChild(printContainer);
         pdfBtn.textContent = originalText;
