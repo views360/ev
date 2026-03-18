@@ -619,7 +619,7 @@ function calculate() {
                 </table>
             </div>`;
         
-        // --- START NEW INTEGRATED REAL WORLD SECTION ---
+        // --- REAL WORLD CALCULATIONS ---
         const A = inputs.journeyMiles;
         const usableKwh = inputs.batteryKwh;
         const efficiency = inputs.efficiency;
@@ -639,29 +639,47 @@ function calculate() {
         const G = Math.ceil((parseFloat(H) / usableKwh) * 100);
         const I = formatChargingTime(parseFloat(H) / chargeSpeed);
 
-        let stopsHTML = '';
+        let assessmentBoxHTML = '';
         if (maxChargingSpeed > 0) {
-            stopsHTML = `
-                <div id="real-world-assessment">
-                    <h4 style="margin-top: 20px; margin-bottom: 10px; font-size: 1rem;">Real World Charging Assessment</h4>
+            assessmentBoxHTML = `
+                <div class="conclusion-white-border guide-section" id="real-world-assessment">
+                    <h3>REAL WORLD CHARGING ASSESSMENT</h3>
                     <div class="results-scroll">
-                        <table class="real-world-table">
+                        <table style="width: 100%; border-collapse: collapse; margin-top: 10px; border: 1px solid var(--border);">
                             <thead>
-                                <tr><th>Event</th><th>Value</th></tr>
+                                <tr style="background: rgba(57, 255, 20, 0.05); color: var(--text);">
+                                    <th style="padding: 10px; border: 1px solid var(--border); text-align: left;">Event</th>
+                                    <th style="padding: 10px; border: 1px solid var(--border); text-align: left;">Value</th>
+                                </tr>
                             </thead>
                             <tbody>
-                                <tr><td>First public charge (down to 20%) reached at</td><td><strong>${B.toFixed(0)} miles</strong></td></tr>
-                                <tr><td>${C} subsequent charging stop(s) (20% to 80%)</td><td><strong>${D}</strong> (to add ${sixtyPercentKwh.toFixed(1)} kWh)</td></tr>
-                                <tr><td>Charging stop ${F} option 1: standard charge (20% to 80%)</td><td><strong>${D}</strong> (to add ${sixtyPercentKwh.toFixed(1)} kWh)</td></tr>
-                                <tr><td>Charging stop ${F} option 2: charge enough to get home with 20%</td><td>Add <strong>${G}% / ${H} kWh</strong>, taking <strong>${I}</strong></td></tr>
+                                <tr>
+                                    <td style="padding: 10px; border: 1px solid var(--border); color: var(--muted);">First public charge (down to 20%) reached at</td>
+                                    <td style="padding: 10px; border: 1px solid var(--border); color: var(--text);"><strong>${B.toFixed(0)} miles</strong></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 10px; border: 1px solid var(--border); color: var(--muted);">${C} subsequent charging stop(s) (20% to 80%)</td>
+                                    <td style="padding: 10px; border: 1px solid var(--border); color: var(--text);"><strong>${D}</strong> (to add ${sixtyPercentKwh.toFixed(1)} kWh)</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 10px; border: 1px solid var(--border); color: var(--muted);">Charging stop ${F} option 1: standard charge (20% to 80%)</td>
+                                    <td style="padding: 10px; border: 1px solid var(--border); color: var(--text);"><strong>${D}</strong> (to add ${sixtyPercentKwh.toFixed(1)} kWh)</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 10px; border: 1px solid var(--border); color: var(--muted);">Charging stop ${F} option 2: charge enough to get home with 20%</td>
+                                    <td style="padding: 10px; border: 1px solid var(--border); color: var(--text);">Add <strong>${G}% / ${H} kWh</strong>, taking <strong>${I}</strong></td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>`;
         } else {
-            stopsHTML = `<div id="real-world-assessment"><h4 style="margin-top: 20px; margin-bottom: 10px; font-size: 1rem;">Real World Charging Assessment</h4><p class="main-result" style="font-size: 0.95rem;">Enter your vehicle's <strong>Max. Charging Speed</strong> above to see how many charging stops you'll need following the <a href="mastery.html#sec-8020" style="color: var(--accent); text-decoration: underline;">80/20 Rule</a>.</p></div>`;
+            assessmentBoxHTML = `
+                <div class="conclusion-white-border guide-section" id="real-world-assessment">
+                    <h3>REAL WORLD CHARGING ASSESSMENT</h3>
+                    <p class="main-result" style="font-size: 0.95rem;">Enter your vehicle's <strong>Max. Charging Speed</strong> above to see how many charging stops you'll need following the <a href="mastery.html#sec-8020" style="color: var(--accent); text-decoration: underline;">80/20 Rule</a>.</p>
+                </div>`;
         }
-        // --- END NEW INTEGRATED REAL WORLD SECTION ---
         
         const locationDisclaimer = `<p style="font-size:0.85rem; margin-top:12px; opacity:0.8; color:var(--neon-green) !important;">Note 1: Before purchasing a subscription, check that your chosen provider has charging stations in your planned area of travel — else your subscription will be wasted.</p><p style="font-size:0.85rem; margin-top:12px; opacity:0.8;">Note 2: Charging times exclude the initial ramp-up phase and the 80-to-100% charging slowdown. Read the section on <a href="mastery.html#sec-slow" style="color: var(--accent); text-decoration: underline;">Slow Charging</a> to find out more.</p>`;
     
@@ -673,6 +691,7 @@ function calculate() {
                     <li><a href="#providerResults" style="color: var(--accent); text-decoration:none;">Table of Results</a></li>
                     <li><a href="#payg-vs-subscription" style="color: var(--accent); text-decoration:none;">PAYG vs Subscription Conclusion</a></li>
                     <li><a href="#charging-times-section" style="color: var(--accent); text-decoration:none;">Charging Times</a></li>
+                    <li><a href="#real-world-assessment" style="color: var(--accent); text-decoration:none;">Real World Charging Assessment</a></li>
                     <li><a href="#graph-section" style="color: var(--accent); text-decoration:none;">Graph</a></li>
                 </ul>
             </div>
@@ -695,8 +714,10 @@ function calculate() {
         } else {
             conclusionHTML += `<p class="main-result">Enter your vehicle's <strong>Max. Charging Speed</strong> above to see estimated charging times for this journey.</p>`;
         }
-        conclusionHTML += `${speedTableHtml}${stopsHTML}${locationDisclaimer}</div>`;
-        conclusionsBox.innerHTML = conclusionHTML;
+        conclusionHTML += `${speedTableHtml}${locationDisclaimer}</div>`;
+
+        // Combine the sections together in order
+        conclusionsBox.innerHTML = conclusionHTML + assessmentBoxHTML;
     } else {
         conclusionsBox.innerHTML = "";
     }
@@ -705,7 +726,6 @@ function calculate() {
     const dataToSave = getInputs();
     setCookie("ev_trip_values", dataToSave);
 }
-
 
 
 
