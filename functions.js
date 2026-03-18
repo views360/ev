@@ -688,7 +688,7 @@ function calculate() {
                 <h3>RESULTS CONTENTS</h3>
                 <ul style="margin:0; padding-left:20px; font-size:0.95rem;">
                     <li><a href="#payg-summary" style="color: var(--accent); text-decoration:none;">PAYG Summary</a></li>
-                    <li><a href="#providerResults" style="color: var(--accent); text-decoration:none;">Table of Results</a></li>
+                    <li><a href="#providerResults" style="color: var(--accent); text-decoration:none;">Providers and Subscriptions</a></li>
                     <li><a href="#payg-vs-subscription" style="color: var(--accent); text-decoration:none;"><i>Theorectical</i> PAYG vs Subscription Conclusion</a></li>
                     <li><a href="#charging-times-section" style="color: var(--accent); text-decoration:none;"><i>Theorectical</i> Charging Times</a></li>
                     <li><a href="#real-world-assessment" style="color: var(--accent); text-decoration:none;"><i>Real-World</i> Charging Assessment</a></li>
