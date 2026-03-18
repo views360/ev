@@ -914,65 +914,62 @@ function init() {
     });
 }
 
+
+
+
 function exportPdf() {
     const pdfBtn = document.getElementById("pdfBtn");
     const providerRows = document.querySelectorAll("#providerResults tbody tr");
     const paygSummary = document.querySelector(".calc-lines");
     const conclusion = document.getElementById("conclusionsBox");
+    const realWorldTable = document.querySelector("#real-world-assessment table");
 
     if (!providerRows.length || !pdfBtn) return;
 
     const originalText = pdfBtn.textContent;
-    pdfBtn.textContent = "Generating...";
+    pdfBtn.textContent = "Generating PDF...";
     pdfBtn.style.pointerEvents = "none";
-    pdfBtn.style.opacity = "0.7";
 
     const printContainer = document.createElement("div");
-    printContainer.id = "pdf-render-area";
     printContainer.style.cssText = "position:absolute; left:-9999px; width:800px; padding:40px; background:#fff; color:#000; font-family:Arial, sans-serif;";
 
+    // Optimized CSS for PDF clarity (Black & White)
     let contentHtml = `
         <style>
-            #pdf-render-area * { color: #000 !important; }
-            .pdf-header { text-align: center; margin-bottom: 10px; }
-            .pdf-section-title { font-size: 22px; margin-top: 20px; }
-            .pdf-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 10px; margin-bottom: 30px; }
-            .pdf-table th, .pdf-table td { border: 1px solid #000; padding: 8px; text-align: left; }
-            .pdf-table th { background: #f2f2f2; }
-            .conclusion-white-border { border: none !important; }
-            .pdf-conclusion-wrapper { 
-                background: #f4f4f4 !important; 
-                padding: 0px; 
-                border: 1px solid #ccc; 
-                border-radius: 8px; 
-                margin-top: 20px;
-            }
-            .calc-lines div { margin-bottom: 5px; }
+            #pdf-wrap { color: #000 !important; line-height: 1.4; }
+            .pdf-header { text-align: center; border-bottom: 2px solid #000; margin-bottom: 20px; padding-bottom: 10px; }
+            .pdf-section { margin-top: 25px; margin-bottom: 10px; font-size: 18px; font-weight: bold; border-bottom: 1px solid #eee; }
+            table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 11px; }
+            th, td { border: 1px solid #ccc; padding: 8px; text-align: left; color: #000 !important; }
+            th { background: #f2f2f2; }
+            .summary-box { background: #f9f9f9; padding: 15px; border: 1px solid #ddd; margin-top: 10px; }
+            .be-highlight { font-weight: bold; color: #000; }
+            .footer { margin-top: 30px; font-size: 10px; text-align: center; color: #666; }
         </style>
-        
-        <div class="pdf-header">
-            <strong style="font-size:24px; color:#000">EV SUBSCRIPTIONS COMPARISON REPORT</strong>
-            <p>Generated on ${new Date().toLocaleDateString('en-GB')}</p>
-        </div>
-        
-        <div class="calc-lines">
-            ${paygSummary ? paygSummary.innerHTML : ""}
-        </div>
+        <div id="pdf-wrap">
+            <div class="pdf-header">
+                <h1 style="margin:0;">EV Subscription Analysis</h1>
+                <p>Date: ${new Date().toLocaleDateString('en-GB')}</p>
+            </div>
 
-        <h2 class="pdf-section-title">Comparison Results</h2>
-        <table class="pdf-table">
-            <thead>
-                <tr>
-                    <th>Provider</th>
-                    <th>Sub. Fee</th>
-                    <th>Disc. Rate</th>
-                    <th>Trip Cost</th>
-                    <th>vs. PAYG</th>
-                    <th>Break Even<br />(Exc. Battery Pre-Charge)</th>
-                </tr>
-            </thead>
-            <tbody>`;
+            <div class="pdf-section">Journey Summary</div>
+            <div class="summary-box">${paygSummary ? paygSummary.innerHTML : ""}</div>
 
+            <div class="pdf-section">Provider Comparison</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Provider</th>
+                        <th>Sub. Fee</th>
+                        <th>Disc. Rate</th>
+                        <th>Trip Cost</th>
+                        <th>vs. PAYG</th>
+                        <th>Break Even</th>
+                    </tr>
+                </thead>
+                <tbody>`;
+
+    // 1. Capture the main Comparison Table
     providerRows.forEach(row => {
         const cols = row.querySelectorAll("td");
         if (cols.length >= 6) {
@@ -988,15 +985,26 @@ function exportPdf() {
         }
     });
 
-    contentHtml += `</tbody></table>
-        <h2 class="pdf-section-title">Analysis Conclusion</h2>
-        <div class="pdf-conclusion-wrapper">
-            ${conclusion ? conclusion.innerHTML : ""}
-        </div>`;
+    contentHtml += `</tbody></table>`;
 
+    // 2. Capture the Real-World Assessment Table (if it exists)
+    if (realWorldTable) {
+        contentHtml += `<div class="pdf-section">Real World Charging Assessment</div>`;
+        contentHtml += `<table>${realWorldTable.innerHTML}</table>`;
+    }
+
+    // 3. Capture Conclusion/Analysis
+    if (conclusion) {
+        contentHtml += `<div class="pdf-section">Analysis & Recommendations</div>`;
+        contentHtml += `<div class="summary-box">${conclusion.innerHTML}</div>`;
+    }
+
+    contentHtml += `<div class="footer">Generated via EV Subscriptions Comparison Tool</div></div>`;
+    
     printContainer.innerHTML = contentHtml;
 
-    printContainer.querySelectorAll(".info-icon, .jump-btn-pulse, .mini-table, .mobile-only-text, p[style*='opacity:0.8']").forEach(el => el.remove());
+    // Clean up unwanted icons or buttons inside the print container
+    printContainer.querySelectorAll(".info-icon, .jump-btn-pulse, .mobile-only-text, button").forEach(el => el.remove());
 
     document.body.appendChild(printContainer);
 
@@ -1006,19 +1014,41 @@ function exportPdf() {
     }).then(canvas => {
         const { jsPDF } = window.jspdf;
         const pdf = new jsPDF("p", "mm", "a4");
-        const pageWidth = pdf.internal.pageSize.getWidth();
-        const imgWidth = pageWidth - 20; // 10mm margins
+        
+        const imgData = canvas.toDataURL("image/png");
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = pdf.internal.pageSize.getHeight();
+        
+        // Calculate dimensions (10mm margins)
+        const imgWidth = pdfWidth - 20; 
         const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        
+        let heightLeft = imgHeight;
+        let position = 10; // Top margin
 
-        pdf.addImage(canvas.toDataURL("image/png"), "PNG", 10, 15, imgWidth, imgHeight);
-        pdf.save("EV-Trip-Analysis.pdf");
+        // Add first page
+        pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+        heightLeft -= (pdfHeight - 20);
+
+        // THE FIX: Pagination loop for multi-page support
+        while (heightLeft > 0) {
+            position = heightLeft - imgHeight + 10;
+            pdf.addPage();
+            pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+            heightLeft -= (pdfHeight - 20);
+        }
+
+        pdf.save(`EV-Comparison-${new Date().toISOString().slice(0,10)}.pdf`);
 
         document.body.removeChild(printContainer);
         pdfBtn.textContent = originalText;
         pdfBtn.style.pointerEvents = "auto";
-        pdfBtn.style.opacity = "1";
     });
 }
+
+
+
+
 
 window.addEventListener("DOMContentLoaded", init);
 
