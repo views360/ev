@@ -643,7 +643,7 @@ function calculate() {
         if (maxChargingSpeed > 0) {
             assessmentBoxHTML = `
                 <div class="conclusion-white-border guide-section" id="real-world-assessment">
-                    <h3>REAL WORLD CHARGING ASSESSMENT</h3>
+                    <h3>REAL-WORLD CHARGING ASSESSMENT</h3>
                     <div class="results-scroll">
                         <table style="width: 100%; border-collapse: collapse; margin-top: 10px; border: 1px solid var(--border);">
                             <thead>
@@ -654,11 +654,11 @@ function calculate() {
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td style="padding: 10px; border: 1px solid var(--border); color: var(--muted);">First public charge (down to 20%) reached at</td>
-                                    <td style="padding: 10px; border: 1px solid var(--border); color: var(--text);"><strong>${B.toFixed(0)} miles</strong></td>
+                                    <td style="padding: 10px; border: 1px solid var(--border); color: var(--muted);">First public charge (when pre-charge reduces to 20%)</td>
+                                    <td style="padding: 10px; border: 1px solid var(--border); color: var(--text);"><strong>After ${B.toFixed(0)} miles</strong></td>
                                 </tr>
                                 <tr>
-                                    <td style="padding: 10px; border: 1px solid var(--border); color: var(--muted);">${C} subsequent charging stop(s) (20% to 80%)</td>
+                                    <td style="padding: 10px; border: 1px solid var(--border); color: var(--muted);">${C} subsequent charging stop(s) (charge from 20% to 80%)</td>
                                     <td style="padding: 10px; border: 1px solid var(--border); color: var(--text);"><strong>${D}</strong> (to add ${sixtyPercentKwh.toFixed(1)} kWh)</td>
                                 </tr>
                                 <tr>
@@ -666,7 +666,7 @@ function calculate() {
                                     <td style="padding: 10px; border: 1px solid var(--border); color: var(--text);"><strong>${D}</strong> (to add ${sixtyPercentKwh.toFixed(1)} kWh)</td>
                                 </tr>
                                 <tr>
-                                    <td style="padding: 10px; border: 1px solid var(--border); color: var(--muted);">Charging stop ${F} option 2: charge enough to get home with 20%</td>
+                                    <td style="padding: 10px; border: 1px solid var(--border); color: var(--muted);">Charging stop ${F} option 2: charge enough to get home with 20% remaining</td>
                                     <td style="padding: 10px; border: 1px solid var(--border); color: var(--text);">Add <strong>${G}% / ${H} kWh</strong>, taking <strong>${I}</strong></td>
                                 </tr>
                             </tbody>
