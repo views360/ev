@@ -238,6 +238,11 @@ function enforceSpeedRules() {
     });
 }
 
+
+
+
+
+
 function calculate() {
     const activePill = document.querySelector('.calc-tab.active');
     const isTripMode = activePill && activePill.textContent.trim() === "Trip Savings";
@@ -311,7 +316,9 @@ function calculate() {
             
             speedKeys.forEach(speed => {
                 const numericSpeed = speed === 'default' ? 0 : parseFloat(speed);
-                if (speed !== 'default' && numericSpeed < minSpeedSelection) return; 
+                if (speed !== 'default' && numericSpeed < minSpeedSelection) {
+                    return; 
+                }
 
                 const rate = rates[speed];
                 const speedDisplay = speed === 'default' ? "Max. available" : `${speed}kW`;
@@ -358,20 +365,48 @@ function calculate() {
                         <thead>
                             <tr>
                                 <th>Provider (click hyperlink to view subscription info)</th>
-                                <th>Charging Speed</th>
-                                <th>Sub. Fee</th>
-                                <th>Disc. Rate</th>
-                                <th>Break-Even Miles</th>
+                                <th><span class="tooltip-container">
+                                    <span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">If the provider's discounted charge rate is tied to a charging speed (selected in the form above), it will be specified in this column. If the provider offers more than one speed at the same discounted charge rate, you will see <strong>'Max. available'</strong>.</span></span>
+                                </span></span>Charging Speed</th>
+                                <th><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is the provider's subscription fee, which gives you access to their discounted charge rate for ONE MONTH.</span></span></span>Sub. Fee</th>
+                                <th><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is the provider's discounted charge rate (per kWh) that is available after subscribing for one month. Note that some providers have variable charge rates depending on location and time of day. The rate listed here may be an average. Click the provider's link to confirm pricing.</span></span></span>Disc. Rate</th>
+                                <th><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is the number of miles you must drive on the provider's discounted charge rate to pay off the subscription fee. <strong>Important! This is not the total miles of your journey</strong> — it is the number of miles you must drive from your first charge with this provider. Remember, a subscription lasts for an entire month.</span></span></span>Break-Even Miles</th>
                             </tr>
                         </thead>
                         <tbody>`;
 
         beData.forEach(row => {
-            const providerLink = row.url ? `<a href="${row.url}" target="_blank" style="color:inherit; text-decoration:underline;">${row.name}</a>` : row.name;
-            html += `<tr><td><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">${row.comments}</span></span></span> ${providerLink}</td><td>${row.speedDisplay}</td><td>£${row.subCost.toFixed(2)}</td><td>${row.rate.toFixed(1)}p</td><td><strong>${row.displayText}</strong></td></tr>`;
+            const providerLink = row.url 
+                ? `<a href="${row.url}" target="_blank" style="color:inherit; text-decoration:underline;">${row.name}</a>` 
+                : row.name;
+
+            html += `<tr>
+                <td>
+                    <span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">${row.comments}</span>
+                    </span></span> ${providerLink}
+                </td>
+                <td>${row.speedDisplay}</td>
+                <td>£${row.subCost.toFixed(2)}</td>
+                <td>${row.rate.toFixed(1)}p</td>
+                <td><strong>${row.displayText}</strong></td>
+            </tr>`;
         });
 
         document.getElementById("providerResults").innerHTML = html + `</tbody></table></div>`;
+        document.querySelectorAll(".results-scroll").forEach(el => {
+            if (!el._ftScrollBound) { el._ftScrollBound = true; el.addEventListener("scroll", () => { if (_ftActive) _ftHide(); }, { passive: true }); }
+        });
+
+        if (!beReminderShown) {
+            setTimeout(() => {
+                const activePill = document.querySelector('.calc-tab.active');
+                const isTripMode = activePill && activePill.textContent.trim() === "Trip Savings";
+                if (!isTripMode) {
+                    showBeReminder();
+                    beReminderShown = true; 
+                }
+            }, 5000);
+        }
         return; 
     }
 
@@ -476,20 +511,29 @@ function calculate() {
 
     let html = `<div class="mobile-only-text" style="font-size: 0.8em; text-align: center; color: var(--neon-green)">Slide table left to view hidden columns.</div><div class="results-scroll"><table><thead><tr>
         <th>Provider (click hyperlink to view subscription info)</th>
-        <th>Sub. Fee</th>
-        <th>Disc. Rate</th>
-        <th>Trip Cost</th>
-        <th>vs. PAYG</th>
-        <th>Break-Even Miles</th>
-        <th>Break Even + Battery</th>
+        <th><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is the provider's subscription fee, which gives you access to their discounted charge rate for ONE MONTH.</span></span></span>Sub. Fee</th>
+        <th><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is the provider's discounted charge rate (per kWh) that is available after subscribing for one month. Note that some providers have variable charge rates depending on location and time of day. The rate listed here may be an average. Click the provider's link to confirm pricing.</span></span></span>Disc. Rate</th>
+        <th><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is the expected <strong>total charging cost</strong> of your trip using this provider and including your stated battery pre-charge. If it is displayed in green, it is cheaper than the equivalent journey using PAYG charging at the rate you entered above.</span></span></span>Trip Cost</th>
+        <th><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is the amount by which the discounted charge rate will either be cheaper or more expensive than your average PAYG rate for the same distance. Green means cheaper; red means more expensive. Bear in mind that you can continue to use a provider's subscription for one full month.</span></span></span>vs. PAYG</th>
+        <th><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is the number of miles you must drive on the provider's discounted charge rate to pay off the subscription fee. <strong>Important! This is not the total miles of your journey</strong> — it is the number of miles you must drive from your first charge with this provider. Remember, a subscription lasts for an entire month.</span></span></span>Break-Even Miles</th>
+        <th><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is the break-even miles PLUS the initial number of miles your vehicle can drive based on its precharged state.</span></span></span>Break Even + Battery</th>
         </tr></thead><tbody>`;
     providers.forEach(p => {
         const rowClass = p.savings > 0 ? "good" : (p.savings < 0 ? "bad" : "");
-        const providerLink = p.url ? `<a href="${p.url}" target="_blank" style="color:inherit; text-decoration:underline;">${p.name}</a>` : p.name;
-        const breakEvenText = p.rate < inputs.adhoc ? `${p.breakEvenMiles.toFixed(0)} miles` : "Never";
-        const totalMilesText = p.rate < inputs.adhoc ? `${p.totalWithBattery.toFixed(0)} miles` : "N/A";
+        const providerLink = p.url 
+            ? `<a href="${p.url}" target="_blank" style="color:inherit; text-decoration:underline;">${p.name}</a>` 
+            : p.name;
+        const breakEvenText = p.rate < inputs.adhoc 
+            ? `${p.breakEvenMiles.toFixed(0)} miles` 
+            : "Never";
+        const totalMilesText = p.rate < inputs.adhoc 
+            ? `${p.totalWithBattery.toFixed(0)} miles` 
+            : "N/A";
         html += `<tr class="${rowClass}">
-            <td><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">${p.comments}</span></span></span> ${providerLink}</td>
+            <td>
+                <span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">${p.comments}</span>
+                </span></span> ${providerLink}
+            </td>
             <td>£${p.subCost.toFixed(2)}</td>
             <td>${p.rate.toFixed(1)}p</td>
             <td><strong>£${p.totalJourneyCost.toFixed(2)}</strong></td>
@@ -499,6 +543,9 @@ function calculate() {
         </tr>`;
     });
     document.getElementById("providerResults").innerHTML = html + `</tbody></table></div>`;
+    document.querySelectorAll(".results-scroll").forEach(el => {
+        if (!el._ftScrollBound) { el._ftScrollBound = true; el.addEventListener("scroll", () => { if (_ftActive) _ftHide(); }, { passive: true }); }
+    });
 
     if (providers.length > 0) {
         const bestProvider = providers[0];
@@ -508,29 +555,71 @@ function calculate() {
         
         const formatChargingTime = (timeHours) => {
             if (timeHours < 1) {
-                return `${Math.round(timeHours * 60)} minutes`;
+                const minutes = Math.round(timeHours * 60);
+                return `${minutes} minutes`;
             } else {
                 const hours = Math.floor(timeHours);
                 const minutes = Math.round((timeHours - hours) * 60);
-                return minutes === 0 ? `${hours} hour${hours > 1 ? 's' : ''}` : `${hours}h ${minutes}m`;
+                if (minutes === 0) {
+                    return `${hours} hour${hours > 1 ? 's' : ''}`;
+                }
+                return `${hours}h ${minutes}m`;
             }
         };
-
+        
+        const maxChargingTimeHours = maxChargingSpeed > 0 ? publicKwh / maxChargingSpeed : 0;
+        const maxChargingTimeFormatted = formatChargingTime(maxChargingTimeHours);
+        
         const chargingSpeeds = [
-            { speed: 7, type: 'AC', descriptor: 'Standard' }, { speed: 11, type: 'AC', descriptor: 'Standard Plus' },
-            { speed: 50, type: 'DC', descriptor: 'Rapid' }, { speed: 150, type: 'DC', descriptor: 'Ultra-Rapid' },
-            { speed: 350, type: 'DC', descriptor: 'Hyper-Rapid' }
+            { speed: 7, type: 'AC', descriptor: 'Standard' },
+            { speed: 11, type: 'AC', descriptor: 'Standard Plus' },
+            { speed: 22, type: 'AC', descriptor: 'Fast' },
+            { speed: 50, type: 'DC', descriptor: 'Rapid' },
+            { speed: 60, type: 'DC', descriptor: 'Rapid' },
+            { speed: 75, type: 'DC', descriptor: 'Rapid Plus' },
+            { speed: 90, type: 'DC', descriptor: 'Rapid Plus' },
+            { speed: 100, type: 'DC', descriptor: 'Rapid Plus' },
+            { speed: 120, type: 'DC', descriptor: 'Ultra-Rapid' },
+            { speed: 150, type: 'DC', descriptor: 'Ultra-Rapid' },
+            { speed: 175, type: 'DC', descriptor: 'Ultra-Rapid' },
+            { speed: 250, type: 'DC', descriptor: 'Ultra-Rapid' },
+            { speed: 300, type: 'DC', descriptor: 'Hyper-Rapid' },
+            { speed: 350, type: 'DC', descriptor: 'Hyper-Rapid' },
+            { speed: 360, type: 'DC', descriptor: 'Hyper-Rapid' }
         ];
         
+        let speedsToDisplay = [...chargingSpeeds];
+        if (maxChargingSpeed > 0 && !speedsToDisplay.some(s => Math.abs(s.speed - maxChargingSpeed) < 0.01)) {
+            speedsToDisplay.push({
+                speed: maxChargingSpeed,
+                type: 'Custom',
+                descriptor: 'Vehicle Max'
+            });
+            speedsToDisplay.sort((a, b) => a.speed - b.speed);
+        }
+        
         let tableRows = '';
-        chargingSpeeds.forEach(speedObj => {
+        speedsToDisplay.forEach(speedObj => {
+            const timeHours = publicKwh / speedObj.speed;
+            const timeFormatted = formatChargingTime(timeHours);
             const isMaxSpeed = Math.abs(maxChargingSpeed - speedObj.speed) < 0.01;
-            tableRows += `<tr style="${isMaxSpeed ? 'font-weight:bold; color:#4A9EFF;' : ''}"><td>${speedObj.speed}kW</td><td>${speedObj.type}</td><td>${speedObj.descriptor}</td><td>${formatChargingTime(publicKwh / speedObj.speed)}</td></tr>`;
+            const highlightStyle = isMaxSpeed ? 'font-weight:bold; color:#4A9EFF;' : '';
+            tableRows += `<tr style="${highlightStyle}"><td>${speedObj.speed}kW</td><td>${speedObj.type}</td><td>${speedObj.descriptor}</td><td>${timeFormatted}</td></tr>`;
         });
-
-        const speedTableHtml = `<div class="speed-comparison-container"><table class="mini-table"><thead><tr><th>Charging Speed</th><th>Type</th><th>Descriptor</th><th>Journey Charging Time</th></tr></thead><tbody>${tableRows}</tbody></table></div>`;
-
-        // --- NEW REAL WORLD CALCULATIONS INTEGRATED HERE ---
+        
+        const speedTableHtml = `
+            <div class="speed-comparison-container">
+                <table class="mini-table">
+                    <thead>
+                        <tr><th>Charging Speed</th><th>Type</th><th>Descriptor</th><th>Journey Charging Time</th></tr>
+                    </thead>
+                    <tbody>
+                        ${tableRows}
+                    </tbody>
+                </table>
+            </div>`;
+        
+        // --- START NEW INTEGRATED REAL WORLD SECTION ---
         const A = inputs.journeyMiles;
         const usableKwh = inputs.batteryKwh;
         const efficiency = inputs.efficiency;
@@ -557,31 +646,78 @@ function calculate() {
                     <h4 style="margin-top: 20px; margin-bottom: 10px; font-size: 1rem;">Real World Charging Assessment</h4>
                     <div class="results-scroll">
                         <table class="real-world-table">
-                            <thead><tr><th>Event</th><th>Value</th></tr></thead>
+                            <thead>
+                                <tr><th>Event</th><th>Value</th></tr>
+                            </thead>
                             <tbody>
-                                <tr><td>First public charge at 20%</td><td><strong>${B.toFixed(0)} miles</strong></td></tr>
-                                <tr><td>${C} subsequent charges (20% to 80%)</td><td><strong>${D}</strong> (to add ${sixtyPercentKwh.toFixed(1)}kWh)</td></tr>
-                                <tr><td>Charge ${F} option 2: charge enough to get home with 20%</td><td>Add <strong>${G}%/${H}kWh</strong>, taking <strong>${I}</strong></td></tr>
+                                <tr><td>First public charge (down to 20%) reached at</td><td><strong>${B.toFixed(0)} miles</strong></td></tr>
+                                <tr><td>${C} subsequent charging stop(s) (20% to 80%)</td><td><strong>${D}</strong> (to add ${sixtyPercentKwh.toFixed(1)} kWh)</td></tr>
+                                <tr><td>Charging stop ${F} option 1: standard charge (20% to 80%)</td><td><strong>${D}</strong> (to add ${sixtyPercentKwh.toFixed(1)} kWh)</td></tr>
+                                <tr><td>Charging stop ${F} option 2: charge enough to get home with 20%</td><td>Add <strong>${G}% / ${H} kWh</strong>, taking <strong>${I}</strong></td></tr>
                             </tbody>
                         </table>
                     </div>
                 </div>`;
+        } else {
+            stopsHTML = `<div id="real-world-assessment"><h4 style="margin-top: 20px; margin-bottom: 10px; font-size: 1rem;">Real World Charging Assessment</h4><p class="main-result" style="font-size: 0.95rem;">Enter your vehicle's <strong>Max. Charging Speed</strong> above to see how many charging stops you'll need following the <a href="mastery.html#sec-8020" style="color: var(--accent); text-decoration: underline;">80/20 Rule</a>.</p></div>`;
         }
-
-        const locationDisclaimer = `<p style="font-size:0.85rem; margin-top:12px; opacity:0.8; color:var(--neon-green) !important;">Note 1: Check provider stations in your area. Note 2: Times exclude ramp-up/slowdown.</p>`;
+        // --- END NEW INTEGRATED REAL WORLD SECTION ---
         
-        document.getElementById("contentsBox").innerHTML = `<div class="conclusion-white-border"><h3>RESULTS CONTENTS</h3><ul style="margin:0; padding-left:20px; font-size:0.95rem;"><li><a href="#payg-summary" style="color: var(--accent); text-decoration:none;">PAYG Summary</a></li><li><a href="#providerResults" style="color: var(--accent); text-decoration:none;">Table of Results</a></li><li><a href="#payg-vs-subscription" style="color: var(--accent); text-decoration:none;">PAYG vs Subscription</a></li><li><a href="#charging-times-section" style="color: var(--accent); text-decoration:none;">Charging Times</a></li></ul></div>`;
-
-        let conclusionHTML = `<div class="conclusion-white-border guide-section" id="payg-vs-subscription"><h3>PAYG vs SUBSCRIPTION CONCLUSION</h3><p class="main-result">${bestProvider.savings > 0 ? `For a trip of <strong>${inputs.journeyMiles} miles</strong>, <strong>${bestProvider.name}</strong> saves you <strong>£${bestProvider.savings.toFixed(2)}</strong>.` : `Standard PAYG is cheaper.`}</p></div>`;
-        conclusionHTML += `<div class="conclusion-white-border guide-section" id="charging-times-section"><h3>CHARGING TIMES</h3><p class="main-result">Public charging would take <strong>${formatChargingTime(publicKwh / maxChargingSpeed)}</strong>.</p>${speedTableHtml}${stopsHTML}${locationDisclaimer}</div>`;
+        const locationDisclaimer = `<p style="font-size:0.85rem; margin-top:12px; opacity:0.8; color:var(--neon-green) !important;">Note 1: Before purchasing a subscription, check that your chosen provider has charging stations in your planned area of travel — else your subscription will be wasted.</p><p style="font-size:0.85rem; margin-top:12px; opacity:0.8;">Note 2: Charging times exclude the initial ramp-up phase and the 80-to-100% charging slowdown. Read the section on <a href="mastery.html#sec-slow" style="color: var(--accent); text-decoration: underline;">Slow Charging</a> to find out more.</p>`;
+    
+        const contentsHTML = `
+            <div class="conclusion-white-border">
+                <h3>RESULTS CONTENTS</h3>
+                <ul style="margin:0; padding-left:20px; font-size:0.95rem;">
+                    <li><a href="#payg-summary" style="color: var(--accent); text-decoration:none;">PAYG Summary</a></li>
+                    <li><a href="#providerResults" style="color: var(--accent); text-decoration:none;">Table of Results</a></li>
+                    <li><a href="#payg-vs-subscription" style="color: var(--accent); text-decoration:none;">PAYG vs Subscription Conclusion</a></li>
+                    <li><a href="#charging-times-section" style="color: var(--accent); text-decoration:none;">Charging Times</a></li>
+                    <li><a href="#graph-section" style="color: var(--accent); text-decoration:none;">Graph</a></li>
+                </ul>
+            </div>
+        `;
+        
+        document.getElementById("contentsBox").innerHTML = contentsHTML;
+        let conclusionHTML = "";
+        
+        conclusionHTML += `<div class="conclusion-white-border guide-section" id="payg-vs-subscription">`; 
+        if (bestProvider.savings > 0) {
+            conclusionHTML += `<h3>PAYG vs SUBSCRIPTION CONCLUSION</h3><p class="main-result">For a trip of <strong>${inputs.journeyMiles} miles</strong>, a one-month subscription with <strong>${bestProvider.name}</strong> is cheaper than PAYG based on the selected minimum charging rate of <strong>${minSpeedLabel}</strong> and the other information entered. The total journey cost will be <strong>£${bestProvider.totalJourneyCost.toFixed(2)}</strong>, which represents a saving of <strong>£${bestProvider.savings.toFixed(2)}</strong> over PAYG rates.</p>`;
+        } else {
+            conclusionHTML += `<h3>PAYG vs SUBSCRIPTION CONCLUSION</h3><p class="main-result"><strong>Standard PAYG</strong> rates are cheaper than a subscription at the selected minimum charging rate of <strong>${minSpeedLabel}</strong> and the other information entered. The total journey cost will be <strong>£${bestProvider.totalJourneyCost.toFixed(2)}</strong>.</p>`;
+        }
+        conclusionHTML += `</div>`;
+        
+        conclusionHTML += `<div class="conclusion-white-border guide-section" id="charging-times-section"><h3>CHARGING TIMES</h3>`;
+        if (maxChargingSpeed > 0) {
+            conclusionHTML += `<p class="main-result">With your vehicle's maximum charging speed of <strong>${maxChargingSpeed} kW</strong>, the journey requiring <strong>${publicKwh.toFixed(1)} kWh</strong> of public charging would take <strong>${maxChargingTimeFormatted}</strong> at public chargers.</p>`;
+        } else {
+            conclusionHTML += `<p class="main-result">Enter your vehicle's <strong>Max. Charging Speed</strong> above to see estimated charging times for this journey.</p>`;
+        }
+        conclusionHTML += `${speedTableHtml}${stopsHTML}${locationDisclaimer}</div>`;
         conclusionsBox.innerHTML = conclusionHTML;
     } else {
         conclusionsBox.innerHTML = "";
     }
-
+    
     drawGraph(inputs, providers);
-    setCookie("ev_trip_values", getInputs());
+    const dataToSave = getInputs();
+    setCookie("ev_trip_values", dataToSave);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 function drawGraph(core, providers) {
     const ctx = document.getElementById("costChart");
