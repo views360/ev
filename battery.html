@@ -341,6 +341,7 @@
                     <li><a href="#sec-charging">Rapid vs. Home Charging</a></li>
                     <li><a href="#sec-thermal">Thermal Management & Noise</a></li>
                     <li><a href="#sec-calibration">The BMS & State of Charge</a></li>
+                    <li><a href="#sec-summary">At-a-Glance Maintenance Summary</a></li>
                     <li><a href="#sec-checklist">The Battery Health Checklist</a></li>
                 </ol>
             </nav>
@@ -402,6 +403,117 @@
                 <p>If you always stay between 20% and 80%, your car’s computer (BMS) can eventually lose track of where the actual top and bottom of the battery are. This can lead to "range anxiety" where the car shows 5% but suddenly drops to 0%.</p>
                 <p>Once every few months, it is actually beneficial to charge to 100% and let the car sit for an hour. This allows the BMS to "balance" the individual cells, ensuring they are all at the same voltage level. This isn't for the battery chemistry itself—it's for the <strong>accuracy</strong> of your range meter.</p>
             </div>
+
+            <style>
+                .maintenance-table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin: 24px 0;
+                    font-size: 0.85rem;
+                    background: rgba(15, 23, 42, 0.4);
+                    border-radius: 8px;
+                    overflow: hidden;
+                }
+                .maintenance-table th {
+                    background: rgba(56, 189, 248, 0.1);
+                    color: var(--accent);
+                    text-align: left;
+                    padding: 12px;
+                    border-bottom: 1px solid var(--border);
+                }
+                .maintenance-table td {
+                    padding: 12px;
+                    border-bottom: 1px solid var(--border);
+                    color: var(--muted);
+                }
+                .maintenance-table tr:last-child td { border-bottom: none; }
+            </style>
+            
+            <div class="guide-section" id="sec-summary">
+                <div class="guide-section-header">
+                    <div class="guide-icon-box">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="16" y1="2" x2="16" y2="6"></line>
+                            <line x1="8" y1="2" x2="8" y2="6"></line>
+                            <line x1="3" y1="10" x2="21" y2="10"></line>
+                        </svg>
+                    </div>
+                    <h3>At-a-Glance Maintenance Summary</h3>
+                </div>
+                
+                <p>Use this reference table to quickly determine the best state of charge for your battery based on your immediate driving needs.</p>
+            
+                <style>
+                    .maintenance-table-wrapper {
+                        overflow-x: auto;
+                        margin: 20px 0;
+                        border-radius: 8px;
+                        border: 1px solid var(--border);
+                    }
+                    .maintenance-table {
+                        width: 100%;
+                        border-collapse: collapse;
+                        font-size: 0.88rem;
+                        background: rgba(15, 23, 42, 0.4);
+                    }
+                    .maintenance-table th {
+                        background: rgba(56, 189, 248, 0.1);
+                        color: var(--accent);
+                        text-align: left;
+                        padding: 14px;
+                        border-bottom: 1px solid var(--border);
+                        font-family: 'Sora', sans-serif;
+                        font-weight: 700;
+                        font-size: 0.75rem;
+                        text-transform: uppercase;
+                        letter-spacing: 0.05em;
+                    }
+                    .maintenance-table td {
+                        padding: 14px;
+                        border-bottom: 1px solid var(--border);
+                        color: var(--muted);
+                        line-height: 1.5;
+                    }
+                    .maintenance-table tr:last-child td { border-bottom: none; }
+                    .maintenance-table strong { color: var(--text); }
+                </style>
+            
+                <div class="maintenance-table-wrapper">
+                    <table class="maintenance-table">
+                        <thead>
+                            <tr>
+                                <th>Scenario</th>
+                                <th>Ideal State</th>
+                                <th>Reasoning</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Daily Use</strong></td>
+                                <td>20% to 80%</td>
+                                <td>Minimizes chemical stress and heat build-up.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Long Trip</strong></td>
+                                <td>100% (Departing)</td>
+                                <td>Battery won't sit at high voltage long enough to degrade.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Storage (Airport)</strong></td>
+                                <td>50% (Sentry Off)</td>
+                                <td>The most stable "resting" state for Lithium-ion cells.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Winter Driving</strong></td>
+                                <td>Pre-conditioned</td>
+                                <td>Heats battery using grid power to improve efficiency.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
 
             <div class="guide-section" id="sec-checklist">
                 <div class="guide-section-header">
