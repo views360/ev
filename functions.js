@@ -556,6 +556,87 @@ function calculate() {
 
     if (providers.length > 0) {
         const bestProvider = providers[0];
+
+
+
+
+
+        /*--real-world table*/
+        const A = inputs.journeyMiles;
+        const usableKwh = inputs.batteryKwh;
+        const efficiency = inputs.efficiency;
+        
+        // B: Miles the initial pre-charge lasts until 20% remains
+        const initialKwh = (inputs.soc / 100) * usableKwh;
+        const reserveKwh = 0.2 * usableKwh;
+        const B = Math.max(0, (initialKwh - reserveKwh) * efficiency);
+        
+        // C & D: Subsequent 20-80% charges
+        const milesRemainingAfterFirstLeg = Math.max(0, A - B);
+        const fullChargeRange = (0.6 * usableKwh) * efficiency; // Range added by 20% -> 80%
+        const C = Math.floor(milesRemainingAfterFirstLeg / fullChargeRange);
+        
+        const sixtyPercentKwh = 0.6 * usableKwh;
+        const chargeSpeed = inputs.maxChargingSpeed || 100; // Default to 100 if not set
+        const timeHours = sixtyPercentKwh / chargeSpeed;
+        const D = formatChargingTime(timeHours); // Uses your existing formatChargingTime function
+        
+        // F, G, H, I: Final charge to get home
+        const F = C + 1;
+        const milesAfterFullCharges = milesRemainingAfterFirstLeg % fullChargeRange;
+        const kwhNeededToFinish = milesAfterFullCharges / efficiency;
+        const totalKwhToChargeFinal = kwhNeededToFinish + reserveKwh; 
+        // G: % needed to reach home with 20% left
+        const G = Math.ceil((kwhNeededToFinish / usableKwh) * 100);
+        const H = kwhNeededToFinish.toFixed(1);
+        const I = formatChargingTime(kwhNeededToFinish / chargeSpeed);
+        
+        // Generate the HTML Table
+        let realWorldTableHtml = `
+        <div class="guide-section">
+            <h3>Real World Charging Assessment</h3>
+            <p>The journey charging time listed above is useful but misleading because it is based on using your battery all the way down to 0%, which you must never do.</p>
+            <p>Here's how charging for your <strong>${A}</strong>-mile trip should actually look.</p>
+            
+            <div class="results-scroll">
+                <table class="real-world-table">
+                    <thead>
+                        <tr>
+                            <th>Event</th>
+                            <th>Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>First public charge (when battery hits 20%)</td>
+                            <td><strong>After ${B.toFixed(0)} miles</strong></td>
+                        </tr>
+                        <tr>
+                            <td>${C} subsequent charges (20% to 80%)</td>
+                            <td><strong>${D}</strong> to add 60% (${sixtyPercentKwh.toFixed(1)} kWh)</td>
+                        </tr>
+                        <tr>
+                            <td>Charge number ${F} option 1: Regular charge</td>
+                            <td>20% to 80% (as above)</td>
+                        </tr>
+                        <tr>
+                            <td>Charge number ${F} option 2: Charge to get home (with 20% left)</td>
+                            <td>Add <strong>${G}% / ${H} kWh</strong>, taking <strong>${I}</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>`;
+        
+        // Update the DOM - ensure you have a div with id="realWorldAssessment" in your HTML
+        document.getElementById("realWorldAssessment").innerHTML = realWorldTableHtml;
+
+
+
+
+
+
+        
         
         const minSpeedSelect = document.getElementById("minSpeed");
         const minSpeedLabel = minSpeedSelect.options[minSpeedSelect.selectedIndex].text;
