@@ -62,11 +62,6 @@ h3 {
     font-weight: 700;
 }
 
-.guide-section {
-    /* 48px header height + 20px of extra "padding" for aesthetics */
-    scroll-margin-top: 68px;
-}
-
 .info-icon {
     line-height: 1;
     cursor: pointer;
@@ -204,9 +199,6 @@ body {
     padding-bottom: 98px !important; /* clears the fixed bottom ad bar */
     line-height: 1.6;
     transition: background-color 0.3s, color 0.3s;
-    overflow-x: hidden; /* Prevents zooming out into the 'ad gutter' */
-    width: 100vw;       /* Ensures the body stays exactly screen-width */
-    position: relative;
 }
 
 .app {
@@ -1337,9 +1329,6 @@ body {
 @media (min-width: 700px) {
     body {
         padding-bottom: 20px !important;
-        #sideMenu.active {
-            right: 160px !important; /* Only offset when the ad is visible */
-        }
     }
 
     /* 1. content-wrap gives margin:auto children a right boundary that
@@ -1404,10 +1393,6 @@ body {
 /* MOBILE */
 @media (max-width: 700px) {
 
-    #sideMenu.active {
-        right: 0 !important; /* Snap to the edge on phones */
-    }
-    
     .cookie-banner {
         width: 75%;
         left: calc(50%);
@@ -1415,18 +1400,6 @@ body {
         
     .mobile-only-text {
         display: block;
-    }
-
-    .android-header-full {
-        width: 100% !important;
-        right: 0 !important;
-        left: 0 !important;
-    }
-
-    .help-overlay,
-    #beReminderOverlay {
-        right: 0 !important;
-        width: 100% !important;
     }
     
 body {
