@@ -33,6 +33,7 @@ function resetAll() {
 // ---------------------------------------------------------------------------
 let _ftDiv = null;
 let _ftCaret = null;
+let _ftOverlay = null;
 let _ftActive = null;
 let _ftTimer = null;
 
@@ -73,6 +74,15 @@ function _initTooltipDOM() {
     ].join(';') + ';';
     _ftDiv.appendChild(_ftCaret);
     document.body.appendChild(_ftDiv);
+
+    // Transparent overlay
+    _ftOverlay = document.createElement('div');
+    _ftOverlay.style.cssText = 'position:fixed;inset:0;z-index:9998;background:transparent;display:none;';
+    document.body.appendChild(_ftOverlay);
+
+    _ftOverlay.addEventListener('touchstart', (e) => {
+        _ftHide();
+    }, { passive: true });
 }
 
 function _ftPosition(iconEl) {
@@ -125,6 +135,7 @@ function _ftHide() {
     if (!_ftDiv) return;
     clearTimeout(_ftTimer);
     _ftDiv.style.visibility = 'hidden';
+    if (_ftOverlay) _ftOverlay.style.display = 'none';
     _ftActive = null;
 }
 
@@ -142,25 +153,24 @@ function toggleTooltip(iconEl) {
     requestAnimationFrame(() => {
         _ftPosition(iconEl);
         _ftDiv.style.visibility = 'visible';
+        // Show overlay on touch devices so any subsequent touch hides the tooltip
+        if (window.matchMedia('(hover: none)').matches) {
+            _ftOverlay.style.display = 'block';
+        }
     });
 }
 
 // Desktop: hide on click outside, show/hide on hover, reposition on scroll
-// These listeners are defensive and check if there's actually a tooltip active
 document.addEventListener('click', (e) => {
     if (_ftActive && !e.target.closest('.info-icon')) _ftHide();
 }, true);
 
 document.addEventListener('mouseover', (e) => {
-    // Only process if we have an initialized tooltip div
-    if (!_ftDiv) return;
     const icon = e.target.closest('.info-icon');
     if (icon && icon !== _ftActive) toggleTooltip(icon);
 });
 
 document.addEventListener('mouseout', (e) => {
-    // Only process if we have an initialized tooltip div
-    if (!_ftDiv) return;
     const icon = e.target.closest('.info-icon');
     if (icon && !icon.contains(e.relatedTarget)) _ftHide();
 });
