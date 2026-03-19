@@ -1150,7 +1150,16 @@ _ftOverlay.addEventListener('touchstart', (e) => {
     // Don't hide if clicking the menu trigger or menu itself
     if (e.target.closest('.android-dots-trigger') || 
         e.target.closest('#sideMenu') ||
-        e.target.closest('.chrome-style-menu')) {
+        e.target.closest('.chrome-style-menu') ||
+        // Also exclude buttons, links, inputs, and other interactive elements
+        e.target.closest('button') ||
+        e.target.closest('a') ||
+        e.target.closest('input') ||
+        e.target.closest('.btn') ||
+        e.target.closest('[onclick]') ||
+        // Exclude modals and overlays
+        e.target.closest('.help-overlay') ||
+        e.target.closest('.cookie-banner')) {
         return;
     }
     // Hide tooltip, remove overlay, then re-dispatch the touch so the scroll proceeds
