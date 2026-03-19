@@ -1293,6 +1293,7 @@ body {
 
 /* Desktop sidebar ad — hidden on mobile, visible on desktop */
 .desktop-sidebar-ad {
+    display: none;
     position: absolute;
     visibility: hidden;
     pointer-events: none;
