@@ -5,7 +5,7 @@
      crossorigin="anonymous"></script>
     <meta charset="UTF-8">
     <meta name="google-adsense-account" content="ca-pub-2696934198267016">
-    <title>About This Tool - EV Subs Compare</title>
+    <title>EV App Toolkit - EV Subs Compare</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="stylesheet" href="style.css">
@@ -32,7 +32,7 @@
         .hero-bg {
             position: absolute;
             inset: -80px 0 -80px 0;
-            background-image: url('images/about.webp');
+            background-image: url('images/apps.webp');
             background-size: cover;
             background-position: right bottom;
             will-change: transform;
@@ -46,9 +46,9 @@
             inset: 0;
             background: linear-gradient(
                 to bottom,
-                rgba(2, 6, 23, 0.15) 0%,
-                rgba(2, 6, 23, 0.40) 55%,
-                rgba(2, 6, 23, 0.82) 100%
+                rgba(2, 6, 23, 0.40) 0%,
+                rgba(2, 6, 23, 0.65) 55%,
+                rgba(2, 6, 23, 1.00) 100%
             );
         }
 
@@ -103,14 +103,14 @@
         }
 
         /* ── Page body layout ── */
-        .about-wrap {
+        .guide-wrap {
             max-width: 860px;
             margin: 0 auto;
             padding: 56px 40px 120px;
         }
 
-        /* ── Content card ── */
-        .about-card {
+        /* ── Guide card ── */
+        .guide-card {
             background: var(--panel);
             border: 1px solid var(--border);
             border-radius: 16px;
@@ -121,90 +121,193 @@
         }
 
         /* subtle corner accent */
-        .about-card::before {
+        .guide-card::before {
             content: '';
             position: absolute;
             top: 0; right: 0;
             width: 180px; height: 180px;
-            background: radial-gradient(circle at top right, var(--accent-soft), transparent 70%);
+            background: radial-gradient(circle at top right, rgba(0, 191, 165, 0.08), transparent 70%);
             pointer-events: none;
         }
 
-        .about-card h2 {
+        .guide-card h2 {
             font-family: 'Sora', sans-serif;
             font-size: 1.6rem;
             font-weight: 800;
             color: var(--accent);
+            margin: 0 0 8px;
+        }
+
+        .guide-subtitle {
+            font-size: 0.95rem;
+            color: var(--muted);
+            line-height: 1.7;
             margin: 0 0 36px;
         }
 
         /* ── Section blocks ── */
-        .about-section {
+        .guide-section {
             margin-bottom: 36px;
             padding-bottom: 36px;
             border-bottom: 1px solid var(--border);
         }
 
-        .about-section:last-child {
+        .guide-section:last-child {
             margin-bottom: 0;
             padding-bottom: 0;
             border-bottom: none;
         }
 
-        .about-section-header {
+        .guide-section-header {
             display: flex;
             align-items: center;
             gap: 14px;
             margin-bottom: 14px;
         }
 
-        .about-icon-box {
+        /* ── Teal icon boxes ── */
+        .guide-icon-box {
             flex-shrink: 0;
             width: 40px;
             height: 40px;
             border-radius: 10px;
-            background: rgba(255, 117, 0, 0.15);
-            border: 1px solid #ff7500;
+            background: rgba(0, 191, 165, 0.12);
+            border: 1px solid #00bfa5;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 0 10px rgba(255, 117, 0, 0.4);
+            box-shadow: 0 0 10px rgba(0, 191, 165, 0.35);
         }
 
-        .about-icon-box svg {
+        .guide-icon-box svg {
             width: 18px;
             height: 18px;
-            stroke: #ff7500;
+            stroke: #00bfa5;
         }
 
-        .about-section h3 {
+        /* ── App name heading ── */
+        .guide-section h3 {
             font-family: 'Sora', sans-serif;
-            font-size: 1.05rem;
-            font-weight: 700;
-            color: var(--text);
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: #00bfa5;
             margin: 0;
+            letter-spacing: 0.04em;
         }
 
-        .about-section p,
-        .about-section li {
+        .guide-section p {
             color: var(--muted);
             font-size: 0.93rem;
             line-height: 1.75;
             margin: 0 0 10px;
         }
 
-        .about-section ul {
-            padding-left: 20px;
-            margin: 10px 0 0;
-        }
-
-        .about-section li {
-            margin-bottom: 6px;
-        }
-
-        .about-section strong {
+        .guide-section strong {
             color: var(--text);
             font-weight: 600;
+        }
+
+        /* ── Best for / Pro Strategy rows ── */
+        .app-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin: 12px 0 14px;
+        }
+
+        .app-meta-row {
+            display: flex;
+            gap: 10px;
+            align-items: baseline;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .app-meta-label {
+            flex-shrink: 0;
+            font-family: 'Sora', sans-serif;
+            font-size: 0.68rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #00bfa5;
+            padding: 2px 7px;
+            border: 1px solid rgba(0, 191, 165, 0.4);
+            border-radius: 4px;
+            background: rgba(0, 191, 165, 0.08);
+            white-space: nowrap;
+        }
+
+        .app-meta-text {
+            color: var(--muted);
+        }
+
+        /* ── App store links ── */
+        .app-links {
+            display: flex;
+            gap: 10px;
+            margin-top: 14px;
+            flex-wrap: wrap;
+        }
+
+        .app-link-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            font-family: 'Sora', sans-serif;
+            text-decoration: none;
+            border: 1px solid #00bfa5;
+            color: #00bfa5;
+            background: rgba(0, 191, 165, 0.08);
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .app-link-btn:hover {
+            background: #00bfa5;
+            color: var(--bg);
+        }
+
+        .app-link-btn svg {
+            width: 13px;
+            height: 13px;
+            stroke: currentColor;
+            fill: none;
+            flex-shrink: 0;
+        }
+
+        /* ── App icon images ── */
+        .guide-section-body {
+            display: flex;
+            gap: 24px;
+            align-items: flex-start;
+        }
+
+        .guide-section-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .app-icon-wrap {
+            flex-shrink: 0;
+            width: 80px;
+        }
+
+        .app-icon-wrap img {
+            width: 80px;
+            height: 80px;
+            border-radius: 18px;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.04);
+            display: block;
+        }
+
+        @media (max-width: 480px) {
+            .app-icon-wrap { width: 60px; }
+            .app-icon-wrap img { width: 60px; height: 60px; border-radius: 14px; }
         }
 
         /* ── Light mode overrides ── */
@@ -231,10 +334,59 @@
         @media (max-width: 700px) {
             .hero-parallax { height: 360px; margin-top: 48px; }
             .hero-text { padding: 0 24px 36px; }
-            .about-wrap { padding: 36px 20px 110px; }
-            .about-card { padding: 24px; }
+            .guide-wrap { padding: 36px 20px 110px; }
+            .guide-card { padding: 24px; }
         }
-    </style>
+    
+        /* ── Table of contents ── */
+        .toc {
+            margin: 0 0 36px;
+            padding: 20px 24px;
+            background: rgba(0, 191, 165, 0.05);
+            border: 1px solid rgba(0, 191, 165, 0.25);
+            border-radius: 12px;
+        }
+
+        .toc-title {
+            font-family: 'Sora', sans-serif;
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin: 0 0 12px;
+        }
+
+        .toc ol {
+            margin: 0;
+            padding: 0 0 0 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .toc li {
+            font-size: 0.88rem;
+            color: var(--muted);
+            line-height: 1.4;
+        }
+
+        .toc a {
+            color: var(--muted);
+            text-decoration: none;
+            transition: color 0.15s;
+        }
+
+        .toc a:hover {
+            color: var(--accent);
+        }
+
+.guide-section {
+    /* 48px header height + 20px of extra "padding" for aesthetics */
+    scroll-margin-top: 68px;
+}
+
+        </style>
     <script>
         (function() {
             const getCookie = (name) => {
@@ -273,97 +425,153 @@
     </div>
 
     <!-- Slide-out menu -->
-    <div id="menu-placeholder"></div>   
-    
+    <div id="menu-placeholder"></div>    
+
     <!-- ── Parallax hero banner ── -->
     <div class="hero-parallax" id="heroParallax">
         <div class="hero-bg" id="heroBg"></div>
         <div class="hero-text">
             <p class="hero-eyebrow">&#x26A1; EV Subs Compare &mdash; UK</p>
-            <h1 class="hero-title">About <span>This Tool</span></h1>
-            <p class="hero-sub">A data-driven, privacy-first calculator built by UK EV enthusiasts to help you decide whether a charging subscription is worth it for your driving habits.</p>
+            <h1 class="hero-title">EV <span>App Toolkit</span></h1>
+            <p class="hero-sub">Listed below are the top four free apps for EV charging in the UK. Each of them includes a map so you can locate the charging stations you need. Be sure to install these apps on your phone.</p>
         </div>
     </div>
     <div class="hero-strip"></div>
 
     <!-- ── Page content ── -->
-    <div class="about-wrap">
-        <div class="about-card">
+    <div class="guide-wrap">
+        <div class="guide-card">
 
-            <h2>About EV Subs Compare</h2>
+            <h2>The Essential EV App Toolkit</h2>
+            <p class="guide-subtitle">So, you've figured out which EV subscription will save you the most money, and now you need to know whether that provider has charging stations in your area of travel. Here is a list of the four main free apps (each of which incorporates a UK map) that between them cover everything.</p>
+            <nav class="toc">
+                <p class="toc-title">Contents</p>
+                <ol>
+                    <li><a href="#sec-zapmap">Zapmap — The UK's Search Engine</a></li>
+                    <li><a href="#sec-electroverse">Octopus Electroverse — The All-Access Pass</a></li>
+                    <li><a href="#sec-abrp">ABRP — The Brains</a></li>
+                    <li><a href="#sec-tesla">Tesla App — For Non-Teslas</a></li>
+                </ol>
+            </nav>
 
-            <!-- 1. What it does -->
-            <div class="about-section">
-                <div class="about-section-header">
-                    <div class="about-icon-box">
-                        <svg style="color #ff7500"viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/>
-                        </svg>
+            <!-- 1. Zapmap -->
+            <div class="guide-section" id="sec-zapmap">
+                <div class="guide-section-body">
+                    <div class="app-icon-wrap">
+                        <img src="images/zapmap.webp" alt="Zapmap app icon">
                     </div>
-                    <h3>What This Tool Does</h3>
+                    <div class="guide-section-content">
+                        <div class="guide-section-header">
+                            <div class="guide-icon-box">
+                                <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                                </svg>
+                            </div>
+                            <h3>Zapmap &mdash; The UK's Search Engine</h3>
+                        </div>
+                        <p>Zapmap is the industry standard for the UK. While they offer a paid "Premium" tier for in-car screens, the <strong>free version provides the most accurate live status of the UK's 115,000+ chargers</strong>.</p>
+                        <div class="app-links">
+                            <a class="app-link-btn" href="https://apps.apple.com/gb/app/zapmap-ev-charging-in-the-uk/id964082746" target="_blank" rel="noopener">
+                                <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 1 10 10 10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2m0 2a8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8 8 8 0 0 0-8-8"/></svg>
+                                App Store
+                            </a>
+                            <a class="app-link-btn" href="https://play.google.com/store/apps/details?id=com.zapmap.zapmap" target="_blank" rel="noopener">
+                                <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                                Google Play
+                            </a>
+                        </div>
+                    </div>
                 </div>
-                <p>Deciding between a <strong>Pay-As-You-Go (PAYG)</strong> rate and a <strong>monthly subscription</strong> can be difficult without accurate, personalised data. Public charging costs vary wildly — from 40p/kWh to over 85p/kWh — and a subscription might cost £10/month but reduce your rate by 20p/kWh.</p>
-                <p>EV Subs Compare automates this calculation across all known UK subscription providers instantly, giving you a clear answer based on your own vehicle and driving habits.</p>
             </div>
 
-            <!-- 2. How it works -->
-            <div class="about-section">
-                <div class="about-section-header">
-                    <div class="about-icon-box">
-                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
-                        </svg>
+            <!-- 2. Octopus Electroverse -->
+            <div class="guide-section" id="sec-electroverse">
+                <div class="guide-section-body">
+                    <div class="app-icon-wrap">
+                        <img src="images/electroverse.webp" alt="Octopus Electroverse app icon">
                     </div>
-                    <h3>How the Comparisons Work</h3>
+                    <div class="guide-section-content">
+                        <div class="guide-section-header">
+                            <div class="guide-icon-box">
+                                <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/>
+                                </svg>
+                            </div>
+                            <h3>Octopus Electroverse &mdash; The All-Access Pass</h3>
+                        </div>
+                        <p>You don't need to be an Octopus Energy customer to use this. It <strong>aggregates hundreds of networks</strong> — including IONITY, Osprey, and MFG — into one map and one payment method.</p>
+                        <div class="app-links">
+                            <a class="app-link-btn" href="https://apps.apple.com/gb/app/octopus-electroverse/id1535444463" target="_blank" rel="noopener">
+                                <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 1 10 10 10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2m0 2a8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8 8 8 0 0 0-8-8"/></svg>
+                                App Store
+                            </a>
+                            <a class="app-link-btn" href="https://play.google.com/store/apps/details?id=energy.octopus.electricjuice.android" target="_blank" rel="noopener">
+                                <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                                Google Play
+                            </a>
+                        </div>
+                    </div>
                 </div>
-                <p>The tool offers two calculation modes:</p>
-                <ul>
-                    <li><strong>Break-Even Analysis</strong> — calculates the exact mileage required to recoup a subscription fee, based on your car's efficiency and your typical PAYG rate. Results update live as you adjust any input.</li>
-                    <li><strong>Trip Savings</strong> — perfect for planning a long-distance journey. Enter your route distance and see exactly how much you'd save with each provider's subscription rate versus paying as you go.</li>
-                </ul>
-                <p>All calculations run entirely in your browser — no data is sent to a server, and results are instant.</p>
             </div>
 
-            <!-- 3. Coverage -->
-            <div class="about-section">
-                <div class="about-section-header">
-                    <div class="about-icon-box">
-                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="3"/>
-                        </svg>
+            <!-- 3. ABRP -->
+            <div class="guide-section" id="sec-abrp">
+                <div class="guide-section-body">
+                    <div class="app-icon-wrap">
+                        <img src="images/abrp.webp" alt="ABRP app icon">
                     </div>
-                    <h3>Coverage &amp; Data</h3>
+                    <div class="guide-section-content">
+                        <div class="guide-section-header">
+                            <div class="guide-icon-box">
+                                <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                                </svg>
+                            </div>
+                            <h3>ABRP &mdash; The Brains</h3>
+                        </div>
+                        <p>A Better Routeplanner is the world's most powerful EV trip planner. Unlike Google Maps, it <strong>calculates your battery percentage based on your specific car model</strong>, the weight you're carrying, and even UK wind speeds.</p>
+                        <div class="app-links">
+                            <a class="app-link-btn" href="https://apps.apple.com/gb/app/a-better-routeplanner-abrp/id1490860521" target="_blank" rel="noopener">
+                                <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 1 10 10 10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2m0 2a8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8 8 8 0 0 0-8-8"/></svg>
+                                App Store
+                            </a>
+                            <a class="app-link-btn" href="https://play.google.com/store/apps/details?id=com.iternio.abrpapp" target="_blank" rel="noopener">
+                                <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                                Google Play
+                            </a>
+                        </div>
+                    </div>
                 </div>
-                <p>This tool covers <strong>UK public charging networks</strong> only. Subscription pricing data is reviewed and updated periodically to keep comparisons accurate, with the last update date shown in the settings menu.</p>
-                <p>If you spot a rate that looks out of date — or know of a provider we haven't included yet — please <a href="contact.html" style="color: var(--accent); font-weight: 600;">let us know</a>. Reports from the community help to keep the data fresh.</p>
             </div>
 
-            <!-- 4. Privacy -->
-            <div class="about-section">
-                <div class="about-section-header">
-                    <div class="about-icon-box">
-                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                        </svg>
+            <!-- 4. Tesla App -->
+            <div class="guide-section" id="sec-tesla">
+                <div class="guide-section-body">
+                    <div class="app-icon-wrap">
+                        <img src="images/tesla.webp" alt="Tesla app icon">
                     </div>
-                    <h3>Designed for Privacy</h3>
-                </div>
-                <p>We believe in a <strong>privacy-first</strong> approach. This tool does not collect or store any personally identifiable information. We use local cookies solely to remember your vehicle settings and input values so the calculator is ready to use immediately on your next visit.</p>
-                <p>No account is required. No data leaves your browser. Read our full <a href="privacy.html" style="color: var(--accent); font-weight: 600;">Privacy Policy</a> for complete details.</p>
-            </div>
-
-            <!-- 5. Get involved -->
-            <div class="about-section">
-                <div class="about-section-header">
-                    <div class="about-icon-box">
-                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="12" r="4"/><path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-4 8"/>
-                        </svg>
+                    <div class="guide-section-content">
+                        <div class="guide-section-header">
+                            <div class="guide-icon-box">
+                                <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                                </svg>
+                            </div>
+                            <h3>Tesla App &mdash; For Non-Teslas</h3>
+                        </div>
+                        <p>In 2026, a large portion of the Tesla Supercharger network in the UK is <strong>open to all brands</strong> with a CCS charging port. They are often the most reliable and fastest chargers in the country.</p>
+                        <div class="app-links">
+                            <a class="app-link-btn" href="https://apps.apple.com/gb/app/tesla/id582007913" target="_blank" rel="noopener">
+                                <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 1 10 10 10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2m0 2a8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8 8 8 0 0 0-8-8"/></svg>
+                                App Store
+                            </a>
+                            <a class="app-link-btn" href="https://play.google.com/store/apps/details?id=com.teslamotors.tesla" target="_blank" rel="noopener">
+                                <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                                Google Play
+                            </a>
+                        </div>
                     </div>
-                    <h3>Get Involved</h3>
                 </div>
-                <p>EV Subs Compare is a free, independent tool maintained by a small team of EV enthusiasts. If you find it useful, the best way to support it is to share it with other EV drivers.</p>
-                <p>Have feedback, spotted a bug, or want to suggest a new provider? <a href="contact.html" style="color: var(--accent); font-weight: 600;">Get in touch</a> — we read every message.</p>
             </div>
 
         </div>
@@ -452,6 +660,8 @@ function toggleTheme() {
 }
 </script>
 <script src="functions.js"></script>
+</body>
+<script src="functions.js"></script>
 <script>
 async function loadMenu() {
     try {
@@ -492,5 +702,4 @@ function expandActiveSections() {
 
 loadMenu();
 </script>
-</body>
 </html>
