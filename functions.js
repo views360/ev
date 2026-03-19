@@ -1130,7 +1130,7 @@ function _ftPosition(iconEl) {
 // Any touch on it (tap or start of scroll) hides the tooltip and removes itself,
 // passing the gesture through to whatever is underneath.
 const _ftOverlay = document.createElement('div');
-_ftOverlay.style.cssText = 'position:fixed;inset:0;z-index:9998;background:transparent;display:none;pointer-events:none;';
+_ftOverlay.style.cssText = 'position:fixed;inset:0;z-index:9998;background:transparent;display:none;';
 document.body.appendChild(_ftOverlay);
 
 function _ftHide() {
