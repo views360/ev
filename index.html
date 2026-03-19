@@ -456,6 +456,10 @@ function expandActiveSections() {
 function toggleMenu() {
     const menu = document.getElementById('sideMenu');
     if (menu) {
+        // Hide any visible tooltips when opening menu to prevent overlay from blocking clicks
+        if (typeof _ftHide === 'function') {
+            _ftHide();
+        }
         menu.classList.toggle('active');
         if (menu.classList.contains('active')) {
             expandActiveSections();
