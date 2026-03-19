@@ -285,6 +285,11 @@
             color: var(--accent);
         }
 
+.guide-section {
+    /* 48px header height + 20px of extra "padding" for aesthetics */
+    scroll-margin-top: 68px;
+}
+
         </style>
     <script>
         (function() {
@@ -347,6 +352,7 @@
                 <p class="toc-title">Contents</p>
                 <ol>
                     <li><a href="#sec-8020">The 80/20 Rule Explained</a></li>
+					<li><a href="#sec-slow">Why Slow Charging?</a></li>
                     <li><a href="#sec-speed">The Sweet Spot: Speed & Range</a></li>
                     <li><a href="#sec-regen">Smooth Regeneration</a></li>
                     <li><a href="#sec-cabin">Cabin vs. Seats: Heating Efficiency</a></li>
@@ -372,7 +378,56 @@
                 </ul>
             </div>
 
-            <!-- 2. Speed -->
+
+			<!--1a. Slow Charging -->
+			<div class="guide-section" id="sec-slow">
+			    <div class="guide-section-header">
+			        <div class="guide-icon-box">
+						<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+			                <path d="M5 2h14"></path>
+			                <path d="M5 22h14"></path>
+			                <path d="M6 2v1c0 5 6 4 6 9s6 4 6 9v1"></path>
+			                <path d="M18 2v1c0 5-6 4-6 9s-6 4-6 9v1"></path>
+			            </svg>
+			        </div>
+			        <h3>Why So Slow?</h3>
+			    </div>
+			    <p>It is a common (and often frustrating) experience: you plug your car into a shiny 350kW charger, but the screen only shows 64kW. In the industry, this is known as the <strong>"Requested vs. Delivered" gap</strong>.</p>
+			    <p>Your car is the "boss"—it tells the charger exactly how much power to send based on safety rules managed by the Battery Management System (BMS). Here are the four primary reasons for the gap:</p>
+			    <ul>
+			        <li><strong>The Charging Curve:</strong> Batteries charge fastest when nearly empty (**10%–50%**). Above 80%, the BMS "tapers" the speed to a trickle to protect long-term health.</li>
+			        <li><strong>The "Coldgate" Effect:</strong> If the battery is below 20°C, internal resistance is high, and the BMS limits speed to prevent damage. <strong>Pro Tip:</strong> Use your car's SatNav to navigate to the charger; this triggers "Pre-conditioning" to bring the battery to the ideal 25°C just as you arrive.</li>
+			        <li><strong>Shared Power:</strong> Hubs like Tesla V2 or GRIDSERVE often share one power cabinet between two stalls. If someone plugs in next to you, your 150kW might be split 50/50, capping you at <strong>75kW</strong>.</li>
+			        <li><strong>Voltage Mismatch:</strong> Most EVs (400V architecture) are physically capped at 150kW–175kW. Only 800V cars (like the IONIQ 5 or EV6) can pull the full 230kW–350kW without overheating.</li>
+			    </ul>
+			
+			    <div style="overflow-x: auto; margin-top: 20px;">
+			        <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem; color: var(--muted); border: 1px solid var(--border);">
+			            <thead>
+			                <tr style="background: rgba(57, 255, 20, 0.05); color: var(--text);">
+			                    <th style="padding: 10px; border: 1px solid var(--border); text-align: left;">If the car...</th>
+			                    <th style="padding: 10px; border: 1px solid var(--border); text-align: left;">The reason is likely...</th>
+			                </tr>
+			            </thead>
+			            <tbody>
+			                <tr>
+			                    <td style="padding: 10px; border: 1px solid var(--border);">Starts slow, then speeds up</td>
+			                    <td style="padding: 10px; border: 1px solid var(--border);">Battery was cold and is warming up.</td>
+			                </tr>
+			                <tr>
+			                    <td style="padding: 10px; border: 1px solid var(--border);">Starts fast, then drops at 80%</td>
+			                    <td style="padding: 10px; border: 1px solid var(--border);">Normal "tapering" for battery health.</td>
+			                </tr>
+			                <tr>
+			                    <td style="padding: 10px; border: 1px solid var(--border);">Capped at 75kW or 175kW</td>
+			                    <td style="padding: 10px; border: 1px solid var(--border);">Shared power or car's voltage limit.</td>
+			                </tr>
+			            </tbody>
+			        </table>
+			    </div>
+			</div>
+
+			<!-- 2. Speed -->
             <div class="guide-section" id="sec-speed">
                 <div class="guide-section-header">
                     <div class="guide-icon-box">

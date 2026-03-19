@@ -442,7 +442,7 @@ body.light-mode #providerResults th:nth-child(even) {
 
 .speed-comparison-container {
     margin-top: 20px;
-    max-width: 400px;
+    width: 100%;
 }
 
 .mini-table {
