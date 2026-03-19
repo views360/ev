@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2944414800646015"
+     crossorigin="anonymous"></script>
+    <meta charset="UTF-8">
+    <title>About Us - EV Subs Compare</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* (2) Fix: Allow page to scroll naturally instead of inside the panel */
+        body {
+            background: rgba(0, 0, 0, 0.85);
+            /* backdrop-filter removed: causes position:fixed children to scroll with page */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 80px 20px 98px 20px; /* Space for the fixed header and bottom ad bar */
+            box-sizing: border-box;
+            /* overflow-y removed: same issue as backdrop-filter with position:fixed */
+        }
+        /* DEBUG-V2 */
+
+        /* Replicate the look and feel of the .help-modal without the height restriction */
+        .about-modal-container {
+            background: var(--panel);
+            width: 75%;
+            max-width: 700px;
+            border-radius: 16px;
+            border: 1px solid var(--accent);
+            box-shadow: var(--glow-strong);
+            padding: 5px 30px 30px 30px;
+            position: relative;
+            /* Fix: Remove overflow and max-height to let it expand */
+            overflow: visible; 
+            height: auto;
+	    margin-top: 16px !important;
+        }
+
+        .about-modal-container h1, 
+        .about-modal-container h2 {
+            color: var(--accent);
+            margin-top: 0;
+        }
+
+        .about-modal-container h2 {
+            margin-top: 25px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 10px;
+        }
+
+        .about-modal-container p, 
+        .about-modal-container li {
+            color: var(--text);
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+
+        /* Ensure the settings menu trigger is visible */
+        .android-header-full {
+            background: var(--panel);
+            border-bottom: 1px solid var(--border);
+        }
+        
+        /* Ensure 30px side margins on mobile devices */
+        @media (max-width: 700px) {
+            body {
+                padding: 30px !important;
+                padding-bottom: 98px !important; /* clears the fixed bottom ad bar */
+            }
+            
+            .content-section {
+                padding-left: 0;
+                padding-right: 0;
+            }
+        
+            .app {
+                width: 100%;
+                margin: 0;
+            }
+
+            .about-modal-container {
+				width: 90% !important;
+                margin: 50px 50px 30px 50px !important;
+            }
+        }
+    </style>
+    <script>
+        /* Theme persistence check */
+        (function() {
+            const getCookie = (name) => {
+                const nameEQ = name + "=";
+                const ca = document.cookie.split(';');
+                for (let i = 0; i < ca.length; i++) {
+                    let c = ca[i].trim();
+                    if (c.indexOf(nameEQ) === 0) {
+                        try { return JSON.parse(decodeURIComponent(c.substring(nameEQ.length))); } 
+                        catch (e) { return decodeURIComponent(c.substring(nameEQ.length)).replace(/"/g, ''); }
+                    }
+                }
+                return null;
+            };
+            const theme = getCookie('themePref');
+            if (theme === 'light') document.documentElement.classList.add('light-mode');
+        })();
+    </script>
+</head>
+<body>
+
+    <div class="android-header-full">
+        <h1 class="android-title-clean">EV Subs Compare (UK)</h1>
+        <div class="android-dots-trigger" onclick="toggleMenu()">
+            <span></span><span></span><span></span>
+        </div>
+    </div>
+
+    <div id="sideMenu" class="chrome-style-menu">
+        <div class="menu-content">
+            <a class="menu-item-clean" href="index.html">
+                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cGF0aCBkPSJNMyA5bDktN2w5IDd2MTFhMiAyIDAgMCAxLTIgMmgtNHYtNGgtNHY0SDVhMiAyIDAgMCAxLTItMlY5eiIgc3Ryb2tlPSIjOTRhM2I4IiBzdHJva2Utd2lkdGg9IjIiLz4KPC9zdmc+" class="menu-icon-svg">
+                <span>Calculator Home</span>
+            </a>
+            <a class="menu-item-clean" onclick="toggleTheme(); toggleMenu();">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z'/%3E%3C/svg%3E" class="menu-icon-svg">
+                <span>Light/Dark Mode</span>
+            </a>
+        </div>
+    </div>
+
+    <div class="about-modal-container">
+		<a href="index.html" class="close-x" style="text-decoration: none;">&times;</a>
+        <h2>About This Tool</strong></h2>
+        <p>Deciding between a Pay-As-You-Go (PAYG) rate and a monthly subscription can be difficult without accurate data. We provide a data-driven approach to help you decide if a one-month subscription is a savvy financial move for your specific driving habits.</p>
+
+        <h3>Why Use This Tool?</h3>
+        <p>Public charging costs can vary wildly, from 40p/kWh to over 85p/kWh. A subscription might cost £10 but lower your rate by 20p/kWh. Our tool automates this calculation across all known UK subscription providers instantly.</p>
+
+        <h3>How the Comparisons Work</h3>
+        <ul>
+            <li><strong>Break-Even Analysis:</strong> Calculates the exact mileage required to recoup a subscription fee based on your car's efficiency.</li>
+            <li><strong>Trip Savings:</strong> Perfect for planning long-distance holidays, showing you exactly how much you'll save on a specific route.</li>
+        </ul>
+
+        <h3>Designed for Privacy</h3>
+        <p>We believe in a <i>privacy-first</i> approach. This tool does not collect or store any personally identifiable information. We use local cookies solely to remember your vehicle settings so that the tool is ready to use immediately upon your next visit.</p>
+
+        <div style="margin-top: 30px; text-align: center;">
+            <a href="index.html" class="btn secondary">Return to Calculator</a>
+        </div>
+    </div>
+
+    <script>
+        // Standalone versions of only the functions needed by this page
+        const setCookie = (name, value) => {
+            const date = new Date();
+            date.setTime(date.getTime() + (30 * 24 * 60 * 60 * 1000));
+            document.cookie = `${name}=${encodeURIComponent(JSON.stringify(value))};expires=${date.toUTCString()};path=/;SameSite=Lax`;
+        };
+
+        function toggleTheme() {
+            const isLight = document.documentElement.classList.toggle('light-mode');
+            setCookie('themePref', isLight ? 'light' : 'dark');
+        }
+
+        function toggleMenu() {
+            document.getElementById('sideMenu').classList.toggle('active');
+        }
+
+        document.addEventListener('click', (e) => {
+            const menu = document.getElementById('sideMenu');
+            const trigger = document.querySelector('.android-dots-trigger');
+            if (menu.classList.contains('active')) {
+                if (!menu.contains(e.target) && !trigger.contains(e.target)) {
+                    menu.classList.remove('active');
+                }
+            }
+        });
+    </script>
+<div class="desktop-sidebar-ad">
+    <div class="ad-tab-vertical">Ads Area</div>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2944414800646015"
+         crossorigin="anonymous"></script>
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-2944414800646015"
+         data-ad-slot="DESKTOP_SLOT_ID" 
+         data-ad-format="vertical"
+         data-full-width-responsive="true"></ins>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+</div>
+<div class="mobile-bottom-ad">
+    <div class="ad-tab">Ads Area</div>
+	<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2944414800646015"
+	     crossorigin="anonymous"></script>
+	<ins class="adsbygoogle"
+	     style="display:block"
+	     data-ad-format="autorelaxed"
+	     data-ad-client="ca-pub-2944414800646015"
+	     data-ad-slot="3754204567"></ins>
+	<script>
+	     (adsbygoogle = window.adsbygoogle || []).push({});
+	</script>
+</div>
+</body>
+</html>
