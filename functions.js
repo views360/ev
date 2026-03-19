@@ -283,7 +283,7 @@ function calculate() {
         const minSpeedSelection = parseFloat(document.getElementById("minSpeedBE").value) || 0;
 
         if (isNaN(efficiency) || efficiency <= 0 || isNaN(adhocRate) || adhocRate <= 0) {
-            uiPreText.innerHTML = "Please attend to all flashing green fields, or use the navigation tabs at the top to switch between BREAK EVEN and TRIP SAVINGS calcuation types.";
+            uiPreText.innerHTML = "Please enter valid <strong>Efficiency</strong> and <strong>PAYG Rate</strong> values, or use the toggle at the top to switch to TRIP SAVINGS calculation type.";
             uiPreText.style.display = "block";
             uiResults.style.display = "none";
             return;
@@ -348,7 +348,7 @@ function calculate() {
         });
 
         let html = `<h2 class="results-heading" style="text-align: center">BREAK-EVEN ANALYSIS</h2>
-                    <div class="mobile-only-text" style="font-size: 0.8em; text-align: center; color: var(--neon-green)">Slide table left to view hidden columns.</div>
+                    <div class="mobile-only-text" style="font-size: 0.8em; margin-left: 10px; color: var(--neon-green)">Slide table left to view hidden columns.</div>
                     <div class="results-scroll">
                     <table>
                         <thead>
@@ -423,7 +423,7 @@ function calculate() {
     const providerBoxes = document.querySelectorAll(".provider-box");
 
     if (tripIncomplete) {
-        uiPreText.innerHTML = "Please attend to all flashing green fields, or use the navigation tabs at the top to switch between BREAK EVEN and TRIP SAVINGS calcuation types.";
+        uiPreText.innerHTML = "Please complete all fields in the <strong>Trip & Vehicle</strong> section.";
         uiPreText.style.display = "block";
         uiResults.style.display = "none";
         if (resultsHeader) resultsHeader.style.display = "none";
@@ -505,7 +505,7 @@ function calculate() {
         if (sortVal === "za") return b.name.localeCompare(a.name);
         return 0;
     });
-    let html = `<div class="mobile-only-text" style="font-size: 0.8em; text-align: center; color: var(--neon-green)">Slide table left to view hidden columns.</div><div class="results-scroll"><table><thead><tr>
+    let html = `<div class="mobile-only-text" style="font-size: 0.8em; margin-left: 10px; color: var(--neon-green)">Slide table left to view hidden columns.</div><div class="results-scroll"><table><thead><tr>
         <th>Provider (click hyperlink to view subscription info)</th>
         <th><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is the provider's subscription fee, which gives you access to their discounted charge rate for ONE MONTH.</span></span></span>Sub. Fee</th>
         <th><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is the provider's discounted charge rate (per kWh) that is available after subscribing for one month. Note that some providers have variable charge rates depending on location and time of day. The rate listed here may be an average. Click the provider's link to confirm pricing.</span></span></span>Disc. Rate</th>
@@ -573,7 +573,7 @@ function calculate() {
                 </table>
             </div>`;
         
-        const locationDisclaimer = `<p style="font-size:0.85rem; margin-top:12px; opacity:0.8; color:var(--neon-green) !important;">Note 1: Before purchasing a subscription, check that your chosen provider has charging stations in your planned area of travel — else your subscription will be wasted.</p><p style="font-size:0.85rem; margin-top:12px; opacity:0.8;">Note 2: Charging times exclude the "80-100%" charging slowdown.</p>`;
+        const locationDisclaimer = `<p style="font-size:0.85rem; margin-top:12px; opacity:0.8;">* Charging times exclude the "80-100%" charging slowdown. Also, you will need to ensure that this provider has charging stations in your planned area of travel.</p>`;
     
             let conclusionHTML = `<div class="conclusion-white-border">`; 
             
@@ -1100,10 +1100,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     } else {
         if (!getCookie('cookiesAccepted')) {
-            setTimeout(function() {
-                const banner = document.getElementById('cookieBanner');
-                if (banner) banner.style.display = 'block';
-            }, 4000);
+            const banner = document.getElementById('cookieBanner');
+            if (banner) banner.style.display = 'block';
         }
     }
 });
@@ -1139,6 +1137,49 @@ document.addEventListener('click', (e) => {
     }
 });
 
+function openPrivacy() {
+    const privacy = document.getElementById('privacyOverlay');
+    privacy.style.display = 'flex';
+    setTimeout(() => {
+        privacy.style.opacity = '1';
+    }, 10);
+}
+
+function closePrivacy() {
+    const privacy = document.getElementById('privacyOverlay');
+    privacy.style.opacity = '0';
+    setTimeout(() => {
+        privacy.style.display = 'none';
+    }, 400); 
+}
+
+function openAbout() {
+    const about = document.getElementById('aboutOverlay');
+    about.style.display = 'flex';
+    setTimeout(() => { about.style.opacity = '1'; }, 10);
+}
+
+function closeAbout() {
+    const about = document.getElementById('aboutOverlay');
+    about.style.opacity = '0';
+    setTimeout(() => { about.style.display = 'none'; }, 400); 
+}
+
+function openContact() {
+    const contact = document.getElementById('contactOverlay');
+    contact.style.display = 'flex';
+    setTimeout(() => {
+        contact.style.opacity = '1';
+    }, 10);
+}
+
+function closeContact() {
+    const contact = document.getElementById('contactOverlay');
+    contact.style.opacity = '0';
+    setTimeout(() => {
+        contact.style.display = 'none';
+    }, 400);
+}
 
 let beReminderShown = false;
 
