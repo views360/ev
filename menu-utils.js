@@ -146,16 +146,21 @@ function toggleTooltip(iconEl) {
 }
 
 // Desktop: hide on click outside, show/hide on hover, reposition on scroll
+// These listeners are defensive and check if there's actually a tooltip active
 document.addEventListener('click', (e) => {
     if (_ftActive && !e.target.closest('.info-icon')) _ftHide();
 }, true);
 
 document.addEventListener('mouseover', (e) => {
+    // Only process if we have an initialized tooltip div
+    if (!_ftDiv) return;
     const icon = e.target.closest('.info-icon');
     if (icon && icon !== _ftActive) toggleTooltip(icon);
 });
 
 document.addEventListener('mouseout', (e) => {
+    // Only process if we have an initialized tooltip div
+    if (!_ftDiv) return;
     const icon = e.target.closest('.info-icon');
     if (icon && !icon.contains(e.relatedTarget)) _ftHide();
 });
