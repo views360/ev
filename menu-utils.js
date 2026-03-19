@@ -31,45 +31,62 @@ function resetAll() {
 // ---------------------------------------------------------------------------
 // Floating viewport-safe tooltip
 // ---------------------------------------------------------------------------
-const _ftDiv = document.createElement('div');
-_ftDiv.id = 'floatingTooltip';
-_ftDiv.style.cssText = [
-    'position:fixed',
-    'z-index:9999',
-    'width:200px',
-    'padding:10px 14px 16px',
-    'border-radius:8px',
-    'text-align:center',
-    'font-size:0.85rem',
-    'line-height:1.4',
-    'pointer-events:none',
-    'background:#1e293b',
-    'color:#f1f5f9',
-    'border:1px solid #38bdf8',
-    'box-shadow:0 0 12px rgba(56,189,248,0.3)',
-    'visibility:hidden',
-].join(';') + ';';
-
-// Caret arrow
-const _ftCaret = document.createElement('div');
-_ftCaret.style.cssText = [
-    'position:absolute',
-    'bottom:-6px',
-    'left:50%',
-    'width:0',
-    'height:0',
-    'border-left:6px solid transparent',
-    'border-right:6px solid transparent',
-    'border-top:6px solid #38bdf8',
-    'transform:translateX(-50%)',
-].join(';') + ';';
-_ftDiv.appendChild(_ftCaret);
-document.body.appendChild(_ftDiv);
-
+let _ftDiv = null;
+let _ftCaret = null;
+let _ftOverlay = null;
 let _ftActive = null;
-let _ftTimer  = null;
+let _ftTimer = null;
+
+function _initTooltipDOM() {
+    if (_ftDiv) return; // Already initialized
+
+    _ftDiv = document.createElement('div');
+    _ftDiv.id = 'floatingTooltip';
+    _ftDiv.style.cssText = [
+        'position:fixed',
+        'z-index:9999',
+        'width:200px',
+        'padding:10px 14px 16px',
+        'border-radius:8px',
+        'text-align:center',
+        'font-size:0.85rem',
+        'line-height:1.4',
+        'pointer-events:none',
+        'background:#1e293b',
+        'color:#f1f5f9',
+        'border:1px solid #38bdf8',
+        'box-shadow:0 0 12px rgba(56,189,248,0.3)',
+        'visibility:hidden',
+    ].join(';') + ';';
+
+    // Caret arrow
+    _ftCaret = document.createElement('div');
+    _ftCaret.style.cssText = [
+        'position:absolute',
+        'bottom:-6px',
+        'left:50%',
+        'width:0',
+        'height:0',
+        'border-left:6px solid transparent',
+        'border-right:6px solid transparent',
+        'border-top:6px solid #38bdf8',
+        'transform:translateX(-50%)',
+    ].join(';') + ';';
+    _ftDiv.appendChild(_ftCaret);
+    document.body.appendChild(_ftDiv);
+
+    // Transparent overlay
+    _ftOverlay = document.createElement('div');
+    _ftOverlay.style.cssText = 'position:fixed;inset:0;z-index:9998;background:transparent;display:none;';
+    document.body.appendChild(_ftOverlay);
+
+    _ftOverlay.addEventListener('touchstart', (e) => {
+        _ftHide();
+    }, { passive: true });
+}
 
 function _ftPosition(iconEl) {
+    if (!_ftDiv) return;
     const ir     = iconEl.getBoundingClientRect();
     const vw     = window.innerWidth;
     const W      = _ftDiv.offsetWidth  || 200;
@@ -114,27 +131,16 @@ function _ftPosition(iconEl) {
     }
 }
 
-// Transparent overlay — sits over everything when tooltip is open on mobile.
-// Any touch on it (tap or start of scroll) hides the tooltip and removes itself,
-// passing the gesture through to whatever is underneath.
-const _ftOverlay = document.createElement('div');
-_ftOverlay.style.cssText = 'position:fixed;inset:0;z-index:9998;background:transparent;display:none;';
-document.body.appendChild(_ftOverlay);
-
 function _ftHide() {
+    if (!_ftDiv) return;
     clearTimeout(_ftTimer);
     _ftDiv.style.visibility = 'hidden';
-    _ftOverlay.style.display = 'none';
+    if (_ftOverlay) _ftOverlay.style.display = 'none';
     _ftActive = null;
 }
 
-_ftOverlay.addEventListener('touchstart', (e) => {
-    // Hide tooltip, remove overlay, then re-dispatch the touch so the scroll proceeds
-    _ftHide();
-    // Don't call preventDefault — passive listener — scroll will continue naturally
-}, { passive: true });
-
 function toggleTooltip(iconEl) {
+    if (!_ftDiv) _initTooltipDOM(); // Initialize if not yet done
     if (_ftActive === iconEl) { _ftHide(); return; }
     const src = iconEl.querySelector('.tooltip-box');
     if (!src) return;
