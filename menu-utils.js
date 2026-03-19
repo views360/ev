@@ -33,7 +33,6 @@ function resetAll() {
 // ---------------------------------------------------------------------------
 let _ftDiv = null;
 let _ftCaret = null;
-let _ftOverlay = null;
 let _ftActive = null;
 let _ftTimer = null;
 
@@ -74,16 +73,6 @@ function _initTooltipDOM() {
     ].join(';') + ';';
     _ftDiv.appendChild(_ftCaret);
     document.body.appendChild(_ftDiv);
-
-    // Transparent overlay — created separately when needed
-    if (!_ftOverlay) {
-        _ftOverlay = document.createElement('div');
-        _ftOverlay.style.cssText = 'position:fixed;inset:0;z-index:9998;background:transparent;display:none;';
-        _ftOverlay.addEventListener('touchstart', (e) => {
-            _ftHide();
-        }, { passive: true });
-        // Don't add to DOM yet — only add when tooltip is shown
-    }
 }
 
 function _ftPosition(iconEl) {
@@ -136,13 +125,6 @@ function _ftHide() {
     if (!_ftDiv) return;
     clearTimeout(_ftTimer);
     _ftDiv.style.visibility = 'hidden';
-    if (_ftOverlay) {
-        _ftOverlay.style.display = 'none';
-        // Remove overlay from DOM so it doesn't block touch events
-        if (_ftOverlay.parentNode) {
-            _ftOverlay.parentNode.removeChild(_ftOverlay);
-        }
-    }
     _ftActive = null;
 }
 
@@ -160,14 +142,6 @@ function toggleTooltip(iconEl) {
     requestAnimationFrame(() => {
         _ftPosition(iconEl);
         _ftDiv.style.visibility = 'visible';
-        // Show overlay on touch devices so any subsequent touch hides the tooltip
-        if (window.matchMedia('(hover: none)').matches) {
-            // Add overlay to DOM only when actually showing tooltip
-            if (_ftOverlay && !_ftOverlay.parentNode) {
-                document.body.appendChild(_ftOverlay);
-            }
-            _ftOverlay.style.display = 'block';
-        }
     });
 }
 
