@@ -62,6 +62,17 @@ h3 {
     font-weight: 700;
 }
 
+.menu-backdrop {
+       position: fixed;
+       top: 0;
+       left: 0;
+       right: 0;
+       bottom: 0;
+       z-index: 150;  /* Just below menu at 200 */
+       background: transparent;
+       pointer-events: auto;
+}
+
 .info-icon {
     line-height: 1;
     cursor: pointer;
@@ -92,7 +103,7 @@ h3 {
     width: 200px;
     text-align: center;
 
-    z-index: 100;
+    z-index: 500;
     font-size: 0.85rem;
     font-weight: normal;
     text-transform: none;
@@ -818,7 +829,7 @@ tr.bad td { color: var(--danger); }
     position: fixed; 
     top: 0;
     left: 0;
-    z-index: 2000; 
+    z-index: 100; 
 }
 
 .android-title-clean {
@@ -853,7 +864,7 @@ tr.bad td { color: var(--danger); }
     background: #2d2e30; 
     box-shadow: 0 8px 24px rgba(0,0,0,0.4);
     border-radius: 4px;
-    z-index: 2100; 
+    z-index: 200; 
     transform-origin: top right;
     transform: scale(0);
     opacity: 0;
@@ -1232,7 +1243,7 @@ body {
     width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.7);
-    z-index: 2000;
+    z-index: 1000;
     justify-content: center;
     align-items: flex-start;
 }
