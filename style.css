@@ -442,7 +442,7 @@ body.light-mode #providerResults th:nth-child(even) {
 
 .speed-comparison-container {
     margin-top: 20px;
-    width: 100%;
+    max-width: 400px;
 }
 
 .mini-table {
@@ -818,7 +818,7 @@ tr.bad td { color: var(--danger); }
     position: fixed; 
     top: 0;
     left: 0;
-    z-index: 100; 
+    z-index: 2000; 
 }
 
 .android-title-clean {
@@ -853,7 +853,7 @@ tr.bad td { color: var(--danger); }
     background: #2d2e30; 
     box-shadow: 0 8px 24px rgba(0,0,0,0.4);
     border-radius: 4px;
-    z-index: 200; 
+    z-index: 2100; 
     transform-origin: top right;
     transform: scale(0);
     opacity: 0;
@@ -1232,7 +1232,7 @@ body {
     width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.7);
-    z-index: 1000;
+    z-index: 2000;
     justify-content: center;
     align-items: flex-start;
 }
@@ -1293,12 +1293,7 @@ body {
 
 /* Desktop sidebar ad — hidden on mobile, visible on desktop */
 .desktop-sidebar-ad {
-    position: absolute;
-    visibility: hidden;
-    pointer-events: none;
-    width: 160px;
-    height: 100vh;
-    right: -200px;
+    display: none;
 }
 
 /* Rotated tab on the left edge of the desktop sidebar */
@@ -1357,17 +1352,11 @@ body {
         width: auto;
     }
 
-    /* 5. Hide mobile bottom ad (off-screen but maintains container width) */
+    /* 5. Hide mobile bottom ad, show desktop sidebar */
     .mobile-bottom-ad {
-        position: absolute;
-        visibility: hidden;
-        pointer-events: none;
-        bottom: -200px;
-        width: 100%;
-        height: 90px;
+        display: none;
     }
 
-    /* Show desktop sidebar ad on desktop */
     .desktop-sidebar-ad {
         display: block;
         position: fixed;
@@ -1381,7 +1370,6 @@ body {
         border-left: 1px solid var(--accent);
         box-shadow: -4px 0 18px rgba(56, 189, 248, 0.25), -1px 0 6px rgba(56, 189, 248, 0.15);
         z-index: 2001;
-        visibility: visible;
     }
 
 }
