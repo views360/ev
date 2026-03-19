@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&display=swap');
 
 #floatingTooltip {
     visibility: hidden;
@@ -57,20 +57,9 @@ html {
 
 h3 {
     margin: 0px 0px 10px 0px;
-    font-family: 'Sora', sans-serif;
+    font-family: 'Syne', sans-serif;
     font-size: 1.05rem;
     font-weight: 700;
-}
-
-.menu-backdrop {
-       position: fixed;
-       top: 0;
-       left: 0;
-       right: 0;
-       bottom: 0;
-       z-index: 150;  /* Just below menu at 200 */
-       background: transparent;
-       pointer-events: auto;
 }
 
 .info-icon {
@@ -103,7 +92,7 @@ h3 {
     width: 200px;
     text-align: center;
 
-    z-index: 500;
+    z-index: 100;
     font-size: 0.85rem;
     font-weight: normal;
     text-transform: none;
@@ -227,12 +216,12 @@ h1 {
     margin: 0 0 10px 0;
     color: var(--accent);
     text-shadow: var(--glow);
-    font-family: 'Sora', sans-serif;
+    font-family: 'Syne', sans-serif;
     font-weight: 700;
 }
 
 h2 {
-    font-family: 'Sora', sans-serif;
+    font-family: 'Syne', sans-serif;
     font-weight: 700;
 }
 
@@ -547,7 +536,7 @@ tr.bad td { color: var(--danger); }
     border-bottom: 3px solid transparent;
     margin-bottom: -2px;
     padding: 0px 5px 10px 5px;
-    font-family: 'Sora', sans-serif;
+    font-family: 'Syne', sans-serif;
     font-size: 0.85rem;
     font-weight: 600;
     color: var(--muted);
@@ -829,7 +818,7 @@ tr.bad td { color: var(--danger); }
     position: fixed; 
     top: 0;
     left: 0;
-    z-index: 100; 
+    z-index: 2000; 
 }
 
 .android-title-clean {
@@ -864,7 +853,7 @@ tr.bad td { color: var(--danger); }
     background: #2d2e30; 
     box-shadow: 0 8px 24px rgba(0,0,0,0.4);
     border-radius: 4px;
-    z-index: 200; 
+    z-index: 2100; 
     transform-origin: top right;
     transform: scale(0);
     opacity: 0;
@@ -1243,7 +1232,7 @@ body {
     width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.7);
-    z-index: 1000;
+    z-index: 2000;
     justify-content: center;
     align-items: flex-start;
 }
