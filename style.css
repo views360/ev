@@ -158,7 +158,7 @@ h3 {
     color: var(--danger);
     font-weight: bold;
     text-align: center;
-    margin: 20px auto; 
+    margin: 0px auto 50px auto; 
     padding: 15px;
     border: 1px solid var(--danger);
     border-radius: 12px; 
@@ -190,7 +190,7 @@ body {
     font-family: 'Inter', -apple-system, system-ui, sans-serif;
     margin: 0;
     padding: 20px;
-    padding-top: 54px !important;
+    padding-top: 64px !important;
     padding-bottom: 98px !important; /* clears the fixed bottom ad bar */
     line-height: 1.6;
     transition: background-color 0.3s, color 0.3s;
@@ -230,7 +230,8 @@ h1 {
     margin-bottom: 30px;
 }
 
-.card,
+.comparison-mode-box, 
+.card, 
 #breakEvenCard {
     max-width: 420px !important; 
     width: 100%;
@@ -509,42 +510,50 @@ tr.bad td { color: var(--danger); }
     box-shadow: var(--glow);
 }
 
-/* calc tabs */
-.calc-tabs-bar {
+.pill-toggle {
+    position: relative;
     display: flex;
-    border-bottom: 2px solid var(--border);
-    max-width: 410px;
-    margin: 0 auto 20px auto;
+    width: 100%; 
+    max-width: 100%; 
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 50px;
+    padding: 4px;
+    overflow: hidden;
+    box-sizing: border-box;
 }
 
-.calc-tab {
+.pill-slider {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: calc(50% - 4px);
+    height: calc(100% - 8px);
+    background: var(--accent);
+    border-radius: 50px;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: var(--glow);
+    z-index: 1;
+}
+
+.pill-btn {
+    position: relative;
     flex: 1;
     background: none;
     border: none;
-    border-bottom: 3px solid transparent;
-    margin-bottom: -2px;
-    padding: 0px 5px 10px 5px;
-    font-family: inherit;
-    font-size: 0.85rem;
+    color: var(--text);
+    padding: 10px 5px; 
     font-weight: 600;
-    color: var(--muted);
     cursor: pointer;
-    transition: color 0.2s ease, border-color 0.2s ease;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    white-space: nowrap;
+    z-index: 2;
+    transition: color 0.3s ease;
+    font-family: inherit;
+    font-size: 0.85rem; 
+    white-space: nowrap; 
 }
 
-.calc-tab.active {
-    color: var(--accent);
-    border-bottom-color: var(--accent);
-    text-shadow: 0 0 8px rgba(56, 189, 248, 0.5);
-    animation: tabBorderPulse 1.5s infinite ease-in-out;
-}
-
-@keyframes tabBorderPulse {
-    0%, 100% { border-bottom-color: var(--accent); }
-    50% { border-bottom-color: var(--neon-green); }
+.pill-btn.active {
+    color: var(--bg);
 }
 
 .header-row {
@@ -660,7 +669,26 @@ tr.bad td { color: var(--danger); }
     transform: translateY(-3px);
 }
 
+.comparison-mode-box {
+    border: 1px solid var(--border); 
+    background: var(--panel-alt);
+    box-shadow: none; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    animation: none; 
+    margin-top: 10px !important;
+    margin-bottom: 20px !important;
+}
 
+.comparison-label {
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+}
 
 @keyframes boxPulse {
     0%, 100% { box-shadow: var(--glow); border-color: var(--accent); }
@@ -766,8 +794,6 @@ tr.bad td { color: var(--danger); }
 .standalone-slide {
     width: 100%;
     display: block;
-    box-sizing: border-box;
-    text-align: left;
 }
 
 #providerResults table th:first-child,
@@ -797,7 +823,7 @@ tr.bad td { color: var(--danger); }
 .android-header-full {
     background-color: #000000 !important;
     width: 100vw;
-    height: 50px;
+    height: 64px;
     display: flex;
     align-items: center; 
     justify-content: space-between;
@@ -877,7 +903,7 @@ tr.bad td { color: var(--danger); }
 }
 
 body {
-    padding-top: 54px !important; 
+    padding-top: 64px !important; 
     margin: 0;
     padding: 0 30px 30px 30px;
 }
@@ -955,10 +981,11 @@ body {
 
 .cookie-banner {
     position: fixed;
-    top: 232px;
-    left: calc(50% - 80px);
+    top: 20px;
+    left: 50%;
     transform: translateX(-50%);
-    max-width: 450px;
+    width: 90%;
+    max-width: 600px;
     background: var(--panel-alt);
     border: 1px solid var(--neon-green);
     border-top: 2px solid var(--neon-green);
@@ -967,8 +994,6 @@ body {
     box-shadow: 0 0 5px var(--neon-green-soft);
     animation: neonPulse 1.5s infinite ease-in-out;
     z-index: 2000;
-    right: 160px;
-    width: calc(90% - 160px);
 }
 
 .cookie-content {
@@ -1222,7 +1247,7 @@ body {
     background: rgba(0, 0, 0, 0.7);
     z-index: 2000;
     justify-content: center;
-    align-items: flex-start;
+    align-items: center;
 }
 
 #beReminderOverlay.active {
@@ -1231,7 +1256,6 @@ body {
 }
 
 #beReminderOverlay .help-modal {
-    margin-top: 80px !important;
     transform: translateY(20px);
     transition: transform 0.4s ease;
 }
@@ -1240,9 +1264,7 @@ body {
     transform: translateY(0);
 }
 
-/* Mobile bottom ad — visible on mobile, hidden on desktop */
 .mobile-bottom-ad {
-    display: block;
     position: fixed;
     bottom: 0;
     left: 0;
@@ -1260,50 +1282,27 @@ body {
     background: rgba(0,255,0,0.1);
 }
 
-/* Tab that sits above the mobile bottom bar */
 .ad-tab {
     position: absolute;
-    top: -22px;
-    right: 16px;
+    top: -23px;
+    right: -5px;
     background: var(--panel-alt);
     color: var(--muted);
     font-size: 0.65rem;
     font-weight: 600;
     letter-spacing: 0.08em;
+    text-transform: uppercase;
     padding: 3px 10px;
     border-radius: 6px 6px 0 0;
     border: 1px solid var(--accent);
     border-bottom: none;
     white-space: nowrap;
     pointer-events: none;
-    box-shadow: -3px -3px 10px rgba(56, 189, 248, 0.2), 3px -3px 10px rgba(56, 189, 248, 0.2);
+    /*box-shadow: -3px -3px 10px rgba(56, 189, 248, 0.2), 3px -3px 10px rgba(56, 189, 248, 0.2);*/
 }
 
-/* Desktop sidebar ad — hidden on mobile, visible on desktop */
 .desktop-sidebar-ad {
-    display: none;
-}
-
-/* Rotated tab on the left edge of the desktop sidebar */
-.ad-tab-vertical {
-    position: absolute;
-    top: 185px;
-    left: 48px;
-    background: var(--panel-alt);
-    color: var(--muted);
-    font-size: 0.65rem;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    padding: 3px 10px;
-    border-radius: 6px 6px 0 0;
-    border: 1px solid var(--accent);
-    border-bottom: none;
-    white-space: nowrap;
-    pointer-events: none;
-    box-shadow: -3px -3px 10px rgba(56, 189, 248, 0.2), 3px -3px 10px rgba(56, 189, 248, 0.2);
-    transform: rotate(-90deg);
-    transform-origin: top left;
-    translate: -100% 0;
+    display: none; /* Hidden by default (mobile first) */
 }
 
 
@@ -1311,38 +1310,34 @@ body {
 /* --- Desktop Layout (>= 700px) --- */
 @media (min-width: 700px) {
     body {
+        /* Reserve 160px on the right for the ad sidebar */
+        padding-right: 160px !important;
         padding-bottom: 20px !important;
     }
 
-    /* 1. content-wrap gives margin:auto children a right boundary that
-       excludes the 160px ad column, so they centre within the content area */
-    .content-wrap {
-        margin-right: 160px;
-    }
-
-    /* 2. Shift the Top Header bar left by 160px */
+    /* 1. Shift the Top Header bar left by 160px */
     .android-header-full {
         width: calc(100% - 160px) !important;
         right: 160px !important;
         left: 0 !important;
     }
 
-    /* 3. Shift the Floating Settings Menu left by 160px */
+    /* 2. Shift the Floating Settings Menu left by 160px */
+    /* This ensures the menu opens aligned with the dots icon, not against the screen edge */
     #sideMenu {
         right: 160px !important;
     }
 
-    /* 4. Fixed overlays: anchor right edge to the ad column so
-       justify-content:center centres modals within the content area */
-    .help-overlay,
-    #beReminderOverlay {
-        right: 160px;
-        width: auto;
+    /* 3. Main content containers */
+    .app, .about-modal-container {
+        width: calc(100% - 180px);
+        max-width: 1000px;
+        margin-right: 0;
     }
 
-    /* 5. Hide mobile bottom ad, show desktop sidebar */
+    /* 4. Transform bottom ad into right sidebar */
     .mobile-bottom-ad {
-        display: none;
+        display: none !important;
     }
 
     .desktop-sidebar-ad {
@@ -1351,15 +1346,40 @@ body {
         top: 0;
         right: 0;
         bottom: 0;
-        left: auto;
         width: 160px;
-        height: 100vh;
         background: var(--panel-alt);
+        z-index: 9999;
         border-left: 1px solid var(--accent);
+        /* Matches your mobile blue glow */
         box-shadow: -4px 0 18px rgba(56, 189, 248, 0.25), -1px 0 6px rgba(56, 189, 248, 0.15);
-        z-index: 2001;
+        padding: 20px 5px;
+        box-sizing: border-box;
     }
 
+    .ad-tab-vertical {
+        position: absolute;
+        top: 100px; /* Position from top */
+        left: -77px; /* Pull it over the border line */
+        background: var(--panel-alt);
+        color: var(--muted);
+        font-size: 0.65rem;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        padding: 3px 10px;
+        border-radius: 6px 6px 0 0;
+        border: 1px solid var(--accent);
+        border-bottom: none;
+        white-space: nowrap;
+        pointer-events: none;
+        
+        /* The Magic: Rotate 90 degrees counter-clockwise */
+        transform: rotate(-90deg);
+        transform-origin: bottom right;
+        
+        /* Match the tab's glow */
+        /*box-shadow: -3px -3px 10px rgba(56, 189, 248, 0.2);*/
+    }
 }
 
 
@@ -1371,14 +1391,23 @@ body {
 
     .cookie-banner {
         width: 75%;
-        left: calc(50%);
     }
         
     .mobile-only-text {
         display: block;
     }
     
-body {
+    .toggle-container-block {
+        margin: 0px 10px 15px 10px !important; 
+        width: auto; 
+        display: block; 
+    }
+
+    .pill-toggle {
+        max-width: 100%;
+    }
+
+    body {
         padding: 0;
     }
     .app {
@@ -1466,10 +1495,14 @@ body {
         font-size: 1.2rem;
     }
     
+    .comparison-mode-box,
     .card,
     #breakEvenCard {
         max-width: 100%; 
-        margin-bottom: 20px;
+        /*margin-bottom: 20px;*/
+    }
+    .comparison-mode-box {
+        margin-top: 0px !important;
     }
     
     .results-header, .result-row {
@@ -1554,9 +1587,5 @@ body {
         font-size: 0.75rem;  
         height: 36px;        
         white-space: nowrap; 
-    }
-
-    .chart-wrapper {
-        margin-bottom: 30px;
     }
 }
