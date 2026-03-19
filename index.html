@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script src="menu-utils.js"></script>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2944414800646015"
+	<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2944414800646015"
      crossorigin="anonymous"></script>
     <meta charset="UTF-8">
 	<meta name="google-adsense-account" content="ca-pub-2696934198267016">
@@ -240,6 +239,12 @@
                     </label>
                     <input type="number" id="startChargeRate" oninput="calculate()" placeholder="e.g., 7.5">
                 </div>
+                <div class="input-group">
+                    <label for="maxChargingSpeed">
+                        <span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">What is the maximum charging speed your vehicle supports? You may need to check your user manual or Google it. If you have noticed a lower-than-advertised speed while charging, enter <i>that</i> speed.</span></span></span>Max. Charging Speed (kW)                        
+                    </label>
+                    <input type="number" id="maxChargingSpeed" oninput="calculate()" placeholder="e.g., 150">
+                </div>
             </div>
 
             <div class="input-group">
@@ -287,6 +292,8 @@
 	    </div>
 	</div>
 
+	<div id="contentsBox"></div>
+
     <div id="preConclusionsText">Please complete all fields in the <strong>Trip & Vehicle</strong> section</div>
     <div id="results" class="results">
 		<div style="align: center; margin: auto">
@@ -300,7 +307,8 @@
 		</div>
 
 		<div id="sortContainer" class="input-group" style="max-width:400px; margin-top: 30px; margin-left: 10px;">
-            <label for="sortResults">Sort results</label>
+            <h3>Providers &amp; Subscriptions</h3>
+			<label for="sortResults">Sort results</label>
             <select id="sortResults" onchange="calculate()">
                 <option value="cheapest">Cheapest first</option>
                 <option value="breakeven">Break-even PAYG public charging miles (low to high)</option>
@@ -309,11 +317,13 @@
             </select>
         </div>
 
-        <div id="providerResults"></div>
+        <div class="guide-section" id="providerResults"></div>
         <div id="conclusionsBox"></div>
+		<div id="realWorldAssessment"></div>
         <div id="summaryBox" class="summary"></div>
-
-        <div class="chart-wrapper">
+		
+        <div class="chart-wrapper guide-section" id="graph-section">
+			<h3>SUBSCRIPTION BREAK-EVEN GRAPH</h3>
             Click a legend box/text to show/hide line
             <canvas id="costChart" height="220"></canvas>
         </div>
