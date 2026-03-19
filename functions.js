@@ -900,8 +900,11 @@ function init() {
             if (tripBtn) setToggle('trip-savings', tripBtn);
         } else {
             const activeTab = document.querySelector('.calc-tab.active');
-            const currentMode = activeTab.textContent.trim() === "Trip Savings" ? 'trip-savings' : 'break-even';
-            setToggle(currentMode, activeTab);
+            // Only set toggle if activeTab exists (it won't on non-index pages)
+            if (activeTab) {
+                const currentMode = activeTab.textContent.trim() === "Trip Savings" ? 'trip-savings' : 'break-even';
+                setToggle(currentMode, activeTab);
+            }
         }
 
         const provEl = document.getElementById("provider");
