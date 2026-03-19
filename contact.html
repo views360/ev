@@ -326,24 +326,7 @@
             .contact-form-card { padding: 24px; }
         }
     </style>
-    <script>
-        (function() {
-            const getCookie = (name) => {
-                const nameEQ = name + "=";
-                const ca = document.cookie.split(';');
-                for (let i = 0; i < ca.length; i++) {
-                    let c = ca[i].trim();
-                    if (c.indexOf(nameEQ) === 0) {
-                        try { return JSON.parse(decodeURIComponent(c.substring(nameEQ.length))); }
-                        catch (e) { return decodeURIComponent(c.substring(nameEQ.length)).replace(/"/g, ''); }
-                    }
-                }
-                return null;
-            };
-            const theme = getCookie('themePref');
-            if (theme === 'light') document.documentElement.classList.add('light-mode');
-        })();
-    </script>
+    
 </head>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-6B2B03YZ17"></script>
