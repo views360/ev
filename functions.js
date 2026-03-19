@@ -913,7 +913,10 @@ function init() {
         }
 
         updateProviderInfo();
-        calculate();
+        // Only call calculate() if the calculation UI exists (it won't on non-index pages)
+        if (document.getElementById("conclusionsBox")) {
+            calculate();
+        }
     });
 }
 
