@@ -462,7 +462,7 @@ function calculate() {
     const publicKwh = publicMiles / inputs.efficiency;
     const totalAdhocCost = startChargeCost + (publicKwh * (inputs.adhoc / 100));
     
-    document.getElementById("preChargeLine").innerHTML = `<div class="guide-section" id="payg-summary"><h3><i>Theoretical</i> PAYG Summary</h3>Pre-journey starting charge: <strong>${startChargeKwh.toFixed(1)} kWh</strong> (£${startChargeCost.toFixed(2)})</div>`;
+    document.getElementById("preChargeLine").innerHTML = `<div class="guide-section" id="payg-summary"><h3>PAYG SUMMARY</h3>Pre-journey starting charge: <strong>${startChargeKwh.toFixed(1)} kWh</strong> (£${startChargeCost.toFixed(2)})</div>`;
     document.getElementById("homeRangeLine").innerHTML = `<span class="tooltip-container"><span class="info-icon" style="font-size:0.8rem" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is the distance you can expect to drive before your first public charge along your route.</span></span></span>Range from pre-journey starting charge: <strong>${initialRange.toFixed(0)} miles</strong></span>`;
     document.getElementById("publicMilesLine").innerHTML = `<span class="tooltip-container"><span class="info-icon" style="font-size:0.8rem" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is how many miles of your trip will need to be covered by public charging.</span></span></span>PAYG public charging miles needed: <strong>${publicMiles.toFixed(0)} miles</strong></span>`;
     document.getElementById("publicKwhLine").innerHTML = `PAYG public charging energy needed: <strong>${publicKwh.toFixed(1)} kWh @ ${inputs.adhoc}p</strong>`;
@@ -625,7 +625,6 @@ function calculate() {
         const chargeSpeed = inputs.maxChargingSpeed || 101;
         const reserveKwh = 0.2 * usableKwh;
         const initialKwhAtStart = (inputs.soc / 100) * usableKwh;
-        
         const sixtyPercentKwh = 0.6 * usableKwh;
         const fullChargeRange = sixtyPercentKwh * efficiency;
         const firstStopMile = Math.max(0, (initialKwhAtStart - reserveKwh) * efficiency);
@@ -635,20 +634,10 @@ function calculate() {
         let currentMileMark = firstStopMile;
 
         if (inputs.journeyMiles > firstStopMile) {
-            stopCount++;
-            stopsRows += `<tr>
-                <td style="padding: 10px; border: 1px solid var(--border); text-align: center;">${stopCount}</td>
-                <td style="padding: 10px; border: 1px solid var(--border); color: var(--muted);">Public charge (when battery reaches 20%)</td>
-                <td style="padding: 10px; border: 1px solid var(--border); text-align: center;">${currentMileMark.toFixed(0)}</td>
-                <td style="padding: 10px; border: 1px solid var(--border);">Add 60% / ${sixtyPercentKwh.toFixed(1)}kWh</td>
-                <td style="padding: 10px; border: 1px solid var(--border); text-align: center;">${formatChargingTime(sixtyPercentKwh / chargeSpeed)}</td>
-            </tr>`;
-
-            // CRITICAL BUG FIX: Ensure fullChargeRange > 0 to avoid infinite loop
+            // intermediate stops loop (Corrected logic)
             if (fullChargeRange > 0) {
                 while (currentMileMark + fullChargeRange < inputs.journeyMiles) {
                     stopCount++;
-                    currentMileMark += fullChargeRange;
                     stopsRows += `<tr>
                         <td style="padding: 10px; border: 1px solid var(--border); text-align: center;">${stopCount}</td>
                         <td style="padding: 10px; border: 1px solid var(--border); color: var(--muted);">Public charge (when battery reaches 20%)</td>
@@ -656,9 +645,11 @@ function calculate() {
                         <td style="padding: 10px; border: 1px solid var(--border);">Add 60% / ${sixtyPercentKwh.toFixed(1)}kWh</td>
                         <td style="padding: 10px; border: 1px solid var(--border); text-align: center;">${formatChargingTime(sixtyPercentKwh / chargeSpeed)}</td>
                     </tr>`;
+                    currentMileMark += fullChargeRange;
                 }
             }
 
+            // Final stop logic (Option a and b)
             const finalStopNum = stopCount + 1;
             const milesRemainingAfterLastStop = inputs.journeyMiles - currentMileMark;
             const kwhNeededForFinalLeg = (milesRemainingAfterLastStop / efficiency);
@@ -683,7 +674,7 @@ function calculate() {
 
         let assessmentBoxHTML = `
             <div class="conclusion-white-border guide-section" id="real-world-assessment">
-                <h3>Real-World Charging Itinerary (${inputs.journeyMiles} miles)</h3>
+                <h3>REAL WORLD CHARGING ASSESSMENT</h3>
                 <div class="results-scroll">
                     <table style="width: 100%; border-collapse: collapse; margin-top: 10px; border: 1px solid var(--border); font-size: 0.8rem;">
                         <thead>
@@ -708,12 +699,12 @@ function calculate() {
             <div class="conclusion-white-border">
                 <h3>RESULTS CONTENTS</h3>
                 <ul style="margin:0; padding-left:20px; font-size:0.95rem;">
-                    <li><a href="#payg-summary" style="color: var(--accent); text-decoration:none;"><i>Theoretical</i> PAYG Summary</a></li>
-                    <li><a href="#providerResults" style="color: var(--accent); text-decoration:none;">Providers & Subscriptions</a></li>
-                    <li><a href="#payg-vs-subscription" style="color: var(--accent); text-decoration:none;"><i>Theoretical</i> PAYG vs Subscription Conclusion</a></li>
-                    <li><a href="#charging-times-section" style="color: var(--accent); text-decoration:none;"><i>Theoretical</i> Charging Times</a></li>
-                    <li><a href="#real-world-assessment" style="color: var(--accent); text-decoration:none;">Real-World Charging Itinerary (${inputs.journeyMiles} miles)</a></li>
-                    <li><a href="#graph-section" style="color: var(--accent); text-decoration:none;">Subscription Graph</a></li>
+                    <li><a href="#payg-summary" style="color: var(--accent); text-decoration:none;">PAYG Summary</a></li>
+                    <li><a href="#providerResults" style="color: var(--accent); text-decoration:none;">Table of Results</a></li>
+                    <li><a href="#payg-vs-subscription" style="color: var(--accent); text-decoration:none;">PAYG vs Subscription Conclusion</a></li>
+                    <li><a href="#charging-times-section" style="color: var(--accent); text-decoration:none;">Charging Times</a></li>
+                    <li><a href="#real-world-assessment" style="color: var(--accent); text-decoration:none;">Real World Charging Assessment</a></li>
+                    <li><a href="#graph-section" style="color: var(--accent); text-decoration:none;">Graph</a></li>
                 </ul>
             </div>
         `;
@@ -723,13 +714,13 @@ function calculate() {
         
         conclusionHTML += `<div class="conclusion-white-border guide-section" id="payg-vs-subscription">`; 
         if (bestProvider.savings > 0) {
-            conclusionHTML += `<h3><i>Theoretical</i> PAYG vs Subscription Conclusion</h3><p class="main-result">For a trip of <strong>${inputs.journeyMiles} miles</strong>, a one-month subscription with <strong>${bestProvider.name}</strong> is cheaper than PAYG based on the selected minimum charging rate of <strong>${minSpeedLabel}</strong> and the other information entered. The total journey cost will be <strong>£${bestProvider.totalJourneyCost.toFixed(2)}</strong>, which represents a saving of <strong>£${bestProvider.savings.toFixed(2)}</strong> over PAYG rates.</p>`;
+            conclusionHTML += `<h3>PAYG vs SUBSCRIPTION CONCLUSION</h3><p class="main-result">For a trip of <strong>${inputs.journeyMiles} miles</strong>, a one-month subscription with <strong>${bestProvider.name}</strong> is cheaper than PAYG based on the selected minimum charging rate of <strong>${minSpeedLabel}</strong> and the other information entered. The total journey cost will be <strong>£${bestProvider.totalJourneyCost.toFixed(2)}</strong>, which represents a saving of <strong>£${bestProvider.savings.toFixed(2)}</strong> over PAYG rates.</p>`;
         } else {
-            conclusionHTML += `<h3><i>Theoretical</i> PAYG vs Subscription Conclusion</h3><p class="main-result"><strong>Standard PAYG</strong> rates are cheaper than a subscription at the selected minimum charging rate of <strong>${minSpeedLabel}</strong> and the other information entered. The total journey cost will be <strong>£${bestProvider.totalJourneyCost.toFixed(2)}</strong>.</p>`;
+            conclusionHTML += `<h3>PAYG vs SUBSCRIPTION CONCLUSION</h3><p class="main-result"><strong>Standard PAYG</strong> rates are cheaper than a subscription at the selected minimum charging rate of <strong>${minSpeedLabel}</strong> and the other information entered. The total journey cost will be <strong>£${bestProvider.totalJourneyCost.toFixed(2)}</strong>.</p>`;
         }
         conclusionHTML += `</div>`;
         
-        conclusionHTML += `<div class="conclusion-white-border guide-section" id="charging-times-section"><h3><i>Theoretical</i> Charging Times</h3>`;
+        conclusionHTML += `<div class="conclusion-white-border guide-section" id="charging-times-section"><h3>CHARGING TIMES</h3>`;
         if (maxChargingSpeed > 0) {
             conclusionHTML += `<p class="main-result">With your vehicle's maximum charging speed of <strong>${maxChargingSpeed} kW</strong>, the journey requiring <strong>${publicKwh.toFixed(1)} kWh</strong> of public charging would take <strong>${maxChargingTimeFormatted}</strong> at public chargers.</p>`;
         } else {
@@ -923,111 +914,102 @@ function init() {
     });
 }
 
+
+
+
+
+
+
+
 function exportPdf() {
     const pdfBtn = document.getElementById("pdfBtn");
-    const providerRows = document.querySelectorAll("#providerResults tbody tr");
-    const paygSummary = document.querySelector(".calc-lines");
+    const journeySummary = document.getElementById("payg-summary");
+    const providersTable = document.querySelector("#providerResults table");
+    const assessmentTable = document.querySelector("#real-world-assessment table");
     const conclusion = document.getElementById("conclusionsBox");
 
-    if (!providerRows.length || !pdfBtn) return;
-
+    if (!pdfBtn) return;
     const originalText = pdfBtn.textContent;
     pdfBtn.textContent = "Generating...";
     pdfBtn.style.pointerEvents = "none";
-    pdfBtn.style.opacity = "0.7";
 
     const printContainer = document.createElement("div");
-    printContainer.id = "pdf-render-area";
     printContainer.style.cssText = "position:absolute; left:-9999px; width:800px; padding:40px; background:#fff; color:#000; font-family:Arial, sans-serif;";
 
-    let contentHtml = `
-        <style>
-            #pdf-render-area * { color: #000 !important; }
-            .pdf-header { text-align: center; margin-bottom: 10px; }
-            .pdf-section-title { font-size: 22px; margin-top: 20px; }
-            .pdf-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 10px; margin-bottom: 30px; }
-            .pdf-table th, .pdf-table td { border: 1px solid #000; padding: 8px; text-align: left; }
-            .pdf-table th { background: #f2f2f2; }
-            .conclusion-white-border { border: none !important; }
-            .pdf-conclusion-wrapper { 
-                background: #f4f4f4 !important; 
-                padding: 0px; 
-                border: 1px solid #ccc; 
-                border-radius: 8px; 
-                margin-top: 20px;
-            }
-            .calc-lines div { margin-bottom: 5px; }
-        </style>
-        
-        <div class="pdf-header">
-            <strong style="font-size:24px; color:#000">EV SUBSCRIPTIONS COMPARISON REPORT</strong>
-            <p>Generated on ${new Date().toLocaleDateString('en-GB')}</p>
-        </div>
-        
-        <div class="calc-lines">
-            ${paygSummary ? paygSummary.innerHTML : ""}
+    let html = `
+    <style>
+        * { color: #000 !important; background: transparent !important; }
+        .pdf-wrap { background: #fff !important; }
+        .header { text-align: center; border-bottom: 2px solid #000; margin-bottom: 20px; padding-bottom: 10px; }
+        .section-title { font-size: 18px; font-weight: bold; margin: 30px 0 10px 0; text-transform: uppercase; border-bottom: 1px solid #000; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; table-layout: fixed; }
+        th, td { border: 1px solid #000; padding: 10px; text-align: left; font-size: 11px; word-wrap: break-word; }
+        th { background: #eee !important; }
+        .text-block { font-size: 13px; line-height: 1.6; margin-bottom: 20px; white-space: pre-line; }
+        .page-break { page-break-before: always; margin-top: 50px; }
+    </style>
+    <div class="pdf-wrap">
+        <div class="header">
+            <h1>EV SUBSCRIPTION ANALYSIS</h1>
+            <p>Report Date: ${new Date().toLocaleDateString('en-GB')}</p>
         </div>
 
-        <h2 class="pdf-section-title">Comparison Results</h2>
-        <table class="pdf-table">
-            <thead>
-                <tr>
-                    <th>Provider</th>
-                    <th>Sub. Fee</th>
-                    <th>Disc. Rate</th>
-                    <th>Trip Cost</th>
-                    <th>vs. PAYG</th>
-                    <th>Break Even<br />(Exc. Battery Pre-Charge)</th>
-                </tr>
-            </thead>
-            <tbody>`;
+        <div class="section-title">1. Journey Summary</div>
+        <div class="text-block">${journeySummary ? journeySummary.innerText : "No data"}</div>
 
-    providerRows.forEach(row => {
-        const cols = row.querySelectorAll("td");
-        if (cols.length >= 6) {
-            contentHtml += `
-                <tr>
-                    <td><strong>${cols[0].innerText.split('\n')[0]}</strong></td>
-                    <td>${cols[1].innerText}</td>
-                    <td>${cols[2].innerText}</td>
-                    <td>${cols[3].innerText}</td>
-                    <td>${cols[4].innerText}</td>
-                    <td>${cols[5].innerText}</td>
-                </tr>`;
-        }
-    });
+        <div class="section-title">2. Provider Comparison</div>
+        ${providersTable ? `<table>${providersTable.innerHTML}</table>` : "<p>No table found</p>"}
 
-    contentHtml += `</tbody></table>
-        <h2 class="pdf-section-title">Analysis Conclusion</h2>
-        <div class="pdf-conclusion-wrapper">
-            ${conclusion ? conclusion.innerHTML : ""}
-        </div>`;
+        <div class="page-break"></div>
+        <div class="section-title">3. Real World Charging Assessment</div>
+        ${assessmentTable ? `<table>${assessmentTable.innerHTML}</table>` : "<p>No data</p>"}
 
-    printContainer.innerHTML = contentHtml;
+        <div class="page-break"></div>
+        <div class="section-title">4. Analysis & Conclusion</div>
+        <div class="text-block">${conclusion ? conclusion.innerText : "No data"}</div>
+    </div>`;
 
-    printContainer.querySelectorAll(".info-icon, .jump-btn-pulse, .mini-table, .mobile-only-text, p[style*='opacity:0.8']").forEach(el => el.remove());
-
+    printContainer.innerHTML = html;
+    
+    // Final check: Remove web-specific UI elements that might have been carried over in .innerHTML
+    printContainer.querySelectorAll(".info-icon, .jump-btn-pulse, .mobile-only-text, button").forEach(el => el.remove());
+    
     document.body.appendChild(printContainer);
 
-    html2canvas(printContainer, { 
-        scale: 2,
-        useCORS: true 
-    }).then(canvas => {
+    html2canvas(printContainer, { scale: 2, useCORS: true }).then(canvas => {
         const { jsPDF } = window.jspdf;
         const pdf = new jsPDF("p", "mm", "a4");
-        const pageWidth = pdf.internal.pageSize.getWidth();
-        const imgWidth = pageWidth - 20; // 10mm margins
+        const imgData = canvas.toDataURL("image/png");
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = pdf.internal.pageSize.getHeight();
+        const imgWidth = pdfWidth - 20;
         const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        
+        let heightLeft = imgHeight;
+        let position = 10;
 
-        pdf.addImage(canvas.toDataURL("image/png"), "PNG", 10, 15, imgWidth, imgHeight);
-        pdf.save("EV-Trip-Analysis.pdf");
+        pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+        heightLeft -= (pdfHeight - 20);
 
+        while (heightLeft > 0) {
+            position = heightLeft - imgHeight + 10;
+            pdf.addPage();
+            pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+            heightLeft -= (pdfHeight - 20);
+        }
+
+        pdf.save("EV-Analysis-Report.pdf");
         document.body.removeChild(printContainer);
         pdfBtn.textContent = originalText;
         pdfBtn.style.pointerEvents = "auto";
-        pdfBtn.style.opacity = "1";
     });
 }
+
+
+
+
+
+
 
 window.addEventListener("DOMContentLoaded", init);
 
@@ -1159,6 +1141,12 @@ function _ftHide() {
 }
 
 _ftOverlay.addEventListener('touchstart', (e) => {
+    // Don't hide if clicking the menu trigger or menu itself
+    if (e.target.closest('.android-dots-trigger') || 
+        e.target.closest('#sideMenu') ||
+        e.target.closest('.chrome-style-menu')) {
+        return;
+    }
     // Hide tooltip, remove overlay, then re-dispatch the touch so the scroll proceeds
     _ftHide();
     // Don't call preventDefault — passive listener — scroll will continue naturally
@@ -1289,6 +1277,9 @@ function closeCookieBanner() {
 function toggleMenu() {
     const menu = document.getElementById('sideMenu');
     if (menu) {
+        // Hide any visible tooltips when opening menu to prevent overlay from blocking clicks
+        _ftHide();
+        
         menu.classList.toggle('active');
         // When menu opens, expand sections containing the active page
         if (menu.classList.contains('active')) {
