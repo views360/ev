@@ -25,6 +25,12 @@ let PRESETS = [];
 let providerCount = 0;
 let chart = null;
 
+// Stub function - called in init() but doesn't need to do anything
+// The calculate() function handles all necessary updates
+function updateProviderInfo() {
+    // Intentionally empty - this function is called but not needed
+}
+
 function getInputs() {
     return {
         journeyMiles: parseFloat(document.getElementById("journeyMiles").value) || 0,
@@ -283,7 +289,7 @@ function calculate() {
         const minSpeedSelection = parseFloat(document.getElementById("minSpeedBE").value) || 0;
 
         if (isNaN(efficiency) || efficiency <= 0 || isNaN(adhocRate) || adhocRate <= 0) {
-            uiPreText.innerHTML = "Please attend to all flashing green fields, or use the navigation tab at the top to switch between BREAK EVEN and TRIP SAVINGS calcuation types.";
+            uiPreText.innerHTML = "Please attend to all flashing green fields, or use the navigation tabs at the top to switch between BREAK EVEN and TRIP SAVINGS calcuation types.";
             uiPreText.style.display = "block";
             uiResults.style.display = "none";
             return;
@@ -423,7 +429,7 @@ function calculate() {
     const providerBoxes = document.querySelectorAll(".provider-box");
 
     if (tripIncomplete) {
-        uiPreText.innerHTML = "Please attend to all flashing green fields, or use the navigation tab at the top to switch between BREAK EVEN and TRIP SAVINGS calcuation types.";
+        uiPreText.innerHTML = "Please attend to all flashing green fields, or use the navigation tabs at the top to switch between BREAK EVEN and TRIP SAVINGS calcuation types.";
         uiPreText.style.display = "block";
         uiResults.style.display = "none";
         if (resultsHeader) resultsHeader.style.display = "none";
@@ -1126,14 +1132,62 @@ function closeCookieBanner() {
 
 function toggleMenu() {
     const menu = document.getElementById('sideMenu');
-    menu.classList.toggle('active');
+    if (menu) {
+        menu.classList.toggle('active');
+        // When menu opens, expand sections containing the active page
+        if (menu.classList.contains('active')) {
+            expandActiveSections();
+        }
+    }
 }
+
+function toggleMenuSection(toggleId, itemsId) {
+    const toggle = document.getElementById(toggleId);
+    const items = document.getElementById(itemsId);
+    
+    if (toggle && items) {
+        toggle.classList.toggle('open');
+        items.classList.toggle('open');
+    }
+}
+
+function expandActiveSections() {
+    // Get the current page filename
+    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+    
+    // Check all menu items with data-page attribute or href matching current page
+    const activeItem = document.querySelector(`a[data-page][href="${currentPage}"]`) || 
+                       document.querySelector(`a[href="${currentPage}"]`);
+    
+    if (activeItem) {
+        // Add active class to the link
+        document.querySelectorAll('a.menu-item-clean').forEach(link => {
+            link.classList.remove('active-page');
+        });
+        activeItem.classList.add('active-page');
+        
+        // Find parent section and expand it
+        let parent = activeItem.closest('.menu-section-items');
+        if (parent) {
+            const toggle = parent.previousElementSibling;
+            if (toggle && toggle.classList.contains('menu-section-toggle')) {
+                toggle.classList.add('open');
+                parent.classList.add('open');
+            }
+        }
+    }
+}
+
+// Initialize page highlighting on load
+document.addEventListener('DOMContentLoaded', () => {
+    expandActiveSections();
+});
 
 document.addEventListener('click', (e) => {
     const menu = document.getElementById('sideMenu');
     const trigger = document.querySelector('.android-dots-trigger');
-    if (menu.classList.contains('active')) {
-        if (!menu.contains(e.target) && !trigger.contains(e.target)) {
+    if (menu && menu.classList.contains('active')) {
+        if (!menu.contains(e.target) && (!trigger || !trigger.contains(e.target))) {
             menu.classList.remove('active');
         }
     }
