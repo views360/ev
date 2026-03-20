@@ -668,7 +668,26 @@ if (window.matchMedia('(min-width: 700px)').matches) {
 
     loadMenu();
 
-    function toggleTheme() {
+    
+
+// ── Parallax hero effect ──
+const heroBg = document.getElementById('heroBg');
+const heroParallax = document.getElementById('heroParallax');
+
+if (heroBg && heroParallax) {
+    window.addEventListener('scroll', () => {
+        const parallaxContainer = heroParallax.getBoundingClientRect();
+        const scrollPosition = window.pageYOffset;
+        
+        // Only apply parallax while hero is in/near viewport
+        if (parallaxContainer.bottom > 0 && parallaxContainer.top < window.innerHeight) {
+            const yOffset = scrollPosition * 0.5; // 50% parallax speed
+            heroBg.style.transform = `translateY(${yOffset}px)`;
+        }
+    }, { passive: true });
+}
+
+function toggleTheme() {
         const setCookie = (name, value) => {
             const date = new Date();
             date.setTime(date.getTime() + (30 * 24 * 60 * 60 * 1000));
