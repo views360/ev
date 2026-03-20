@@ -151,62 +151,6 @@
     </div>
 </div>
 
-<script>
-// Load ads only when visible
-function loadAdSense() {
-    setTimeout(() => {
-        try {
-            // Only push ads that are actually visible
-            const desktopSlot = document.getElementById('desktop-ad-slot');
-            const mobileSlot = document.getElementById('mobile-ad-slot');
-            
-            if (typeof adsbygoogle !== 'undefined') {
-                // Check desktop ad
-                if (desktopSlot && desktopSlot.offsetWidth > 0) {
-                    try {
-                        (adsbygoogle = window.adsbygoogle || []).push({});
-                    } catch (e) {
-                        // Silently fail for desktop
-                    }
-                }
-                
-                // Check mobile ad separately
-                if (mobileSlot && mobileSlot.offsetWidth > 0) {
-                    try {
-                        (adsbygoogle = window.adsbygoogle || []).push({});
-                    } catch (e) {
-                        // Silently fail for mobile
-                    }
-                }
-            }
-        } catch (e) {
-            console.warn('AdSense processing:', e.message);
-        }
-    }, 1500); // Wait 1.5 seconds for full layout and measurement
-}
-
-// Load ads when page is ready
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', loadAdSense);
-} else {
-    loadAdSense();
-}
-
-// Reload ads if window is resized
-let resizeTimer;
-window.addEventListener('resize', () => {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(() => {
-        try {
-            if (typeof adsbygoogle !== 'undefined') {
-                (adsbygoogle = window.adsbygoogle || []).push({});
-            }
-        } catch (e) {
-            // Silently fail on resize
-        }
-    }, 500);
-});
-</script>
 
 </body>
 </html>
