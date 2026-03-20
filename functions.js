@@ -40,6 +40,7 @@ function getInputs() {
         adhoc: parseFloat(document.getElementById("adhoc").value) || 0,
         startChargeRate: parseFloat(document.getElementById("startChargeRate").value) || 0,
         maxChargingSpeed: parseFloat(document.getElementById("maxChargingSpeed").value) || 0,
+        rechargeAt: parseFloat(document.getElementById("rechargeAt").value) || 20,
         minSpeed: parseFloat(document.getElementById("minSpeed").value) || 0
     };
 }
@@ -48,7 +49,7 @@ function shareLink() {
     const params = new URLSearchParams();
     params.set("mode", "trip-savings");
 
-    const tripIds = ["journeyMiles", "batteryKwh", "soc", "efficiency", "adhoc", "startChargeRate", "maxChargingSpeed", "minSpeed"];
+    const tripIds = ["journeyMiles", "batteryKwh", "soc", "efficiency", "adhoc", "startChargeRate", "maxChargingSpeed", "rechargeAt", "minSpeed"];
     
     tripIds.forEach(id => {
         const el = document.getElementById(id);
@@ -811,7 +812,7 @@ function init() {
     fetch("providers.json").then(r => r.json()).then(data => {
         PRESETS = data.providers;
 
-        const tripIds = ["journeyMiles", "batteryKwh", "soc", "efficiency", "adhoc", "startChargeRate", "maxChargingSpeed", "minSpeed"];        
+        const tripIds = ["journeyMiles", "batteryKwh", "soc", "efficiency", "adhoc", "startChargeRate", "maxChargingSpeed", "rechargeAt", "minSpeed"];        
         tripIds.forEach(id => {
             const el = document.getElementById(id);
             if (!el) return;
