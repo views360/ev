@@ -468,20 +468,22 @@ if (document.readyState === 'loading') {
     loadAdSense();
 }
 
-// Reload ads if window is resized
+// Reload ads if window is resized - desktop only
 let resizeTimer;
-window.addEventListener('resize', () => {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(() => {
-        try {
-            if (typeof adsbygoogle !== 'undefined') {
-                (adsbygoogle = window.adsbygoogle || []).push({});
+if (window.matchMedia('(min-width: 700px)').matches) {
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+            try {
+                if (typeof adsbygoogle !== 'undefined') {
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                }
+            } catch (e) {
+                // Silently fail on resize
             }
-        } catch (e) {
-            // Silently fail on resize
-        }
-    }, 500);
-});
+        }, 500);
+    });
+}
 </script>
 <script>
 async function loadMenu() {
