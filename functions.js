@@ -727,7 +727,7 @@ function calculate() {
 
         let assessmentBoxHTML = `
             <div class="conclusion-white-border guide-section" id="real-world-assessment">
-                <h3>REAL-WORLD CHARGING ITINERARY</h3>
+                <h3>Real-World Charging Itinerary</h3>
                 <div class="results-scroll" style="width: fit-content; max-width: 100%; margin: 0;">
                     <table style="border-collapse: collapse; margin-top: 10px; border: 1px solid var(--border); font-size: 0.8rem;">
                         <thead>
