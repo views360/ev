@@ -399,6 +399,8 @@ function calculate() {
         inputs.soc <= 0 ||
         inputs.efficiency <= 0 || 
         inputs.adhoc <= 0 ||
+        inputs.rechargeAt <=0 ||
+        inputs.maxChargingSpeed <=0 ||
         inputs.startChargeRate <= 0;
     
     const providerBoxes = document.querySelectorAll(".provider-box");
