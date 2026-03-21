@@ -221,7 +221,7 @@ function enforceSpeedRules() {
 
 function calculate() {
     const activePill = document.querySelector('.calc-tab.active');
-    const isTripMode = activePill && activePill.textContent.trim() === "Journey Cost Saving";
+    const isTripMode = activePill && activePill.textContent.trim() === "Journey Savings";
     const conclusionsBox = document.getElementById("conclusionsBox");
     const beCard = document.getElementById("breakEvenCard");
     if (beCard) beCard.style.display = isTripMode ? "none" : "block";
@@ -376,7 +376,7 @@ function calculate() {
         if (!beReminderShown) {
             setTimeout(() => {
                 const activePill = document.querySelector('.calc-tab.active');
-                const isTripMode = activePill && activePill.textContent.trim() === "Journey Cost Saving";
+                const isTripMode = activePill && activePill.textContent.trim() === "Journey Savings";
                 if (!isTripMode) {
                     showBeReminder();
                     beReminderShown = true; 
@@ -448,7 +448,7 @@ function calculate() {
     document.getElementById("publicKwhLine").innerHTML = `PAYG public charging energy needed: <strong>${publicKwh.toFixed(1)} kWh @ ${inputs.adhoc}p</strong>`;
     document.getElementById("adhocCostLine").innerHTML = `Total journey cost (pre-charge + standard PAYG): <strong>£${totalAdhocCost.toFixed(2)}</strong>`;
     
-    // Helper function to simulate journey with a given provider
+    // Helper function to simulate trip with a given provider
     const simulateTripWithProvider = (providerRate, batteryKwh, rechargeThreshold, efficiency, journeyMiles, initialSoc) => {
         const chargeToPercent = 80; // Charge to 80% at each public stop (except final)
         const kwhPerCharge = ((chargeToPercent - rechargeThreshold) / 100) * batteryKwh; // Usable energy per charge (threshold to 80%)
@@ -953,7 +953,7 @@ function init() {
             if (tripBtn) setToggle('trip-savings', tripBtn);
         } else {
             const activeTab = document.querySelector('.calc-tab.active');
-            const currentMode = activeTab.textContent.trim() === "Journey Cost Saving" ? 'trip-savings' : 'break-even';
+            const currentMode = activeTab.textContent.trim() === "Journey Savings" ? 'trip-savings' : 'break-even';
             setToggle(currentMode, activeTab);
         }
 
