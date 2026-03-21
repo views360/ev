@@ -736,7 +736,7 @@ function calculate() {
                                 <th style="padding: 10px; border: 1px solid var(--border); text-align: left;">Event</th>
                                 <th style="padding: 10px; border: 1px solid var(--border);">Mile Mark</th>
                                 <th style="padding: 10px; border: 1px solid var(--border); text-align: left;">Action</th>
-                                <th style="padding: 10px; border: 1px solid var(--border);">Timing</th>
+                                <th style="padding: 10px; border: 1px solid var(--border);">Duration</th>
                             </tr>
                         </thead>
                         <tbody>
