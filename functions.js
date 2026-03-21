@@ -1068,31 +1068,6 @@ function exportPdf() {
         contentHtml += `</tbody></table>`;
     }
     
-    // Add Real-World Charging Assessment section
-    const realWorldTable = document.querySelector("#real-world-assessment table");
-    if (realWorldTable) {
-        contentHtml += `<h2 class="pdf-section-title">Real-World Charging Assessment</h2>
-        <table class="pdf-table">`;
-        
-        const realWorldHeaders = realWorldTable.querySelectorAll("thead th");
-        contentHtml += `<thead><tr>`;
-        realWorldHeaders.forEach(header => {
-            contentHtml += `<th>${header.innerText}</th>`;
-        });
-        contentHtml += `</tr></thead><tbody>`;
-        
-        const realWorldRows = realWorldTable.querySelectorAll("tbody tr");
-        realWorldRows.forEach(row => {
-            const cells = row.querySelectorAll("td");
-            contentHtml += `<tr>`;
-            cells.forEach(cell => {
-                contentHtml += `<td>${cell.innerText}</td>`;
-            });
-            contentHtml += `</tr>`;
-        });
-        contentHtml += `</tbody></table>`;
-    }
-    
     contentHtml += `
         <h2 class="pdf-section-title">Analysis Conclusion</h2>
         <div class="pdf-conclusion-wrapper">
