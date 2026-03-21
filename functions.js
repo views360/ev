@@ -693,19 +693,19 @@ function calculate() {
             
             // Check if this is the final charge
             const remainingDistance = inputs.journeyMiles - distanceDriven;
-            const kwhNeededToReachHomeWithThresholdReserve = (remainingDistance / inputs.efficiency) + ((rechargeThreshold / 100) * inputs.batteryKwh);
+            const kwhNeededToReachHome = remainingDistance / inputs.efficiency;
             
-            if (kwhNeededToReachHomeWithThresholdReserve <= kwhPerPublicCharge) {
-                // This is the final charge - only charge what's needed to reach home with threshold reserve
-                const chargeTimeHours = kwhNeededToReachHomeWithThresholdReserve / chargeSpeed;
+            if (kwhNeededToReachHome <= kwhPerPublicCharge) {
+                // This is the final charge - only charge what's needed to reach destination at threshold
+                const chargeTimeHours = kwhNeededToReachHome / chargeSpeed;
                 const chargeTimeFormatted = formatChargingTime(chargeTimeHours);
-                const chargePercent = Math.ceil((kwhNeededToReachHomeWithThresholdReserve / inputs.batteryKwh) * 100);
+                const chargePercent = Math.ceil((kwhNeededToReachHome / inputs.batteryKwh) * 100);
                 
                 stopsRows += `<tr>
                     <td style="padding: 10px; border: 1px solid var(--border); text-align: center;">${stopCount}</td>
                     <td style="padding: 10px; border: 1px solid var(--border); color: var(--muted);">Final public charge (when battery reaches ${rechargeThreshold}%)</td>
                     <td style="padding: 10px; border: 1px solid var(--border); text-align: center;">${distanceDriven.toFixed(0)}</td>
-                    <td style="padding: 10px; border: 1px solid var(--border);">Add ${chargePercent}% / ${kwhNeededToReachHomeWithThresholdReserve.toFixed(1)}kWh</td>
+                    <td style="padding: 10px; border: 1px solid var(--border);">Add ${chargePercent}% / ${kwhNeededToReachHome.toFixed(1)}kWh</td>
                     <td style="padding: 10px; border: 1px solid var(--border); text-align: center;">${chargeTimeFormatted}</td>
                 </tr>`;
                 break;
