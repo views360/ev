@@ -56,7 +56,7 @@
             
             <div class="help-slide">
                 <h2>Welcome to the EV Subscription Comparison Tool (UK)</h2>
-                <p>Going on a trip and want to find out if EV charging subscriptions are better value than PAYG rates? This tool will tell you!</p>
+                <p>Going on a journey and want to find out if EV charging subscriptions are better value than PAYG rates? This tool will tell you!</p>
 				<p><strong>Note:</strong> Glowing green items are there to direct you.</p>
 				<p style="text-align: center; margin: 30px 0 25px 0"><img src="images/ev-mg.webp" label="EV" style="height: 50px" /></p>
                 <div class="help-footer">
@@ -140,11 +140,11 @@
 </div>
 
 <div id="breakEvenCard" class="card" style="margin-bottom: 20px; max-width: 400px; margin-left: auto; margin-right: auto;">
-    <h3>Trip & Vehicle</h3>
+    <h3>Journey & Vehicle</h3>
     <div class="input-group">
         <label for="efficiencyBE"><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is likely 
 			to be between 2.5 and 5, depending on the time of year and your driving style and habits. You can either estimate it for the time of year when you will travel, 
-			or you can reset your trip counter and calculate it if your trip is imminent.</span></span></span>Vehicle efficiency (miles per kWh)</label>
+			or you can reset your journey counter and calculate it if your journey is imminent.</span></span></span>Vehicle efficiency (miles per kWh)</label>
         <input type="number" id="efficiencyBE" oninput="calculate()" placeholder="e.g., 3.5" step="0.1">
     </div>
     <div class="input-group">
@@ -163,7 +163,7 @@
     <div class="input-group">
         <label for="adhocBE">
             <span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is 
-				the average amount you would ordinarily expect to pay during your trip while using PAYG 
+				the average amount you would ordinarily expect to pay during your journey while using PAYG 
 				chargers. If you get a discount (e.g., 8% from Electroverse), input the discounted rate.</span></span></span>Standard PAYG 
 			rate (pence per kWh)</label>
         <input type="number" id="adhocBE" oninput="calculate()" placeholder="e.g., 62 (62p is the 50kW Lidl+ app price)" step="0.1">
@@ -172,12 +172,12 @@
 
     <div class="grid">
         <div class="card">
-            <h3>Trip & Vehicle</h3>
+            <h3>Journey & Vehicle</h3>
             <div class="input-row">
                 <div class="input-group">
                     <label for="journeyMiles">
                         <span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">How far 
-							do you plan to travel? Adjust this value, and the results will auto-update.</span></span></span>Trip distance (miles)
+							do you plan to travel? Adjust this value, and the results will auto-update.</span></span></span>Journey distance (miles)
                     </label>
                     <input type="number" id="journeyMiles" oninput="calculate()" placeholder="e.g., 250">
                 </div>
@@ -194,7 +194,7 @@
                 <div class="input-group">
                     <label for="soc">
                         <span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">How much 
-							charge will your EV have when you begin your trip?</span></span></span>Starting state of charge (%)</label>
+							charge will your EV have when you begin your journey?</span></span></span>Starting state of charge (%)</label>
                     <input type="number" id="soc" oninput="calculate()" placeholder="e.g., 90">
                 </div>
                 <div class="input-group">
@@ -202,7 +202,7 @@
                         <span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is likely 
 							to be between 2.5 and 5, depending on the time of year and your driving style and habits. 
 							You can either estimate it for the time of year when you will travel, or you can reset your 
-							trip counter and calculate it if your trip is imminent.</span></span></span>Vehicle efficiency (miles per kWh)</label>
+							journey counter and calculate it if your journey is imminent.</span></span></span>Vehicle efficiency (miles per kWh)</label>
                     <input type="number" id="efficiency" oninput="calculate()" placeholder="e.g., 3.5">
                 </div>
             </div>
@@ -210,7 +210,7 @@
             <div class="input-group">
                 <label for="minSpeed">         
                     <span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">Filter out slower 
-						charging speeds from the results if you don't plan to use them during your trip, else they will 
+						charging speeds from the results if you don't plan to use them during your journey, else they will 
 						skew the results because they are cheaper (e.g., setting the value to 50kW will filter out 7kW and 22kW).</span></span></span>Minimum desired 
 					charging speed</label>
                 <select id="minSpeed">
@@ -226,7 +226,7 @@
                 <div class="input-group">
                     <label for="startChargeType">
                         <span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">Before you 
-							begin your trip, will you have charged your battery at home or using PAYG charging?</span></span></span>Starting charge type           
+							begin your journey, will you have charged your battery at home or using PAYG charging?</span></span></span>Starting charge type           
                     </label>
                     <select id="startChargeType">
                         <option value="home">Cheap home charging</option>
@@ -236,7 +236,7 @@
                 <div class="input-group">
                     <label for="startChargeRate">
                         <span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">When you 
-							charge your battery before the trip, how much will the rate be?</span></span></span>Starting rate (pence per kWh)                        
+							charge your battery before the journey, how much will the rate be?</span></span></span>Starting rate (pence per kWh)                        
                     </label>
                     <input type="number" id="startChargeRate" oninput="calculate()" placeholder="e.g., 7.5">
                 </div>
@@ -257,9 +257,9 @@
             <div class="input-group">
                 <label for="adhoc">
                     <span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is the 
-						average amount you would ordinarily expect to pay during your trip while using PAYG chargers.
+						average amount you would ordinarily expect to pay during your journey while using PAYG chargers.
 						If you already get a discount (e.g., 8% from Electroverse), input the discounted rate. This will be the 
-						baseline for calculating whether it is possible to make your trip cheaper.</span></span></span>Typical average PAYG public rate you pay (pence per kWh)                    
+						baseline for calculating whether it is possible to make your journey cheaper.</span></span></span>Typical average PAYG public rate you pay (pence per kWh)                    
                 </label>
                 <input type="number" id="adhoc" oninput="calculate()" placeholder="e.g., 62 (62p is the 50kW Lidl+ app price)">
             </div>
@@ -289,7 +289,7 @@
 
 	<div id="resultsHeader" class="results-header-container">
 	    <div class="results-title-group">
-	        <h2 class="results-headingTRIP">TRIP-SAVING RESULTS</h2>
+	        <h2 class="results-headingTRIP">JOURNEY-SAVING RESULTS</h2>
 	        <a href="#" class="jump-btn-pulse" title="Back to top" style="text-decoration: none;">↑</a>
 	    </div>
 	
@@ -301,7 +301,7 @@
 
 	<div id="contentsBox"></div>
 
-    <div id="preConclusionsText">Please complete all fields in the <strong>Trip & Vehicle</strong> section</div>
+    <div id="preConclusionsText">Please complete all fields in the <strong>Journey & Vehicle</strong> section</div>
     <div id="results" class="results">
 		<div style="align: center; margin: auto">
 	        <div class="calc-lines">
