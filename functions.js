@@ -1061,10 +1061,47 @@ function exportPdf() {
         const { jsPDF } = window.jspdf;
         const pdf = new jsPDF("p", "mm", "a4");
         const pageWidth = pdf.internal.pageSize.getWidth();
+        const pageHeight = pdf.internal.pageSize.getHeight();
         const imgWidth = pageWidth - 20; // 10mm margins
         const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        
+        // Handle multiple pages if content is taller than one page
+        let yPosition = 15;
+        const pageHeightAvailable = pageHeight - 30; // 15mm top and bottom margins
+        
+        if (imgHeight <= pageHeightAvailable) {
+            // Content fits on one page
+            pdf.addImage(canvas.toDataURL("image/png"), "PNG", 10, 15, imgWidth, imgHeight);
+        } else {
+            // Content spans multiple pages
+            let remainingHeight = canvas.height;
+            let yCanvasOffset = 0;
+            
+            while (remainingHeight > 0) {
+                // Calculate how much of the canvas we can fit on this page
+                const canvasHeightThatFits = Math.min(remainingHeight, (pageHeightAvailable * canvas.width) / imgWidth);
+                
+                // Create a temporary canvas for this section
+                const tempCanvas = document.createElement('canvas');
+                tempCanvas.width = canvas.width;
+                tempCanvas.height = canvasHeightThatFits;
+                const tempCtx = tempCanvas.getContext('2d');
+                tempCtx.drawImage(canvas, 0, yCanvasOffset, canvas.width, canvasHeightThatFits, 0, 0, canvas.width, canvasHeightThatFits);
+                
+                // Add this section to the PDF
+                const sectionImgHeight = (canvasHeightThatFits * imgWidth) / canvas.width;
+                pdf.addImage(tempCanvas.toDataURL("image/png"), "PNG", 10, 15, imgWidth, sectionImgHeight);
+                
+                // Move to next page and update positions
+                remainingHeight -= canvasHeightThatFits;
+                yCanvasOffset += canvasHeightThatFits;
+                
+                if (remainingHeight > 0) {
+                    pdf.addPage();
+                }
+            }
+        }
 
-        pdf.addImage(canvas.toDataURL("image/png"), "PNG", 10, 15, imgWidth, imgHeight);
         pdf.save("EV-Journey-Analysis.pdf");
 
         document.body.removeChild(printContainer);
