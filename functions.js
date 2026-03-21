@@ -727,7 +727,7 @@ function calculate() {
 
         let assessmentBoxHTML = `
             <div class="conclusion-white-border guide-section" id="real-world-assessment">
-                <h3>REAL WORLD CHARGING ASSESSMENT</h3>
+                <h3>REAL-WORLD CHARGING ITINERARY</h3>
                 <div class="results-scroll" style="width: fit-content; max-width: 100%; margin: 0;">
                     <table style="border-collapse: collapse; margin-top: 10px; border: 1px solid var(--border); font-size: 0.8rem;">
                         <thead>
@@ -756,7 +756,7 @@ function calculate() {
                     <li><a href="#providerResults" style="color: var(--accent); text-decoration:none;">Table of Results</a></li>
                     <li><a href="#payg-vs-subscription" style="color: var(--accent); text-decoration:none;">PAYG vs Subscription Conclusion</a></li>
                     <li><a href="#charging-times-section" style="color: var(--accent); text-decoration:none;">Charging Times</a></li>
-                    <li><a href="#real-world-assessment" style="color: var(--accent); text-decoration:none;">Real World Charging Assessment</a></li>
+                    <li><a href="#real-world-assessment" style="color: var(--accent); text-decoration:none;">Real-World Charging Itinerary</a></li>
                     <li><a href="#graph-section" style="color: var(--accent); text-decoration:none;">Graph</a></li>
                 </ul>
             </div>
