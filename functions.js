@@ -241,7 +241,7 @@ function calculate() {
 
     const fieldIds = [
         "journeyMiles", "batteryKwh", "soc", "efficiency", 
-        "adhoc", "startChargeRate", "maxChargingSpeed", "efficiencyBE", "adhocBE"
+        "adhoc", "startChargeRate", "maxChargingSpeed", "efficiencyBE", "adhocBE", "rechargeAt"
     ];
 
     fieldIds.forEach(id => {
@@ -528,6 +528,7 @@ function calculate() {
         const minSpeedSelect = document.getElementById("minSpeed");
         const minSpeedLabel = minSpeedSelect.options[minSpeedSelect.selectedIndex].text;
         const maxChargingSpeed = inputs.maxChargingSpeed;
+        const rechargeAt = inputs.rechargeAt;
         
         const formatChargingTime = (timeHours) => {
             if (timeHours < 1) {
