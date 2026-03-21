@@ -400,6 +400,7 @@ function calculate() {
         inputs.efficiency <= 0 || 
         inputs.adhoc <= 0 ||
         inputs.rechargeAt <=0 ||
+        inputs.rechargeAt === '' ||
         inputs.maxChargingSpeed <=0 ||
         inputs.startChargeRate <= 0;
     
