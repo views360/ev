@@ -775,7 +775,7 @@ function calculate() {
         
         conclusionHTML += `<div class="conclusion-white-border guide-section" id="charging-times-section"><h3>CHARGING TIMES</h3>`;
         if (maxChargingSpeed > 0) {
-            conclusionHTML += `<p class="main-result">Based on your vehicle's maximum charging speed of <strong>${maxChargingSpeed} kW</strong>, the journey requiring <strong>${publicKwh.toFixed(1)} kWh</strong> of public charging would take <strong>${maxChargingTimeFormatted}</strong> at public chargers.</p>`;
+            conclusionHTML += `<p class="main-result">Your proposed ${inputs.journeyMiles}-mile journey will require <strong>${publicKwh.toFixed(1)} kWh</strong> of public charging. At your maximum charging speed of <strong>${maxChargingSpeed} kW</strong>, this will take approximately <strong>${maxChargingTimeFormatted}</strong>.</p>`;
         } else {
             conclusionHTML += `<p class="main-result">Enter your vehicle's <strong>Max. Charging Speed</strong> above to see estimated charging times for this journey.</p>`;
         }
