@@ -646,9 +646,9 @@ function calculate() {
             <div class="speed-comparison-container">
                 <p style="font-size: 0.85rem; margin-bottom: 10px;">
                     <span class="tooltip-container">
-                        <span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">Charging times assume that public charging will happen each time the battery reaches your recharge threshold (${inputs.rechargeAt}%), and will charge to 80% (except the final charge, which only charges enough to reach your destination with a ${inputs.rechargeAt}% reserve). All charges use the vehicle's maximum charging speed of ${inputs.maxChargingSpeed}kW.</span></span>
+                        <span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">A comparison of estimated total trip charge times at various speeds for the public-charging section of your trip assumes that charging will begin each time the battery reaches your recharge threshold (${inputs.rechargeAt}%) and that you will charge to 80% (except for the final charge, which only charges enough to reach your destination with a ${inputs.rechargeAt}% reserve). All charges use the vehicle's maximum charging speed of ${inputs.maxChargingSpeed}kW.</span></span>
                     </span>
-                    <strong>Estimated Journey Charging Times at Various Speeds</strong>
+                    <strong>Estimated Total Public Charging Time Required</strong>
                 </p>
                 <table class="mini-table">
                     <thead>
