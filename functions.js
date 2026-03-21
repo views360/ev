@@ -643,16 +643,16 @@ function calculate() {
         });
         
         const speedTableHtml = `
-            <div class="speed-comparison-container" style="width: fit-content; max-width: 100%; margin: 0 auto;">
+            <div class="speed-comparison-container" style="width: fit-content; max-width: 100%; margin: 0;">
                 <p style="font-size: 0.85rem; margin-bottom: 10px;">
                     <span class="tooltip-container">
-                        <span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">A comparison of estimated total trip charge times at various speeds for the public-charging section of your trip assumes that charging will begin each time the battery reaches your recharge threshold (${inputs.rechargeAt}%) and that you will charge to 80% (except for the final charge, which only charges enough to reach your destination with a ${inputs.rechargeAt}% reserve). All charges use the vehicle's maximum charging speed of ${inputs.maxChargingSpeed}kW.</span></span>
+                        <span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">A comparison of estimated total trip charge durations at various speeds for the public-charging section of your trip assumes that charging will begin each time the battery reaches your recharge threshold (${inputs.rechargeAt}%) and that you will charge to 80% (except for the final charge, which only charges enough to reach your destination with a ${inputs.rechargeAt}% reserve). All charges use the vehicle's maximum charging speed of ${inputs.maxChargingSpeed}kW.</span></span>
                     </span>
-                    <strong>Estimated Total Public Charging Time Required</strong>
+                    <strong>Estimated Total Public Charging Duration Required</strong>
                 </p>
                 <table class="mini-table">
                     <thead>
-                        <tr><th>Charging Speed</th><th>Type</th><th>Descriptor</th><th>Journey Charging Time</th></tr>
+                        <tr><th>Charging Speed</th><th>Type</th><th>Descriptor</th><th>Journey Charging Duration</th></tr>
                     </thead>
                     <tbody>
                         ${tableRows}
