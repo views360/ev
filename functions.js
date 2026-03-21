@@ -241,7 +241,7 @@ function calculate() {
 
     const fieldIds = [
         "journeyMiles", "batteryKwh", "soc", "efficiency", 
-        "adhoc", "startChargeRate", "maxChargingSpeed", "efficiencyBE", "adhocBE", "rechargeAt", "rechargeAtBE"
+        "adhoc", "startChargeRate", "maxChargingSpeed", "efficiencyBE", "adhocBE", "rechargeAt"
     ];
 
     fieldIds.forEach(id => {
@@ -270,7 +270,7 @@ function calculate() {
         const adhocRate = parseFloat(document.getElementById("adhocBE").value) || 0;
         const minSpeedSelection = parseFloat(document.getElementById("minSpeedBE").value) || 0;
 
-        if (isNaN(efficiency) || efficiency <= 0 || isNaN(adhocRate) || adhocRate <= 0 || !document.getElementById("rechargeAtBE").value) {
+        if (isNaN(efficiency) || efficiency <= 0 || isNaN(adhocRate) || adhocRate <= 0) {
             uiPreText.innerHTML = "Please attend to all flashing green fields, or use the navigation tabs at the top to switch between BREAK EVEN and TRIP SAVINGS calcuation types.";
             uiPreText.style.display = "block";
             uiResults.style.display = "none";
@@ -850,15 +850,6 @@ function init() {
             adhocBE.value = adhocTrip.value;
             syncFields(adhocTrip, adhocBE);
             syncFields(adhocBE, adhocTrip);
-        }
-
-        const rechargeAtTrip = document.getElementById("rechargeAt");
-        const rechargeAtBE = document.getElementById("rechargeAtBE");
-
-        if (rechargeAtTrip && rechargeAtBE) {
-            rechargeAtBE.value = rechargeAtTrip.value;
-            syncFields(rechargeAtTrip, rechargeAtBE);
-            syncFields(rechargeAtBE, rechargeAtTrip);
         }
 
         if (urlParams.has("p")) {
