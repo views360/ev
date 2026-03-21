@@ -448,6 +448,49 @@ function calculate() {
     document.getElementById("publicKwhLine").innerHTML = `PAYG public charging energy needed: <strong>${publicKwh.toFixed(1)} kWh @ ${inputs.adhoc}p</strong>`;
     document.getElementById("adhocCostLine").innerHTML = `Total journey cost (pre-charge + standard PAYG): <strong>£${totalAdhocCost.toFixed(2)}</strong>`;
     
+    // Helper function to simulate trip with a given provider
+    const simulateTripWithProvider = (providerRate, batteryKwh, rechargeThreshold, efficiency, journeyMiles, initialSoc) => {
+        const chargeToPercent = 80; // Charge to 80% at each public stop (except final)
+        const kwhPerCharge = ((chargeToPercent - rechargeThreshold) / 100) * batteryKwh; // Usable energy per charge (threshold to 80%)
+        
+        let distanceDriven = 0;
+        let publicChargeCost = 0;
+        let chargeCount = 0;
+        
+        // Starting charge (home pre-charge already accounted for in startChargeCost)
+        let currentSoc = initialSoc;
+        
+        while (distanceDriven < journeyMiles) {
+            // How far can we drive before hitting recharge threshold?
+            const rangeOnCurrentCharge = ((currentSoc - rechargeThreshold) / 100) * batteryKwh * efficiency;
+            
+            if (distanceDriven + rangeOnCurrentCharge >= journeyMiles) {
+                // Can reach destination on current charge - no more public charging needed
+                break;
+            }
+            
+            // Drive to threshold and charge
+            distanceDriven += rangeOnCurrentCharge;
+            chargeCount++;
+            
+            // Check if this is the final charge
+            const remainingDistance = journeyMiles - distanceDriven;
+            const kwhNeededForFinal = (remainingDistance / efficiency) + ((rechargeThreshold / 100) * batteryKwh);
+            
+            if (kwhNeededForFinal <= kwhPerCharge) {
+                // This is the final charge - only charge what's needed to reach destination with recharge threshold reserve
+                publicChargeCost += kwhNeededForFinal * (providerRate / 100);
+                break;
+            } else {
+                // Not the final charge - charge to 80% (i.e., add kwhPerCharge from threshold to 80%)
+                publicChargeCost += kwhPerCharge * (providerRate / 100);
+                currentSoc = chargeToPercent;
+            }
+        }
+        
+        return publicChargeCost;
+    };
+    
     const providers = [];
     providerBoxes.forEach(box => {
         const id = box.dataset.id;
@@ -461,7 +504,18 @@ function calculate() {
             const kwhNeeded = subCost / savingPerKwh;
             breakEvenMiles = kwhNeeded * inputs.efficiency;
         }
-        const totalJourneyCost = subCost + startChargeCost + (publicKwh * (rate / 100));
+        
+        // Calculate public charging cost using realistic charging simulation
+        const publicChargingCost = simulateTripWithProvider(
+            rate,
+            inputs.batteryKwh,
+            inputs.rechargeAt,
+            inputs.efficiency,
+            inputs.journeyMiles,
+            inputs.soc
+        );
+        
+        const totalJourneyCost = subCost + startChargeCost + publicChargingCost;
         const pData = PRESETS.find(p => p.name === document.getElementById(`preset${id}`).value);
 
         providers.push({ 
@@ -590,6 +644,12 @@ function calculate() {
         
         const speedTableHtml = `
             <div class="speed-comparison-container">
+                <p style="font-size: 0.85rem; margin-bottom: 10px;">
+                    <span class="tooltip-container">
+                        <span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">Charging times assume that public charging will happen each time the battery reaches your recharge threshold (${inputs.rechargeAt}%), and will charge to 80% (except the final charge, which only charges enough to reach your destination with a ${inputs.rechargeAt}% reserve). All charges use the vehicle's maximum charging speed of ${inputs.maxChargingSpeed}kW.</span></span>
+                    </span>
+                    <strong>Estimated Journey Charging Times at Various Speeds</strong>
+                </p>
                 <table class="mini-table">
                     <thead>
                         <tr><th>Charging Speed</th><th>Type</th><th>Descriptor</th><th>Journey Charging Time</th></tr>
@@ -601,56 +661,68 @@ function calculate() {
             </div>`;
         
         // --- REAL WORLD SECTION ---
-        const usableKwh = inputs.batteryKwh;
-        const efficiency = inputs.efficiency;
         const chargeSpeed = inputs.maxChargingSpeed || 101;
-        const reserveKwh = 0.2 * usableKwh;
-        const initialKwhAtStart = (inputs.soc / 100) * usableKwh;
-        const sixtyPercentKwh = 0.6 * usableKwh;
-        const fullChargeRange = sixtyPercentKwh * efficiency;
-        const firstStopMile = Math.max(0, (initialKwhAtStart - reserveKwh) * efficiency);
+        const rechargeThreshold = inputs.rechargeAt;
+        const chargeToPercent = 80; // Charge to 80% at each public stop (except final)
+        
+        // Usable energy per public charge (from threshold to 80%)
+        const kwhPerPublicCharge = ((chargeToPercent - rechargeThreshold) / 100) * inputs.batteryKwh;
+        const rangePerPublicCharge = kwhPerPublicCharge * inputs.efficiency;
+        
+        // Starting range (from pre-charge SOC down to threshold)
+        const startingRangeOnPreCharge = ((inputs.soc - rechargeThreshold) / 100) * inputs.batteryKwh * inputs.efficiency;
         
         let stopsRows = '';
         let stopCount = 0;
-        let currentMileMark = firstStopMile;
-
-        if (inputs.journeyMiles > firstStopMile) {
-            // intermediate stops loop (Corrected logic)
-            if (fullChargeRange > 0) {
-                while (currentMileMark + fullChargeRange < inputs.journeyMiles) {
-                    stopCount++;
-                    stopsRows += `<tr>
-                        <td style="padding: 10px; border: 1px solid var(--border); text-align: center;">${stopCount}</td>
-                        <td style="padding: 10px; border: 1px solid var(--border); color: var(--muted);">Public charge (when battery reaches 20%)</td>
-                        <td style="padding: 10px; border: 1px solid var(--border); text-align: center;">${currentMileMark.toFixed(0)}</td>
-                        <td style="padding: 10px; border: 1px solid var(--border);">Add 60% / ${sixtyPercentKwh.toFixed(1)}kWh</td>
-                        <td style="padding: 10px; border: 1px solid var(--border); text-align: center;">${formatChargingTime(sixtyPercentKwh / chargeSpeed)}</td>
-                    </tr>`;
-                    currentMileMark += fullChargeRange;
-                }
+        let distanceDriven = 0;
+        let currentChargePercent = inputs.soc;
+        
+        // Simulate the journey
+        while (distanceDriven < inputs.journeyMiles) {
+            // How far can we drive before hitting recharge threshold on current charge?
+            const rangeOnCurrentCharge = ((currentChargePercent - rechargeThreshold) / 100) * inputs.batteryKwh * inputs.efficiency;
+            
+            if (distanceDriven + rangeOnCurrentCharge >= inputs.journeyMiles) {
+                // Can reach destination - no more public charging needed
+                break;
             }
-
-            // Final stop logic (Option a and b)
-            const finalStopNum = stopCount + 1;
-            const milesRemainingAfterLastStop = inputs.journeyMiles - currentMileMark;
-            const kwhNeededForFinalLeg = (milesRemainingAfterLastStop / efficiency);
-            const percentNeededForFinalLeg = Math.ceil((kwhNeededForFinalLeg / usableKwh) * 100);
-
-            stopsRows += `<tr>
-                <td style="padding: 10px; border: 1px solid var(--border); text-align: center;">${finalStopNum}a</td>
-                <td style="padding: 10px; border: 1px solid var(--border); color: var(--muted);">Final stop Option 1: Standard charge (20% to 80%)</td>
-                <td style="padding: 10px; border: 1px solid var(--border); text-align: center;">${currentMileMark.toFixed(0)}</td>
-                <td style="padding: 10px; border: 1px solid var(--border);">Add 60% / ${sixtyPercentKwh.toFixed(1)}kWh</td>
-                <td style="padding: 10px; border: 1px solid var(--border); text-align: center;">${formatChargingTime(sixtyPercentKwh / chargeSpeed)}</td>
-            </tr>`;
-
-            stopsRows += `<tr>
-                <td style="padding: 10px; border: 1px solid var(--border); text-align: center;">${finalStopNum}b</td>
-                <td style="padding: 10px; border: 1px solid var(--border); color: var(--muted);">Final stop Option 2: Precise charge to reach destination with 20%</td>
-                <td style="padding: 10px; border: 1px solid var(--border); text-align: center;">${currentMileMark.toFixed(0)}</td>
-                <td style="padding: 10px; border: 1px solid var(--border);">Add ${percentNeededForFinalLeg}% / ${kwhNeededForFinalLeg.toFixed(1)}kWh</td>
-                <td style="padding: 10px; border: 1px solid var(--border); text-align: center;">${formatChargingTime(kwhNeededForFinalLeg / chargeSpeed)}</td>
-            </tr>`;
+            
+            // Drive to threshold and need to charge
+            distanceDriven += rangeOnCurrentCharge;
+            stopCount++;
+            
+            // Check if this is the final charge
+            const remainingDistance = inputs.journeyMiles - distanceDriven;
+            const kwhNeededToReachHomeWithThresholdReserve = (remainingDistance / inputs.efficiency) + ((rechargeThreshold / 100) * inputs.batteryKwh);
+            
+            if (kwhNeededToReachHomeWithThresholdReserve <= kwhPerPublicCharge) {
+                // This is the final charge - only charge what's needed to reach home with threshold reserve
+                const chargeTimeHours = kwhNeededToReachHomeWithThresholdReserve / chargeSpeed;
+                const chargeTimeFormatted = formatChargingTime(chargeTimeHours);
+                const chargePercent = Math.ceil((kwhNeededToReachHomeWithThresholdReserve / inputs.batteryKwh) * 100);
+                
+                stopsRows += `<tr>
+                    <td style="padding: 10px; border: 1px solid var(--border); text-align: center;">${stopCount}</td>
+                    <td style="padding: 10px; border: 1px solid var(--border); color: var(--muted);">Final public charge (when battery reaches ${rechargeThreshold}%)</td>
+                    <td style="padding: 10px; border: 1px solid var(--border); text-align: center;">${distanceDriven.toFixed(0)}</td>
+                    <td style="padding: 10px; border: 1px solid var(--border);">Add ${chargePercent}% / ${kwhNeededToReachHomeWithThresholdReserve.toFixed(1)}kWh</td>
+                    <td style="padding: 10px; border: 1px solid var(--border); text-align: center;">${chargeTimeFormatted}</td>
+                </tr>`;
+                break;
+            } else {
+                // Not the final charge - charge to 80% (add kwhPerPublicCharge)
+                const chargeTimeHours = kwhPerPublicCharge / chargeSpeed;
+                const chargeTimeFormatted = formatChargingTime(chargeTimeHours);
+                
+                stopsRows += `<tr>
+                    <td style="padding: 10px; border: 1px solid var(--border); text-align: center;">${stopCount}</td>
+                    <td style="padding: 10px; border: 1px solid var(--border); color: var(--muted);">Public charge (when battery reaches ${rechargeThreshold}%)</td>
+                    <td style="padding: 10px; border: 1px solid var(--border); text-align: center;">${distanceDriven.toFixed(0)}</td>
+                    <td style="padding: 10px; border: 1px solid var(--border);">Add ${(chargeToPercent - rechargeThreshold).toFixed(0)}% / ${kwhPerPublicCharge.toFixed(1)}kWh</td>
+                    <td style="padding: 10px; border: 1px solid var(--border); text-align: center;">${chargeTimeFormatted}</td>
+                </tr>`;
+                currentChargePercent = chargeToPercent;
+            }
         }
 
         let assessmentBoxHTML = `
