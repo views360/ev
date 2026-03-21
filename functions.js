@@ -775,7 +775,7 @@ function calculate() {
         
         conclusionHTML += `<div class="conclusion-white-border guide-section" id="charging-times-section"><h3>CHARGING TIMES</h3>`;
         if (maxChargingSpeed > 0) {
-            conclusionHTML += `<p class="main-result">With your vehicle's maximum charging speed of <strong>${maxChargingSpeed} kW</strong>, the journey requiring <strong>${publicKwh.toFixed(1)} kWh</strong> of public charging would take <strong>${maxChargingTimeFormatted}</strong> at public chargers.</p>`;
+            conclusionHTML += `<p class="main-result">Your journey requires <strong>${publicKwh.toFixed(1)} kWh</strong> of public charging. Based on your vehicle's maximum charging speed of <strong>${maxChargingSpeed} kW</strong>, the total time for all public charging stops at that speed will be <strong>${maxChargingTimeFormatted}</strong>.</p>`;
         } else {
             conclusionHTML += `<p class="main-result">Enter your vehicle's <strong>Max. Charging Speed</strong> above to see estimated charging times for this journey.</p>`;
         }
@@ -844,7 +844,7 @@ function drawGraph(core, providers) {
             responsive: true,
             maintainAspectRatio: false,
             scales: {
-                y: { title: { display: true, text: 'Total Trip Cost (£)' } },
+                y: { title: { display: true, text: 'Total Journey Cost (£)' } },
                 x: { title: { display: true, text: 'Distance (Miles)' } }
             },
             plugins: { legend: { position: 'bottom', labels: { boxWidth: 12 } } }
@@ -1019,7 +1019,7 @@ function exportPdf() {
                     <th>Provider</th>
                     <th>Sub. Fee</th>
                     <th>Disc. Rate</th>
-                    <th>Trip Cost</th>
+                    <th>Journey Cost</th>
                     <th>vs. PAYG</th>
                     <th>Break Even<br />(Exc. Battery Pre-Charge)</th>
                 </tr>
@@ -1064,7 +1064,7 @@ function exportPdf() {
         const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
         pdf.addImage(canvas.toDataURL("image/png"), "PNG", 10, 15, imgWidth, imgHeight);
-        pdf.save("EV-Trip-Analysis.pdf");
+        pdf.save("EV-Journey-Analysis.pdf");
 
         document.body.removeChild(printContainer);
         pdfBtn.textContent = originalText;
