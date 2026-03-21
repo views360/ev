@@ -743,7 +743,7 @@ function calculate() {
                             ${stopsRows || '<tr><td colspan="5" style="padding: 20px; text-align: center;">No public charging stops required for this journey distance.</td></tr>'}
                         </tbody>
                     </table>
-                    <p style="font-size:0.85rem; margin-top:12px; opacity:0.8; !important;">Note: the final charge will usually be less than previous charges. It represents the amount of final top-up charge needed to complete the journey and be left with a residual charge of ${rechargeThreshold}%.</p>
+                    <p style="font-size:0.85rem; margin-top:12px; opacity:0.8; !important;">Note: when there is more than one stop for public charging, the final charge will usually be less than previous charge(s). It represents the amount of final top-up charge needed to complete the journey and be left with a residual charge of ${rechargeThreshold}%.</p>
                 </div>
             </div>`;
         
