@@ -241,7 +241,7 @@ function calculate() {
 
     const fieldIds = [
         "journeyMiles", "batteryKwh", "soc", "efficiency", 
-        "adhoc", "startChargeRate", "maxChargingSpeed", "efficiencyBE", "adhocBE", "rechargeAt"
+        "adhoc", "startChargeRate", "maxChargingSpeed", "efficiencyBE", "adhocBE", "rechargeAt", "rechargeAtBE"
     ];
 
     fieldIds.forEach(id => {
@@ -850,6 +850,15 @@ function init() {
             adhocBE.value = adhocTrip.value;
             syncFields(adhocTrip, adhocBE);
             syncFields(adhocBE, adhocTrip);
+        }
+
+        const rechargeAtTrip = document.getElementById("rechargeAt");
+        const rechargeAtBE = document.getElementById("rechargeAtBE");
+
+        if (rechargeAtTrip && rechargeAtBE) {
+            rechargeAtBE.value = rechargeAtTrip.value;
+            syncFields(rechargeAtTrip, rechargeAtBE);
+            syncFields(rechargeAtBE, rechargeAtTrip);
         }
 
         if (urlParams.has("p")) {

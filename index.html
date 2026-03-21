@@ -168,6 +168,11 @@
 			rate (pence per kWh)</label>
         <input type="number" id="adhocBE" oninput="calculate()" placeholder="e.g., 62 (62p is the 50kW Lidl+ app price)" step="0.1">
     </div>
+    <div class="input-group">
+        <label for="rechargeAtBE">
+            <span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">Enter the battery level at which you start charging. Following the <strong>80/20 rule</strong> (see <strong>Menu > EV Guides > Mastery</strong>), we recommend charging when you drop to <strong>20%</strong> and stopping at <strong>80%</strong> to maximize long-term battery health.</span></span></span>Recharge Threshhold (battery %)</label>
+        <input type="number" id="rechargeAtBE" oninput="calculate()" value="20" min="1" max="80">
+    </div>
 </div>
 
     <div class="grid">
