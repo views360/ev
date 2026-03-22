@@ -263,46 +263,23 @@
             box-sizing: border-box;
         }
 
-        .input-wrapper {
-            width: 100%;
-            display: flex;
-            align-items: center;
-            background: var(--bg);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 12px 14px;
-            transition: border-color 0.2s, box-shadow 0.2s;
-            box-sizing: border-box;
-            height: 44px;
-        }
-
-        .input-wrapper:focus-within {
-            border-color: var(--accent);
-            outline: none;
-        }
-
-        /* Pulsating green when input is empty */
-        .input-wrapper.empty-pulse {
-            border-color: var(--neon-green);
-            box-shadow: 0 0 5px var(--neon-green-soft);
-            animation: neonPulse 1.5s infinite ease-in-out;
-        }
-
         input {
             flex: 1;
-            background: transparent;
-            border: none;
+            background: var(--bg);
+            border: 1px solid var(--border);
             color: var(--text);
-            padding: 0;
-            font-size: 0.95rem;
+            padding: 12px;
+            font-size: 1rem;
             outline: none;
             font-family: 'Sora', sans-serif;
-            line-height: 1.5;
-            height: 100%;
+            border-radius: 8px;
+            transition: border-color 0.2s ease;
+            box-sizing: border-box;
         }
 
         input:focus {
             outline: none;
+            border-color: var(--accent);
         }
 
         input::placeholder {
@@ -441,11 +418,6 @@
                 gap: 6px;
             }
 
-            .input-wrapper {
-                min-width: 120px;
-                padding: 0 10px;
-            }
-
             button {
                 padding: 8px 12px;
                 font-size: 0.85rem;
@@ -521,15 +493,12 @@
 
             <!-- Input Area -->
             <div class="input-area">
-                <div class="input-wrapper" id="inputWrapper">
-                    <input 
-                        type="text" 
-                        id="userInput" 
-                        placeholder="Ask about EVs, charging, costs, range..." 
-                        onkeypress="handleKeyPress(event)"
-                        oninput="updateInputState()"
-                    >
-                </div>
+                <input 
+                    type="text" 
+                    id="userInput" 
+                    placeholder="Ask about EVs, charging, costs, range..." 
+                    onkeypress="handleKeyPress(event)"
+                >
                 <button onclick="sendMessage()" id="sendBtn">Send</button>
             </div>
         </div>
@@ -547,19 +516,11 @@
         const messagesContainer = document.getElementById('messages');
         const userInput = document.getElementById('userInput');
         const sendBtn = document.getElementById('sendBtn');
-        const inputWrapper = document.getElementById('inputWrapper');
-
-        // Update input wrapper state based on input value
-        function updateInputState() {
-            if (userInput.value.trim() === '') {
-                inputWrapper.classList.add('empty-pulse');
-            } else {
-                inputWrapper.classList.remove('empty-pulse');
-            }
-        }
 
         // Initialize input state on load
-        window.addEventListener('load', updateInputState);
+        window.addEventListener('load', () => {
+            userInput.focus();
+        });
 
         async function sendMessage() {
             const message = userInput.value.trim();
