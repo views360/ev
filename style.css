@@ -1386,27 +1386,29 @@ body {
 
 }
 
-/* AI Floating Widget */
+/* AI Floating Widget Updated */
 .ai-widget-container {
     position: fixed;
-    left: -110px; /* Partially off-screen */
-    top: 50%;
+    left: -135px; /* Adjusted to hide the button area completely */
+    top: calc(50% + 100px); /* Positioned 100px further down */
     transform: translateY(-50%);
     z-index: 10000;
     display: flex;
     align-items: center;
-    transition: left 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     background: var(--panel);
-    border: 2px solid var(--accent); /* Neon Blue */
+    border: 2px solid var(--accent);
     border-left: none;
     border-radius: 0 12px 12px 0;
-    padding: 10px;
+    padding: 12px;
     box-shadow: var(--glow);
+    cursor: pointer;
 }
 
+/* Slide widget in on hover/active */
 .ai-widget-container:hover, 
 .ai-widget-container:active {
-    left: 0; /* Slides into view */
+    left: 0;
 }
 
 .ai-content {
@@ -1416,12 +1418,20 @@ body {
 }
 
 .ai-icon-wrapper {
-    width: 24px;
-    height: 24px;
+    width: 28px;
+    height: 28px;
     flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
+/* Button hidden by default */
 .ai-button {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(-10px);
+    transition: all 0.3s ease;
     background: var(--accent);
     color: var(--bg);
     border: none;
@@ -1430,9 +1440,16 @@ body {
     font-family: 'Sora', sans-serif;
     font-weight: 700;
     font-size: 0.8rem;
-    cursor: pointer;
     text-decoration: none;
     white-space: nowrap;
+}
+
+/* Show button only when container is expanded */
+.ai-widget-container:hover .ai-button,
+.ai-widget-container:active .ai-button {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0);
 }
 
 
