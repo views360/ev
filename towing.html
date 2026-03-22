@@ -336,12 +336,12 @@
         })();
     </script>
 </head>
-
 <style>
     /* ── Floating AI Assistant Widget ── */
     .floating-ai-widget {
         position: fixed;
-        left: -48px;
+        /* Positioned so only about 8px of the neon border is visible */
+        left: -48px; 
         bottom: 100px;
         z-index: 1000;
         pointer-events: none;
@@ -355,27 +355,31 @@
         transition: transform 0.3s cubic-bezier(0.2, 0, 0.2, 1);
     }
 
+    /* Pulls the widget into view when expanded */
     .floating-ai-widget.expanded .ai-widget-container {
-        transform: translateX(48px);
+        transform: translateX(58px); 
     }
 
     .ai-bot-icon {
         width: 56px;
         height: 56px;
         background: var(--panel);
-        border: 1px solid var(--border);
+        /* Neon Blue Border */
+        border: 2px solid #00f2ff;
         border-radius: 8px;
         display: flex;
         align-items: center;
         justify-content: center;
         cursor: pointer;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        /* Neon Glow Effect */
+        box-shadow: 0 0 12px rgba(0, 242, 255, 0.4);
         transition: all 0.2s ease;
         flex-shrink: 0;
     }
 
     .ai-bot-icon:hover {
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        /* Brighter glow on hover */
+        box-shadow: 0 0 20px rgba(0, 242, 255, 0.6);
         transform: scale(1.05);
     }
 
@@ -386,7 +390,8 @@
     .ai-bot-icon svg {
         width: 28px;
         height: 28px;
-        stroke: var(--text);
+        /* Robot color matches the neon border */
+        stroke: #00f2ff;
         fill: none;
     }
 
@@ -443,7 +448,8 @@
     /* Mobile adjustments */
     @media (max-width: 700px) {
         .floating-ai-widget {
-            left: -46px;
+            /* Slightly more hidden on mobile to account for smaller screen real estate */
+            left: -40px;
             bottom: auto;
             top: 50%;
             transform: translateY(-50%);
@@ -456,7 +462,8 @@
         }
 
         .floating-ai-widget.expanded .ai-widget-container {
-            transform: translateX(46px);
+            /* Slide out enough to clear the screen edge */
+            transform: translateX(50px);
         }
 
         .ai-bot-icon {
@@ -530,9 +537,13 @@
             <div class="guide-section" id="sec-range">
                 <div class="guide-section-header">
                     <div class="guide-icon-box">
-                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="22" y1="12" x2="2" y2="12"/><polyline points="9 18 3 12 9 6"/><line x1="3" y1="12" x2="3" y2="12"/>
-                        </svg>
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+						    <rect x="3" y="11" width="18" height="10" rx="2"/>
+						    <circle cx="12" cy="5" r="2"/>
+						    <path d="M12 7v4"/>
+						    <line x1="8" y1="16" x2="8" y2="16"/>
+						    <line x1="16" y1="16" x2="16" y2="16"/>
+						</svg>
                     </div>
                     <h3>The 30–50% Rule: Planning for Half Your Normal Range</h3>
                 </div>
