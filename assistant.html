@@ -130,10 +130,9 @@
             padding: 0;
             box-shadow: 0 10px 40px rgba(0,0,0,0.3), var(--glow);
             position: relative;
-            overflow: hidden;
             display: flex;
             flex-direction: column;
-            height: 520px;
+            min-height: 300px;
         }
 
         /* subtle corner accent */
@@ -250,9 +249,19 @@
             }
         }
 
+        @keyframes neonPulse {
+            0%, 100% {
+                box-shadow: 0 0 5px var(--neon-green-soft);
+                border-color: var(--neon-green);
+            }
+            50% {
+                box-shadow: 0 0 15px var(--neon-green);
+                border-color: #fff;
+            }
+        }
+
         /* ── Input area ── */
         .input-area {
-            border-top: 1px solid var(--border);
             padding: 12px 14px;
             background: var(--panel-alt);
             display: flex;
@@ -277,9 +286,17 @@
             box-sizing: border-box;
         }
 
+        input:placeholder-shown {
+            border-color: var(--neon-green);
+            box-shadow: 0 0 5px var(--neon-green-soft);
+            animation: neonPulse 1.5s infinite ease-in-out;
+        }
+
         input:focus {
             outline: none;
             border-color: var(--accent);
+            animation: none;
+            box-shadow: none;
         }
 
         input::placeholder {
@@ -399,10 +416,6 @@
             .guide-wrap {
                 max-width: 540px;
                 padding: 32px 16px 80px;
-            }
-
-            .guide-card {
-                height: 500px;
             }
 
             .message-content {
