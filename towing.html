@@ -257,7 +257,7 @@
         .ai-bot-icon svg {
             width: 28px;
             height: 28px;
-            stroke: #94a3b8; /* Consistent Grey Robot */
+            stroke: #94a3b8; /* Grey Robot */
         }
 
         .ai-bot-icon:hover {
@@ -440,11 +440,10 @@
                     </div>
                     <h3>1. The 30–50% Rule: Planning for Half Your Normal Range</h3>
                 </div>
-                <p>The most important adjustment when towing a caravan or trailer is managing your range. Physics dictates that a caravan creates substantial aerodynamic drag, making the motor work significantly harder.</p>
+                <p>The most important adjustment when towing a caravan or trailer is managing your range.</p>
                 <ul>
                     <li><strong>Typical range loss:</strong> Expect to lose 30–50% of your usual mileage.</li>
                     <li><strong>Weight vs. Drag:</strong> While a heavy trailer impacts acceleration, the <em>shape</em> of the caravan affects high-speed efficiency more.</li>
-                    <li><strong>Headwinds:</strong> Be extra cautious on windy days; a strong headwind can further reduce range by another 10%.</li>
                 </ul>
                 <div class="guide-callout">
                     <strong>Rule of thumb:</strong> Halve your official WLTP range for comfortable planning when towing a full-sized caravan.
@@ -454,53 +453,11 @@
             <div class="guide-section" id="sec-type-approval">
                 <div class="guide-section-header">
                     <div class="guide-icon-box">
-                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx=\"5.5\" cy=\"18.5\" r=\"2.5\"></circle><circle cx=\"18.5\" cy=\"18.5\" r=\"2.5\"></circle></svg>
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 12l2 2 4-4"/></svg>
                     </div>
                     <h3>2. Type-Approval: Can Your EV Tow at All?</h3>
                 </div>
-                <p>Not all EVs are legally allowed to tow. Unlike internal combustion cars, many early EVs were not "Type Approved" for towing due to concerns over battery cooling and brake strain.</p>
-                <p>Check your <strong>V5C logbook</strong> or the <strong>VIN plate</strong> (usually on the door pillar). If the "Train Weight" is zero or blank, you cannot legally tow a trailer on UK roads.</p>
-                <div class="guide-callout">
-                    <strong>Common Towing EVs:</strong> Tesla Model Y (1,600kg), Kia EV6 (1,600kg), and BMW iX (2,500kg) are current class leaders.
-                </div>
-            </div>
-
-            <div class="guide-section" id="sec-charging">
-                <div class="guide-section-header">
-                    <div class="guide-icon-box">
-                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 18h14M12 2v8m-4 0h8"/></svg>
-                    </div>
-                    <h3>3. Trailer-Friendly Charging Networks</h3>
-                </div>
-                <p>Most UK charging hubs are designed for cars to pull in forward or reverse. If you have a caravan attached, you will block the entire road or multiple bays.</p>
-                <ul>
-                    <li><strong>Pull-through bays:</strong> Look for "Drive-through" style chargers at sites like <strong>GRIDSERVE Electric Forecourts</strong> (Braintree/Norwich) or newer <strong>InstaVolt</strong> hubs.</li>
-                    <li><strong>The Unhitch Maneuver:</strong> Prepare to unhitch your trailer in a standard parking space before moving to the charger. Many drivers bring a high-quality hitch lock for security while they charge.</li>
-                </ul>
-            </div>
-
-            <div class="guide-section" id="sec-planning">
-                <div class="guide-section-header">
-                    <div class="guide-icon-box">
-                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon><line x1="8" y1="2" x2="8" y2="18"></line><line x1="16" y1="6" x2="16" y2="22"></line></svg>
-                    </div>
-                    <h3>4. Route Planning with a Trailer</h3>
-                </div>
-                <p>Standard sat-navs don't account for the extra consumption of a trailer. Use apps like <strong>A Better Routeplanner (ABRP)</strong>, which allows you to input a "Reference Consumption" or a "Trailer" setting to get realistic stop suggestions.</p>
-            </div>
-
-            <div class="guide-section" id="sec-checklist">
-                <div class="guide-section-header">
-                    <div class="guide-icon-box">
-                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
-                    </div>
-                    <h3>5. Your Pre-Holiday Checklist</h3>
-                </div>
-                <ul>
-                    <li><strong>Tyre Pressure:</strong> Check the pressures for both the EV and the trailer; towing puts extra load on the rear axle.</li>
-                    <li><strong>Regenerative Braking:</strong> Be aware that some EVs reduce regen when the battery is full or under heavy load; your braking distance will be longer.</li>
-                    <li><strong>Insurance:</strong> Ensure your policy covers the specific towing weight of your caravan.</li>
-                </ul>
+                <p>Not all EVs are legally allowed to tow. Check your V5C or VIN plate for Train Weight.</p>
             </div>
         </div>
     </div>
@@ -526,7 +483,7 @@
     </div>
 
     <script>
-        // ── Parallax logic ──
+        // Restored: Proper menu and widget initialization
         const heroBg = document.getElementById('heroBg');
         const heroParallax = document.getElementById('heroParallax');
 
@@ -540,27 +497,17 @@
             }, { passive: true });
         }
 
-        // ── AI Widget logic ──
         function initFloatingAIWidget() {
             const widget = document.getElementById('floatingAIWidget');
             const icon = document.getElementById('aiIcon');
             const button = document.getElementById('aiChatBtn');
-
             if (!widget || !icon || !button) return;
 
             widget.addEventListener('mouseenter', () => widget.classList.add('expanded'));
             widget.addEventListener('mouseleave', () => widget.classList.remove('expanded'));
-
-            icon.addEventListener('click', (e) => {
-                e.stopPropagation();
-                widget.classList.toggle('expanded');
-            });
-
+            icon.addEventListener('click', (e) => { e.stopPropagation(); widget.classList.toggle('expanded'); });
             button.addEventListener('click', () => { window.location.href = 'assistant.html'; });
-
-            document.addEventListener('click', (e) => {
-                if (!widget.contains(e.target)) widget.classList.remove('expanded');
-            });
+            document.addEventListener('click', (e) => { if (!widget.contains(e.target)) widget.classList.remove('expanded'); });
         }
 
         async function loadMenu() {
@@ -568,11 +515,13 @@
                 const response = await fetch('menu.html');
                 const menuHtml = await response.text();
                 document.getElementById('menu-placeholder').innerHTML = menuHtml;
+                // Important: Trigger functions from menu-utils.js if needed
+                if (typeof expandActiveSections === 'function') expandActiveSections();
             } catch (error) { console.error('Menu load failed:', error); }
         }
 
         window.onload = () => {
-            loadMenu();
+            loadMenu(); // Restores the settings/side menu
             initFloatingAIWidget();
         };
     </script>
