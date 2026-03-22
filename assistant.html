@@ -2,7 +2,10 @@
 <html lang="en">
 <head>
     <script src="menu-utils.js"></script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2944414800646015"
+     crossorigin="anonymous"></script>
     <meta charset="UTF-8">
+    <meta name="google-adsense-account" content="ca-pub-2944414800646015">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EV AI Assistant - Get Instant Answers About Electric Vehicles</title>
     <link rel="stylesheet" href="style.css">
@@ -29,7 +32,7 @@
         .hero-bg {
             position: absolute;
             inset: -80px 0 -80px 0;
-            background-image: url('images/assistant.webp');
+            background-image: url('images/ai-assistant.webp');
             background-size: cover;
             background-position: center;
             will-change: transform;
@@ -620,5 +623,99 @@
         // Focus on input on load
         userInput.focus();
     </script>
+
+    <div class="desktop-sidebar-ad">
+    <div class="ad-tab-vertical">Ads Area</div>
+    <div id="desktop-ad-slot" style="width: 160px; height: 600px; display: flex; align-items: center; justify-content: center;">
+        <ins class="adsbygoogle" style="display:block; width:160px; height:600px; margin:0;" data-ad-client="ca-pub-2944414800646015" data-ad-slot="3754204567" data-ad-format="autorelaxed" data-full-width-responsive="false"></ins>
+    </div>
+</div>
+	
+<div class="mobile-bottom-ad">
+    <div class="ad-tab">Ads Area</div>
+    <div id="mobile-ad-slot" style="width: 100%; height: 90px; display: flex; align-items: center; justify-content: center;">
+        <ins class="adsbygoogle" style="display:block; width:100%; height:90px; margin:0;" data-ad-client="ca-pub-2944414800646015" data-ad-slot="5310470020" data-ad-format="autorelaxed" data-full-width-responsive="false"></ins>
+    </div>
+</div>
+
+<script>
+// Load ads only when visible
+function loadAdSense() {
+    setTimeout(() => {
+        try {
+            // Only push ads that are actually visible
+            const desktopSlot = document.getElementById('desktop-ad-slot');
+            const mobileSlot = document.getElementById('mobile-ad-slot');
+            
+            if (typeof adsbygoogle !== 'undefined') {
+                // Check desktop ad
+                if (desktopSlot && desktopSlot.offsetWidth > 0) {
+                    try {
+                        (adsbygoogle = window.adsbygoogle || []).push({});
+                    } catch (e) {
+                        // Silently fail for desktop
+                    }
+                }
+                
+                // Check mobile ad separately
+                if (mobileSlot && mobileSlot.offsetWidth > 0) {
+                    try {
+                        (adsbygoogle = window.adsbygoogle || []).push({});
+                    } catch (e) {
+                        // Silently fail for mobile
+                    }
+                }
+            }
+        } catch (e) {
+            console.warn('AdSense processing:', e.message);
+        }
+    }, 1500); // Wait 1.5 seconds for full layout and measurement
+}
+
+// Load ads when page is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadAdSense);
+} else {
+    loadAdSense();
+}
+
+// Reload ads if window is resized - desktop only
+let resizeTimer;
+if (window.matchMedia('(min-width: 700px)').matches) {
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+            try {
+                if (typeof adsbygoogle !== 'undefined') {
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                }
+            } catch (e) {
+                // Silently fail on resize
+            }
+        }, 500);
+    });
+}
+</script>
+<script>
+async function loadMenu() {
+    try {
+        const response = await fetch('menu.html');
+        if (!response.ok) throw new Error('Menu fetch failed');
+        
+        const menuHtml = await response.text();
+        const placeholder = document.getElementById('menu-placeholder');
+        
+        placeholder.innerHTML = menuHtml;
+        
+        setTimeout(() => {
+            expandActiveSections();
+        }, 50);
+
+    } catch (error) {
+        console.error('Error loading menu:', error);
+    }
+}
+
+loadMenu();
 </body>
 </html>
