@@ -245,30 +245,30 @@
             padding: 14px 20px;
             background: var(--panel-alt);
             display: flex;
+            flex-wrap: wrap;
             gap: 10px;
-            align-items: center;
+            align-items: stretch;
             position: relative;
             z-index: 2;
-            min-height: 48px;
-            overflow-x: hidden;
+            box-sizing: border-box;
         }
 
         .input-wrapper {
             flex: 1;
-            min-width: 140px;
+            min-width: 0;
             display: flex;
             align-items: center;
-            background: var(--panel);
-            border: 2px solid var(--border);
-            border-radius: 10px;
-            padding: 0 12px;
-            transition: all 0.2s ease;
-            overflow: hidden;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            padding: 12px 14px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            box-sizing: border-box;
         }
 
         .input-wrapper:focus-within {
             border-color: var(--accent);
-            box-shadow: 0 0 0 2px var(--accent-soft), var(--glow);
+            outline: none;
         }
 
         /* Pulsating green when input is empty */
@@ -280,10 +280,11 @@
 
         input {
             flex: 1;
+            min-width: 0;
             background: transparent;
             border: none;
             color: var(--text);
-            padding: 12px 0;
+            padding: 0;
             font-size: 0.95rem;
             outline: none;
             font-family: 'Sora', sans-serif;
@@ -298,27 +299,28 @@
         }
 
         button {
-            background: linear-gradient(135deg, var(--accent), #0ea5e9);
-            color: #ffffff;
-            border: 1px solid var(--accent);
-            border-radius: 8px;
-            padding: 10px 18px;
+            background: var(--accent);
+            color: var(--bg);
+            border: none;
+            border-radius: 9px;
+            padding: 12px 20px;
             font-size: 0.9rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: opacity 0.2s, box-shadow 0.2s, transform 0.15s;
             font-family: 'Sora', sans-serif;
-            box-shadow: 0 4px 12px rgba(56, 189, 248, 0.2);
             flex-shrink: 0;
             white-space: nowrap;
+            box-shadow: var(--glow);
         }
 
-        button:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(56, 189, 248, 0.4);
+        button:hover {
+            opacity: 0.88;
+            box-shadow: var(--glow-strong);
+            transform: translateY(-1px);
         }
 
-        button:active:not(:disabled) {
+        button:active {
             transform: translateY(0);
         }
 
