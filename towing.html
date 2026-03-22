@@ -341,7 +341,7 @@
     /* ── Floating AI Assistant Widget ── */
     .floating-ai-widget {
         position: fixed;
-        left: 0;
+        left: -60px;
         bottom: 100px;
         z-index: 1000;
         pointer-events: none;
@@ -352,6 +352,11 @@
         align-items: center;
         height: 60px;
         pointer-events: auto;
+        transition: transform 0.3s cubic-bezier(0.2, 0, 0.2, 1);
+    }
+
+    .floating-ai-widget.expanded .ai-widget-container {
+        transform: translateX(60px);
     }
 
     .ai-bot-icon {
@@ -387,15 +392,13 @@
         margin-left: 12px;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3), var(--glow);
         white-space: nowrap;
-        max-width: 0;
-        overflow: hidden;
+        width: 220px;
         opacity: 0;
-        transition: all 0.3s cubic-bezier(0.2, 0, 0.2, 1);
+        transition: opacity 0.3s ease;
         pointer-events: auto;
     }
 
-    .ai-widget-container.expanded .ai-panel {
-        max-width: 220px;
+    .floating-ai-widget.expanded .ai-panel {
         opacity: 1;
     }
 
@@ -434,15 +437,20 @@
     /* Mobile adjustments */
     @media (max-width: 700px) {
         .floating-ai-widget {
-            bottom: 110px;
-            left: auto;
-            right: 12px;
+            left: -50px;
+            bottom: auto;
+            top: 50%;
+            transform: translateY(-50%);
         }
 
         .ai-widget-container {
-            flex-direction: column-reverse;
-            height: auto;
+            flex-direction: row;
+            height: 50px;
             gap: 12px;
+        }
+
+        .floating-ai-widget.expanded .ai-widget-container {
+            transform: translateX(50px);
         }
 
         .ai-bot-icon {
@@ -452,14 +460,13 @@
         }
 
         .ai-panel {
-            margin-left: 0;
-            max-width: none;
-            width: 220px;
-            text-align: center;
+            margin-left: 12px;
+            width: 200px;
+            opacity: 0;
         }
 
-        .ai-widget-container.expanded .ai-panel {
-            max-width: none;
+        .floating-ai-widget.expanded .ai-panel {
+            opacity: 1;
         }
     }
 </style>
@@ -795,24 +802,22 @@ function initFloatingAIWidget() {
     const widget = document.getElementById('floatingAIWidget');
     if (!widget) return;
 
-    const container = widget.querySelector('.ai-widget-container');
     const icon = widget.querySelector('.ai-bot-icon');
-    const panel = widget.querySelector('.ai-panel');
     const button = widget.querySelector('.ai-panel-button');
 
     // Desktop: hover to expand
-    icon.addEventListener('mouseenter', () => {
-        container.classList.add('expanded');
+    widget.addEventListener('mouseenter', () => {
+        widget.classList.add('expanded');
     });
 
     widget.addEventListener('mouseleave', () => {
-        container.classList.remove('expanded');
+        widget.classList.remove('expanded');
     });
 
     // Mobile: click to toggle
     icon.addEventListener('click', (e) => {
         e.stopPropagation();
-        container.classList.toggle('expanded');
+        widget.classList.toggle('expanded');
     });
 
     // Button click: navigate to assistant
@@ -823,7 +828,7 @@ function initFloatingAIWidget() {
     // Close panel when clicking outside
     document.addEventListener('click', (e) => {
         if (!widget.contains(e.target)) {
-            container.classList.remove('expanded');
+            widget.classList.remove('expanded');
         }
     });
 }
