@@ -32,9 +32,10 @@
         .hero-bg {
             position: absolute;
             inset: -80px 0 -80px 0;
-            background-image: url('images/assistant.webp');
+            background-image: url('images/ai-assistant.webp');
             background-size: cover;
-            background-position: center;
+            background-position: right center;
+            background-attachment: local;
             will-change: transform;
             filter: brightness(0.75);
         }
@@ -106,7 +107,8 @@
         .guide-wrap {
             max-width: 860px;
             margin: 0 auto;
-            padding: 32px 40px 80px;
+            padding: 32px 20px 80px;
+            box-sizing: border-box;
         }
 
         /* ── Chat container ── */
@@ -240,22 +242,26 @@
         /* ── Input area ── */
         .input-area {
             border-top: 1px solid var(--border);
-            padding: 16px 24px;
+            padding: 14px 20px;
             background: var(--panel-alt);
             display: flex;
-            gap: 12px;
+            gap: 10px;
+            align-items: center;
             position: relative;
             z-index: 2;
+            min-height: 48px;
+            overflow-x: hidden;
         }
 
         .input-wrapper {
             flex: 1;
+            min-width: 160px;
             display: flex;
             align-items: center;
             background: var(--panel);
             border: 2px solid var(--border);
             border-radius: 10px;
-            padding: 0 14px;
+            padding: 0 12px;
             transition: all 0.2s ease;
         }
 
@@ -291,13 +297,15 @@
             color: #ffffff;
             border: 1px solid var(--accent);
             border-radius: 8px;
-            padding: 10px 24px;
-            font-size: 0.95rem;
+            padding: 10px 18px;
+            font-size: 0.9rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
             font-family: 'Sora', sans-serif;
             box-shadow: 0 4px 12px rgba(56, 189, 248, 0.2);
+            flex-shrink: 0;
+            white-space: nowrap;
         }
 
         button:hover:not(:disabled) {
@@ -717,5 +725,6 @@ async function loadMenu() {
 }
 
 loadMenu();
+</script>
 </body>
 </html>
