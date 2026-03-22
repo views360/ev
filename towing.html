@@ -340,11 +340,17 @@
     /* ── Floating AI Assistant Widget ── */
     .floating-ai-widget {
         position: fixed;
-        /* Positioned so only about 8px of the neon border is visible */
-        left: -48px; 
+        /* Positioned so the right half of the robot is visible */
+        left: -32px; 
         bottom: 100px;
         z-index: 1000;
         pointer-events: none;
+        transition: transform 0.3s cubic-bezier(0.2, 0, 0.2, 1);
+    }
+
+    /* Slides the widget fully into view */
+    .floating-ai-widget.expanded {
+        transform: translateX(42px);
     }
 
     .ai-widget-container {
@@ -352,46 +358,34 @@
         align-items: center;
         height: 56px;
         pointer-events: auto;
-        transition: transform 0.3s cubic-bezier(0.2, 0, 0.2, 1);
-    }
-
-    /* Pulls the widget into view when expanded */
-    .floating-ai-widget.expanded .ai-widget-container {
-        transform: translateX(58px); 
     }
 
     .ai-bot-icon {
-        width: 56px;
-        height: 56px;
+        width: 48px;  /* Reduced size to better fit the SVG */
+        height: 48px;
         background: var(--panel);
         /* Neon Blue Border */
         border: 2px solid #00f2ff;
-        border-radius: 8px;
+        border-radius: 10px;
         display: flex;
         align-items: center;
         justify-content: center;
         cursor: pointer;
-        /* Neon Glow Effect */
-        box-shadow: 0 0 12px rgba(0, 242, 255, 0.4);
+        /* Neon Glow */
+        box-shadow: 0 0 10px rgba(0, 242, 255, 0.3);
         transition: all 0.2s ease;
         flex-shrink: 0;
     }
 
     .ai-bot-icon:hover {
-        /* Brighter glow on hover */
-        box-shadow: 0 0 20px rgba(0, 242, 255, 0.6);
+        box-shadow: 0 0 15px rgba(0, 242, 255, 0.5);
         transform: scale(1.05);
     }
 
-    .ai-bot-icon:active {
-        transform: scale(0.98);
-    }
-
     .ai-bot-icon svg {
-        width: 28px;
-        height: 28px;
-        /* Robot color matches the neon border */
-        stroke: #00f2ff;
+        width: 26px;
+        height: 26px;
+        stroke: #00f2ff; /* Match neon border */
         fill: none;
     }
 
@@ -400,16 +394,18 @@
         border: 1px solid var(--border);
         border-radius: 8px;
         padding: 14px 16px;
-        margin-left: 10px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-        width: 200px;
+        margin-left: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        width: 190px;
         opacity: 0;
-        transition: opacity 0.3s ease;
+        visibility: hidden;
+        transition: all 0.3s ease;
         pointer-events: auto;
     }
 
     .floating-ai-widget.expanded .ai-panel {
         opacity: 1;
+        visibility: visible;
     }
 
     .ai-panel-text {
@@ -435,50 +431,28 @@
         font-family: 'Sora', sans-serif;
     }
 
-    .ai-panel-button:hover {
-        background: var(--accent);
-        color: var(--bg);
-        transform: translateY(-1px);
-    }
-
-    .ai-panel-button:active {
-        transform: translateY(0);
-    }
-
     /* Mobile adjustments */
     @media (max-width: 700px) {
         .floating-ai-widget {
-            /* Slightly more hidden on mobile to account for smaller screen real estate */
-            left: -40px;
+            left: -30px;
             bottom: auto;
             top: 50%;
             transform: translateY(-50%);
         }
 
-        .ai-widget-container {
-            flex-direction: row;
-            height: 46px;
-            gap: 10px;
-        }
-
-        .floating-ai-widget.expanded .ai-widget-container {
-            /* Slide out enough to clear the screen edge */
-            transform: translateX(50px);
+        .floating-ai-widget.expanded {
+            /* On mobile, include the vertical centering in the transform */
+            transform: translateY(-50%) translateX(40px);
         }
 
         .ai-bot-icon {
-            width: 46px;
-            height: 46px;
+            width: 44px;
+            height: 44px;
         }
 
         .ai-bot-icon svg {
-            width: 24px;
-            height: 24px;
-        }
-
-        .ai-panel {
-            margin-left: 10px;
-            width: 180px;
+            width: 22px;
+            height: 22px;
         }
     }
 </style>
