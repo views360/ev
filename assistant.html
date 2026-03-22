@@ -7,7 +7,7 @@
     <meta charset="UTF-8">
     <meta name="google-adsense-account" content="ca-pub-2944414800646015">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EV AI Assistant - Get Instant Answers About Electric Vehicles</title>
+    <title>EV AI Assistant - Get Instant UK EV Advice</title>
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -204,19 +204,36 @@
             border-radius: 12px 12px 4px 12px;
         }
 
-        .copy-btn {
-            font-size: 0.7rem;
+        .message-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 4px;
+            padding-left: 4px;
+        }
+
+        .action-btn {
+            font-size: 0.75rem;
             color: var(--muted);
             background: none;
             border: none;
             cursor: pointer;
-            padding: 0;
-            box-shadow: none;
-            height: auto;
-            margin-top: 4px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 4px;
         }
 
-        .copy-btn:hover { color: var(--accent); transform: none; box-shadow: none; }
+        .action-btn:hover {
+            background: rgba(255,255,255,0.05);
+            color: var(--accent);
+        }
+
+        .action-btn.rated {
+            color: var(--accent);
+            pointer-events: none;
+        }
 
         .loading { display: flex; gap: 4px; align-items: center; padding: 12px 16px; }
         .loading-dot {
@@ -272,6 +289,7 @@
             border: 1px solid var(--border);
             box-shadow: none;
             padding: 0 12px;
+            font-size: 0.85rem;
         }
 
         .btn-clear:hover { background: rgba(255,255,255,0.05); color: var(--text); }
@@ -291,7 +309,7 @@
             .guide-wrap { max-width: 100%; padding: 16px; }
             .message-content { max-width: 95%; }
             .example-queries { grid-template-columns: 1fr; }
-            .btn-clear { display: none; } /* Hide clear button on small mobile to save space */
+            .btn-clear { display: none; }
         }
     </style>
 </head>
@@ -308,9 +326,9 @@
     <div class="hero-parallax">
         <div class="hero-bg"></div>
         <div class="hero-text">
-            <div class="hero-eyebrow">⚡ 2026 AI-Powered EV Guide</div>
+            <div class="hero-eyebrow">⚡ March 2026 AI Specialist</div>
             <h1 class="hero-title">EV AI <span>Assistant</span></h1>
-            <p class="hero-sub">Expert UK advice on charging, battery health, and used EV valuations.</p>
+            <p class="hero-sub">Expert UK advice on the £3,750 grant, 4% BiK rates, and used EV buying.</p>
         </div>
     </div>
     <div class="hero-strip"></div>
@@ -322,15 +340,15 @@
 
             <div class="messages" id="messages">
                 <div class="message assistant">
-                    <div class="message-content">👋 Hello! I'm your UK EV Specialist. I can help with March 2026 grant info, charging network tips, or valuing a used EV like a 2023 MG4. What's on your mind?</div>
+                    <div class="message-content">👋 Hello! I'm your UK EV Specialist. I'm up to speed on the March 2026 car grants, current 4% BiK rates, and used market valuations. How can I help you today?</div>
                 </div>
 
                 <div class="welcome-message" id="welcomePanel">
                     <div class="example-queries">
-                        <div class="example-query" onclick="sendExampleQuery('What is the 2026 UK EV car grant?')">2026 UK EV Grant</div>
-                        <div class="example-query" onclick="sendExampleQuery('How much is a used 2023 MG4 worth now?')">Used MG4 Price</div>
-                        <div class="example-query" onclick="sendExampleQuery('Explain the 2026 EV power labels')">Charging Labels</div>
-                        <div class="example-query" onclick="sendExampleQuery('What are the 2026/27 BiK tax rates?')">BiK Tax Rates</div>
+                        <div class="example-query" onclick="sendExampleQuery('Explain the 2026 UK Electric Car Grant bands')">£3,750 EV Grant</div>
+                        <div class="example-query" onclick="sendExampleQuery('What is the 2026/27 Benefit-in-Kind rate for an EV?')">2026 BiK Tax</div>
+                        <div class="example-query" onclick="sendExampleQuery('How much is a used 2023 MG4 worth in 2026?')">Used MG4 Value</div>
+                        <div class="example-query" onclick="sendExampleQuery('What are the best UK charging networks right now?')">Charging Tips</div>
                     </div>
                 </div>
             </div>
@@ -344,7 +362,7 @@
 
         <div class="footer-text">
             <p>Powered by AI | <a href="https://www.ev-subs-compare.co.uk" target="_blank">EV Subs Compare</a></p>
-            <p class="footer-disclaimer">💡 Advice is for informational purposes. Consult your manual for technical specifics.</p>
+            <p class="footer-disclaimer">💡 This AI provides general advice. Always check your specific vehicle manual and HMRC for final tax figures.</p>
         </div>
     </div>
 
@@ -379,7 +397,7 @@
                 if (response.ok) {
                     addMessage(data.response, 'assistant');
                 } else {
-                    addMessage('❌ Error: ' + (data.error || 'Service unavailable'), 'assistant');
+                    addMessage('❌ Error: ' + (data.error || 'AI service is currently busy.'), 'assistant');
                 }
             } catch (error) {
                 loadingMsg.remove();
@@ -397,19 +415,46 @@
             const contentDiv = document.createElement('div');
             contentDiv.className = 'message-content';
             contentDiv.textContent = text;
-            
             messageDiv.appendChild(contentDiv);
 
             if (sender === 'assistant') {
+                const actionsDiv = document.createElement('div');
+                actionsDiv.className = 'message-actions';
+
+                // Copy
                 const copyBtn = document.createElement('button');
-                copyBtn.className = 'copy-btn';
-                copyBtn.innerText = 'Copy Answer';
+                copyBtn.className = 'action-btn';
+                copyBtn.innerHTML = '📋 Copy';
                 copyBtn.onclick = () => {
                     navigator.clipboard.writeText(text);
-                    copyBtn.innerText = 'Copied!';
-                    setTimeout(() => copyBtn.innerText = 'Copy Answer', 2000);
+                    copyBtn.innerHTML = '✅ Copied';
+                    setTimeout(() => copyBtn.innerHTML = '📋 Copy', 2000);
                 };
-                messageDiv.appendChild(copyBtn);
+
+                // Rating Up
+                const upBtn = document.createElement('button');
+                upBtn.className = 'action-btn';
+                upBtn.innerHTML = '👍';
+                upBtn.onclick = () => {
+                    upBtn.innerHTML = '👍 Thanks!';
+                    upBtn.classList.add('rated');
+                    downBtn.style.display = 'none';
+                };
+
+                // Rating Down
+                const downBtn = document.createElement('button');
+                downBtn.className = 'action-btn';
+                downBtn.innerHTML = '👎';
+                downBtn.onclick = () => {
+                    downBtn.innerHTML = '👎 Noted';
+                    downBtn.classList.add('rated');
+                    upBtn.style.display = 'none';
+                };
+
+                actionsDiv.appendChild(copyBtn);
+                actionsDiv.appendChild(upBtn);
+                actionsDiv.appendChild(downBtn);
+                messageDiv.appendChild(actionsDiv);
             }
 
             messagesContainer.appendChild(messageDiv);
@@ -432,11 +477,13 @@
         function clearChat() {
             messagesContainer.innerHTML = `
                 <div class="message assistant">
-                    <div class="message-content">👋 Chat cleared. How can I help you with your EV journey today?</div>
+                    <div class="message-content">👋 Chat cleared. I'm ready for your next UK EV question!</div>
                 </div>
             `;
-            if (welcomePanel) welcomePanel.style.display = 'block';
-            messagesContainer.appendChild(welcomePanel);
+            if (welcomePanel) {
+                welcomePanel.style.display = 'block';
+                messagesContainer.appendChild(welcomePanel);
+            }
         }
 
         function sendExampleQuery(query) {
@@ -448,7 +495,19 @@
             if (event.key === 'Enter') sendMessage();
         }
 
-        window.onload = () => userInput.focus();
+        async function loadMenu() {
+            try {
+                const response = await fetch('menu.html');
+                const menuHtml = await response.text();
+                const placeholder = document.getElementById('menu-placeholder');
+                placeholder.innerHTML = menuHtml;
+            } catch (error) {}
+        }
+
+        window.onload = () => {
+            loadMenu();
+            userInput.focus();
+        };
     </script>
-    </body>
+</body>
 </html>
