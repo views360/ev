@@ -340,8 +340,8 @@
     /* ── Floating AI Assistant Widget ── */
     .floating-ai-widget {
         position: fixed;
-        /* Positioned so ~16px of the lozenge (and the robot's face) peeks out */
-        left: -28px; 
+        /* Positioned so the right ~18px of the robot is clearly visible on the edge */
+        left: -24px; 
         bottom: 100px;
         z-index: 1000;
         pointer-events: none;
@@ -350,40 +350,47 @@
     .ai-widget-container {
         display: flex;
         align-items: center;
-        height: 44px; 
+        height: 42px; /* Matches the new smaller icon height */
         pointer-events: auto;
         transition: transform 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28);
     }
 
-    /* Slides the widget right so it sits 12px from the screen edge when open */
+    /* Slides the widget fully into view when expanded */
     .floating-ai-widget.expanded .ai-widget-container {
-        transform: translateX(40px);
+        transform: translateX(36px);
     }
 
     .ai-bot-icon {
-        width: 44px;  /* Tight lozenge size */
-        height: 44px;
+        width: 42px;  /* Shrink from 56px to fit the SVG snugly */
+        height: 42px;
         background: var(--panel);
-        border: 2px solid #00f2ff; /* Neon Blue Border */
+        /* Bold Neon Blue Border */
+        border: 2px solid #00f2ff;
         border-radius: 10px;
         display: flex;
         align-items: center;
         justify-content: center;
         cursor: pointer;
-        box-shadow: 0 0 10px rgba(0, 242, 255, 0.35); /* Neon Glow */
+        /* Glowing Neon Effect */
+        box-shadow: 0 0 12px rgba(0, 242, 255, 0.4);
         transition: all 0.2s ease;
         flex-shrink: 0;
     }
 
     .ai-bot-icon:hover {
-        box-shadow: 0 0 18px rgba(0, 242, 255, 0.6);
+        box-shadow: 0 0 20px rgba(0, 242, 255, 0.6);
         transform: scale(1.05);
     }
 
+    .ai-bot-icon:active {
+        transform: scale(0.98);
+    }
+
     .ai-bot-icon svg {
-        width: 26px;
-        height: 26px;
-        stroke: #00f2ff; /* Robot color matches neon border */
+        width: 24px; /* Perfectly sized for the 42px lozenge */
+        height: 24px;
+        /* Matches the neon border for a unified look */
+        stroke: #00f2ff;
         fill: none;
     }
 
@@ -393,11 +400,11 @@
         border-radius: 8px;
         padding: 12px 14px;
         margin-left: 12px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
         width: 190px;
         opacity: 0;
         visibility: hidden;
-        transition: opacity 0.3s ease;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
         pointer-events: auto;
     }
 
@@ -408,7 +415,7 @@
 
     .ai-panel-text {
         color: var(--text);
-        font-size: 0.9rem;
+        font-size: 0.88rem;
         font-weight: 600;
         margin-bottom: 10px;
         display: block;
@@ -422,7 +429,7 @@
         color: var(--accent);
         border: 1px solid var(--accent);
         border-radius: 6px;
-        font-size: 0.85rem;
+        font-size: 0.82rem;
         font-weight: 600;
         cursor: pointer;
         transition: all 0.2s ease;
@@ -442,24 +449,28 @@
     /* Mobile adjustments */
     @media (max-width: 700px) {
         .floating-ai-widget {
-            left: -24px; /* Slightly more visible on mobile */
+            left: -22px;
             bottom: auto;
             top: 50%;
             transform: translateY(-50%);
         }
 
+        .ai-widget-container {
+            height: 38px;
+        }
+
         .floating-ai-widget.expanded .ai-widget-container {
-            transform: translateX(34px);
+            transform: translateX(32px);
         }
 
         .ai-bot-icon {
-            width: 40px;
-            height: 40px;
+            width: 38px;
+            height: 38px;
         }
 
         .ai-bot-icon svg {
-            width: 22px;
-            height: 22px;
+            width: 20px;
+            height: 20px;
         }
 
         .ai-panel {
