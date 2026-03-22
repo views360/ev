@@ -32,7 +32,7 @@
         .hero-bg {
             position: absolute;
             inset: -80px 0 -80px 0;
-            background-image: url('images/assistant.webp');
+            background-image: url('images/ai-assistant.webp');
             background-size: cover;
             background-position: right center;
             background-attachment: local;
@@ -256,6 +256,7 @@
         .input-wrapper {
             flex: 1;
             min-width: 160px;
+            max-width: calc(100% - 80px);
             display: flex;
             align-items: center;
             background: var(--panel);
@@ -721,6 +722,43 @@ async function loadMenu() {
 
     } catch (error) {
         console.error('Error loading menu:', error);
+    }
+}
+
+function expandActiveSections() {
+    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+    const activeItem = document.querySelector(`a[href="${currentPage}"]`);
+    
+    if (activeItem) {
+        activeItem.classList.add('active-page');
+        
+        let parent = activeItem.closest('.menu-section-items');
+        if (parent) {
+            const toggle = parent.previousElementSibling;
+            if (toggle && toggle.classList.contains('menu-section-toggle')) {
+                toggle.classList.add('open');
+                parent.classList.add('open');
+            }
+        }
+    }
+}
+
+function toggleMenu() {
+    const menu = document.getElementById('sideMenu');
+    if (menu) {
+        menu.classList.toggle('active');
+        if (menu.classList.contains('active')) {
+            expandActiveSections();
+        }
+    }
+}
+
+function toggleMenuSection(toggleId, itemsId) {
+    const toggle = document.getElementById(toggleId);
+    const items = document.getElementById(itemsId);
+    if (toggle && items) {
+        toggle.classList.toggle('open');
+        items.classList.toggle('open');
     }
 }
 
