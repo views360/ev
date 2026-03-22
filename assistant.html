@@ -518,52 +518,58 @@
         });
 
         async function sendMessage() {
-            const message = userInput.value.trim();
-            if (!message) return;
-
-            // Add user message to chat
-            addMessage(message, 'user');
-            userInput.value = '';
-
-            // Show loading indicator
-            const loadingMsg = addLoadingMessage();
-
-            try {
-                // Call your API endpoint
-                const response = await fetch('/api/groq.js', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        message: message,
-                        context: 'EV-focused assistant'
-                    })
-                });
-
-                if (!response.ok) {
-                    throw new Error('API request failed');
-                }
-
-                const data = await response.json();
-                
-                // Remove loading message
-                loadingMsg.remove();
-                
-                // Add AI response
-                addMessage(data.response, 'assistant');
-            } catch (error) {
-                loadingMsg.remove();
-                addMessage(
-                    '❌ Sorry, I encountered an error. Please check that the API is properly configured and try again.',
-                    'assistant'
-                );
-                console.error('Error:', error);
-            }
-
-            sendBtn.disabled = false;
-            userInput.focus();
-        }
+		    const message = userInput.value.trim();
+		    if (!message) return;
+		
+		    // Add user message to UI
+		    addMessage(message, 'user');
+		    userInput.value = '';
+		    sendBtn.disabled = true;
+		
+		    // Show loading indicator
+		    const loadingMsg = addLoadingMessage();
+		
+		    console.log("--- Starting API Request ---");
+		    console.log("Payload:", { message: message });
+		
+		    try {
+		        const response = await fetch('/api/groq', {
+		            method: 'POST',
+		            headers: {
+		                'Content-Type': 'application/json',
+		            },
+		            body: JSON.stringify({ message: message })
+		        });
+		
+		        console.log("Response Status:", response.status);
+		        console.log("Response OK:", response.ok);
+		
+		        const data = await response.json();
+		        console.log("Response Data:", data);
+		
+		        if (!response.ok) {
+		            throw new Error(data.error || `Server returned ${response.status}`);
+		        }
+		
+		        // Remove loading and add AI response
+		        loadingMsg.remove();
+		        addMessage(data.response, 'assistant');
+		
+		    } catch (error) {
+		        console.error("FULL ERROR DETAIL:", error);
+		        loadingMsg.remove();
+		        
+		        // Friendly error message for the user
+		        addMessage(
+		            `❌ Error: ${error.message}. Check the browser console (F12) for more details.`,
+		            'assistant'
+		        );
+		    } finally {
+		        sendBtn.disabled = false;
+		        userInput.focus();
+		        console.log("--- Request Finished ---");
+		    }
+		}
 
         function addMessage(text, sender) {
             const messageDiv = document.createElement('div');
