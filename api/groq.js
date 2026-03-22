@@ -1,8 +1,12 @@
-// api/groq.js - Groq API Implementation (CommonJS)
-// Setup: Get API key from https://console.groq.com
-// Environment variable: GROQ_API_KEY
+// api/groq.js - Groq API Implementation (CommonJS with debugging)
 
 module.exports = async function handler(req, res) {
+  console.log('=== GROQ FUNCTION CALLED ===');
+  console.log('Method:', req.method);
+  console.log('URL:', req.url);
+  console.log('Headers:', req.headers);
+  console.log('Body:', req.body);
+  
   // Enable CORS
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -17,12 +21,14 @@ module.exports = async function handler(req, res) {
 
   // Handle OPTIONS
   if (req.method === 'OPTIONS') {
+    console.log('Handling OPTIONS request');
     res.status(200).end();
     return;
   }
 
   // Only POST allowed
   if (req.method !== 'POST') {
+    console.log('Invalid method - returning 405');
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
@@ -52,6 +58,8 @@ module.exports = async function handler(req, res) {
 - Holiday travel and towing with EVs
 
 Always provide practical, specific advice. Be concise but thorough. If a question is outside your EV expertise, politely redirect back to EV topics. Maintain a friendly, approachable tone suitable for both EV newcomers and experienced drivers.`;
+
+    console.log('Calling Groq API with message:', message.substring(0, 50) + '...');
 
     // Call Groq API (Ultra-fast inference)
     const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
@@ -92,6 +100,7 @@ Always provide practical, specific advice. Be concise but thorough. If a questio
 
     const assistantMessage = data.choices[0].message.content;
 
+    console.log('Success - returning response');
     return res.status(200).json({
       response: assistantMessage,
     });
