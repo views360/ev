@@ -243,26 +243,24 @@
         /* ── Input area ── */
         .input-area {
             border-top: 1px solid var(--border);
-            padding: 10px 16px;
+            padding: 12px 14px;
             background: var(--panel-alt);
             display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            align-items: stretch;
+            gap: 10px;
+            align-items: center;
             position: relative;
             z-index: 2;
             box-sizing: border-box;
         }
 
         .input-wrapper {
-            flex: 1;
-            min-width: 0;
+            width: 100%;
             display: flex;
             align-items: center;
             background: var(--bg);
             border: 1px solid var(--border);
             border-radius: 9px;
-            padding: 10px 12px;
+            padding: 12px 14px;
             transition: border-color 0.2s, box-shadow 0.2s;
             box-sizing: border-box;
         }
@@ -281,7 +279,6 @@
 
         input {
             flex: 1;
-            min-width: 0;
             background: transparent;
             border: none;
             color: var(--text);
@@ -313,6 +310,9 @@
             flex-shrink: 0;
             white-space: nowrap;
             box-shadow: var(--glow);
+            height: 44px;
+            display: flex;
+            align-items: center;
         }
 
         button:hover {
@@ -442,21 +442,6 @@
             .guide-wrap {
                 max-width: 540px;
                 padding: 32px 16px 80px;
-            }
-
-            .input-area {
-                padding: 10px 12px;
-                gap: 6px;
-            }
-
-            .input-wrapper {
-                min-width: 100px;
-                padding: 0 8px;
-            }
-
-            button {
-                padding: 8px 10px;
-                font-size: 0.8rem;
             }
         }
 
