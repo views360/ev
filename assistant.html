@@ -249,17 +249,6 @@
             }
         }
 
-        @keyframes neonPulse {
-            0%, 100% {
-                box-shadow: 0 0 5px var(--neon-green-soft);
-                border-color: var(--neon-green);
-            }
-            50% {
-                box-shadow: 0 0 15px var(--neon-green);
-                border-color: #fff;
-            }
-        }
-
         /* ── Input area ── */
         .input-area {
             padding: 12px 14px;
@@ -286,17 +275,9 @@
             box-sizing: border-box;
         }
 
-        input:placeholder-shown {
-            border-color: var(--neon-green);
-            box-shadow: 0 0 5px var(--neon-green-soft);
-            animation: neonPulse 1.5s infinite ease-in-out;
-        }
-
         input:focus {
             outline: none;
             border-color: var(--accent);
-            animation: none;
-            box-shadow: none;
         }
 
         input::placeholder {
@@ -503,18 +484,19 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Input Area -->
-            <div class="input-area">
-                <input 
-                    type="text" 
-                    id="userInput" 
-                    placeholder="Ask about EVs, charging, costs, range..." 
-                    onkeypress="handleKeyPress(event)"
-                >
-                <button onclick="sendMessage()" id="sendBtn">Send</button>
-            </div>
         </div>
+
+        <!-- Input Area -->
+        <div class="input-area">
+            <input 
+                type="text" 
+                id="userInput" 
+                placeholder="Ask about EVs, charging, costs, range..." 
+                onkeypress="handleKeyPress(event)"
+            >
+            <button onclick="sendMessage()" id="sendBtn">Send</button>
+        </div>
+    </div>
 
         <!-- Footer -->
         <div class="footer-text">
