@@ -341,7 +341,7 @@
     /* ── Floating AI Assistant Widget ── */
     .floating-ai-widget {
         position: fixed;
-        left: -15px;
+        left: -30px;
         bottom: 100px;
         z-index: 1000;
         pointer-events: none;
@@ -443,7 +443,7 @@
     /* Mobile adjustments */
     @media (max-width: 700px) {
         .floating-ai-widget {
-            left: -46px;
+            left: -15px;
             bottom: auto;
             top: 50%;
             transform: translateY(-50%);
@@ -851,24 +851,12 @@ if (document.readyState === 'loading') {
     <div class="ai-widget-container">
         <div class="ai-bot-icon" title="Chat with AI">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <!-- Robot head -->
-                <rect x="4" y="4" width="16" height="12" rx="2"/>
-                <!-- Left eye -->
-                <circle cx="9" cy="9" r="1.5" fill="currentColor"/>
-                <!-- Right eye -->
-                <circle cx="15" cy="9" r="1.5" fill="currentColor"/>
-                <!-- Mouth -->
-                <path d="M9 12h6"/>
-                <!-- Left antenna -->
-                <line x1="8" y1="4" x2="7" y2="1"/>
-                <!-- Right antenna -->
-                <line x1="16" y1="4" x2="17" y2="1"/>
-                <!-- Body -->
-                <rect x="6" y="16" width="12" height="6" rx="1"/>
-                <!-- Left arm -->
-                <line x1="4" y1="18" x2="2" y2="18"/>
-                <!-- Right arm -->
-                <line x1="20" y1="18" x2="22" y2="18"/>
+                <path d="M12 8V4H8"/>
+                <rect width="16" height="12" x="4" y="8" rx="2"/>
+                <path d="M2 14h2"/>
+                <path d="M20 14h2"/>
+                <path d="M15 13v2"/>
+                <path d="M9 13v2"/>
             </svg>
         </div>
         <div class="ai-panel">
@@ -877,5 +865,6 @@ if (document.readyState === 'loading') {
         </div>
     </div>
 </div>
+
 </body>
 </html>
