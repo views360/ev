@@ -524,7 +524,6 @@
             // Add user message to chat
             addMessage(message, 'user');
             userInput.value = '';
-            updateInputState();
 
             // Show loading indicator
             const loadingMsg = addLoadingMessage();
@@ -600,7 +599,6 @@
 
         function sendExampleQuery(query) {
             userInput.value = query;
-            updateInputState();
             sendBtn.click();
         }
 
