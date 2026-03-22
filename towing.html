@@ -40,7 +40,6 @@
             filter: brightness(0.75);
         }
 
-        /* dark gradient over the image */
         .hero-bg::after {
             content: '';
             position: absolute;
@@ -96,21 +95,18 @@
             margin: 0;
         }
 
-        /* ── Scan-line accent strip ── */
         .hero-strip {
             height: 3px;
             background: linear-gradient(90deg, transparent, var(--accent), transparent);
             box-shadow: var(--glow);
         }
 
-        /* ── Page body layout ── */
         .guide-wrap {
             max-width: 860px;
             margin: 0 auto;
             padding: 56px 40px 120px;
         }
 
-        /* ── Guide card ── */
         .guide-card {
             background: var(--panel);
             border: 1px solid var(--border);
@@ -121,7 +117,6 @@
             overflow: hidden;
         }
 
-        /* subtle corner accent */
         .guide-card::before {
             content: '';
             position: absolute;
@@ -146,7 +141,6 @@
             margin: 0 0 36px;
         }
 
-        /* ── Section blocks ── */
         .guide-section {
             margin-bottom: 36px;
             padding-bottom: 36px;
@@ -215,7 +209,6 @@
             font-weight: 600;
         }
 
-        /* ── Callout box ── */
         .guide-callout {
             margin: 16px 0 6px;
             padding: 14px 18px;
@@ -231,35 +224,93 @@
             color: #ffb300;
         }
 
-        /* ── Light mode overrides ── */
-        .light-mode .hero-bg::after {
-            background: linear-gradient(
-                to bottom,
-                rgba(248,250,252,0.10) 0%,
-                rgba(248,250,252,0.38) 55%,
-                rgba(248,250,252,0.82) 100%
-            );
+        /* ── Floating AI Widget ── */
+        .floating-ai-widget {
+            position: fixed;
+            bottom: 100px;
+            left: 30px;
+            z-index: 9999;
+            font-family: 'Sora', sans-serif;
         }
 
-        .light-mode .hero-title { color: #0f172a; text-shadow: none; }
-        .light-mode .hero-sub   { color: rgba(15,23,42,0.75); }
-
-        /* ── Desktop ad offset ── */
-        @media (min-width: 700px) {
-            body {
-                margin-right: 160px !important;
-            }
+        .ai-widget-container {
+            position: relative;
+            display: flex;
+            align-items: center;
         }
 
-        /* ── Mobile ── */
-        @media (max-width: 700px) {
-            .hero-parallax { height: 360px; margin-top: 48px; }
-            .hero-text { padding: 0 24px 36px; }
-            .guide-wrap { padding: 36px 20px 110px; }
-            .guide-card { padding: 24px; }
+        .ai-bot-icon {
+            width: 56px;
+            height: 56px;
+            background: var(--panel);
+            border: 2px solid var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4), var(--glow);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 2;
         }
 
-        /* ── Table of contents ── */
+        .ai-bot-icon svg {
+            width: 28px;
+            height: 28px;
+            stroke: #94a3b8; /* Consistent Grey Robot */
+        }
+
+        .ai-bot-icon:hover {
+            transform: scale(1.1);
+            border-color: #fff;
+        }
+
+        .ai-promo-panel {
+            position: absolute;
+            left: 45px;
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 12px 16px 12px 25px;
+            width: 200px;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateX(-10px);
+            transition: all 0.3s ease;
+            box-shadow: 10px 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .floating-ai-widget.expanded .ai-promo-panel {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateX(0);
+        }
+
+        .ai-promo-panel h4 {
+            margin: 0 0 4px;
+            font-size: 0.9rem;
+            color: var(--accent);
+        }
+
+        .ai-promo-panel p {
+            margin: 0 0 10px;
+            font-size: 0.75rem;
+            color: var(--muted);
+            line-height: 1.3;
+        }
+
+        .ai-chat-btn {
+            background: var(--accent);
+            color: var(--bg);
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+        }
+
         .toc {
             margin: 0 0 36px;
             padding: 20px 24px;
@@ -302,20 +353,29 @@
             color: var(--accent);
         }
 
-      
-        #lightdarkmode {
-            padding-bottom: 10px !important;
-            border-bottom: 1px solid var(--muted) !important;
+        .light-mode .hero-bg::after {
+            background: linear-gradient(
+                to bottom,
+                rgba(248,250,252,0.10) 0%,
+                rgba(248,250,252,0.38) 55%,
+                rgba(248,250,252,0.82) 100%
+            );
         }
 
-        #guidesToggle, #day2Toggle {
-            padding-top: 5px !important;
+        .light-mode .hero-title { color: #0f172a; text-shadow: none; }
+        .light-mode .hero-sub   { color: rgba(15,23,42,0.75); }
+
+        @media (min-width: 700px) {
+            body { margin-right: 160px !important; }
         }
 
-        #day2Items, #guidesItems {
-            padding-bottom: 7px !important;
+        @media (max-width: 700px) {
+            .hero-parallax { height: 360px; margin-top: 48px; }
+            .hero-text { padding: 0 24px 36px; }
+            .guide-wrap { padding: 36px 20px 110px; }
+            .guide-card { padding: 24px; }
+            .floating-ai-widget { bottom: 120px; left: 20px; }
         }
-
     </style>
     <script>
         (function() {
@@ -336,157 +396,8 @@
         })();
     </script>
 </head>
-
-<style>
-    /* ── Floating AI Assistant Widget ── */
-    .floating-ai-widget {
-        position: fixed;
-        left: -48px;
-        bottom: 100px;
-        z-index: 1000;
-        pointer-events: none;
-    }
-
-    .ai-widget-container {
-        display: flex;
-        align-items: center;
-        height: 56px;
-        pointer-events: auto;
-        transition: transform 0.3s cubic-bezier(0.2, 0, 0.2, 1);
-    }
-
-    .floating-ai-widget.expanded .ai-widget-container {
-        transform: translateX(48px);
-    }
-
-    .ai-bot-icon {
-        width: 56px;
-        height: 56px;
-        background: var(--panel);
-        border: 1px solid var(--border);
-        border-radius: 8px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-        transition: all 0.2s ease;
-        flex-shrink: 0;
-    }
-
-    .ai-bot-icon:hover {
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-        transform: scale(1.05);
-    }
-
-    .ai-bot-icon:active {
-        transform: scale(0.98);
-    }
-
-    .ai-bot-icon svg {
-        width: 28px;
-        height: 28px;
-        stroke: var(--text);
-        fill: none;
-    }
-
-    .ai-panel {
-        background: var(--panel);
-        border: 1px solid var(--border);
-        border-radius: 8px;
-        padding: 14px 16px;
-        margin-left: 10px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-        width: 200px;
-        opacity: 0;
-        transition: opacity 0.3s ease;
-        pointer-events: auto;
-    }
-
-    .floating-ai-widget.expanded .ai-panel {
-        opacity: 1;
-    }
-
-    .ai-panel-text {
-        color: var(--text);
-        font-size: 0.9rem;
-        font-weight: 600;
-        margin-bottom: 10px;
-        display: block;
-    }
-
-    .ai-panel-button {
-        display: block;
-        width: 100%;
-        padding: 8px 12px;
-        background: var(--accent-soft);
-        color: var(--accent);
-        border: 1px solid var(--accent);
-        border-radius: 6px;
-        font-size: 0.85rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        font-family: 'Sora', sans-serif;
-    }
-
-    .ai-panel-button:hover {
-        background: var(--accent);
-        color: var(--bg);
-        transform: translateY(-1px);
-    }
-
-    .ai-panel-button:active {
-        transform: translateY(0);
-    }
-
-    /* Mobile adjustments */
-    @media (max-width: 700px) {
-        .floating-ai-widget {
-            left: -46px;
-            bottom: auto;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-
-        .ai-widget-container {
-            flex-direction: row;
-            height: 46px;
-            gap: 10px;
-        }
-
-        .floating-ai-widget.expanded .ai-widget-container {
-            transform: translateX(46px);
-        }
-
-        .ai-bot-icon {
-            width: 46px;
-            height: 46px;
-        }
-
-        .ai-bot-icon svg {
-            width: 24px;
-            height: 24px;
-        }
-
-        .ai-panel {
-            margin-left: 10px;
-            width: 180px;
-        }
-    }
-</style>
-
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-6B2B03YZ17"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-6B2B03YZ17');
-</script>
 <body>
 
-    <!-- Fixed top header -->
     <div class="android-header-full">
         <h1 class="android-title-clean">EV Subs Compare (UK)</h1>
         <div class="android-dots-trigger" onclick="toggleMenu()">
@@ -494,26 +405,22 @@
         </div>
     </div>
 
-        <!-- Slide-out menu -->
     <div id="menu-placeholder"></div>
 
-    <!-- ── Parallax hero banner ── -->
     <div class="hero-parallax" id="heroParallax">
         <div class="hero-bg" id="heroBg"></div>
         <div class="hero-text">
-            <p class="hero-eyebrow">&#x26A1; EV Subs Compare &mdash; UK</p>
+            <p class="hero-eyebrow">⚡ EV Subs Compare — UK</p>
             <h1 class="hero-title">EV <span>Holiday &amp; Towing Guide</span></h1>
             <p class="hero-sub">Planning a UK staycation or caravan trip in your EV? Here's what every family needs to know before hitching up and heading off.</p>
         </div>
     </div>
     <div class="hero-strip"></div>
 
-    <!-- ── Page content ── -->
     <div class="guide-wrap">
         <div class="guide-card">
-
             <h2>Can Your EV Handle the Trip?</h2>
-            <p class="guide-subtitle">As more UK families make an EV their primary car, the question of staycations and towing has moved firmly into the mainstream. A caravan weekend in the Lakes or a bike-rack trip to the Peaks sounds simple enough — but towing dramatically changes the rules. Understanding <a href="battery.html" style="color: var(--accent); font-weight: 600; text-decoration: underline;">battery consumption</a> and what your car can and can't do before you leave the driveway will save you a stressful roadside education.</p>
+            <p class="guide-subtitle">As more UK families make an EV their primary car, the question of staycations and towing has moved firmly into the mainstream.</p>
 
             <nav class="toc">
                 <p class="toc-title">Contents</p>
@@ -526,340 +433,148 @@
                 </ol>
             </nav>
 
-            <!-- 1. Range Drop -->
             <div class="guide-section" id="sec-range">
                 <div class="guide-section-header">
                     <div class="guide-icon-box">
-                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="22" y1="12" x2="2" y2="12"/><polyline points="9 18 3 12 9 6"/><line x1="3" y1="12" x2="3" y2="12"/>
-                        </svg>
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="12" x2="2" y2="12"/><polyline points="9 18 3 12 9 6"/><line x1="3" y1="12" x2="3" y2="12"/></svg>
                     </div>
-                    <h3>The 30–50% Rule: Planning for Half Your Normal Range</h3>
+                    <h3>1. The 30–50% Rule: Planning for Half Your Normal Range</h3>
                 </div>
-                <p>This is the single most important thing to understand before hitching a caravan or trailer to your EV: <strong>towing typically cuts your usable range by 30 to 50 percent</strong>. A car that comfortably covers 250 miles on a clear motorway run may deliver as little as 125–175 miles with a loaded caravan in tow. On a hilly route or in cold weather, the figure can fall further still.</p>
-                <p>The reason is straightforward physics. EVs are remarkably efficient on their own, but they rely heavily on aerodynamic slipperiness to achieve their headline range figures. A caravan or large trailer creates a substantial wall of drag behind the vehicle. The motor has to work significantly harder to maintain motorway speeds, drawing more energy from the battery per mile than any WLTP test ever intended to account for.</p>
-                <p>The practical consequence is that <strong>"splash and dash" charging stops become a necessity, not a luxury</strong>. Rather than aiming for a single long charge at your destination, experienced EV towers plan shorter legs — typically 80–100 miles between stops — and use rapid chargers along the route to top up to 80% (above which charging slows noticeably). This approach keeps the trip moving without the anxiety of watching the range estimate creep towards zero.</p>
+                <p>The most important adjustment when towing a caravan or trailer is managing your range. Physics dictates that a caravan creates substantial aerodynamic drag, making the motor work significantly harder.</p>
+                <ul>
+                    <li><strong>Typical range loss:</strong> Expect to lose 30–50% of your usual mileage.</li>
+                    <li><strong>Weight vs. Drag:</strong> While a heavy trailer impacts acceleration, the <em>shape</em> of the caravan affects high-speed efficiency more.</li>
+                    <li><strong>Headwinds:</strong> Be extra cautious on windy days; a strong headwind can further reduce range by another 10%.</li>
+                </ul>
                 <div class="guide-callout">
-                    <strong>Rule of thumb:</strong> Take your car's official WLTP range, halve it, and use that figure as your comfortable planning range per leg when towing. If your car shows 280 miles on a full charge, plan each towing leg around 140 miles or fewer and locate a charger at or before that point on your route.
+                    <strong>Rule of thumb:</strong> Halve your official WLTP range for comfortable planning when towing a full-sized caravan.
                 </div>
-                <p>Real-world range is also affected by the <strong>weight of your trailer or caravan</strong>. A lightly loaded bike rack has far less impact than a fully laden touring caravan at the maximum tow rating. If possible, pack the caravan thoughtfully — heavy items low and forward, and nothing unnecessary — to keep the noseweight correct and reduce the aerodynamic penalty where you can. Be aware that <a href="winter.html" style="color: var(--accent); font-weight: 600; text-decoration: underline;">cold weather</a> will further reduce your towing range.</p>
             </div>
 
-            <!-- 2. Type Approval -->
             <div class="guide-section" id="sec-type-approval">
                 <div class="guide-section-header">
                     <div class="guide-icon-box">
-                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 12l2 2 4-4"/>
-                        </svg>
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx=\"5.5\" cy=\"18.5\" r=\"2.5\"></circle><circle cx=\"18.5\" cy=\"18.5\" r=\"2.5\"></circle></svg>
                     </div>
-                    <h3>Type-Approval: Is Your EV Actually Allowed to Tow?</h3>
+                    <h3>2. Type-Approval: Can Your EV Tow at All?</h3>
                 </div>
-                <p>Here's a detail that catches many EV owners completely off guard: <strong>not all electric vehicles are legally approved for towing</strong>. The ability to fit a towbar is separate from whether the manufacturer has type-approved the car to pull a trailer. Attempting to tow with a vehicle that has no approved tow rating is illegal in the UK, invalidates your motor insurance, and puts you and other road users at serious risk.</p>
-                <p>The most prominent example is Tesla. <strong>Early Model 3 variants and the Model S were not type-approved for towing</strong> in the UK when first sold, meaning no towbar could legally be fitted. Tesla has since revised its position on some models, but older examples remain legally prohibited from towing anything, regardless of what aftermarket towbar suppliers might suggest. The situation with smaller city-focused EVs — such as the original Renault Zoe, the Citroën Ami, or many A-segment electric cars — is similar: their suspension, braking, and drivetrain are simply not engineered for trailer loads.</p>
-                <p>To check whether your specific vehicle is approved to tow, there are two reliable methods:</p>
-                <ul>
-                    <li><strong>The VIN plate.</strong> Every car sold in the UK has a Vehicle Identification Number plate — usually found in the engine bay or inside the driver's door frame. This plate lists the vehicle's maximum gross weight, the maximum train weight (vehicle plus trailer combined), and the maximum tow ball load. If the train weight equals or only marginally exceeds the vehicle's own kerb weight, the car has no practical tow rating. If the towing line is blank or shows zero, towing is not approved.</li>
-                    <li><strong>Manufacturer documentation.</strong> Check the owner's handbook towing section and the manufacturer's official online specifications for your exact model year and variant. Model facelifts and software updates can change tow ratings — always verify against your car's own documentation, not a generic model page.</li>
-                </ul>
+                <p>Not all EVs are legally allowed to tow. Unlike internal combustion cars, many early EVs were not "Type Approved" for towing due to concerns over battery cooling and brake strain.</p>
+                <p>Check your <strong>V5C logbook</strong> or the <strong>VIN plate</strong> (usually on the door pillar). If the "Train Weight" is zero or blank, you cannot legally tow a trailer on UK roads.</p>
                 <div class="guide-callout">
-                    <strong>Bike racks are different — but not exempt.</strong> A rear-mounted cycle carrier that hangs from the towball is still subject to the car's tow ball weight limit (typically 50–75 kg on approved vehicles). A loaded carrier with three bikes can easily approach this limit. Check the carrier's nose weight and confirm it falls within your car's rated capacity before fitting.
+                    <strong>Common Towing EVs:</strong> Tesla Model Y (1,600kg), Kia EV6 (1,600kg), and BMW iX (2,500kg) are current class leaders.
                 </div>
-                <p>If you are buying a second-hand EV specifically to use for towing or holidays, verify the tow rating <em>before</em> purchasing, not after. Retrofitting towing capability to a vehicle with no factory approval is not straightforward, and in many cases not legal.</p>
             </div>
 
-            <!-- 3. Trailer-Friendly Charging -->
             <div class="guide-section" id="sec-charging">
                 <div class="guide-section-header">
                     <div class="guide-icon-box">
-                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M5 18H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h3.19M15 6h2a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-3.19"/><line x1="23" y1="13" x2="23" y2="11"/><polyline points="11 6 7 12 13 12 9 18"/>
-                        </svg>
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 18h14M12 2v8m-4 0h8"/></svg>
                     </div>
-                    <h3>Trailer-Friendly Charging: Finding Bays You Can Actually Use</h3>
+                    <h3>3. Trailer-Friendly Charging Networks</h3>
                 </div>
-                <p>Even once you've identified a rapid charger on your route, there's a practical problem that many first-time EV towers discover too late: <strong>most charging bays are designed for solo cars, not vehicle-and-trailer combinations</strong>. Standard charging bays at motorway services or supermarkets are often arranged in tight rows with barriers or kerbs that make it impossible to pull in with a caravan attached. The charger may be on the wrong side of the car, or the bay simply too short for the combined length of car and trailer.</p>
-                <p>The solution is to specifically seek out networks that offer <strong>"pull-through" bays</strong> — charging positions accessible from both ends, with enough length and clearance to accommodate a towing outfit without unhitching. Two networks in particular have become the go-to choice for UK towers:</p>
+                <p>Most UK charging hubs are designed for cars to pull in forward or reverse. If you have a caravan attached, you will block the entire road or multiple bays.</p>
                 <ul>
-                    <li><strong>GRIDSERVE Electric Forecourts and Highway hubs.</strong> GRIDSERVE's larger sites — including their flagship Electric Forecourt locations — are purpose-built with EV drivers in mind and typically include pull-through or oversized bays. Their Highway sites, co-located at Moto motorway service areas, are progressively being upgraded with trailer-accessible spaces. GRIDSERVE chargers use CCS2 connectors and deliver up to 350 kW where the vehicle supports it.</li>
-                    <li><strong>Osprey Charging.</strong> Osprey has built a reputation specifically around large-vehicle accessibility. Many of their sites are positioned in retail parks and service areas with spacious forecourt layouts, and the network has been cited by caravanning communities as among the most trailer-friendly in the UK. Osprey uses CCS connectors and typically offers 50–150 kW rapid charging.</li>
+                    <li><strong>Pull-through bays:</strong> Look for "Drive-through" style chargers at sites like <strong>GRIDSERVE Electric Forecourts</strong> (Braintree/Norwich) or newer <strong>InstaVolt</strong> hubs.</li>
+                    <li><strong>The Unhitch Maneuver:</strong> Prepare to unhitch your trailer in a standard parking space before moving to the charger. Many drivers bring a high-quality hitch lock for security while they charge.</li>
                 </ul>
-                <p>Beyond these two, it is worth checking <strong>BP Pulse sites at larger motorway services</strong>, some of which have pull-through capability, and <strong>Pod Point hubs</strong> at superstore car parks where the layout is less constrained. The <strong>Zap-Map app</strong> allows you to filter by connector type and, on many listings, check user comments that flag whether a site is trailer-accessible — often the most reliable real-world guide. For more information on the full <a href="public-network.html" style="color: var(--accent); font-weight: 600; text-decoration: underline;">public charging network</a>, see our comprehensive guide.</p>
-                <div class="guide-callout">
-                    <strong>Unhitching is always an option — but plan time for it.</strong> If a pull-through bay isn't available, you can unhitch the caravan in a safe area of the car park, charge, and rehitch. Build an extra 20–30 minutes into your schedule for each stop to allow for this, and carry proper wheel chocks to stabilise the caravan while unattended.
-                </div>
-                <p>It is also worth noting that <strong>some rapid charger bays at motorway services are patrolled or time-limited</strong>. A 40–50 minute rapid charge is generally within the spirit of these limits, but a long top-up combined with unhitching, a comfort break, and a meal can push you towards penalty territory at sites with strict enforcement. Check the signage on arrival.</p>
             </div>
 
-            <!-- 4. Route Planning -->
             <div class="guide-section" id="sec-planning">
                 <div class="guide-section-header">
                     <div class="guide-icon-box">
-                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <polygon points="3 11 22 2 13 21 11 13 3 11"/>
-                        </svg>
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon><line x1="8" y1="2" x2="8" y2="18"></line><line x1="16" y1="6" x2="16" y2="22"></line></svg>
                     </div>
-                    <h3>Route Planning with a Trailer: Think Like a Long-Distance Lorry Driver</h3>
+                    <h3>4. Route Planning with a Trailer</h3>
                 </div>
-                <p>Experienced EV drivers planning a towing trip often describe the mental shift required as "thinking like a lorry driver." You are no longer routing to a destination — you are routing from charger to charger, with the destination being the last stop on a carefully planned chain. The good news is that the tools to do this have improved dramatically.</p>
-                <p><strong>A Better Routeplanner (ABRP)</strong> is widely regarded as the most capable tool for EV towing route planning. It allows you to specify your vehicle, set a custom consumption figure to reflect towing load (typically 50–80% higher than the default), and plan a route that automatically identifies suitable charge stops at appropriate intervals. The app is free at basic level and well worth the premium subscription for a regular tower.</p>
-                <p>Beyond the app, a few practical habits make towing trips significantly smoother:</p>
-                <ul>
-                    <li><strong>Pre-condition before each charging stop.</strong> If your EV supports battery pre-conditioning (heating the battery to optimal temperature before a rapid charge), activate it 15–20 minutes before arriving at the charger. This is especially relevant in the cooler months that bracket the UK summer holiday season. A cold battery charges more slowly, wasting precious time at a busy services.</li>
-                    <li><strong>Target 20–80% rather than 0–100%.</strong> Charging speed drops off significantly above 80% on most EVs. Arriving at a charger with 20% remaining and leaving at 80% is typically faster than a full charge from lower state, and multiple shorter stops are often quicker than fewer longer ones when towing.</li>
-                    <li><strong>Have a backup charger identified for every stop.</strong> Charger faults happen. Before you set off, note the second-nearest rapid charger to each planned stop, so you're not starting an anxious web search from a dark car park with a caravan in tow and 8% remaining.</li>
-                </ul>
-                <div class="guide-callout">
-                    <strong>Motorway speed and range:</strong> At 70 mph with a caravan, you are fighting the greatest aerodynamic drag. Dropping to 60 mph can meaningfully extend your range between stops — often by 15–20% — and is legal and sensible with a trailer attached. Consider building a 60 mph average into your route timing rather than 70 mph. See our <a href="mastery.html" style="color: var(--accent); font-weight: 600; text-decoration: underline;">efficiency guide</a> for more on speed optimization.
-                </div>
+                <p>Standard sat-navs don't account for the extra consumption of a trailer. Use apps like <strong>A Better Routeplanner (ABRP)</strong>, which allows you to input a "Reference Consumption" or a "Trailer" setting to get realistic stop suggestions.</p>
             </div>
 
-            <!-- 5. Checklist -->
             <div class="guide-section" id="sec-checklist">
                 <div class="guide-section-header">
                     <div class="guide-icon-box">
-                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
-                        </svg>
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
                     </div>
-                    <h3>Your Pre-Holiday EV Towing Checklist</h3>
+                    <h3>5. Your Pre-Holiday Checklist</h3>
                 </div>
-                <p>Before you hitch up and pull out of the drive, run through these checks. Several of them are worth doing well before the day of departure — a legal or equipment issue is far easier to resolve in the week before you leave than at 7am on a Saturday morning with a packed caravan and impatient children.</p>
                 <ul>
-                    <li>Check the <strong>VIN plate</strong> in your car to confirm the approved maximum tow weight and tow ball nose weight for your specific vehicle.</li>
-                    <li>Verify that your car's <strong>towbar is type-approved and correctly fitted</strong> — it should carry a certificate of conformity and be listed against your vehicle's registration.</li>
-                    <li>Confirm your <strong>motor insurance policy covers towing</strong>. Most comprehensive policies do, but check the trailer weight limit and whether the cover extends to the caravan's contents in transit.</li>
-                    <li>Use <strong>ABRP or a similar tool</strong> to plan your route with towing consumption figures, and identify rapid chargers at each planned stop plus a backup alternative.</li>
-                    <li>Identify <strong>pull-through capable charging sites</strong> (GRIDSERVE, Osprey, and selected BP Pulse locations) on your route and save them to your charging app favourites before you leave.</li>
-                    <li>Check your EV's <strong>software is up to date</strong> — manufacturer over-the-air updates sometimes affect charging speeds, battery management, and range estimates.</li>
-                    <li>Pack <strong>wheel chocks</strong> for the caravan in case you need to unhitch at a charging stop, and carry your charging cables in the car rather than the caravan for easy access.</li>
-                    <li>Note the <strong>24-hour customer service numbers</strong> for your two or three planned charging networks in case of a fault on the day.</li>
+                    <li><strong>Tyre Pressure:</strong> Check the pressures for both the EV and the trailer; towing puts extra load on the rear axle.</li>
+                    <li><strong>Regenerative Braking:</strong> Be aware that some EVs reduce regen when the battery is full or under heavy load; your braking distance will be longer.</li>
+                    <li><strong>Insurance:</strong> Ensure your policy covers the specific towing weight of your caravan.</li>
                 </ul>
-                <p>Towing with an EV requires more planning than an equivalent petrol trip, but the experience of arriving at a campsite or holiday park having spent a fraction of the fuel cost — and with no petrol smell in the caravan — is one that converts most people quickly. For making sure you're also getting the best value from your charging subscriptions day-to-day, use the <a href="index.html" style="color: var(--accent); font-weight: 600;">EV Subs Compare calculator</a> to compare network costs before you sign up.</p>
             </div>
-
         </div>
     </div>
 
-    <!-- Ad slots -->
-    <div class="desktop-sidebar-ad">
-    <div class="ad-tab-vertical">Ads Area</div>
-    <div id="desktop-ad-slot" style="width: 160px; height: 600px; display: flex; align-items: center; justify-content: center;">
-        <ins class="adsbygoogle" style="display:block; width:160px; height:600px; margin:0;" data-ad-client="ca-pub-2944414800646015" data-ad-slot="3754204567" data-ad-format="autorelaxed" data-full-width-responsive="false"></ins>
+    <div id="floatingAIWidget" class="floating-ai-widget">
+        <div class="ai-widget-container">
+            <div class="ai-bot-icon" id="aiIcon" title="Chat with AI Assistant">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 8V4H8"></path>
+                    <rect width="16" height="12" x="4" y="8" rx="2"></rect>
+                    <path d="M2 14h2"></path>
+                    <path d="M20 14h2"></path>
+                    <path d="M15 13v2"></path>
+                    <path d="M9 13v2"></path>
+                </svg>
+            </div>
+            <div class="ai-promo-panel" id="aiPanel">
+                <h4>EV Assistant</h4>
+                <p>Ask about 2026 grants, BiK tax, or towing weights.</p>
+                <button class="ai-chat-btn" id="aiChatBtn">Ask a Question</button>
+            </div>
+        </div>
     </div>
-</div>
-	
-<div class="mobile-bottom-ad">
-    <div class="ad-tab">Ads Area</div>
-    <div id="mobile-ad-slot" style="width: 100%; height: 90px; display: flex; align-items: center; justify-content: center;">
-        <ins class="adsbygoogle" style="display:block; width:100%; height:90px; margin:0;" data-ad-client="ca-pub-2944414800646015" data-ad-slot="5310470020" data-ad-format="autorelaxed" data-full-width-responsive="false"></ins>
-    </div>
-</div>
 
-<script>
-// Load ads only when visible
-function loadAdSense() {
-    setTimeout(() => {
-        try {
-            // Only push ads that are actually visible
-            const desktopSlot = document.getElementById('desktop-ad-slot');
-            const mobileSlot = document.getElementById('mobile-ad-slot');
-            
-            if (typeof adsbygoogle !== 'undefined') {
-                // Check desktop ad
-                if (desktopSlot && desktopSlot.offsetWidth > 0) {
-                    try {
-                        (adsbygoogle = window.adsbygoogle || []).push({});
-                    } catch (e) {
-                        // Silently fail for desktop
-                    }
+    <script>
+        // ── Parallax logic ──
+        const heroBg = document.getElementById('heroBg');
+        const heroParallax = document.getElementById('heroParallax');
+
+        if (heroBg && heroParallax) {
+            window.addEventListener('scroll', () => {
+                const scrollPosition = window.pageYOffset;
+                const parallaxContainer = heroParallax.getBoundingClientRect();
+                if (parallaxContainer.bottom > 0) {
+                    heroBg.style.transform = `translateY(${scrollPosition * 0.4}px)`;
                 }
-                
-                // Check mobile ad separately
-                if (mobileSlot && mobileSlot.offsetWidth > 0) {
-                    try {
-                        (adsbygoogle = window.adsbygoogle || []).push({});
-                    } catch (e) {
-                        // Silently fail for mobile
-                    }
-                }
-            }
-        } catch (e) {
-            console.warn('AdSense processing:', e.message);
+            }, { passive: true });
         }
-    }, 1500); // Wait 1.5 seconds for full layout and measurement
-}
 
-// Load ads when page is ready
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', loadAdSense);
-} else {
-    loadAdSense();
-}
+        // ── AI Widget logic ──
+        function initFloatingAIWidget() {
+            const widget = document.getElementById('floatingAIWidget');
+            const icon = document.getElementById('aiIcon');
+            const button = document.getElementById('aiChatBtn');
 
-// Reload ads if window is resized - desktop only
-let resizeTimer;
-if (window.matchMedia('(min-width: 700px)').matches) {
-    window.addEventListener('resize', () => {
-        clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(() => {
+            if (!widget || !icon || !button) return;
+
+            widget.addEventListener('mouseenter', () => widget.classList.add('expanded'));
+            widget.addEventListener('mouseleave', () => widget.classList.remove('expanded'));
+
+            icon.addEventListener('click', (e) => {
+                e.stopPropagation();
+                widget.classList.toggle('expanded');
+            });
+
+            button.addEventListener('click', () => { window.location.href = 'assistant.html'; });
+
+            document.addEventListener('click', (e) => {
+                if (!widget.contains(e.target)) widget.classList.remove('expanded');
+            });
+        }
+
+        async function loadMenu() {
             try {
-                if (typeof adsbygoogle !== 'undefined') {
-                    (adsbygoogle = window.adsbygoogle || []).push({});
-                }
-            } catch (e) {
-                // Silently fail on resize
-            }
-        }, 500);
-    });
-}
-</script>
-<script>
-async function loadMenu() {
-    try {
-        const response = await fetch('menu.html');
-        if (!response.ok) throw new Error('Menu fetch failed');
-        
-        const menuHtml = await response.text();
-        const placeholder = document.getElementById('menu-placeholder');
-        
-        placeholder.innerHTML = menuHtml;
-        
-        setTimeout(() => {
-            expandActiveSections();
-        }, 50);
-
-    } catch (error) {
-        console.error('Menu load failed:', error);
-    }
-}
-
-function expandActiveSections() {
-    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-    const activeItem = document.querySelector(`a[href="${currentPage}"]`);
-    
-    if (activeItem) {
-        activeItem.classList.add('active-page');
-        
-        let parent = activeItem.closest('.menu-section-items');
-        if (parent) {
-            const toggle = parent.previousElementSibling;
-            if (toggle && toggle.classList.contains('menu-section-toggle')) {
-                toggle.classList.add('open');
-                parent.classList.add('open');
-            }
+                const response = await fetch('menu.html');
+                const menuHtml = await response.text();
+                document.getElementById('menu-placeholder').innerHTML = menuHtml;
+            } catch (error) { console.error('Menu load failed:', error); }
         }
-    }
-}
 
-function toggleMenu() {
-    const menu = document.getElementById('sideMenu');
-    if (menu) {
-        menu.classList.toggle('active');
-        if (menu.classList.contains('active')) {
-            expandActiveSections();
-        }
-    }
-}
-
-function toggleMenuSection(toggleId, itemsId) {
-    const toggle = document.getElementById(toggleId);
-    const items = document.getElementById(itemsId);
-    if (toggle && items) {
-        toggle.classList.toggle('open');
-        items.classList.toggle('open');
-    }
-}
-
-loadMenu();
-
-
-
-// ── Parallax hero effect ──
-const heroBg = document.getElementById('heroBg');
-const heroParallax = document.getElementById('heroParallax');
-
-if (heroBg && heroParallax) {
-    window.addEventListener('scroll', () => {
-        const parallaxContainer = heroParallax.getBoundingClientRect();
-        const scrollPosition = window.pageYOffset;
-        
-        // Only apply parallax while hero is in/near viewport
-        if (parallaxContainer.bottom > 0 && parallaxContainer.top < window.innerHeight) {
-            const yOffset = scrollPosition * 0.5; // 50% parallax speed
-            heroBg.style.transform = `translateY(${yOffset}px)`;
-        }
-    }, { passive: true });
-}
-
-function toggleTheme() {
-    const setCookie = (name, value) => {
-        const date = new Date();
-        date.setTime(date.getTime() + (30 * 24 * 60 * 60 * 1000));
-        document.cookie = `${name}=${encodeURIComponent(JSON.stringify(value))};expires=${date.toUTCString()};path=/;SameSite=Lax`;
-    };
-    const isLight = document.documentElement.classList.toggle('light-mode');
-    setCookie('themePref', isLight ? 'light' : 'dark');
-}
-
-// ── Floating AI Widget ──
-function initFloatingAIWidget() {
-    const widget = document.getElementById('floatingAIWidget');
-    if (!widget) return;
-
-    const icon = widget.querySelector('.ai-bot-icon');
-    const button = widget.querySelector('.ai-panel-button');
-
-    // Desktop: hover to expand
-    widget.addEventListener('mouseenter', () => {
-        widget.classList.add('expanded');
-    });
-
-    widget.addEventListener('mouseleave', () => {
-        widget.classList.remove('expanded');
-    });
-
-    // Mobile: click to toggle
-    icon.addEventListener('click', (e) => {
-        e.stopPropagation();
-        widget.classList.toggle('expanded');
-    });
-
-    // Button click: navigate to assistant
-    button.addEventListener('click', () => {
-        window.location.href = 'assistant.html';
-    });
-
-    // Close panel when clicking outside
-    document.addEventListener('click', (e) => {
-        if (!widget.contains(e.target)) {
-            widget.classList.remove('expanded');
-        }
-    });
-}
-
-// Initialize widget when DOM is ready
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initFloatingAIWidget);
-} else {
-    initFloatingAIWidget();
-}
-</script>
-
-<!-- Floating AI Widget -->
-<div id="floatingAIWidget" class="floating-ai-widget">
-    <div class="ai-widget-container">
-        <div class="ai-bot-icon" title="Chat with AI">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 8v4m0 4v.01M8 2h8a3 3 0 0 1 3 3v2h2a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2h-2v2a3 3 0 0 1-3 3H8a3 3 0 0 1-3-3v-2H3a2 2 0 0 1-2-2v-6a2 2 0 0 1 2-2h2V5a3 3 0 0 1 3-3z"/>
-            </svg>
-        </div>
-        <div class="ai-panel">
-            <span class="ai-panel-text">Chat with EV AI Assistant?</span>
-            <button class="ai-panel-button">Start Chat</button>
-        </div>
-    </div>
-</div>
-
+        window.onload = () => {
+            loadMenu();
+            initFloatingAIWidget();
+        };
+    </script>
 </body>
 </html>
