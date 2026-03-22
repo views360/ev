@@ -1333,3 +1333,46 @@ function closeBeReminder() {
         }, 400); 
     }
 }
+
+// ── Floating AI Widget ──
+function initFloatingAIWidget() {
+    const widget = document.getElementById('floatingAIWidget');
+    if (!widget) return;
+
+    const icon = widget.querySelector('.ai-bot-icon');
+    const button = widget.querySelector('.ai-panel-button');
+
+    // Desktop: hover to expand
+    widget.addEventListener('mouseenter', () => {
+        widget.classList.add('expanded');
+    });
+
+    widget.addEventListener('mouseleave', () => {
+        widget.classList.remove('expanded');
+    });
+
+    // Mobile: click to toggle
+    icon.addEventListener('click', (e) => {
+        e.stopPropagation();
+        widget.classList.toggle('expanded');
+    });
+
+    // Button click: navigate to assistant
+    button.addEventListener('click', () => {
+        window.location.href = 'assistant.html';
+    });
+
+    // Close panel when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!widget.contains(e.target)) {
+            widget.classList.remove('expanded');
+        }
+    });
+}
+
+// Initialize widget when DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initFloatingAIWidget);
+} else {
+    initFloatingAIWidget();
+}
