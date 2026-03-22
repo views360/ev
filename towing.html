@@ -336,6 +336,134 @@
         })();
     </script>
 </head>
+
+<style>
+    /* ── Floating AI Assistant Widget ── */
+    .floating-ai-widget {
+        position: fixed;
+        left: 0;
+        bottom: 100px;
+        z-index: 1000;
+        pointer-events: none;
+    }
+
+    .ai-widget-container {
+        display: flex;
+        align-items: center;
+        height: 60px;
+        pointer-events: auto;
+    }
+
+    .ai-bot-icon {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, var(--accent), #0ea5e9);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 32px;
+        cursor: pointer;
+        box-shadow: 0 4px 12px rgba(56, 189, 248, 0.4);
+        transition: all 0.3s ease;
+        flex-shrink: 0;
+        border: 2px solid var(--accent);
+    }
+
+    .ai-bot-icon:hover {
+        box-shadow: 0 6px 16px rgba(56, 189, 248, 0.6);
+        transform: scale(1.05);
+    }
+
+    .ai-bot-icon:active {
+        transform: scale(0.98);
+    }
+
+    .ai-panel {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 16px 20px;
+        margin-left: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3), var(--glow);
+        white-space: nowrap;
+        max-width: 0;
+        overflow: hidden;
+        opacity: 0;
+        transition: all 0.3s cubic-bezier(0.2, 0, 0.2, 1);
+        pointer-events: auto;
+    }
+
+    .ai-widget-container.expanded .ai-panel {
+        max-width: 220px;
+        opacity: 1;
+    }
+
+    .ai-panel-text {
+        color: var(--text);
+        font-size: 0.95rem;
+        font-weight: 600;
+        margin-bottom: 10px;
+        display: block;
+    }
+
+    .ai-panel-button {
+        display: block;
+        width: 100%;
+        padding: 10px 16px;
+        background: linear-gradient(135deg, var(--accent), #0ea5e9);
+        color: #ffffff;
+        border: none;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        font-family: 'Sora', sans-serif;
+    }
+
+    .ai-panel-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(56, 189, 248, 0.4);
+    }
+
+    .ai-panel-button:active {
+        transform: translateY(0);
+    }
+
+    /* Mobile adjustments */
+    @media (max-width: 700px) {
+        .floating-ai-widget {
+            bottom: 110px;
+            left: auto;
+            right: 12px;
+        }
+
+        .ai-widget-container {
+            flex-direction: column-reverse;
+            height: auto;
+            gap: 12px;
+        }
+
+        .ai-bot-icon {
+            width: 50px;
+            height: 50px;
+            font-size: 28px;
+        }
+
+        .ai-panel {
+            margin-left: 0;
+            max-width: none;
+            width: 220px;
+            text-align: center;
+        }
+
+        .ai-widget-container.expanded .ai-panel {
+            max-width: none;
+        }
+    }
+</style>
+
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-6B2B03YZ17"></script>
 <script>
@@ -661,6 +789,63 @@ function toggleTheme() {
     const isLight = document.documentElement.classList.toggle('light-mode');
     setCookie('themePref', isLight ? 'light' : 'dark');
 }
+
+// ── Floating AI Widget ──
+function initFloatingAIWidget() {
+    const widget = document.getElementById('floatingAIWidget');
+    if (!widget) return;
+
+    const container = widget.querySelector('.ai-widget-container');
+    const icon = widget.querySelector('.ai-bot-icon');
+    const panel = widget.querySelector('.ai-panel');
+    const button = widget.querySelector('.ai-panel-button');
+
+    // Desktop: hover to expand
+    icon.addEventListener('mouseenter', () => {
+        container.classList.add('expanded');
+    });
+
+    widget.addEventListener('mouseleave', () => {
+        container.classList.remove('expanded');
+    });
+
+    // Mobile: click to toggle
+    icon.addEventListener('click', (e) => {
+        e.stopPropagation();
+        container.classList.toggle('expanded');
+    });
+
+    // Button click: navigate to assistant
+    button.addEventListener('click', () => {
+        window.location.href = 'assistant.html';
+    });
+
+    // Close panel when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!widget.contains(e.target)) {
+            container.classList.remove('expanded');
+        }
+    });
+}
+
+// Initialize widget when DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initFloatingAIWidget);
+} else {
+    initFloatingAIWidget();
+}
 </script>
+
+<!-- Floating AI Widget -->
+<div id="floatingAIWidget" class="floating-ai-widget">
+    <div class="ai-widget-container">
+        <div class="ai-bot-icon" title="Chat with AI">🤖</div>
+        <div class="ai-panel">
+            <span class="ai-panel-text">Chat with EV AI Assistant?</span>
+            <button class="ai-panel-button">Start Chat</button>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>
