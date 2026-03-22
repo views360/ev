@@ -269,9 +269,11 @@
             align-items: center;
             background: var(--bg);
             border: 1px solid var(--border);
+            border-radius: 8px;
             padding: 12px 14px;
             transition: border-color 0.2s, box-shadow 0.2s;
             box-sizing: border-box;
+            height: 44px;
         }
 
         .input-wrapper:focus-within {
@@ -295,6 +297,8 @@
             font-size: 0.95rem;
             outline: none;
             font-family: 'Sora', sans-serif;
+            line-height: 1.5;
+            height: 100%;
         }
 
         input:focus {
@@ -440,7 +444,6 @@
             .input-wrapper {
                 min-width: 120px;
                 padding: 0 10px;
-                height: 44px;
             }
 
             button {
