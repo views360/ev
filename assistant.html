@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EV AI Assistant - Get Instant Answers About Electric Vehicles</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* ── Page reset ── */
+        body {
+            padding: 0 !important;
+            margin: 0;
+            background: var(--bg);
+            overflow-x: hidden;
+        }
+
+        /* ── Parallax hero ── */
+        .hero-parallax {
+            position: relative;
+            height: 480px;
+            overflow: hidden;
+            margin-top: 48px;
+        }
+
+        .hero-bg {
+            position: absolute;
+            inset: -80px 0 -80px 0;
+            background-image: url('images/ai-assistant.webp');
+            background-size: cover;
+            background-position: center;
+            will-change: transform;
+            filter: brightness(0.75);
+        }
+
+        /* dark gradient over the image */
+        .hero-bg::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                to bottom,
+                rgba(2, 6, 23, 0.15) 0%,
+                rgba(2, 6, 23, 0.40) 55%,
+                rgba(2, 6, 23, 0.82) 100%
+            );
+        }
+
+        .hero-text {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 0 40px 48px;
+            z-index: 2;
+        }
+
+        .hero-eyebrow {
+            font-family: 'Sora', sans-serif;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--accent);
+            text-shadow: var(--glow);
+            margin-bottom: 10px;
+        }
+
+        .hero-title {
+            font-family: 'Sora', sans-serif;
+            font-size: clamp(2.4rem, 7vw, 4.8rem);
+            font-weight: 800;
+            color: #f1f5f9;
+            line-height: 1.05;
+            margin: 0 0 14px;
+            text-shadow: 0 2px 40px rgba(0,0,0,0.7);
+        }
+
+        .hero-title span {
+            color: var(--accent);
+            text-shadow: var(--glow-strong);
+        }
+
+        .hero-sub {
+            font-size: 1.05rem;
+            color: rgba(241,245,249,0.78);
+            max-width: 520px;
+            line-height: 1.55;
+            margin: 0;
+        }
+
+        /* ── Scan-line accent strip ── */
+        .hero-strip {
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            box-shadow: var(--glow);
+        }
+
+        /* ── Page body layout ── */
+        .guide-wrap {
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 56px 40px 120px;
+        }
+
+        /* ── Chat container ── */
+        .guide-card {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 0;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3), var(--glow);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 650px;
+        }
+
+        /* subtle corner accent */
+        .guide-card::before {
+            content: '';
+            position: absolute;
+            top: 0; right: 0;
+            width: 180px; height: 180px;
+            background: radial-gradient(circle at top right, var(--accent-soft), transparent 70%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .guide-card > h2 {
+            font-family: 'Sora', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--accent);
+            margin: 24px 24px 8px 24px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .guide-card > p {
+            font-size: 0.95rem;
+            color: var(--muted);
+            margin: 0 24px 24px 24px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* ── Messages container ── */
+        .messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .message {
+            display: flex;
+            gap: 12px;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.user {
+            justify-content: flex-end;
+        }
+
+        .message-content {
+            max-width: 70%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            line-height: 1.5;
+            font-size: 0.95rem;
+        }
+
+        .message.assistant .message-content {
+            background: var(--panel-alt);
+            border: 1px solid var(--border);
+            color: var(--text);
+        }
+
+        .message.user .message-content {
+            background: linear-gradient(135deg, var(--accent), #0ea5e9);
+            color: #ffffff;
+            border-radius: 12px 4px 12px 12px;
+        }
+
+        .loading {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+            padding: 12px 16px;
+        }
+
+        .loading-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--accent);
+            border-radius: 50%;
+            animation: loading 1.4s infinite;
+        }
+
+        .loading-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .loading-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes loading {
+            0%, 60%, 100% {
+                opacity: 0.3;
+            }
+            30% {
+                opacity: 1;
+            }
+        }
+
+        /* ── Input area ── */
+        .input-area {
+            border-top: 1px solid var(--border);
+            padding: 16px 24px;
+            background: var(--panel-alt);
+            display: flex;
+            gap: 12px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .input-wrapper {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            background: var(--panel);
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            padding: 0 14px;
+            transition: all 0.2s ease;
+        }
+
+        .input-wrapper:focus-within {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px var(--accent-soft), var(--glow);
+        }
+
+        /* Pulsating green when input is empty */
+        .input-wrapper.empty-pulse {
+            border-color: var(--neon-green);
+            box-shadow: 0 0 5px var(--neon-green-soft);
+            animation: neonPulse 1.5s infinite ease-in-out;
+        }
+
+        input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--text);
+            padding: 12px 0;
+            font-size: 0.95rem;
+            outline: none;
+            font-family: 'Sora', sans-serif;
+        }
+
+        input::placeholder {
+            color: var(--muted);
+        }
+
+        button {
+            background: linear-gradient(135deg, var(--accent), #0ea5e9);
+            color: #ffffff;
+            border: 1px solid var(--accent);
+            border-radius: 8px;
+            padding: 10px 24px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: 'Sora', sans-serif;
+            box-shadow: 0 4px 12px rgba(56, 189, 248, 0.2);
+        }
+
+        button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(56, 189, 248, 0.4);
+        }
+
+        button:active:not(:disabled) {
+            transform: translateY(0);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .welcome-message {
+            text-align: center;
+            color: var(--muted);
+            padding: 30px 20px;
+        }
+
+        .welcome-message h2 {
+            color: var(--text);
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            font-family: 'Sora', sans-serif;
+        }
+
+        .example-queries {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .example-query {
+            padding: 12px;
+            background: var(--panel-alt);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.85rem;
+            color: var(--muted);
+            font-family: 'Sora', sans-serif;
+            text-align: center;
+        }
+
+        .example-query:hover {
+            border-color: var(--accent);
+            background: var(--panel);
+            color: var(--text);
+            box-shadow: 0 0 10px var(--accent-soft);
+        }
+
+        /* ── Footer ── */
+        .footer-text {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 0.85rem;
+            color: var(--muted);
+            padding: 0 40px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .footer-text a {
+            color: var(--accent);
+            text-decoration: none;
+            transition: color 0.2s;
+            font-weight: 600;
+        }
+
+        .footer-text a:hover {
+            color: #0ea5e9;
+            text-decoration: underline;
+        }
+
+        .footer-disclaimer {
+            font-size: 0.8rem;
+            color: var(--muted);
+            margin-top: 12px;
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 1.8rem;
+            }
+
+            .guide-wrap {
+                padding: 40px 20px 80px;
+            }
+
+            .guide-card {
+                height: 500px;
+            }
+
+            .message-content {
+                max-width: 85%;
+            }
+
+            .example-queries {
+                grid-template-columns: 1fr;
+            }
+
+            .input-area {
+                padding: 12px 16px;
+                gap: 8px;
+            }
+
+            button {
+                padding: 10px 16px;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* ── Scrollbar styling ── */
+        .messages::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .messages::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .messages::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 3px;
+        }
+
+        .messages::-webkit-scrollbar-thumb:hover {
+            background: var(--muted);
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <div class="hero-parallax">
+        <div class="hero-bg"></div>
+        <div class="hero-text">
+            <div class="hero-eyebrow">⚡ AI-Powered EV Guide</div>
+            <h1 class="hero-title">EV AI <span>Assistant</span></h1>
+            <p class="hero-sub">Get instant answers to all your electric vehicle questions about charging, battery care, costs, and ownership.</p>
+        </div>
+    </div>
+    <div class="hero-strip"></div>
+
+    <!-- Main Content -->
+    <div class="guide-wrap">
+        <div class="guide-card">
+            <h2>Ask Anything</h2>
+            <p>Your AI-powered guide to electric vehicles</p>
+
+            <!-- Messages -->
+            <div class="messages" id="messages">
+                <div class="message assistant">
+                    <div class="message-content">
+                        👋 Hello! I'm your EV AI Assistant. Ask me anything about electric vehicles—from battery care and charging strategies to costs, range, winter driving, insurance, or buying used. What would you like to know?
+                    </div>
+                </div>
+
+                <div class="welcome-message">
+                    <h2>Example questions:</h2>
+                    <div class="example-queries">
+                        <div class="example-query" onclick="sendExampleQuery('How does regenerative braking work in EVs?')">How does regenerative braking work?</div>
+                        <div class="example-query" onclick="sendExampleQuery('What is the best way to maximize EV battery life?')">Maximize battery life</div>
+                        <div class="example-query" onclick="sendExampleQuery('Should I charge my EV to 100% or 80%?')">Charging to 100% or 80%?</div>
+                        <div class="example-query" onclick="sendExampleQuery('How does cold weather affect EV range?')">Cold weather & range</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Input Area -->
+            <div class="input-area">
+                <div class="input-wrapper" id="inputWrapper">
+                    <input 
+                        type="text" 
+                        id="userInput" 
+                        placeholder="Ask about EVs, charging, costs, range..." 
+                        onkeypress="handleKeyPress(event)"
+                        oninput="updateInputState()"
+                    >
+                </div>
+                <button onclick="sendMessage()" id="sendBtn">Send</button>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer-text">
+            <p>Powered by AI | <a href="https://www.ev-subs-compare.co.uk" target="_blank">EV Subs Compare</a></p>
+            <p class="footer-disclaimer">
+                💡 Tip: This AI provides general EV information. Always consult your vehicle manual or manufacturer for specific advice.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        const messagesContainer = document.getElementById('messages');
+        const userInput = document.getElementById('userInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const inputWrapper = document.getElementById('inputWrapper');
+
+        // Update input wrapper state based on input value
+        function updateInputState() {
+            if (userInput.value.trim() === '') {
+                inputWrapper.classList.add('empty-pulse');
+            } else {
+                inputWrapper.classList.remove('empty-pulse');
+            }
+        }
+
+        // Initialize input state on load
+        window.addEventListener('load', updateInputState);
+
+        async function sendMessage() {
+            const message = userInput.value.trim();
+            if (!message) return;
+
+            // Add user message to chat
+            addMessage(message, 'user');
+            userInput.value = '';
+            updateInputState();
+
+            // Show loading indicator
+            const loadingMsg = addLoadingMessage();
+
+            try {
+                // Call your API endpoint
+                const response = await fetch('/api/ask-claude', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        message: message,
+                        context: 'EV-focused assistant'
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('API request failed');
+                }
+
+                const data = await response.json();
+                
+                // Remove loading message
+                loadingMsg.remove();
+                
+                // Add AI response
+                addMessage(data.response, 'assistant');
+            } catch (error) {
+                loadingMsg.remove();
+                addMessage(
+                    '❌ Sorry, I encountered an error. Please check that the API is properly configured and try again.',
+                    'assistant'
+                );
+                console.error('Error:', error);
+            }
+
+            sendBtn.disabled = false;
+            userInput.focus();
+        }
+
+        function addMessage(text, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+            
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'message-content';
+            contentDiv.textContent = text;
+            
+            messageDiv.appendChild(contentDiv);
+            messagesContainer.appendChild(messageDiv);
+            
+            // Auto-scroll to bottom
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            
+            return messageDiv;
+        }
+
+        function addLoadingMessage() {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message assistant';
+            
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'loading';
+            contentDiv.innerHTML = '<div class="loading-dot"></div><div class="loading-dot"></div><div class="loading-dot"></div>';
+            
+            messageDiv.appendChild(contentDiv);
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            
+            return messageDiv;
+        }
+
+        function sendExampleQuery(query) {
+            userInput.value = query;
+            updateInputState();
+            sendBtn.click();
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendMessage();
+            }
+        }
+
+        // Focus on input on load
+        userInput.focus();
+    </script>
+</body>
+</html>
