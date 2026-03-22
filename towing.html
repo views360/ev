@@ -172,7 +172,7 @@
             height: 40px;
             border-radius: 10px;
             background: rgba(255, 179, 0, 0.12);
-            border: 1px solid #9921cb;
+            border: 1px solid #ffb300;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -182,7 +182,7 @@
         .guide-icon-box svg {
             width: 18px;
             height: 18px;
-            stroke: #9921cb;
+            stroke: #ffb300;
         }
 
         .guide-section h3 {
@@ -220,7 +220,7 @@
             margin: 16px 0 6px;
             padding: 14px 18px;
             background: rgba(255, 179, 0, 0.07);
-            border-left: 3px solid #9921cb;
+            border-left: 3px solid #ffb300;
             border-radius: 0 8px 8px 0;
             font-size: 0.88rem;
             color: var(--muted);
@@ -228,7 +228,7 @@
         }
 
         .guide-callout strong {
-            color: #9921cb;
+            color: #ffb300;
         }
 
         /* ── Light mode overrides ── */
@@ -336,12 +336,12 @@
         })();
     </script>
 </head>
+
 <style>
     /* ── Floating AI Assistant Widget ── */
     .floating-ai-widget {
         position: fixed;
-        /* Positioned so the right ~18px of the robot is clearly visible on the edge */
-        left: -24px; 
+        left: -38px;
         bottom: 100px;
         z-index: 1000;
         pointer-events: none;
@@ -350,35 +350,32 @@
     .ai-widget-container {
         display: flex;
         align-items: center;
-        height: 42px; /* Matches the new smaller icon height */
+        height: 48px;
         pointer-events: auto;
-        transition: transform 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+        transition: transform 0.3s cubic-bezier(0.2, 0, 0.2, 1);
     }
 
-    /* Slides the widget fully into view when expanded */
     .floating-ai-widget.expanded .ai-widget-container {
-        transform: translateX(36px);
+        transform: translateX(48px);
     }
 
     .ai-bot-icon {
-        width: 42px;  /* Shrink from 56px to fit the SVG snugly */
-        height: 42px;
+        width: 48px;
+        height: 48px;
         background: var(--panel);
-        /* Bold Neon Blue Border */
-        border: 2px solid #00f2ff;
-        border-radius: 10px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
         display: flex;
         align-items: center;
         justify-content: center;
         cursor: pointer;
-        /* Glowing Neon Effect */
-        box-shadow: 0 0 12px rgba(0, 242, 255, 0.4);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
         transition: all 0.2s ease;
         flex-shrink: 0;
     }
 
     .ai-bot-icon:hover {
-        box-shadow: 0 0 20px rgba(0, 242, 255, 0.6);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
         transform: scale(1.05);
     }
 
@@ -387,35 +384,33 @@
     }
 
     .ai-bot-icon svg {
-        width: 24px; /* Perfectly sized for the 42px lozenge */
+        width: 24px;
         height: 24px;
-        /* Matches the neon border for a unified look */
-        stroke: #00f2ff;
+        stroke: var(--text);
         fill: none;
+        margin: auto;
     }
 
     .ai-panel {
         background: var(--panel);
         border: 1px solid var(--border);
         border-radius: 8px;
-        padding: 12px 14px;
-        margin-left: 12px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-        width: 190px;
+        padding: 14px 16px;
+        margin-left: 10px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        width: 200px;
         opacity: 0;
-        visibility: hidden;
-        transition: opacity 0.3s ease, visibility 0.3s ease;
+        transition: opacity 0.3s ease;
         pointer-events: auto;
     }
 
     .floating-ai-widget.expanded .ai-panel {
         opacity: 1;
-        visibility: visible;
     }
 
     .ai-panel-text {
         color: var(--text);
-        font-size: 0.88rem;
+        font-size: 0.9rem;
         font-weight: 600;
         margin-bottom: 10px;
         display: block;
@@ -429,7 +424,7 @@
         color: var(--accent);
         border: 1px solid var(--accent);
         border-radius: 6px;
-        font-size: 0.82rem;
+        font-size: 0.85rem;
         font-weight: 600;
         cursor: pointer;
         transition: all 0.2s ease;
@@ -449,33 +444,35 @@
     /* Mobile adjustments */
     @media (max-width: 700px) {
         .floating-ai-widget {
-            left: -22px;
+            left: -46px;
             bottom: auto;
             top: 50%;
             transform: translateY(-50%);
         }
 
         .ai-widget-container {
-            height: 38px;
+            flex-direction: row;
+            height: 46px;
+            gap: 10px;
         }
 
         .floating-ai-widget.expanded .ai-widget-container {
-            transform: translateX(32px);
+            transform: translateX(46px);
         }
 
         .ai-bot-icon {
-            width: 38px;
-            height: 38px;
+            width: 46px;
+            height: 46px;
         }
 
         .ai-bot-icon svg {
-            width: 20px;
-            height: 20px;
+            width: 24px;
+            height: 24px;
         }
 
         .ai-panel {
             margin-left: 10px;
-            width: 170px;
+            width: 180px;
         }
     }
 </style>
@@ -534,10 +531,10 @@
             <div class="guide-section" id="sec-range">
                 <div class="guide-section-header">
                     <div class="guide-icon-box">
-						<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <line x1="22" y1="12" x2="2" y2="12"/><polyline points="9 18 3 12 9 6"/><line x1="3" y1="12" x2="3" y2="12"/>
                         </svg>
-					</div>
+                    </div>
                     <h3>The 30–50% Rule: Planning for Half Your Normal Range</h3>
                 </div>
                 <p>This is the single most important thing to understand before hitching a caravan or trailer to your EV: <strong>towing typically cuts your usable range by 30 to 50 percent</strong>. A car that comfortably covers 250 miles on a clear motorway run may deliver as little as 125–175 miles with a loaded caravan in tow. On a hilly route or in cold weather, the figure can fall further still.</p>
@@ -854,7 +851,9 @@ if (document.readyState === 'loading') {
 <div id="floatingAIWidget" class="floating-ai-widget">
     <div class="ai-widget-container">
         <div class="ai-bot-icon" title="Chat with AI">
-			<img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 8V4H8'/%3E%3Crect width='16' height='12' x='4' y='8' rx='2'/%3E%3Cpath d='M2 14h2'/%3E%3Cpath d='M20 14h2'/%3E%3Cpath d='M15 13v2'/%3E%3Cpath d='M9 13v2'/%3E%3C/svg%3E" class="menu-icon-svg">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 8v4m0 4v.01M8 2h8a3 3 0 0 1 3 3v2h2a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2h-2v2a3 3 0 0 1-3 3H8a3 3 0 0 1-3-3v-2H3a2 2 0 0 1-2-2v-6a2 2 0 0 1 2-2h2V5a3 3 0 0 1 3-3z"/>
+            </svg>
         </div>
         <div class="ai-panel">
             <span class="ai-panel-text">Chat with EV AI Assistant?</span>
@@ -862,5 +861,6 @@ if (document.readyState === 'loading') {
         </div>
     </div>
 </div>
+
 </body>
 </html>
