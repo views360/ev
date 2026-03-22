@@ -1386,6 +1386,57 @@ body {
 
 }
 
+/* AI Floating Widget */
+.ai-widget-container {
+    position: fixed;
+    left: -110px; /* Partially off-screen */
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    transition: left 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    background: var(--panel);
+    border: 2px solid var(--accent); /* Neon Blue */
+    border-left: none;
+    border-radius: 0 12px 12px 0;
+    padding: 10px;
+    box-shadow: var(--glow);
+}
+
+.ai-widget-container:hover, 
+.ai-widget-container:active {
+    left: 0; /* Slides into view */
+}
+
+.ai-content {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.ai-icon-wrapper {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+}
+
+.ai-button {
+    background: var(--accent);
+    color: var(--bg);
+    border: none;
+    padding: 8px 15px;
+    border-radius: 6px;
+    font-family: 'Sora', sans-serif;
+    font-weight: 700;
+    font-size: 0.8rem;
+    cursor: pointer;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+
+
 
 
 
