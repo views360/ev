@@ -1386,11 +1386,12 @@ body {
 
 }
 
-/* AI Floating Widget Updated */
+/* AI Floating Widget - Icon Only on Edge */
 .ai-widget-container {
     position: fixed;
-    left: -135px; /* Adjusted to hide the button area completely */
-    top: calc(50% + 100px); /* Positioned 100px further down */
+    /* Adjusted to only show the icon area on the screen edge */
+    left: -138px; 
+    top: calc(50% + 100px); 
     transform: translateY(-50%);
     z-index: 10000;
     display: flex;
@@ -1405,7 +1406,7 @@ body {
     cursor: pointer;
 }
 
-/* Slide widget in on hover/active */
+/* Slide widget in on hover or click (mobile) */
 .ai-widget-container:hover, 
 .ai-widget-container:active {
     left: 0;
@@ -1426,12 +1427,22 @@ body {
     justify-content: center;
 }
 
-/* Button hidden by default */
+/* The Robot Icon SVG - Styled like menu icons */
+.ai-robot-icon {
+    stroke: var(--muted);
+    transition: stroke 0.3s ease;
+}
+
+.ai-widget-container:hover .ai-robot-icon {
+    stroke: var(--accent); /* Glows when widget slides out */
+}
+
+/* Button hidden until expanded */
 .ai-button {
     opacity: 0;
     visibility: hidden;
     transform: translateX(-10px);
-    transition: all 0.3s ease;
+    transition: all 0.3s ease 0.1s; /* Slight delay for smoother appearance */
     background: var(--accent);
     color: var(--bg);
     border: none;
@@ -1444,7 +1455,6 @@ body {
     white-space: nowrap;
 }
 
-/* Show button only when container is expanded */
 .ai-widget-container:hover .ai-button,
 .ai-widget-container:active .ai-button {
     opacity: 1;
