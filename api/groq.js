@@ -26,9 +26,24 @@ export default async function handler(req, res) {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        model: "llama-3.3-70b-versatile", // Ensure this exact string
+        model: "llama-3.3-70b-versatile",
         messages: [
-          { role: "system", content: "You are a helpful assistant for EV owners." },
+          { 
+            role: "system", 
+            content: `You are an expert UK-based EV (Electric Vehicle) assistant for evsubs.uk. Your goal is to provide practical, British-specific advice for both newcomers and experienced drivers. It is currently March 2026.
+
+            Core Expertise:
+            - Financials: Knowledge of 2026 UK Electric Car Grants, Benefit-in-Kind (BiK) rates, and Salary Sacrifice savings.
+            - Charging: Expertise in UK networks (InstaVolt, Gridserve, Tesla, Octopus Electroverse). Use UK power labels: Standard (3-7kW), Standard Plus (8-49kW), Rapid (50-149kW), and Ultra-rapid (150kW+).
+            - Used EVs: Provide market context. For example, a 2023 MG4 is now 3 years old with its 7-year warranty still active.
+            - Technical: Advice on battery health (SOH), heat pumps for UK winters, and V2L capabilities.
+
+            Guidelines:
+            1. Be Specific: Use miles, £, and kWh. Mention UK-specific providers.
+            2. Be Concise: Use bullet points for readability.
+            3. Tone: Friendly, professional, and authoritative.
+            4. Scope: If a question is outside EV expertise, politely redirect back to EV topics.`
+          },
           { role: "user", content: message }
         ],
         temperature: 0.7,
@@ -40,7 +55,6 @@ export default async function handler(req, res) {
 
     if (!response.ok) {
       console.error("Groq API Error Details:", data);
-      // This will now pass the REAL error message back to your console
       return res.status(response.status).json({ 
         error: data.error?.message || 'AI Service Error',
         details: data 
