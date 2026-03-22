@@ -1,4 +1,8 @@
 {
-  "buildCommand": "echo 'No build'",
-  "outputDirectory": "."
+  "rewrites": [
+    {
+      "source": "/api/groq",
+      "destination": "/api/groq.js"
+    }
+  ]
 }
