@@ -336,7 +336,6 @@
         })();
     </script>
 </head>
-
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-6B2B03YZ17"></script>
 <script>
@@ -662,70 +661,6 @@ function toggleTheme() {
     const isLight = document.documentElement.classList.toggle('light-mode');
     setCookie('themePref', isLight ? 'light' : 'dark');
 }
-
-// ── Floating AI Widget ──
-function initFloatingAIWidget() {
-    const widget = document.getElementById('floatingAIWidget');
-    if (!widget) return;
-
-    const icon = widget.querySelector('.ai-bot-icon');
-    const button = widget.querySelector('.ai-panel-button');
-
-    // Desktop: hover to expand
-    widget.addEventListener('mouseenter', () => {
-        widget.classList.add('expanded');
-    });
-
-    widget.addEventListener('mouseleave', () => {
-        widget.classList.remove('expanded');
-    });
-
-    // Mobile: click to toggle
-    icon.addEventListener('click', (e) => {
-        e.stopPropagation();
-        widget.classList.toggle('expanded');
-    });
-
-    // Button click: navigate to assistant
-    button.addEventListener('click', () => {
-        window.location.href = 'assistant.html';
-    });
-
-    // Close panel when clicking outside
-    document.addEventListener('click', (e) => {
-        if (!widget.contains(e.target)) {
-            widget.classList.remove('expanded');
-        }
-    });
-}
-
-// Initialize widget when DOM is ready
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initFloatingAIWidget);
-} else {
-    initFloatingAIWidget();
-}
 </script>
-
-<!-- Floating AI Widget -->
-<div id="floatingAIWidget" class="floating-ai-widget">
-    <div class="ai-widget-container">
-        <div class="ai-bot-icon" title="Chat with AI">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 8V4H8"/>
-                <rect width="16" height="12" x="4" y="8" rx="2"/>
-                <path d="M2 14h2"/>
-                <path d="M20 14h2"/>
-                <path d="M15 13v2"/>
-                <path d="M9 13v2"/>
-            </svg>
-        </div>
-        <div class="ai-panel">
-            <span class="ai-panel-text">Chat with EV AI Assistant?</span>
-            <button class="ai-panel-button">Start Chat</button>
-        </div>
-    </div>
-</div>
-
 </body>
 </html>
