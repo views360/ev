@@ -1,8 +1,8 @@
-// api/ask-claude.js - Groq API Implementation (FASTEST & FREE)
+// api/groq.js - Groq API Implementation (CommonJS)
 // Setup: Get API key from https://console.groq.com
 // Environment variable: GROQ_API_KEY
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   // Enable CORS
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -61,7 +61,7 @@ Always provide practical, specific advice. Be concise but thorough. If a questio
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'mixtral-8x7b-32768', // or 'llama-2-70b-chat' for higher quality
+        model: 'mixtral-8x7b-32768',
         messages: [
           {
             role: 'system',
@@ -114,4 +114,4 @@ Always provide practical, specific advice. Be concise but thorough. If a questio
       error: 'Failed to process request. Please try again later.',
     });
   }
-}
+};
