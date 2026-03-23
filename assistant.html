@@ -109,6 +109,40 @@
             box-sizing: border-box;
         }
 
+        /* Modal Overlay Styles */
+        .help-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(2, 6, 23, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        
+        .help-overlay.active {
+            opacity: 1;
+        }
+        
+        .help-modal {
+            background: var(--panel);
+            border: 1px solid var(--accent);
+            box-shadow: var(--glow-strong);
+            padding: 30px;
+            border-radius: 16px;
+            max-width: 450px;
+            width: 90%;
+            transform: translateY(20px);
+            transition: transform 0.4s ease;
+        }
+        
+        .help-overlay.active .help-modal {
+            transform: translateY(0);
+        }
+
         @media (min-width: 700px) {
             body { margin-right: 160px !important; }
             .guide-wrap { max-width: calc(860px - 160px); }
@@ -394,15 +428,15 @@
 
             <div class="messages" id="messages">
                 <div class="message assistant">
-                    <div class="message-content">👋 Hello! I'm your UK EV Specialist. I'm up to speed on March 2026 car grants, current 4% BiK rates, and used market valuations. How can I help you today?</div>
+                    <div class="message-content">👋 Hello! I'm your UK EV Specialist. I'm up to speed on car grants, current BiK rates, used market valuations, and pretty much everything EV related. How can I help you today?</div>
                 </div>
 
                 <div class="welcome-message" id="welcomePanel">
                     <div class="example-queries">
                         <div class="example-query" onclick="sendExampleQuery('Explain the 2026 UK Electric Car Grant bands')">£3,750 EV Grant</div>
                         <div class="example-query" onclick="sendExampleQuery('What is the 2026/27 Benefit-in-Kind rate for an EV?')">2026 BiK Tax</div>
-                        <div class="example-query" onclick="sendExampleQuery('How much is a used 2023 MG4 worth in 2026?')">Used MG4 Value</div>
-                        <div class="example-query" onclick="sendExampleQuery('What are the best UK charging networks right now?')">Charging Network Tips</div>
+                        <div class="example-query" onclick="sendExampleQuery('How much is a used 2023 MG4 worth now?')">Used 2023 MG4 Value</div>
+                        <div class="example-query" onclick="sendExampleQuery('What are the best UK charging networks right now?')">UK Charging Network Tips</div>
                     </div>
                 </div>
             </div>
