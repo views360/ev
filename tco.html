@@ -22,23 +22,23 @@
             overflow-x: hidden;
         }
 
-        /* ── Parallax hero ── */
-        .hero-parallax {
-            position: relative;
-            height: 480px;
-            overflow: hidden;
-            margin-top: 48px;
-        }
-
-        .hero-bg {
-            position: absolute;
-            inset: -80px 0 -80px 0;
-            background-image: url('images/tco.webp');
-            background-size: cover;
-            background-position: center;
-            will-change: transform;
-            filter: brightness(0.75);
-        }
+		/* ── Parallax hero ── */
+		.hero-parallax {
+		    position: relative;
+		    height: 350px; /* Changed from 480px */
+		    overflow: hidden;
+		    margin-top: 48px; /* Changed from 0px */
+		}
+		
+		.hero-bg {
+		    position: absolute;
+		    inset: -80px 0 -80px 0;
+		    background-image: url('images/home-charging.webp');
+		    background-size: cover;
+		    background-position: right center; /* Changed from right bottom */
+		    will-change: transform;
+		    filter: brightness(0.75);
+		}
 
         /* dark gradient over the image */
         .hero-bg::after {
