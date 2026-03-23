@@ -693,6 +693,7 @@ tr.bad td { color: var(--danger); }
     opacity: 1;
     transition: opacity 0.3s ease;
     padding-top: 10px;
+    margin-bottom: 50px;
 }
 
 .help-modal {
