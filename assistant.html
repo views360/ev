@@ -109,41 +109,6 @@
             box-sizing: border-box;
         }
 
-        /* Modal Overlay Styles */
-        .help-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(2, 6, 23, 0.85);
-            backdrop-filter: blur(8px);
-            z-index: 10000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            transition: opacity 0.4s ease;
-        }
-        
-        .help-overlay.active {
-            opacity: 1;
-        }
-        
-        .help-modal {
-            background: var(--panel);
-            border: 1px solid var(--accent);
-            box-shadow: var(--glow-strong);
-            padding: 30px;
-            border-radius: 16px;
-            max-width: 450px;
-            width: 90%;
-            transform: translateY(20px);
-            transition: transform 0.4s ease;
-            margin-bottom: 100px;
-        }
-        
-        .help-overlay.active .help-modal {
-            transform: translateY(0);
-        }
-
         @media (min-width: 700px) {
             body { margin-right: 160px !important; }
             .guide-wrap { max-width: calc(860px - 160px); }
@@ -400,6 +365,169 @@
                 flex: none;   /* Disable flex grow to prevent squashing */
             }
         }
+
+        /* ── Warning Modal Styling ── */
+        .warning-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.65);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(3px);
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+            }
+        }
+
+        .warning-modal {
+            background: var(--panel);
+            border: 2px solid var(--accent);
+            border-radius: 16px;
+            padding: 32px 28px;
+            max-width: 480px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6), var(--glow-strong);
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .warning-icon {
+            font-size: 2.8rem;
+            margin-bottom: 16px;
+            display: inline-block;
+        }
+
+        .warning-modal h2 {
+            font-family: 'Sora', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--accent);
+            margin: 0 0 12px;
+            line-height: 1.3;
+        }
+
+        .warning-modal > p {
+            color: var(--text);
+            line-height: 1.6;
+            margin: 12px 0;
+            font-size: 0.95rem;
+        }
+
+        .warning-modal .warning-list {
+            background: var(--panel-alt);
+            border-left: 4px solid var(--accent);
+            padding: 14px 16px;
+            border-radius: 6px;
+            margin: 16px 0;
+            font-size: 0.9rem;
+            color: var(--text);
+        }
+
+        .warning-modal .warning-list ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .warning-modal .warning-list li {
+            margin: 8px 0;
+            line-height: 1.5;
+        }
+
+        .btn-understand {
+            width: 100%;
+            height: 48px;
+            margin-top: 20px;
+            background: var(--accent);
+            color: var(--bg);
+            border: none;
+            border-radius: 10px;
+            font-family: 'Sora', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: var(--glow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-understand:hover {
+            opacity: 0.88;
+            box-shadow: var(--glow-strong);
+            transform: translateY(-2px);
+        }
+
+        .btn-understand:active {
+            transform: translateY(0);
+        }
+
+        /* Prevent closing by clicking outside the modal */
+        .warning-overlay {
+            pointer-events: auto;
+        }
+
+        .warning-modal {
+            pointer-events: auto;
+        }
+
+        @media (max-width: 700px) {
+            .warning-modal {
+                padding: 24px;
+                width: 95%;
+                max-width: 100%;
+            }
+
+            .warning-modal h2 {
+                font-size: 1.3rem;
+            }
+
+            .warning-modal > p {
+                font-size: 0.9rem;
+            }
+
+            .warning-modal .warning-list {
+                font-size: 0.85rem;
+                padding: 12px 14px;
+            }
+
+            .btn-understand {
+                height: 44px;
+                font-size: 0.9rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -417,7 +545,7 @@
         <div class="hero-text">
             <div class="hero-eyebrow">⚡ March 2026 AI Specialist</div>
             <h1 class="hero-title">EV AI <span>Assistant</span></h1>
-            <p class="hero-sub">Expert UK advice on grants, benefit-in-kind (BiK) rates, and used EV buying.</p>
+            <p class="hero-sub">Expert UK advice on the £3,750 grant, 4% BiK rates, and used EV buying.</p>
         </div>
     </div>
     <div class="hero-strip"></div>
@@ -429,22 +557,22 @@
 
             <div class="messages" id="messages">
                 <div class="message assistant">
-                    <div class="message-content">👋 Hello! I'm your UK EV Specialist. I'm up to speed on car grants, current BiK rates, used market valuations, and pretty much everything EV related. How can I help you today?</div>
+                    <div class="message-content">👋 Hello! I'm your UK EV Specialist. I'm up to speed on the March 2026 car grants, current 4% BiK rates, and used market valuations. How can I help you today?</div>
                 </div>
 
                 <div class="welcome-message" id="welcomePanel">
                     <div class="example-queries">
                         <div class="example-query" onclick="sendExampleQuery('Explain the 2026 UK Electric Car Grant bands')">£3,750 EV Grant</div>
                         <div class="example-query" onclick="sendExampleQuery('What is the 2026/27 Benefit-in-Kind rate for an EV?')">2026 BiK Tax</div>
-                        <div class="example-query" onclick="sendExampleQuery('How much is a used 2023 MG4 worth now?')">Used 2023 MG4 Value</div>
-                        <div class="example-query" onclick="sendExampleQuery('What are the best UK charging networks right now?')">UK Charging Network Tips</div>
+                        <div class="example-query" onclick="sendExampleQuery('How much is a used 2023 MG4 worth in 2026?')">Used MG4 Value</div>
+                        <div class="example-query" onclick="sendExampleQuery('What are the best UK charging networks right now?')">Charging Tips</div>
                     </div>
                 </div>
             </div>
 
             <div class="input-area">
                 <div class="input-row">
-                    <input type="text" id="userInput" class="empty-pulse" placeholder="Ask about EVs..." onkeypress="handleKeyPress(event)">
+                    <input type="text" id="userInput" placeholder="Ask about EVs..." onkeypress="handleKeyPress(event)">
                 </div>
                 <div class="button-row">
                     <button class="btn-clear" onclick="clearChat()">Clear Chat History</button>
@@ -454,8 +582,8 @@
         </div>
 
         <div class="footer-text">
-            <p>Powered by AI</p>
-            <p class="footer-disclaimer"><strong>This AI tool provides general advice. Always double-check with an official source before making decisions.</strong></p>
+            <p>Powered by AI | <a href="https://www.ev-subs-compare.co.uk" target="_blank">EV Subs Compare</a></p>
+            <p class="footer-disclaimer">💡 This AI provides general advice. Always check your specific vehicle manual and HMRC for final tax figures.</p>
         </div>
     </div>
 
@@ -473,36 +601,26 @@
         </div>
     </div>
 
+    <!-- Warning Modal -->
+    <div id="warningOverlay" class="warning-overlay">
+        <div class="warning-modal">
+            <div class="warning-icon">⚠️</div>
+            <h2>Important Notice</h2>
+            <p>This AI assistant provides <strong>general information only</strong> and is not a substitute for professional advice.</p>
+            <div class="warning-list">
+                <ul>
+                    <li>Always verify information with official HMRC sources</li>
+                    <li>Check your vehicle's manual for technical specifications</li>
+                    <li>Consult a financial advisor for personal tax implications</li>
+                    <li>Current rates are accurate as of March 2026</li>
+                </ul>
+            </div>
+            <p style="font-size: 0.85rem; color: var(--muted); margin-top: 16px;">By continuing, you acknowledge that you've read this disclaimer.</p>
+            <button class="btn-understand" onclick="closeWarningModal()">I Understand</button>
+        </div>
+    </div>
+
     <script>
-        // Remove the pulse effect once the user interacts with the input
-        const inputField = document.getElementById('userInput');
-        inputField.addEventListener('input', function() {
-            if (this.value.trim() !== "") {
-                this.classList.remove('empty-pulse');
-            } else {
-                this.classList.add('empty-pulse');
-            }
-        });
-        
-        function updateDynamicDates() {
-            const now = new Date();
-            const monthYear = now.toLocaleString('en-GB', { month: 'long', year: 'numeric' });
-        
-            // Update Hero Eyebrow
-            const heroDate = document.getElementById('heroDate');
-            if (heroDate) heroDate.innerHTML = `⚡ ${monthYear} AI Specialist`;
-        
-            // Update Card Subtitle
-            const cardDate = document.getElementById('cardDate');
-            if (cardDate) cardDate.innerHTML = `Expert UK EV Guide • ${monthYear}`;
-        
-            // Update Welcome Message text
-            const welcomeMsg = document.getElementById('welcomeMsg');
-            if (welcomeMsg) {
-                welcomeMsg.textContent = `👋 Hello! I'm your UK EV Specialist. I'm up to speed on issues in ${monthYear}, such as car grants, current BiK rates, and used market valuations. How can I help you today?`;
-            }
-        }
-        
         const messagesContainer = document.getElementById('messages');
         const userInput = document.getElementById('userInput');
         const sendBtn = document.getElementById('sendBtn');
@@ -700,7 +818,7 @@
         window.onload = () => {
             loadMenu();
             loadAdSense();
-            updateDynamicDates();
+            userInput.focus();
         };
 
         // Close menu when clicking outside
@@ -712,46 +830,26 @@
             }
         });
 
-        function showAiWarning() {
-            const overlay = document.getElementById('aiWarningOverlay');
+        // Warning Modal Functions
+        function closeWarningModal() {
+            const overlay = document.getElementById('warningOverlay');
             if (overlay) {
-                overlay.style.display = 'flex';
-                // Trigger reflow for transition
-                void overlay.offsetWidth; 
-                overlay.classList.add('active');
-            }
-        }
-        
-        function closeAiWarning() {
-            const overlay = document.getElementById('aiWarningOverlay');
-            if (overlay) {
-                overlay.classList.remove('active');
+                overlay.style.animation = 'fadeOut 0.3s ease-out forwards';
                 setTimeout(() => {
                     overlay.style.display = 'none';
-                }, 400); 
+                }, 300);
             }
         }
-        
-        // Update the existing window.onload or add this:
+
+        // Show warning modal after 2 seconds on page load
         window.addEventListener('load', () => {
-            // Other existing load functions (loadMenu, etc.)
-            
-            // Set timer for 2 seconds (2000 milliseconds)
-            setTimeout(showAiWarning, 2000);
+            setTimeout(() => {
+                const overlay = document.getElementById('warningOverlay');
+                if (overlay) {
+                    overlay.style.display = 'flex';
+                }
+            }, 2000);
         });
     </script>
-    <div id="aiWarningOverlay" class="help-overlay" style="display: none;" onclick="closeAiWarning()">
-    <div class="help-modal" onclick="event.stopPropagation()">
-        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
-            <div style="font-size: 2rem;">🤖</div>
-            <h2 style="margin: 0; font-family: 'Sora', sans-serif;">AI Usage Notice</h2>
-        </div>
-        <p style="color: var(--text); line-height: 1.6; margin-bottom: 20px;">
-            <strong style="color: var(--accent)">Important: AI often makes stuff up (it hallucinates)</strong>. Never act on information provided by this tool without first double-checking with another source. 
-            <strong>Always verify imporant data</strong>, such as grants, tax rates, and legal requirements with official government sources.
-        </p>
-        <button class="btn btn-primary" style="width: 100%;" onclick="closeAiWarning()">I Understand</button>
-    </div>
-    </div>
 </body>
 </html>
