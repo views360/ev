@@ -666,6 +666,47 @@
                 menu.classList.remove('active');
             }
         });
+
+        function showAiWarning() {
+            const overlay = document.getElementById('aiWarningOverlay');
+            if (overlay) {
+                overlay.style.display = 'flex';
+                // Trigger reflow for transition
+                void overlay.offsetWidth; 
+                overlay.classList.add('active');
+            }
+        }
+        
+        function closeAiWarning() {
+            const overlay = document.getElementById('aiWarningOverlay');
+            if (overlay) {
+                overlay.classList.remove('active');
+                setTimeout(() => {
+                    overlay.style.display = 'none';
+                }, 400); 
+            }
+        }
+        
+        // Update the existing window.onload or add this:
+        window.addEventListener('load', () => {
+            // Other existing load functions (loadMenu, etc.)
+            
+            // Set timer for 2 seconds (2000 milliseconds)
+            setTimeout(showAiWarning, 2000);
+        });
     </script>
+    <div id="aiWarningOverlay" class="help-overlay" style="display: none;" onclick="closeAiWarning()">
+    <div class="help-modal" onclick="event.stopPropagation()">
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+            <div style="font-size: 2rem;">🤖</div>
+            <h2 style="margin: 0; font-family: 'Sora', sans-serif;">AI Usage Notice</h2>
+        </div>
+        <p style="color: var(--text); line-height: 1.6; margin-bottom: 20px;">
+            In case you are unaware, AI makes stuff up. Never act on information provided by this tool without first double-checking with another source. 
+            <strong>Always verify imporant data</strong>, such as grants, tax rates, and legal requirements with official government sources.
+        </p>
+        <button class="btn btn-primary" style="width: 100%;" onclick="closeAiWarning()">I Understand</button>
+    </div>
+</div>
 </body>
 </html>
