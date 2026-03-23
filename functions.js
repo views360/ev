@@ -1197,7 +1197,7 @@ document.addEventListener('DOMContentLoaded', () => {
         track.addEventListener('animationend', () => {
             track.classList.remove('intro-animation');
             // Lock the position on Slide 3 (Index 2)
-            track.style.transform = `translateX(-28.5714%)`;
+            track.style.transform = `translateX(-25%)`;
             // Sync the manual index so 'Next' starts from Slide 3
             currentSlide = 2; 
         });
