@@ -444,7 +444,7 @@
 
             <div class="input-area">
                 <div class="input-row">
-                    <input type="text" id="userInput" placeholder="Ask about EVs..." onkeypress="handleKeyPress(event)">
+                    <input type="text" id="userInput" class="empty-pulse" placeholder="Ask about EVs..." onkeypress="handleKeyPress(event)">
                 </div>
                 <div class="button-row">
                     <button class="btn-clear" onclick="clearChat()">Clear Chat History</button>
@@ -474,6 +474,16 @@
     </div>
 
     <script>
+        // Remove the pulse effect once the user interacts with the input
+        const inputField = document.getElementById('userInput');
+        inputField.addEventListener('input', function() {
+            if (this.value.trim() !== "") {
+                this.classList.remove('empty-pulse');
+            } else {
+                this.classList.add('empty-pulse');
+            }
+        });
+        
         function updateDynamicDates() {
             const now = new Date();
             const monthYear = now.toLocaleString('en-GB', { month: 'long', year: 'numeric' });
