@@ -22,23 +22,23 @@
             overflow-x: hidden;
         }
 
-        /* ── Parallax hero ── */
-        .hero-parallax {
-            position: relative;
-            height: 480px;
-            overflow: hidden;
-            margin-top: 48px; /* clear the fixed header */
-        }
-
-        .hero-bg {
-            position: absolute;
-            inset: -80px 0 -80px 0;   /* extra height enables the parallax travel */
-            background-image: url('images/contact.webp');
-            background-size: cover;
-            background-position: right bottom; /* anchor to bottom-right where the car/figure is */
-            will-change: transform;
-            filter: brightness(0.75);
-        }
+		/* ── Parallax hero ── */
+		.hero-parallax {
+		    position: relative;
+		    height: 350px; /* Changed from 480px */
+		    overflow: hidden;
+		    margin-top: 48px; /* Changed from 0px */
+		}
+		
+		.hero-bg {
+		    position: absolute;
+		    inset: -80px 0 -80px 0;
+		    background-image: url('images/home-charging.webp');
+		    background-size: cover;
+		    background-position: right center; /* Changed from right bottom */
+		    will-change: transform;
+		    filter: brightness(0.75);
+		}
 
         /* dark gradient over the image — lighter so the image reads clearly in dark mode */
         .hero-bg::after {
