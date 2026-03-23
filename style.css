@@ -525,7 +525,7 @@ tr.bad td { color: var(--danger); }
     display: flex;
     border-bottom: 2px solid var(--border);
     max-width: 410px;
-    margin: 0 auto 20px auto;
+    margin: 30px auto 30px auto;
 }
 
 .calc-tab {
