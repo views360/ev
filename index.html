@@ -540,6 +540,15 @@ if (window.matchMedia('(min-width: 700px)').matches) {
         }, 500);
     });
 }
+
+window.addEventListener('scroll', function() {
+    const scrollY = window.scrollY;
+    const heroBg = document.getElementById('heroBg');
+    if (heroBg) {
+        // Adjust the 0.4 value to change the speed of the parallax movement
+        heroBg.style.transform = `translateY(${scrollY * 0.4}px)`;
+    }
+});
 </script>
 <script>
 async function loadMenu() {
