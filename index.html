@@ -31,6 +31,98 @@
 	        if (theme === 'light') document.documentElement.classList.add('light-mode');
 	    })();
 	</script>
+	<style>
+		/* ── Parallax hero ── */
+		.hero-parallax {
+		    position: relative;
+		    height: 480px;
+		    overflow: hidden;
+		    margin-top: 48px;
+		}
+		
+		.hero-bg {
+		    position: absolute;
+		    inset: -80px 0 -80px 0;
+		    background-image: url('images/battery.webp'); /* Ensure this path is correct */
+		    background-size: cover;
+		    background-position: right bottom;
+		    will-change: transform;
+		    filter: brightness(0.75);
+		}
+		
+		.hero-bg::after {
+		    content: '';
+		    position: absolute;
+		    inset: 0;
+		    background: linear-gradient(
+		        to bottom,
+		        rgba(2, 6, 23, 0.15) 0%,
+		        rgba(2, 6, 23, 0.40) 55%,
+		        rgba(2, 6, 23, 0.82) 100%
+		    );
+		}
+		
+		.hero-text {
+		    position: absolute;
+		    bottom: 0;
+		    left: 0;
+		    right: 0;
+		    padding: 0 40px 48px;
+		    z-index: 2;
+		}
+		
+		.hero-eyebrow {
+		    font-family: 'Sora', sans-serif;
+		    font-size: 0.72rem;
+		    font-weight: 700;
+		    letter-spacing: 0.22em;
+		    text-transform: uppercase;
+		    color: var(--accent);
+		    text-shadow: var(--glow);
+		    margin-bottom: 10px;
+		}
+		
+		.hero-title {
+		    font-family: 'Sora', sans-serif;
+		    font-size: clamp(2.4rem, 7vw, 4.8rem);
+		    font-weight: 800;
+		    color: #f1f5f9;
+		    line-height: 1.05;
+		    margin: 0 0 14px;
+		    text-shadow: 0 2px 40px rgba(0,0,0,0.7);
+		}
+		
+		.hero-title span {
+		    color: var(--accent);
+		    text-shadow: var(--glow-strong);
+		}
+		
+		.hero-sub {
+		    font-size: 1.05rem;
+		    color: rgba(241,245,249,0.78);
+		    max-width: 520px;
+		    line-height: 1.55;
+		    margin: 0;
+		}
+		
+		.hero-strip {
+		    height: 3px;
+		    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+		    box-shadow: var(--glow);
+		}
+		
+		/* Ensure light mode compatibility */
+		.light-mode .hero-bg::after {
+		    background: linear-gradient(
+		        to bottom,
+		        rgba(248,250,252,0.10) 0%,
+		        rgba(248,250,252,0.38) 55%,
+		        rgba(248,250,252,0.82) 100%
+		    );
+		}
+		.light-mode .hero-title { color: #0f172a; text-shadow: none; }
+		.light-mode .hero-sub { color: rgba(15,23,42,0.75); }
+	</style>
 </head>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-6B2B03YZ17"></script>
@@ -126,6 +218,16 @@
 
 <!-- Slide-out menu -->
 <div id="menu-placeholder"></div>
+<!-- ── Parallax hero banner ── -->
+<div class="hero-parallax" id="heroParallax">
+	<div class="hero-bg" id="heroBg"></div>
+	<div class="hero-text">
+		<p class="hero-eyebrow">&#x26A1; EV Subs Compare &mdash; UK</p>
+		<h1 class="hero-title">EV <span>Subs Compare</span></h1>
+		<p class="hero-sub">A comparison tool for UK-based EV charging subscriptions that offer discounted rates for a monthly fee. Plus a raft of helpful EV information and an AI assistant.</p>
+	</div>
+</div>
+<div class="hero-strip"></div>
 <div class="app">
 	<div class="android-header-full">
 	    <h1 class="android-title-clean">EV Subs (UK)</h1>
