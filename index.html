@@ -35,17 +35,17 @@
 		/* ── Parallax hero ── */
 		.hero-parallax {
 		    position: relative;
-		    height: 480px;
+		    height: 350px; /* Changed from 480px */
 		    overflow: hidden;
-		    margin-top: 0px;
+		    margin-top: 48px; /* Changed from 0px */
 		}
 		
 		.hero-bg {
 		    position: absolute;
 		    inset: -80px 0 -80px 0;
-		    background-image: url('images/home-charging.webp'); /* Ensure this path is correct */
+		    background-image: url('images/home-charging.webp');
 		    background-size: cover;
-		    background-position: right bottom;
+		    background-position: right center; /* Changed from right bottom */
 		    will-change: transform;
 		    filter: brightness(0.75);
 		}
@@ -123,7 +123,10 @@
 		.light-mode .hero-title { color: #0f172a; text-shadow: none; }
 		.light-mode .hero-sub { color: rgba(15,23,42,0.75); }
 		body {
-		    padding-top: 0 !important; /* Removes the gap above the hero on index.html */
+		    padding: 0 !important;
+		    margin: 0;
+		    background: var(--bg);
+		    overflow-x: hidden;
 		}
 	</style>
 </head>
