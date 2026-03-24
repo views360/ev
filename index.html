@@ -396,10 +396,9 @@
                 <div id="providerControls">
                     <p style="font-size: 0.8em; margin-bottom: 15px">Add <strong>all</strong> subscription providers to identify the cheapest for your planned route compared with the baseline for PAYG public charging. Scroll down for the results. You may also add, remove, and temporarily edit individual providers if details are outdated.</p>
                     <div class="button-group" style="display:flex; gap:6px; margin-bottom: 20px; width: 100%">
-                       <button id="addAllBtn" style="flex: 1" class="btn secondary empty-pulse" onclick="addAllProviders(); this.classList.remove('empty-pulse');">
-						    Add All Providers
-						</button>
+                    	<button id="addAllBtn" style="flex: 1" class="btn secondary empty-pulse" onclick="addAllProviders(); this.classList.remove('empty-pulse');">Add All Providers</button>
 						<button type="button" class="btn secondary" style="flex: 1;" onclick="createProviderBox()">Add Provider</button>
+						<button type="button" class="btn secondary" style="flex: 1;" onclick="clearProviderBox()">Clear Saved Providers</button>
 					</div>					
                 </div>
 				<button type="button" class="btn secondary" id="toggleProvidersBtn" onclick="toggleProviders()" style="margin-bottom: 10px; width: 100%;">
@@ -630,6 +629,15 @@ function toggleMenuSection(toggleId, itemsId) {
     }
 }
 
+function clearSavedProviders() {
+    // Delete the cookie by setting it to empty with past date
+    document.cookie = "ev_providers=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;";
+    
+    // Clear the UI
+    document.getElementById("providers").innerHTML = "";
+    
+    calculate();
+}
 loadMenu();
 </script>
 </body>
