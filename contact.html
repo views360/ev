@@ -343,6 +343,24 @@
             const theme = getCookie('themePref');
             if (theme === 'light') document.documentElement.classList.add('light-mode');
         })();
+
+		window.addEventListener('DOMContentLoaded', () => {
+		    const urlParams = new URLSearchParams(window.location.search);
+		    if (urlParams.get('success') === '1') {
+		        const successDiv = document.getElementById('successMsg');
+		        const contactForm = document.getElementById('contactForm');
+		        
+		        if (successDiv) {
+		            successDiv.style.display = 'block'; // Show the success message
+		        }
+		        if (contactForm) {
+		            contactForm.style.display = 'none';  // Optional: Hide the form after success
+		        }
+		    }
+});
+
+
+		
     </script>
 </head>
 <!-- Google tag (gtag.js) -->
