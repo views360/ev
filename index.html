@@ -405,7 +405,7 @@
 					<button type="button" class="btn secondary" style="flex: 1;" id="toggleProvidersBtn" onclick="toggleProviders()" style="margin-bottom: 10px;">Collapse Providers List</button>					
 				 </div>
 				<div id="providersHiddenMsg" style="display: none; font-size: 0.85rem; color: var(--accent); margin-bottom: 15px; font-style: italic;">
-    				⚡ Provider list hidden but still active in calculations.
+    				⚡ Provider list hidden, but all selected providers remain active in calculations.
 				</div>
 			</div>
             <div id="collapsibleProviders">
@@ -638,7 +638,7 @@ function clearSavedProviders() {
     
     // Clear the UI
     document.getElementById("providers").innerHTML = "";
-	document.getElementById("providersHiddenMsg").display="none";
+	document.getElementById("providersHiddenMsg").style.display="none";
     
     calculate();
 }
