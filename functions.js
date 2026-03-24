@@ -35,7 +35,7 @@ function getInputs() {
 const extraMiles = Array.from(document.querySelectorAll(".extra-journey-miles")).map(el => parseFloat(el.value) || 0);
 const extraSocs = Array.from(document.querySelectorAll(".extra-journey-soc")).map(el => parseFloat(el.value) || 0);
 const extraRates = Array.from(document.querySelectorAll(".extra-journey-rate")).map(el => parseFloat(el.value) || 0);
-const extraRecharges = Array.from(document.querySelectorAll(".extra-journey-recharge")).map(el => parseFloat(el.value) || 20);
+    const extraRecharges = Array.from(document.querySelectorAll(".extra-journey-recharge")).map(el => parseFloat(el.value) || 20);
 return {
 journeyMiles: parseFloat(document.getElementById("journeyMiles").value) || 0,
 batteryKwh: parseFloat(document.getElementById("batteryKwh").value) || 0,
@@ -49,8 +49,9 @@ minSpeed: parseFloat(document.getElementById("minSpeed").value) || 0,
 additionalJourneys: extraMiles.map((miles, i) => ({
 miles: miles,
 soc: extraSocs[i],
-rate: extraRates[i],
-rechargeAt: extraRecharges[i] // New field mapped here
+            rate: extraRates[i]
+            rate: extraRates[i],
+            rechargeAt: extraRecharges[i] // New field mapped here
 }))
 };
 }
@@ -460,34 +461,29 @@ if (uiPdf) uiPdf.style.display = "";
 document.querySelector(".calc-lines").style.display = "block";
 document.querySelector(".chart-wrapper").style.display = "block";
 
-    const startSocAdded = Math.max(0, inputs.soc - inputs.rechargeAt);
 const startChargeKwh = (inputs.soc / 100) * inputs.batteryKwh;
 const startChargeCost = startChargeKwh * (inputs.startChargeRate / 100);
-    
-let preChargeItemsHtml = `<li>Initial Trip: 0% to ${inputs.soc}% (${startChargeKwh.toFixed(1)} kWh) @ ${inputs.startChargeRate}p = <strong>£${startChargeCost.toFixed(2)}</strong></li>`;
-let totalPreChargeCost = startChargeCost;
+    let preChargeItemsHtml = `<li>Initial Trip: 0% to ${inputs.soc}% (${startChargeKwh.toFixed(1)} kWh) @ ${inputs.startChargeRate}p = <strong>£${startChargeCost.toFixed(2)}</strong></li>`;
+    let totalPreChargeCost = startChargeCost;
 
-inputs.additionalJourneys.forEach((journey, index) => {
+    inputs.additionalJourneys.forEach((journey, index) => {
         const socAdded = Math.max(0, journey.soc - journey.rechargeAt);
         const kwhAdded = (socAdded / 100) * inputs.batteryKwh;
         const journeyPreCost = kwhAdded * (journey.rate / 100);
-    const socAdded = Math.max(0, journey.soc - journey.rechargeAt);
-    const kwhAdded = (socAdded / 100) * inputs.batteryKwh;
-    const journeyPreCost = kwhAdded * (journey.rate / 100);
-
+        
         preChargeItemsHtml += `<li>Trip ${index + 1}: ${journey.rechargeAt}% to ${journey.soc}% (${kwhAdded.toFixed(1)} kWh) @ ${journey.rate}p = <strong>£${journeyPreCost.toFixed(2)}</strong></li>`;
         totalPreChargeCost += journeyPreCost;
-    let preChargeItemsHtml = `<li>Initial Trip: ${inputs.rechargeAt}% to ${inputs.soc}% (${startChargeKwh.toFixed(1)} kWh) @ ${inputs.startChargeRate}p = <strong>£${startChargeCost.toFixed(2)}</strong></li>`;
-    let totalPreChargeCost = startChargeCost;
-});
-
+    });
+    
 // Calculate usable kWh from soc% down to rechargeAt% (the recharge threshold)
 const usableKwh = ((inputs.soc - inputs.rechargeAt) / 100) * inputs.batteryKwh;
 const initialRange = usableKwh * inputs.efficiency;
 const publicMiles = Math.max(0, inputs.journeyMiles - initialRange);
 const publicKwh = publicMiles / inputs.efficiency;
-const totalAdhocCost = totalPreChargeCost + (publicKwh * (inputs.adhoc / 100));
+    const totalAdhocCost = startChargeCost + (publicKwh * (inputs.adhoc / 100));
+    const totalAdhocCost = totalPreChargeCost + (publicKwh * (inputs.adhoc / 100));
 
+    document.getElementById("preChargeLine").innerHTML = `<div class="guide-section" id="payg-summary"><h3>PAYG Summary</h3><span class="tooltip-container"><span class="info-icon" style="font-size:0.8rem" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is a notional value for the entire ${inputs.soc}% state of charge before you set off for your journey (i.e., how much it cost to pre-charge your battery). This amount will be included in your total journey cost.</span></span></span>Pre-journey battery charge cost (${inputs.soc}% / ${startChargeKwh.toFixed(1)} kWh): <strong>£${startChargeCost.toFixed(2)}</strong></div>`;
     document.getElementById("preChargeLine").innerHTML = `
         <div class="guide-section" id="payg-summary">
             <h3>PAYG Summary</h3>
@@ -501,29 +497,6 @@ const totalAdhocCost = totalPreChargeCost + (publicKwh * (inputs.adhoc / 100));
                 <strong>£${totalPreChargeCost.toFixed(2)}</strong>
             </div>
         </div>`;
-    const preChargeLine = document.getElementById("preChargeLine");
-    if (preChargeLine) {
-        preChargeLine.innerHTML = `
-            <div class="guide-section" id="payg-summary">
-                <h3>PAYG Summary</h3>
-                <p>
-                    <span class="tooltip-container">
-                        <span class="info-icon" onclick="toggleTooltip(this)">💡
-                            <span class="tooltip-box">These costs represent the energy required to top up your battery from your 'Recharge Threshold' to your 'Starting SoC' at your home/starting rate before each leg of the journey begins.</span>
-                        </span>
-                    </span>
-                    Pre-journey battery charge costs:
-                </p>
-                <ul style="margin: 10px 0; padding-left: 20px; list-style-type: disc;">
-                    ${preChargeItemsHtml}
-                </ul>
-                <hr style="border: 0; border-top: 1px solid var(--accent); opacity: 0.2; margin: 10px 0;">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <span>Total Overall Pre-charge Cost:</span>
-                    <strong>£${totalPreChargeCost.toFixed(2)}</strong>
-                </div>
-            </div>`;
-    }
 document.getElementById("homeRangeLine").innerHTML = `<span class="tooltip-container"><span class="info-icon" style="font-size:0.8rem" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is the distance you can expect to drive before your first public charge along your route. It is calculated from your starting charge level down to your recharge threshold (${inputs.rechargeAt}%).</span></span></span>Range from pre-charged battery: <strong>${initialRange.toFixed(0)} miles</strong></span>`;
 document.getElementById("publicMilesLine").innerHTML = `<span class="tooltip-container"><span class="info-icon" style="font-size:0.8rem" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is how many miles of your journey will need to be covered by public charging. It accounts for your recharge threshold of ${inputs.rechargeAt}%.</span></span></span>PAYG public charging miles needed: <strong>${publicMiles.toFixed(0)} miles</strong></span>`;
 document.getElementById("publicKwhLine").innerHTML = `PAYG public charging energy needed: <strong>${publicKwh.toFixed(1)} kWh @ ${inputs.adhoc}p</strong>`;
@@ -596,7 +569,8 @@ inputs.journeyMiles,
 inputs.soc
 );
 
-const totalJourneyCost = subCost + totalPreChargeCost + publicChargingCost;
+        const totalJourneyCost = subCost + startChargeCost + publicChargingCost;
+        const totalJourneyCost = subCost + totalPreChargeCost + publicChargingCost;
 const pData = PRESETS.find(p => p.name === document.getElementById(`preset${id}`).value);
 
 providers.push({ 
@@ -1467,14 +1441,15 @@ let journeyCount = 0;
 function addJourneyField() {
 journeyCount++;
 const container = document.getElementById("additionalJourneysContainer");
-
-// Capture current defaults from the main form to pre-fill the new trip
+    
+    // Capture current defaults from the main form to pre-fill the new trip
 const defaultSoc = document.getElementById("soc").value || "";
 const defaultRate = document.getElementById("startChargeRate").value || "";
-const defaultRecharge = document.getElementById("rechargeAt").value || "20";
-
+    const defaultRecharge = document.getElementById("rechargeAt").value || "20";
+    
 const journeyDiv = document.createElement("div");
-journeyDiv.className = "additional-journey-box";
+    journeyDiv.className = "additional-journey-box"; // You can style this in CSS
+    journeyDiv.className = "additional-journey-box";
 journeyDiv.style.borderTop = "1px solid var(--accent)";
 journeyDiv.style.marginTop = "15px";
 journeyDiv.style.paddingTop = "10px";
@@ -1486,16 +1461,19 @@ journeyDiv.innerHTML = `
            <button class="remove-btn" onclick="document.getElementById('journeyRow${journeyCount}').remove(); calculate();">×</button>
        </div>
        <p style="font-size: 0.8rem">Enter or adjust the following details for this additional journey, which may differ from the first.</p>
-       
-       <div class="input-row">
-           <div class="input-group">
-               <label><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">The is the total distance for this additional journey, out and back.</span></span></span>Journey Distance (Miles)</label>
-               <input type="number" class="extra-journey-miles" placeholder="e.g. 150" oninput="calculate()">
-           </div>
-           <div class="input-group">
-               <label><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is the level to which you will allow your battery to drop before recharging during this specific trip.</span></span></span>Recharge Threshold (%)</label>
-               <input type="number" class="extra-journey-recharge" value="${defaultRecharge}" oninput="calculate()">
-           </div>
+        <div class="input-group">
+            <label><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">The is the total distance for this additional journey, out and back.</span></span></span>Journey Distance (Miles)</label>
+            <input type="number" class="extra-journey-miles" placeholder="e.g. 150" oninput="calculate()">
+        
+        <div class="input-row">
+            <div class="input-group">
+                <label><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">The is the total distance for this additional journey, out and back.</span></span></span>Journey Distance (Miles)</label>
+                <input type="number" class="extra-journey-miles" placeholder="e.g. 150" oninput="calculate()">
+            </div>
+            <div class="input-group">
+                <label><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is the level to which you will allow your battery to drop before recharging during this specific trip.</span></span></span>Recharge Threshold (%)</label>
+                <input type="number" class="extra-journey-recharge" value="${defaultRecharge}" oninput="calculate()">
+            </div>
        </div>
 
        <div class="input-row">
