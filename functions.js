@@ -968,33 +968,6 @@ function init() {
         updateProviderInfo();
         calculate();
     });
-
-    function loadProvidersFromCookie() {
-        const saved = getCookie('savedProviders');
-        if (saved && Array.isArray(saved) && saved.length > 0) {
-            // Clear any default boxes if they exist
-            document.getElementById("providers").innerHTML = "";
-            
-            saved.forEach(p => {
-                // Re-use your existing box creation logic
-                createProviderBox(); 
-                const id = providerCount;
-                
-                // Set values
-                document.getElementById(`name${id}`).value = p.name;
-                document.getElementById(`subCost${id}`).value = p.sub;
-                document.getElementById(`rate${id}`).value = p.rate;
-                document.getElementById(`preset${id}`).value = p.preset;
-                
-                // Re-select speed if it was a preset with speed options
-                if (p.speed && document.getElementById(`speed${id}`)) {
-                    updateProviderFields(id); // Re-fills dropdowns
-                    document.getElementById(`speed${id}`).value = p.speed;
-                }
-            });
-            // Run one calculation to refresh the results table immediately
-            calculate();
-        }
     }   
 }
 
@@ -1370,20 +1343,49 @@ function saveProvidersToCookie() {
     const providers = [];
     document.querySelectorAll(".provider-box").forEach(box => {
         const id = box.dataset.id;
-        providers.push({
-            name: document.getElementById(`name${id}`).value,
-            sub: document.getElementById(`subCost${id}`).value,
-            rate: document.getElementById(`rate${id}`).value,
-            preset: document.getElementById(`preset${id}`).value,
-            speed: document.getElementById(`speed${id}`) ? document.getElementById(`speed${id}`).value : null
-        });
+        const nameEl = document.getElementById(`name${id}`);
+        const subEl = document.getElementById(`subCost${id}`);
+        const rateEl = document.getElementById(`rate${id}`);
+        const presetEl = document.getElementById(`preset${id}`);
+        const speedEl = document.getElementById(`speed${id}`);
+
+        if (nameEl && subEl && rateEl && presetEl) {
+            providers.push({
+                name: nameEl.value,
+                sub: subEl.value,
+                rate: rateEl.value,
+                preset: presetEl.value,
+                speed: speedEl ? speedEl.value : null
+            });
+        }
     });
     setCookie('savedProviders', providers);
 }
 
-// In your existing calculate() function, add this as the final line:
-function calculate() {
-    // ... all your existing calculation code ...
-    
-    saveProvidersToCookie(); // <--- Add this line here
+function loadProvidersFromCookie() {
+    const saved = getCookie('savedProviders');
+    if (saved && Array.isArray(saved) && saved.length > 0) {
+        // Clear any default boxes first
+        document.getElementById("providers").innerHTML = "";
+        
+        saved.forEach(p => {
+            // Re-use your existing box creation logic
+            createProviderBox(); 
+            const id = providerCount;
+            
+            // Fill the fields
+            document.getElementById(`name${id}`).value = p.name;
+            document.getElementById(`subCost${id}`).value = p.sub;
+            document.getElementById(`rate${id}`).value = p.rate;
+            document.getElementById(`preset${id}`).value = p.preset;
+            
+            // Re-select speed if it was a preset
+            if (p.speed && document.getElementById(`speedRow${id}`)) {
+                updateProviderFields(id); 
+                const speedSelect = document.getElementById(`speed${id}`);
+                if (speedSelect) speedSelect.value = p.speed;
+            }
+        });
+        calculate();
+    }
 }
