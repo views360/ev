@@ -1400,7 +1400,9 @@ let journeyCount = 0;
 function addJourneyField() {
     journeyCount++;
     const container = document.getElementById("additionalJourneysContainer");
-    
+    const defaultMiles = document.getElementById("journeyMiles").value || "";
+    const defaultSoc = document.getElementById("soc").value || "";
+    const defaultRate = document.getElementById("startChargeRate").value || "";
     const journeyDiv = document.createElement("div");
     journeyDiv.className = "additional-journey-box"; // You can style this in CSS
     journeyDiv.style.borderTop = "1px solid var(--accent)";
@@ -1411,24 +1413,25 @@ function addJourneyField() {
     journeyDiv.innerHTML = `
         <div style="display: flex; justify-content: space-between; align-items: center;">
             <h4>Additional Journey #${journeyCount}</h4>
-            <button class="remove-btn" onclick="document.getElementById('journeyRow${journeyCount}').remove()">×</button>
+            <button class="remove-btn" onclick="document.getElementById('journeyRow${journeyCount}').remove(); calculate();">×</button>
         </div>
         <p style="font-size: 0.8rem">Enter or adjust the following details for this additional journey, which may differ from the first.</p>
         <div class="input-group">
             <label><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">The is the total distance for this additional journey, out and back.</span></span></span>Journey Distance (Miles)</label>
-            <input type="number" class="extra-journey-miles" placeholder="e.g. 150" oninput="calculate()">
+            <input type="number" class="extra-journey-miles" placeholder="e.g. 150" value="${defaultMiles}" oninput="calculate()">
         </div>
         <div class="input-row">
             <div class="input-group">
                 <label><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is the level to which you will pre-charge your battery for this additional trip. It may be the same as above — or not.</span></span></span>Starting State of Charge (%)</label>
-                <input type="number" class="extra-journey-soc" placeholder="e.g. 100" oninput="calculate()">
+                <input type="number" class="extra-journey-soc" placeholder="e.g. 100" value="${defaultSoc}" oninput="calculate()">
             </div>
             <div class="input-group">
                 <label><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">While it is to be expected that you will depart from your usual place (e.g., home) and charge at your usual rate, you may have other plans — so this allows the results to take that into account.</span></span></span>Starting Rate (Pence per kWh)</label>
-                <input type="number" class="extra-journey-rate" placeholder="e.g. 7.5" oninput="calculate()">
+                <input type="number" class="extra-journey-rate" placeholder="e.g. 7.5" value="${defaultRate}" oninput="calculate()">
             </div>
         </div>
     `;
     
     container.appendChild(journeyDiv);
+    calculate();
 }
