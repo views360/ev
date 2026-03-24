@@ -552,11 +552,11 @@
     <div class="guide-wrap">
         <div class="guide-card">
             <h2>Live Assistant</h2>
-            <p>Up-to-date UK EV Guide • <span id="date"></span></p>
+            <p>Expert UK EV Guidance • <span id="date"></span></p>
 
             <div class="messages" id="messages">
                 <div class="message assistant">
-                    <div class="message-content">👋 Hello! I'm your UK EV Specialist. I'm up to speed on the March 2026 car grants, current 4% BiK rates, and used market valuations. How can I help you today?</div>
+                    <div class="message-content">👋 Hello! I'm your UK EV Specialist. I'm up to speed on the car grants, current BiK rates, used market valuations, and pretty much everything EV oriented. How can I help you today?</div>
                 </div>
 
                 <div class="welcome-message" id="welcomePanel">
@@ -580,9 +580,8 @@
             </div>
         </div>
 
-        <div class="footer-text">
-            <p>Powered by AI | <a href="https://www.ev-subs-compare.co.uk" target="_blank">EV Subs Compare</a></p>
-            <p class="footer-disclaimer">💡 This AI provides general advice. Always check your specific vehicle manual and HMRC for final tax figures.</p>
+        <div class="footer-text">>
+            <p class="footer-disclaimer">This AI assistant provides general advice. If you plan to act on guidance it offers, <strong>always double-check with secondary sources of information</strong>.</p>
         </div>
     </div>
 
@@ -620,7 +619,7 @@
     </div>
 
     <script>
-		document.getElementById('date').innerText = new Date().toLocaleString('default', { month: 'short', year: '2-digit' });
+		document.getElementById('date').innerText = new Date().toLocaleString('default', { month: 'numeric', year: '2-digit' });
         const messagesContainer = document.getElementById('messages');
         const userInput = document.getElementById('userInput');
         const sendBtn = document.getElementById('sendBtn');
