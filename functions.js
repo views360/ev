@@ -795,6 +795,7 @@ function calculate() {
     drawGraph(inputs, providers);
     const dataToSave = getInputs();
     setCookie("ev_trip_values", dataToSave);
+    saveProvidersToCookie();
 }
 
 
@@ -1307,6 +1308,7 @@ function expandActiveSections() {
 // Initialize page highlighting on load
 document.addEventListener('DOMContentLoaded', () => {
     expandActiveSections();
+    setTimeout(loadProvidersFromCookie, 100);
 });
 
 document.addEventListener('click', (e) => {
@@ -1340,5 +1342,47 @@ function closeBeReminder() {
         setTimeout(() => {
             overlay.style.display = 'none';
         }, 400); 
+    }
+}
+
+function saveProvidersToCookie() {
+    const providers = [];
+    document.querySelectorAll(".provider-box").forEach(box => {
+        const id = box.dataset.id;
+        providers.push({
+            name: document.getElementById(`name${id}`).value,
+            subCost: document.getElementById(`subCost${id}`).value,
+            rate: document.getElementById(`rate${id}`).value,
+            preset: document.getElementById(`preset${id}`).value,
+            speed: document.getElementById(`speed${id}`) ? document.getElementById(`speed${id}`).value : null
+        });
+    });
+    setCookie('ev_providers', providers); // Uses your existing setCookie function
+}
+
+function loadProvidersFromCookie() {
+    const saved = getCookie('ev_providers'); // Uses your existing getCookie function
+    if (saved && Array.isArray(saved)) {
+        // Clear any default or existing boxes first
+        document.getElementById("providers").innerHTML = "";
+        
+        saved.forEach(p => {
+            // Use your existing function to create the box structure
+            createProviderBox(); 
+            const id = providerCount;
+            
+            // Repopulate the fields
+            document.getElementById(`name${id}`).value = p.name;
+            document.getElementById(`subCost${id}`).value = p.subCost;
+            document.getElementById(`rate${id}`).value = p.rate;
+            document.getElementById(`preset${id}`).value = p.preset;
+            
+            // Handle speed dropdown if it exists for this preset
+            if (p.speed && document.getElementById(`speed${id}`)) {
+                updateProviderFields(id); // Rebuilds speed options
+                document.getElementById(`speed${id}`).value = p.speed;
+            }
+        });
+        calculate(); // Refresh the results
     }
 }
