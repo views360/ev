@@ -349,19 +349,9 @@
 
             <div class="input-row">
                 <div class="input-group">
-                    <label for="startChargeType">
-                        <span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">Before you 
-							begin your journey, will you have charged your battery at home or using PAYG charging?</span></span></span>Starting charge type           
-                    </label>
-                    <select id="startChargeType">
-                        <option value="home">Cheap home charging</option>
-                        <option value="public">PAYG Public charging</option>
-                    </select>
-                </div>
-                <div class="input-group">
                     <label for="startChargeRate">
                         <span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">When you 
-							charge your battery before the journey, how much will the rate be?</span></span></span>Starting rate (pence per kWh)                        
+							charge your battery before the journey, how much will the rate be?</span></span></span>Battery Pre-Charge rate (pence per kWh)                        
                     </label>
                     <input type="number" id="startChargeRate" oninput="calculate()" placeholder="e.g., 7.5">
                 </div>
