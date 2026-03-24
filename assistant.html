@@ -619,7 +619,7 @@
     </div>
 
     <script>
-		document.getElementById('date').innerText = new Date().toLocaleString('default', { month: 'numeric', year: '2-digit' });
+		document.getElementById('date').innerText = new Date().toLocaleString('default', { month: 'long', year: 'numeric' });
         const messagesContainer = document.getElementById('messages');
         const userInput = document.getElementById('userInput');
         const sendBtn = document.getElementById('sendBtn');
