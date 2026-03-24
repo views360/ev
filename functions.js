@@ -1171,15 +1171,18 @@ function toggleProviders() {
     const container = document.getElementById("collapsibleProviders");
     const controls = document.getElementById("providerControls"); 
     const btn = document.getElementById("toggleProvidersBtn");
+    const hiddenMsg = document.getElementById("providersHiddenMsg"); 
     
     if (container.style.display === "none") {
         container.style.display = "block";
         if (controls) controls.style.display = "block"; 
         btn.textContent = "Collapse Providers List";
+        hiddenMsg.style.display = "none";
     } else {
         container.style.display = "none";
         if (controls) controls.style.display = "none"; 
         btn.textContent = "Expand Providers List";
+        hiddenMsg.style.display = "block";
     }
 
     btn.classList.remove("empty-pulse");
