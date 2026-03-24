@@ -490,8 +490,8 @@ function calculate() {
                 <h3>PAYG Summary</h3>
                 <p>
                     <span class="tooltip-container">
-                        <span class="info-icon" onclick="toggleTooltip(this)">💡
-                            <span class="tooltip-box">These costs represent the energy required to top up your battery from your 'Recharge Threshold' to your 'Starting SoC' at your home/starting rate before each leg of the journey begins.</span>
+                        <span class="info-icon" style="font-size:0.8rem" onclick="toggleTooltip(this)">💡
+                            <span class="tooltip-box">These costs represent the energy required to top up your battery from your <strong>Recharge Threshold</strong> to your <strong>Starting SoC</strong> at your home/starting rate before each journey begins.</span>
                         </span>
                     </span>
                     Pre-journey battery charge costs:
