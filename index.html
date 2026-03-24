@@ -400,10 +400,13 @@
 						<button type="button" class="btn secondary" style="flex: 1;" onclick="createProviderBox()">Add Provider</button>
 					</div>
                 </div>
-				 <div class="button-group" style="display:flex; gap:6px; margin-bottom: 20px; width: 100%">
-					 <button type="button" class="btn secondary" style="flex: 1;" onclick="clearSavedProviders()">Clear Saved Providers</button>
+				<div class="button-group" style="display:flex; gap:6px; margin-bottom: 0px; width: 100%">
+					<button type="button" class="btn secondary" style="flex: 1;" onclick="clearSavedProviders()">Clear Saved Providers</button>
 					<button type="button" class="btn secondary" style="flex: 1;" id="toggleProvidersBtn" onclick="toggleProviders()" style="margin-bottom: 10px;">Collapse Providers List</button>					
 				 </div>
+				<div id="providersHiddenMsg" style="display: none; font-size: 0.85rem; color: var(--accent); margin-top: 0px; padding-top: 0px; font-style: italic;">
+    				⚡ Provider list hidden — but all selected providers remain active in calculations.
+				</div>
 			</div>
             <div id="collapsibleProviders">
                 <div id="providers"></div>
@@ -633,12 +636,13 @@ function clearSavedProviders() {
     // Delete the cookie by setting it to empty with past date
     document.cookie = "ev_providers=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;";
     
-    // Clear the UI
-    document.getElementById("providers").innerHTML = "";
-    
-    calculate();
-}
-loadMenu();
+	// Clear the UI
+	document.getElementById("providers").innerHTML = "";
+	document.getElementById("providersHiddenMsg").style.display="none";
+	
+	calculate();
+	}
+	loadMenu();
 </script>
 </body>
 </html>
