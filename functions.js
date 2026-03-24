@@ -404,6 +404,7 @@ function calculate() {
         inputs.startChargeRate <= 0;
     
     const providerBoxes = document.querySelectorAll(".provider-box");
+    const resultsContent = document.getElementById("results-content");
 
     if (tripIncomplete) {
         uiPreText.innerHTML = "Please attend to all flashing green fields, or use the navigation tabs at the top to switch between BREAK EVEN and COST REDUCTION calcuation types.";
@@ -412,6 +413,7 @@ function calculate() {
         if (resultsHeader) resultsHeader.style.display = "none";
         if (uiShare) uiShare.style.display = "none";
         if (uiPdf) uiPdf.style.display = "none";
+        if (resultsContent) resultsContent.style.display = "none";
         return; 
     }
     
@@ -422,12 +424,14 @@ function calculate() {
         if (resultsHeader) resultsHeader.style.display = "none";
         if (uiShare) uiShare.style.display = "none";
         if (uiPdf) uiPdf.style.display = "none";
+        if (resultsContent) resultsContent.style.display = "none";
         return;
     }
 
     uiPreText.style.display = "none";
     uiResults.style.display = "block";
     conclusionsBox.style.display = "block";
+    if (resultsContent) resultsContent.style.display = "block";
     if (uiShare) uiShare.style.display = "";
     if (uiPdf) uiPdf.style.display = "";
     document.querySelector(".calc-lines").style.display = "block";
