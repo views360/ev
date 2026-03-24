@@ -460,18 +460,20 @@ function calculate() {
     document.querySelector(".calc-lines").style.display = "block";
     document.querySelector(".chart-wrapper").style.display = "block";
 
+    const startSocAdded = Math.max(0, inputs.soc - inputs.rechargeAt);
     const startChargeKwh = (inputs.soc / 100) * inputs.batteryKwh;
     const startChargeCost = startChargeKwh * (inputs.startChargeRate / 100);
+    
     let preChargeItemsHtml = `<li>Initial Trip: 0% to ${inputs.soc}% (${startChargeKwh.toFixed(1)} kWh) @ ${inputs.startChargeRate}p = <strong>£${startChargeCost.toFixed(2)}</strong></li>`;
     let totalPreChargeCost = startChargeCost;
 
     inputs.additionalJourneys.forEach((journey, index) => {
-        const socAdded = Math.max(0, journey.soc - journey.rechargeAt);
-        const kwhAdded = (socAdded / 100) * inputs.batteryKwh;
-        const journeyPreCost = kwhAdded * (journey.rate / 100);
+    const socAdded = Math.max(0, journey.soc - journey.rechargeAt);
+    const kwhAdded = (socAdded / 100) * inputs.batteryKwh;
+    const journeyPreCost = kwhAdded * (journey.rate / 100);
         
-        preChargeItemsHtml += `<li>Trip ${index + 1}: ${journey.rechargeAt}% to ${journey.soc}% (${kwhAdded.toFixed(1)} kWh) @ ${journey.rate}p = <strong>£${journeyPreCost.toFixed(2)}</strong></li>`;
-        totalPreChargeCost += journeyPreCost;
+    let preChargeItemsHtml = `<li>Initial Trip: ${inputs.rechargeAt}% to ${inputs.soc}% (${startChargeKwh.toFixed(1)} kWh) @ ${inputs.startChargeRate}p = <strong>£${startChargeCost.toFixed(2)}</strong></li>`;
+    let totalPreChargeCost = startChargeCost;
     });
     
     // Calculate usable kWh from soc% down to rechargeAt% (the recharge threshold)
@@ -481,19 +483,29 @@ function calculate() {
     const publicKwh = publicMiles / inputs.efficiency;
     const totalAdhocCost = totalPreChargeCost + (publicKwh * (inputs.adhoc / 100));
     
-    document.getElementById("preChargeLine").innerHTML = `
-        <div class="guide-section" id="payg-summary">
-            <h3>PAYG Summary</h3>
-            <p>Pre-journey battery charge costs (Home/Starting location):</p>
-            <ul style="margin: 10px 0; padding-left: 20px; list-style-type: disc;">
-                ${preChargeItemsHtml}
-            </ul>
-            <hr style="border: 0; border-top: 1px solid var(--accent); opacity: 0.2; margin: 10px 0;">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <span>Total Overall Pre-charge Cost:</span>
-                <strong>£${totalPreChargeCost.toFixed(2)}</strong>
-            </div>
-        </div>`;
+    const preChargeLine = document.getElementById("preChargeLine");
+    if (preChargeLine) {
+        preChargeLine.innerHTML = `
+            <div class="guide-section" id="payg-summary">
+                <h3>PAYG Summary</h3>
+                <p>
+                    <span class="tooltip-container">
+                        <span class="info-icon" onclick="toggleTooltip(this)">💡
+                            <span class="tooltip-box">These costs represent the energy required to top up your battery from your 'Recharge Threshold' to your 'Starting SoC' at your home/starting rate before each leg of the journey begins.</span>
+                        </span>
+                    </span>
+                    Pre-journey battery charge costs:
+                </p>
+                <ul style="margin: 10px 0; padding-left: 20px; list-style-type: disc;">
+                    ${preChargeItemsHtml}
+                </ul>
+                <hr style="border: 0; border-top: 1px solid var(--accent); opacity: 0.2; margin: 10px 0;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span>Total Overall Pre-charge Cost:</span>
+                    <strong>£${totalPreChargeCost.toFixed(2)}</strong>
+                </div>
+            </div>`;
+    }
     document.getElementById("homeRangeLine").innerHTML = `<span class="tooltip-container"><span class="info-icon" style="font-size:0.8rem" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is the distance you can expect to drive before your first public charge along your route. It is calculated from your starting charge level down to your recharge threshold (${inputs.rechargeAt}%).</span></span></span>Range from pre-charged battery: <strong>${initialRange.toFixed(0)} miles</strong></span>`;
     document.getElementById("publicMilesLine").innerHTML = `<span class="tooltip-container"><span class="info-icon" style="font-size:0.8rem" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is how many miles of your journey will need to be covered by public charging. It accounts for your recharge threshold of ${inputs.rechargeAt}%.</span></span></span>PAYG public charging miles needed: <strong>${publicMiles.toFixed(0)} miles</strong></span>`;
     document.getElementById("publicKwhLine").innerHTML = `PAYG public charging energy needed: <strong>${publicKwh.toFixed(1)} kWh @ ${inputs.adhoc}p</strong>`;
