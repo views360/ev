@@ -789,6 +789,8 @@ function calculate() {
     drawGraph(inputs, providers);
     const dataToSave = getInputs();
     setCookie("ev_trip_values", dataToSave);
+
+    saveProvidersToCookie();
 }
 
 
@@ -969,23 +971,31 @@ function init() {
 
     function loadProvidersFromCookie() {
         const saved = getCookie('savedProviders');
-        if (saved && Array.isArray(saved)) {
-            const container = document.getElementById("providers");
-            container.innerHTML = ""; // Clear defaults if necessary
+        if (saved && Array.isArray(saved) && saved.length > 0) {
+            // Clear any default boxes if they exist
+            document.getElementById("providers").innerHTML = "";
             
             saved.forEach(p => {
-                // You'll need to slightly modify createProviderBox to accept 
-                // these custom values or manually set them after creation
+                // Re-use your existing box creation logic
                 createProviderBox(); 
                 const id = providerCount;
+                
+                // Set values
                 document.getElementById(`name${id}`).value = p.name;
                 document.getElementById(`subCost${id}`).value = p.sub;
                 document.getElementById(`rate${id}`).value = p.rate;
                 document.getElementById(`preset${id}`).value = p.preset;
+                
+                // Re-select speed if it was a preset with speed options
+                if (p.speed && document.getElementById(`speed${id}`)) {
+                    updateProviderFields(id); // Re-fills dropdowns
+                    document.getElementById(`speed${id}`).value = p.speed;
+                }
             });
+            // Run one calculation to refresh the results table immediately
             calculate();
         }
-    }    
+    }   
 }
 
 function exportPdf() {
@@ -1249,6 +1259,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 4000);
         }
     }
+    loadProvidersFromCookie();
 });
 
 function acceptCookies() {
@@ -1354,6 +1365,7 @@ function closeBeReminder() {
     }
 }
 
+// Add this function to the bottom of functions.js
 function saveProvidersToCookie() {
     const providers = [];
     document.querySelectorAll(".provider-box").forEach(box => {
@@ -1362,9 +1374,16 @@ function saveProvidersToCookie() {
             name: document.getElementById(`name${id}`).value,
             sub: document.getElementById(`subCost${id}`).value,
             rate: document.getElementById(`rate${id}`).value,
-            preset: document.getElementById(`preset${id}`).value
-            // Add 'speed' here if you want to save the selected kW speed too
+            preset: document.getElementById(`preset${id}`).value,
+            speed: document.getElementById(`speed${id}`) ? document.getElementById(`speed${id}`).value : null
         });
     });
     setCookie('savedProviders', providers);
+}
+
+// In your existing calculate() function, add this as the final line:
+function calculate() {
+    // ... all your existing calculation code ...
+    
+    saveProvidersToCookie(); // <--- Add this line here
 }
