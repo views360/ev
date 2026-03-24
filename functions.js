@@ -1333,3 +1333,18 @@ function closeBeReminder() {
         }, 400); 
     }
 }
+
+function saveProvidersToCookie() {
+    const providers = [];
+    document.querySelectorAll(".provider-box").forEach(box => {
+        const id = box.dataset.id;
+        providers.push({
+            name: document.getElementById(`name${id}`).value,
+            sub: document.getElementById(`subCost${id}`).value,
+            rate: document.getElementById(`rate${id}`).value,
+            preset: document.getElementById(`preset${id}`).value
+            // Add 'speed' here if you want to save the selected kW speed too
+        });
+    });
+    setCookie('savedProviders', providers);
+}
