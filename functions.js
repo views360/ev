@@ -264,17 +264,16 @@ function calculate() {
         }
     });
 
-    document.querySelectorAll(".extra-journey-miles").forEach(input => {
+    document.querySelectorAll(".extra-journey-miles, .extra-journey-soc, .extra-journey-rate").forEach(input => {
         const val = parseFloat(input.value);
+        
+        // Check if the field is empty, not a number, or less than/equal to zero
         if (!input.value || isNaN(val) || val <= 0) {
             input.classList.add('empty-pulse');
         } else {
             input.classList.remove('empty-pulse');
         }
-    });
-
-
-    
+    }); 
 
     document.querySelectorAll(".provider-box input[type='number'], .provider-box input[type='text']").forEach(input => {
         if (!input.value || input.value === "0") {
