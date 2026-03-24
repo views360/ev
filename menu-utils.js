@@ -182,3 +182,16 @@ document.addEventListener('scroll', () => {
 window.addEventListener('resize', () => {
     if (_ftActive) _ftPosition(_ftActive);
 });
+
+document.addEventListener('click', (e) => {
+    const menu = document.getElementById('sideMenu');
+    // Adjust '.android-dots-trigger' if your menu button has a different class
+    const trigger = document.querySelector('.android-dots-trigger'); 
+    
+    if (menu && menu.classList.contains('active')) {
+        // If the click is NOT on the menu and NOT on the trigger button, close the menu
+        if (!menu.contains(e.target) && (!trigger || !trigger.contains(e.target))) {
+            menu.classList.remove('active');
+        }
+    }
+});
