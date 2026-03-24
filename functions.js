@@ -232,12 +232,14 @@ function calculate() {
     const uiResults = document.getElementById("results");
     const uiPreText = document.getElementById("preConclusionsText");
     const sortContainer = document.getElementById("sortContainer");
+    const resultsContent = document.getElementById("results-content");
 
     if (sortContainer) sortContainer.style.display = isTripMode ? "block" : "none";
     if (tripGrid) tripGrid.style.display = isTripMode ? "grid" : "none";
     if (resultsHeader) resultsHeader.style.display = isTripMode ? "flex" : "none";
     if (uiResults) uiResults.style.display = isTripMode ? "flex" : "none";
     if (btnRow) btnRow.style.display = isTripMode ? "flex" : "none";
+    if (resultsContent) resultsContent.style.display = "none";
 
     const fieldIds = [
         "journeyMiles", "batteryKwh", "soc", "efficiency", 
