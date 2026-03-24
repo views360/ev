@@ -89,7 +89,7 @@
         .hero-sub {
             font-size: 0.9rem;
             color: rgba(241,245,249,0.78);
-            max-width: 520px;
+            max-width: calc(100% - 200px);
             line-height: 1.5;
             margin: 0;
         }
@@ -363,6 +363,9 @@
                 height: 48px; /* Force consistent desktop height */
                 flex: none;   /* Disable flex grow to prevent squashing */
             }
+			.hero-sub {
+	            max-width: 90%;
+	        }
         }
 
         /* ── Warning Modal Styling ── */
