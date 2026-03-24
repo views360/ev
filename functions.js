@@ -32,6 +32,9 @@ function updateProviderInfo() {
 }
 
 function getInputs() {
+    const extraMiles = Array.from(document.querySelectorAll(".extra-journey-miles")).map(el => parseFloat(el.value) || 0);
+    const extraSocs = Array.from(document.querySelectorAll(".extra-journey-soc")).map(el => parseFloat(el.value) || 0);
+    const extraRates = Array.from(document.querySelectorAll(".extra-journey-rate")).map(el => parseFloat(el.value) || 0);
     return {
         journeyMiles: parseFloat(document.getElementById("journeyMiles").value) || 0,
         batteryKwh: parseFloat(document.getElementById("batteryKwh").value) || 0,
@@ -42,6 +45,11 @@ function getInputs() {
         maxChargingSpeed: parseFloat(document.getElementById("maxChargingSpeed").value) || 0,
         rechargeAt: parseFloat(document.getElementById("rechargeAt").value) || 20,
         minSpeed: parseFloat(document.getElementById("minSpeed").value) || 0
+        additionalJourneys: extraMiles.map((miles, i) => ({
+            miles: miles,
+            soc: extraSocs[i],
+            rate: extraRates[i]
+        }))
     };
 }
 
@@ -1385,4 +1393,41 @@ function loadProvidersFromCookie() {
         });
         calculate(); // Refresh the results
     }
+}
+
+let journeyCount = 0;
+
+function addJourneyField() {
+    journeyCount++;
+    const container = document.getElementById("additionalJourneysContainer");
+    
+    const journeyDiv = document.createElement("div");
+    journeyDiv.className = "additional-journey-box"; // You can style this in CSS
+    journeyDiv.style.borderTop = "1px solid var(--accent)";
+    journeyDiv.style.marginTop = "15px";
+    journeyDiv.style.paddingTop = "10px";
+    journeyDiv.id = `journeyRow${journeyCount}`;
+
+    journeyDiv.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h4>Additional Journey #${journeyCount}</h4>
+            <button class="remove-btn" onclick="document.getElementById('journeyRow${journeyCount}').remove()">×</button>
+        </div>
+        <div class="input-group">
+            <label>Journey Distance (Miles)</label>
+            <input type="number" class="extra-journey-miles" placeholder="e.g. 150" oninput="calculate()">
+        </div>
+        <div class="input-row">
+            <div class="input-group">
+                <label>Starting State of Charge (%)</label>
+                <input type="number" class="extra-journey-soc" placeholder="e.g. 100" oninput="calculate()">
+            </div>
+            <div class="input-group">
+                <label>Starting Rate (Pence per kWh)</label>
+                <input type="number" class="extra-journey-rate" placeholder="e.g. 7.5" oninput="calculate()">
+            </div>
+        </div>
+    `;
+    
+    container.appendChild(journeyDiv);
 }
