@@ -399,9 +399,11 @@
                     	<button id="addAllBtn" style="flex: 1" class="btn secondary empty-pulse" onclick="addAllProviders(); this.classList.remove('empty-pulse');">Add All Providers</button>
 						<button type="button" class="btn secondary" style="flex: 1;" onclick="createProviderBox()">Add Provider</button>
 					</div>
-						<button type="button" class="btn secondary" style="flex: 1;" onclick="clearSavedProviders()">Clear Saved Providers</button>
-						<button type="button" class="btn secondary" style="flex: 1;" id="toggleProvidersBtn" onclick="toggleProviders()" style="margin-bottom: 10px;">Collapse Providers List</button>					
                 </div>
+				 <div class="button-group" style="display:flex; gap:6px; margin-bottom: 20px; width: 100%">
+					 <button type="button" class="btn secondary" style="flex: 1;" onclick="clearSavedProviders()">Clear Saved Providers</button>
+					<button type="button" class="btn secondary" style="flex: 1;" id="toggleProvidersBtn" onclick="toggleProviders()" style="margin-bottom: 10px;">Collapse Providers List</button>					
+				 </div>
 			</div>
             <div id="collapsibleProviders">
                 <div id="providers"></div>
