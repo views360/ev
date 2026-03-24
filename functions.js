@@ -44,7 +44,7 @@ function getInputs() {
         startChargeRate: parseFloat(document.getElementById("startChargeRate").value) || 0,
         maxChargingSpeed: parseFloat(document.getElementById("maxChargingSpeed").value) || 0,
         rechargeAt: parseFloat(document.getElementById("rechargeAt").value) || 20,
-        minSpeed: parseFloat(document.getElementById("minSpeed").value) || 0
+        minSpeed: parseFloat(document.getElementById("minSpeed").value) || 0,
         additionalJourneys: extraMiles.map((miles, i) => ({
             miles: miles,
             soc: extraSocs[i],
