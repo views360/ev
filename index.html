@@ -401,9 +401,12 @@
 					</div>
                 </div>
 				 <div class="button-group" style="display:flex; gap:6px; margin-bottom: 20px; width: 100%">
-					 <button type="button" class="btn secondary" style="flex: 1;" onclick="clearSavedProviders()">Clear Saved Providers</button>
+					<button type="button" class="btn secondary" style="flex: 1;" onclick="clearSavedProviders()">Clear Saved Providers</button>
 					<button type="button" class="btn secondary" style="flex: 1;" id="toggleProvidersBtn" onclick="toggleProviders()" style="margin-bottom: 10px;">Collapse Providers List</button>					
 				 </div>
+				<div id="providersHiddenMsg" style="display: none; text-align: center; font-size: 0.85rem; color: var(--accent); margin-bottom: 15px; font-style: italic;">
+    				⚡ Provider list is hidden but active in calculations
+				</div>
 			</div>
             <div id="collapsibleProviders">
                 <div id="providers"></div>
