@@ -378,6 +378,18 @@
                 </label>
                 <input type="number" id="adhoc" oninput="calculate()" placeholder="e.g., 62 (62p is the 50kW Lidl+ app price)">
             </div>
+			<div id="additionalJourneysContainer"></div>
+
+			<div class="input-group" style="margin-top: 10px;">
+			    <button type="button" class="btn secondary" id="addJourneyBtn" onclick="addJourneyField()">
+			        <span class="tooltip-container">
+			            Include Another Journey?
+			            <span class="info-icon" onclick="toggleTooltip(this)">💡
+			                <span class="tooltip-box">If you plan to go on more than one journey within the same month period (before the same day in the following month), include that trip, too.</span>
+			            </span>
+			        </span>
+			    </button>
+			</div>
         </div>
 
         <div class="card">
