@@ -1400,7 +1400,6 @@ let journeyCount = 0;
 function addJourneyField() {
     journeyCount++;
     const container = document.getElementById("additionalJourneysContainer");
-    const defaultMiles = document.getElementById("journeyMiles").value || "";
     const defaultSoc = document.getElementById("soc").value || "";
     const defaultRate = document.getElementById("startChargeRate").value || "";
     const journeyDiv = document.createElement("div");
@@ -1418,7 +1417,7 @@ function addJourneyField() {
         <p style="font-size: 0.8rem">Enter or adjust the following details for this additional journey, which may differ from the first.</p>
         <div class="input-group">
             <label><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">The is the total distance for this additional journey, out and back.</span></span></span>Journey Distance (Miles)</label>
-            <input type="number" class="extra-journey-miles" placeholder="e.g. 150" value="${defaultMiles}" oninput="calculate()">
+            <input type="number" class="extra-journey-miles" placeholder="e.g. 150" oninput="calculate()">
         </div>
         <div class="input-row">
             <div class="input-group">
