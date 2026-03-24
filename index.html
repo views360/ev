@@ -247,7 +247,7 @@
 	<div class="hero-text">
 		<p class="hero-eyebrow">&#x26A1; EV Subs Compare &mdash; UK</p>
 		<h1 class="hero-title">EV <span>Subs Compare</span></h1>
-		<p class="hero-sub">This is a UK-specific tool for comparing "Charging-as-a-Service" (CaaS) subscriptions — where a provider offers discounted rates for a monthly fee — with PAYG rates. This resource also hosts a raft of helpful EV-related information pages and an AI assistant to tackle your unanswered questions.</p>
+		<p class="hero-sub">This is a UK-oriented comparison tool for EV-charging subscriptions that offer discounted rates for a monthly fee. It also offers a raft of helpful EV information pages and an AI assistant to tackle those unanswered questions.</p>
 	</div>
 </div>
 <div class="hero-strip"></div>
@@ -400,13 +400,10 @@
 						<button type="button" class="btn secondary" style="flex: 1;" onclick="createProviderBox()">Add Provider</button>
 					</div>
                 </div>
-				 <div class="button-group" style="display:flex; gap:6px; margin-bottom: 0px; width: 100%">
-					<button type="button" class="btn secondary" style="flex: 1;" onclick="clearSavedProviders()">Clear Saved Providers</button>
+				 <div class="button-group" style="display:flex; gap:6px; margin-bottom: 20px; width: 100%">
+					 <button type="button" class="btn secondary" style="flex: 1;" onclick="clearSavedProviders()">Clear Saved Providers</button>
 					<button type="button" class="btn secondary" style="flex: 1;" id="toggleProvidersBtn" onclick="toggleProviders()" style="margin-bottom: 10px;">Collapse Providers List</button>					
 				 </div>
-				<div id="providersHiddenMsg" style="display: none; font-size: 0.85rem; color: var(--accent); margin-top: 0px; padding-top: 0px; font-style: italic;">
-    				⚡ Provider list hidden — but all selected providers remain active in calculations.
-				</div>
 			</div>
             <div id="collapsibleProviders">
                 <div id="providers"></div>
@@ -638,7 +635,6 @@ function clearSavedProviders() {
     
     // Clear the UI
     document.getElementById("providers").innerHTML = "";
-	document.getElementById("providersHiddenMsg").style.display="none";
     
     calculate();
 }

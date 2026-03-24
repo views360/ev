@@ -232,14 +232,12 @@ function calculate() {
     const uiResults = document.getElementById("results");
     const uiPreText = document.getElementById("preConclusionsText");
     const sortContainer = document.getElementById("sortContainer");
-    const resultsContent = document.getElementById("results-content");
 
     if (sortContainer) sortContainer.style.display = isTripMode ? "block" : "none";
     if (tripGrid) tripGrid.style.display = isTripMode ? "grid" : "none";
     if (resultsHeader) resultsHeader.style.display = isTripMode ? "flex" : "none";
     if (uiResults) uiResults.style.display = isTripMode ? "flex" : "none";
     if (btnRow) btnRow.style.display = isTripMode ? "flex" : "none";
-    if (resultsContent) resultsContent.style.display = "none";
 
     const fieldIds = [
         "journeyMiles", "batteryKwh", "soc", "efficiency", 
@@ -406,7 +404,6 @@ function calculate() {
         inputs.startChargeRate <= 0;
     
     const providerBoxes = document.querySelectorAll(".provider-box");
-    const resultsContent = document.getElementById("results-content");
 
     if (tripIncomplete) {
         uiPreText.innerHTML = "Please attend to all flashing green fields, or use the navigation tabs at the top to switch between BREAK EVEN and COST REDUCTION calcuation types.";
@@ -415,7 +412,6 @@ function calculate() {
         if (resultsHeader) resultsHeader.style.display = "none";
         if (uiShare) uiShare.style.display = "none";
         if (uiPdf) uiPdf.style.display = "none";
-        if (resultsContent) resultsContent.style.display = "none";
         return; 
     }
     
@@ -426,14 +422,12 @@ function calculate() {
         if (resultsHeader) resultsHeader.style.display = "none";
         if (uiShare) uiShare.style.display = "none";
         if (uiPdf) uiPdf.style.display = "none";
-        if (resultsContent) resultsContent.style.display = "none";
         return;
     }
 
     uiPreText.style.display = "none";
     uiResults.style.display = "block";
     conclusionsBox.style.display = "block";
-    if (resultsContent) resultsContent.style.display = "block";
     if (uiShare) uiShare.style.display = "";
     if (uiPdf) uiPdf.style.display = "";
     document.querySelector(".calc-lines").style.display = "block";
@@ -1177,18 +1171,15 @@ function toggleProviders() {
     const container = document.getElementById("collapsibleProviders");
     const controls = document.getElementById("providerControls"); 
     const btn = document.getElementById("toggleProvidersBtn");
-    const msg = document.getElementById('providersHiddenMsg');
     
     if (container.style.display === "none") {
         container.style.display = "block";
         if (controls) controls.style.display = "block"; 
         btn.textContent = "Collapse Providers List";
-        msg.style.display = 'none'; // Hide the message
     } else {
         container.style.display = "none";
         if (controls) controls.style.display = "none"; 
         btn.textContent = "Expand Providers List";
-        msg.style.display = 'block'; // Show the message
     }
 
     btn.classList.remove("empty-pulse");
