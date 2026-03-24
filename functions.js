@@ -1413,7 +1413,7 @@ function addJourneyField() {
             <h4>Additional Journey #${journeyCount}</h4>
             <button class="remove-btn" onclick="document.getElementById('journeyRow${journeyCount}').remove()">×</button>
         </div>
-        <p style="font-size: 0.8rem">Enter or adjust the following information for this additional journey, which may differ from the previous one.</p>
+        <p style="font-size: 0.8rem">Enter or adjust the following details for this additional journey, which may differ from the previous one.</p>
         <div class="input-group">
             <label><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">The is the total distance for this additional journey, out and back.</span></span></span>Journey Distance (Miles)</label>
             <input type="number" class="extra-journey-miles" placeholder="e.g. 150" oninput="calculate()">
