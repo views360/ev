@@ -412,6 +412,8 @@ function calculate() {
         if (resultsHeader) resultsHeader.style.display = "none";
         if (uiShare) uiShare.style.display = "none";
         if (uiPdf) uiPdf.style.display = "none";
+        const toc = document.getElementById("toc");
+        if (toc) toc.style.display = "none";
         return; 
     }
     
@@ -428,6 +430,8 @@ function calculate() {
     uiPreText.style.display = "none";
     uiResults.style.display = "block";
     conclusionsBox.style.display = "block";
+    const toc = document.getElementById("toc");
+    if (toc) toc.style.display = "block";
     if (uiShare) uiShare.style.display = "";
     if (uiPdf) uiPdf.style.display = "";
     document.querySelector(".calc-lines").style.display = "block";
