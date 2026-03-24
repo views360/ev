@@ -542,9 +542,9 @@
     <div class="hero-parallax">
         <div class="hero-bg"></div>
         <div class="hero-text">
-            <div class="hero-eyebrow">⚡ March 2026 AI Specialist</div>
+            <div class="hero-eyebrow">⚡ Finding the answers you need</div>
             <h1 class="hero-title">EV AI <span>Assistant</span></h1>
-            <p class="hero-sub">Expert UK advice on the £3,750 grant, 4% BiK rates, and used EV buying.</p>
+            <p class="hero-sub">Expert UK advice on grants, benefit-in-kind (BiK) rates, used EV buying, and general day-to-day issues.</p>
         </div>
     </div>
     <div class="hero-strip"></div>
@@ -552,7 +552,7 @@
     <div class="guide-wrap">
         <div class="guide-card">
             <h2>Live Assistant</h2>
-            <p>Expert UK EV Guide • March 2026</p>
+            <p>Up-to-date UK EV Guide • <span id="date"></span></p>
 
             <div class="messages" id="messages">
                 <div class="message assistant">
@@ -620,6 +620,7 @@
     </div>
 
     <script>
+		document.getElementById('date').innerText = new Date().toLocaleString('default', { month: 'short', year: '2-digit' });
         const messagesContainer = document.getElementById('messages');
         const userInput = document.getElementById('userInput');
         const sendBtn = document.getElementById('sendBtn');
