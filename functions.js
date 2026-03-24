@@ -416,7 +416,7 @@ function calculate() {
     }
     
     if (providerBoxes.length === 0) {
-        uiPreText.innerHTML = "Before you may view a comparison, you must select at least one provider from the list of providers (above).";
+        uiPreText.innerHTML = "Before you may view the results, you must select at least one provider from the list of providers (above). It is simplest to select <i>all</i> providers.";
         uiPreText.style.display = "block";
         uiResults.style.display = "none";
         if (resultsHeader) resultsHeader.style.display = "none";
