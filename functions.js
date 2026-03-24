@@ -966,6 +966,26 @@ function init() {
         updateProviderInfo();
         calculate();
     });
+
+    function loadProvidersFromCookie() {
+        const saved = getCookie('savedProviders');
+        if (saved && Array.isArray(saved)) {
+            const container = document.getElementById("providers");
+            container.innerHTML = ""; // Clear defaults if necessary
+            
+            saved.forEach(p => {
+                // You'll need to slightly modify createProviderBox to accept 
+                // these custom values or manually set them after creation
+                createProviderBox(); 
+                const id = providerCount;
+                document.getElementById(`name${id}`).value = p.name;
+                document.getElementById(`subCost${id}`).value = p.sub;
+                document.getElementById(`rate${id}`).value = p.rate;
+                document.getElementById(`preset${id}`).value = p.preset;
+            });
+            calculate();
+        }
+    }    
 }
 
 function exportPdf() {
