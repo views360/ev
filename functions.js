@@ -25,12 +25,6 @@ let PRESETS = [];
 let providerCount = 0;
 let chart = null;
 
-// Stub function - called in init() but doesn't need to do anything
-// The calculate() function handles all necessary updates
-function updateProviderInfo() {
-    // Intentionally empty - this function is called but not needed
-}
-
 function getInputs() {
     return {
         journeyMiles: parseFloat(document.getElementById("journeyMiles").value) || 0,
@@ -100,7 +94,7 @@ function createProviderBox(preset) {
     box.dataset.id = id;
     box.innerHTML = `
         <div class="provider-header">
-            <input type="text" id="name${id}" placeholder="Provider Name" oninput="calculate()">
+            <input type="text" id="name${id}" placeholder="Provider Name" oninput="calculate(); saveProvidersToCookie()">
             <div style="display: flex; align-items: center; gap: 12px; margin-left: 8px;">
                 <a href="#resultsHeader" class="jump-btn-pulse" title="Jump to results">↓</a>
                 <button class="remove-btn" onclick="this.parentElement.parentElement.parentElement.remove(); calculate();">×</button>
@@ -108,21 +102,21 @@ function createProviderBox(preset) {
         </div>
         <div class="input-group">
             <label>Preset</label>
-            <select id="preset${id}" class="preset-select-pulse" onchange="updateProviderFields(${id})">${presetOptions}</select>
+            <select id="preset${id}" class="preset-select-pulse" onchange="updateProviderFields(${id}); saveProvidersToCookie()">
         </div>
         <div class="input-row">
             <div class="input-group">
                 <label>Monthly Sub (£)</label>
-                <input type="number" id="subCost${id}" step="0.01" value="0" oninput="calculate()">
+                <input type="number" id="subCost${id}" step="0.01" value="0" oninput="calculate(); saveProvidersToCookie()">
             </div>
             <div class="input-group">
                 <label>Rate (p/kWh)</label>
-                <input type="number" id="rate${id}" step="0.1" value="0" oninput="calculate()">
+                <<input type="number" id="rate${id}" step="0.1" value="0" oninput="calculate(); saveProvidersToCookie()">
             </div>
         </div>
         <div class="input-group" id="speedRow${id}" style="display:none">
             <label>Charging Speed</label>
-            <select id="speed${id}" onchange="updateRateFromSpeed(${id})"></select>
+            <select id="speed${id}" onchange="updateRateFromSpeed(${id}); saveProvidersToCookie()"></select>
         </div>
     `;
     document.getElementById("providers").appendChild(box);
@@ -965,7 +959,17 @@ function init() {
             provEl.value = savedValues.provider;
         }
 
-        updateProviderInfo();
+        const providersLoaded = loadProvidersFromCookie();
+
+        // Only load from URL if no saved cookie data
+        if (!providersLoaded && urlParams.has("p")) {
+            try {
+                const sharedProviders = JSON.parse(urlParams.get("p"));
+                // ... existing URL loading code ...
+            } catch (e) {
+                console.error("Error parsing shared providers:", e);
+            }
+        }
         calculate();
     });
     }   
@@ -1388,4 +1392,63 @@ function loadProvidersFromCookie() {
         });
         calculate();
     }
+}
+
+function saveProvidersToCookie() {
+    const providers = [];
+    document.querySelectorAll(".provider-box").forEach(box => {
+        const id = box.dataset.id;
+        providers.push({
+            name: document.getElementById(`name${id}`).value,
+            subCost: document.getElementById(`subCost${id}`).value,
+            rate: document.getElementById(`rate${id}`).value,
+            preset: document.getElementById(`preset${id}`).value,
+            speed: document.getElementById(`speed${id}`) ? document.getElementById(`speed${id}`).value : null
+        });
+    });
+    
+    if (providers.length > 0) {
+        setCookie("ev_providers", providers);
+    }
+}
+
+// Load provider boxes from cookie
+function loadProvidersFromCookie() {
+    const savedProviders = getCookie("ev_providers");
+    
+    if (savedProviders && Array.isArray(savedProviders)) {
+        // Clear any existing providers first
+        document.getElementById("providers").innerHTML = "";
+        
+        // Create new provider boxes with saved data
+        savedProviders.forEach(p => {
+            createProviderBox();
+            const id = providerCount;
+            
+            // Set the preset first (this will trigger updateProviderFields)
+            document.getElementById(`preset${id}`).value = p.preset;
+            
+            // Update the fields based on the preset
+            if (p.preset !== 'Custom') {
+                updateProviderFields(id);
+                // Override with saved rate if it was manually changed
+                document.getElementById(`rate${id}`).value = p.rate;
+            }
+            
+            // Set all values (custom or overrides)
+            document.getElementById(`name${id}`).value = p.name;
+            document.getElementById(`subCost${id}`).value = p.subCost;
+            document.getElementById(`rate${id}`).value = p.rate;
+            
+            // Set speed if applicable
+            if (p.speed && document.getElementById(`speed${id}`)) {
+                document.getElementById(`speed${id}`).value = p.speed;
+            }
+        });
+        
+        calculate();
+        return true;
+    }
+    
+    return false;
 }
