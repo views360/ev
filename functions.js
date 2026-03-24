@@ -421,6 +421,8 @@ function calculate() {
         uiPreText.innerHTML = "Before you may view the results, you must select at least one provider from the list of providers (above). It is simplest to add <i>all</i> providers.";
         uiPreText.style.display = "block";
         uiResults.style.display = "none";
+        const toc = document.getElementById("toc");
+        if (toc) toc.style.display = "none";
         if (resultsHeader) resultsHeader.style.display = "none";
         if (uiShare) uiShare.style.display = "none";
         if (uiPdf) uiPdf.style.display = "none";
