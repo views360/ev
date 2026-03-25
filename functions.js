@@ -390,7 +390,7 @@ function calculate() {
 
         document.getElementById("providerResults").innerHTML = html + `</tbody></table></div>`;
         document.querySelectorAll(".results-scroll").forEach(el => {
-            if (!el._ftScrollBound) { el._ftScrollBound = true; el.addEventListener("scroll", () => { if (_ftActive) _ftHide(); }, { passive: true }); }
+            if (!el._ftScrollBound) { el._ftScrollBound = true; el.addEventListener("scroll", () => { if (typeof _ftActive !== 'undefined' && _ftActive) _ftHide(); }, { passive: true }); }
         });
 
         if (!beReminderShown) {
@@ -459,14 +459,14 @@ function calculate() {
     document.querySelector(".calc-lines").style.display = "block";
     document.querySelector(".chart-wrapper").style.display = "block";
 
-// 1. Calculate Main Journey (Journey 1)
+    // 1. Calculate Main Journey (Journey 1)
     const mainTopUpKwh = Math.max(0, ((inputs.soc - inputs.rechargeAt) / 100) * inputs.batteryKwh);
     const mainTopUpCost = mainTopUpKwh * (inputs.startChargeRate / 100);
 
     let totalPreJourneyCost = mainTopUpCost;
     
     // Updated Tooltip with 0.8rem icon and requested text
-    const preChargeTooltip = `<span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)" style="font-size: 0.8rem;">💡<span class="tooltip-box">This is the total pre-journey battery charge cost for charging from your recharge threshold (${inputs.rechargeAt}%) to the specified starting state of charge (SOC).</span></span></span>`;
+    const preChargeTooltip = `<span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)" style="font-size: 0.8rem;">💡<span class="tooltip-box">This is the total pre-journey battery charge cost for charging from your recharge threshhold (${inputs.rechargeAt}%) to the specified starting state of charge (SOC).</span></span></span>`;
 
     let preChargeHtml = "";
 
@@ -508,7 +508,7 @@ function calculate() {
     let totalInitialRange = mainInitialRange;
     
     // Tooltip for the new range summary
-    const rangeTooltip = `<span class="tooltip-container"><span class="info-icon" style="font-size:0.8rem" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is the total number of miles you will be expected to drive across all journeys from the recharge threshold to each journey's respective starting state of charge.</span></span></span>`;
+    const rangeTooltip = `<span class="tooltip-container"><span class="info-icon" style="font-size:0.8rem" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is the total number of miles you will be expected to drive across all journeys from the recharge threshhold to each journey's respective starting state of charge.</span></span></span>`;
 
     let rangeHtml = "";
 
@@ -545,26 +545,26 @@ function calculate() {
 
     // 5. Update UI Lines
     document.getElementById("homeRangeLine").innerHTML = rangeHtml;
-    document.getElementById("publicMilesLine").innerHTML = `<span class="tooltip-container"><span class="info-icon" style="font-size:0.8rem" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is how many miles of your journey will need to be covered by public charging. It accounts for your recharge threshold of ${inputs.rechargeAt}%.</span></span></span>PAYG public charging miles needed: <strong>${publicMiles.toFixed(0)} miles</strong>`;
+    document.getElementById("publicMilesLine").innerHTML = `<span class="tooltip-container"><span class="info-icon" style="font-size:0.8rem" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is how many miles of your journey will need to be covered by public charging. It accounts for your recharge threshhold of ${inputs.rechargeAt}%.</span></span></span>PAYG public charging miles needed: <strong>${publicMiles.toFixed(0)} miles</strong>`;
     document.getElementById("publicKwhLine").innerHTML = `PAYG public charging energy needed: <strong>${publicKwh.toFixed(1)} kWh @ ${inputs.adhoc}p</strong>`;
     document.getElementById("adhocCostLine").innerHTML = `Total journey cost (pre-charge + standard PAYG): <strong>£${totalAdhocCost.toFixed(2)}</strong>`;
     // Helper function to simulate trip with a given provider
-    const simulateTripWithProvider = (providerRate, batteryKwh, rechargeThreshold, efficiency, journeyMiles, initialSoc) => {
+    const simulateTripWithProvider = (providerRate, batteryKwh, rechargethreshhold, efficiency, journeyMiles, initialSoc) => {
         const chargeToPercent = 80; 
-        const kwhPerCharge = ((chargeToPercent - rechargeThreshold) / 100) * batteryKwh; 
+        const kwhPerCharge = ((chargeToPercent - rechargethreshhold) / 100) * batteryKwh; 
         let distanceDriven = 0;
         let publicChargeCost = 0;
         let chargeCount = 0;
         let currentSoc = initialSoc;
         
         while (distanceDriven < journeyMiles) {
-            const rangeOnCurrentCharge = ((currentSoc - rechargeThreshold) / 100) * batteryKwh * efficiency;
+            const rangeOnCurrentCharge = ((currentSoc - rechargethreshhold) / 100) * batteryKwh * efficiency;
             if (distanceDriven + rangeOnCurrentCharge >= journeyMiles) break;
             
             distanceDriven += rangeOnCurrentCharge;
             chargeCount++;
             const remainingDistance = journeyMiles - distanceDriven;
-            const kwhNeededForFinal = (remainingDistance / efficiency) + ((rechargeThreshold / 100) * batteryKwh);
+            const kwhNeededForFinal = (remainingDistance / efficiency);
             
             if (kwhNeededForFinal <= kwhPerCharge) {
                 publicChargeCost += kwhNeededForFinal * (providerRate / 100);
@@ -601,7 +601,7 @@ function calculate() {
         providers.push({ 
             name, subCost, rate, totalJourneyCost, 
             breakEvenMiles,
-            totalWithBattery: breakEvenMiles + initialRange,
+            totalWithBattery: breakEvenMiles + mainInitialRange,
             savings: totalAdhocCost - totalJourneyCost,
             url: pData?.subscription?.url,
             comments: pData?.subscription?.comments || ""
@@ -658,7 +658,7 @@ function calculate() {
     });
     document.getElementById("providerResults").innerHTML = html + `</tbody></table></div>`;
     document.querySelectorAll(".results-scroll").forEach(el => {
-        if (!el._ftScrollBound) { el._ftScrollBound = true; el.addEventListener("scroll", () => { if (_ftActive) _ftHide(); }, { passive: true }); }
+        if (!el._ftScrollBound) { el._ftScrollBound = true; el.addEventListener("scroll", () => { if (typeof _ftActive !== 'undefined' && _ftActive) _ftHide(); }, { passive: true }); }
     });
 
     if (providers.length > 0) {
@@ -725,7 +725,7 @@ function calculate() {
             <div class="speed-comparison-container" style="width: fit-content; max-width: 100%; margin: 0;">
                 <p style="font-size: 0.85rem; margin-bottom: 10px;">
                     <span class="tooltip-container">
-                        <span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">A comparison of estimated total journey charge durations at various speeds for the public-charging section of your journey assumes that charging will begin each time the battery reaches your recharge threshold (${inputs.rechargeAt}%) and that you will charge to 80% (except for the final charge, which only charges enough to reach your destination with a ${inputs.rechargeAt}% reserve). All charges use the vehicle's maximum charging speed of ${inputs.maxChargingSpeed}kW.</span></span>
+                        <span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">A comparison of estimated total journey charge durations at various speeds for the public-charging section of your journey assumes that charging will begin each time the battery reaches your recharge threshhold (${inputs.rechargeAt}%) and that you will charge to 80% (except for the final charge, which only charges enough to reach your destination with a ${inputs.rechargeAt}% reserve). All charges use the vehicle's maximum charging speed of ${inputs.maxChargingSpeed}kW.</span></span>
                     </span>
                     <strong>Estimated Total Public Charging Duration Required</strong>
                 </p>
@@ -741,15 +741,15 @@ function calculate() {
         
         // --- REAL WORLD SECTION ---
         const chargeSpeed = inputs.maxChargingSpeed || 101;
-        const rechargeThreshold = inputs.rechargeAt;
+        const rechargethreshhold = inputs.rechargeAt;
         const chargeToPercent = 80; // Charge to 80% at each public stop (except final)
         
-        // Usable energy per public charge (from threshold to 80%)
-        const kwhPerPublicCharge = ((chargeToPercent - rechargeThreshold) / 100) * inputs.batteryKwh;
+        // Usable energy per public charge (from threshhold to 80%)
+        const kwhPerPublicCharge = ((chargeToPercent - rechargethreshhold) / 100) * inputs.batteryKwh;
         const rangePerPublicCharge = kwhPerPublicCharge * inputs.efficiency;
         
-        // Starting range (from pre-charge SOC down to threshold)
-        const startingRangeOnPreCharge = ((inputs.soc - rechargeThreshold) / 100) * inputs.batteryKwh * inputs.efficiency;
+        // Starting range (from pre-charge SOC down to threshhold)
+        const startingRangeOnPreCharge = ((inputs.soc - rechargethreshhold) / 100) * inputs.batteryKwh * inputs.efficiency;
         
         let stopsRows = '';
         let stopCount = 0;
@@ -758,15 +758,15 @@ function calculate() {
         
         // Simulate the journey
         while (distanceDriven < inputs.journeyMiles) {
-            // How far can we drive before hitting recharge threshold on current charge?
-            const rangeOnCurrentCharge = ((currentChargePercent - rechargeThreshold) / 100) * inputs.batteryKwh * inputs.efficiency;
+            // How far can we drive before hitting recharge threshhold on current charge?
+            const rangeOnCurrentCharge = ((currentChargePercent - rechargethreshhold) / 100) * inputs.batteryKwh * inputs.efficiency;
             
             if (distanceDriven + rangeOnCurrentCharge >= inputs.journeyMiles) {
                 // Can reach destination - no more public charging needed
                 break;
             }
             
-            // Drive to threshold and need to charge
+            // Drive to threshhold and need to charge
             distanceDriven += rangeOnCurrentCharge;
             stopCount++;
             
@@ -775,14 +775,14 @@ function calculate() {
             const kwhNeededToReachHome = remainingDistance / inputs.efficiency;
             
             if (kwhNeededToReachHome <= kwhPerPublicCharge) {
-                // This is the final charge - only charge what's needed to reach destination at threshold
+                // This is the final charge - only charge what's needed to reach destination at threshhold
                 const chargeTimeHours = kwhNeededToReachHome / chargeSpeed;
                 const chargeTimeFormatted = formatChargingTime(chargeTimeHours);
                 const chargePercent = Math.ceil((kwhNeededToReachHome / inputs.batteryKwh) * 100);
                 
                 stopsRows += `<tr>
                     <td style="padding: 10px; border: 1px solid var(--border); text-align: center;">${stopCount}</td>
-                    <td style="padding: 10px; border: 1px solid var(--border); color: var(--muted);">Final public charge (when battery reaches ${rechargeThreshold}%)</td>
+                    <td style="padding: 10px; border: 1px solid var(--border); color: var(--muted);">Final public charge (when battery reaches ${rechargethreshhold}%)</td>
                     <td style="padding: 10px; border: 1px solid var(--border); text-align: center;">${distanceDriven.toFixed(0)}</td>
                     <td style="padding: 10px; border: 1px solid var(--border);">Add ${chargePercent}% / ${kwhNeededToReachHome.toFixed(1)}kWh</td>
                     <td style="padding: 10px; border: 1px solid var(--border); text-align: center;">${chargeTimeFormatted}</td>
@@ -795,9 +795,9 @@ function calculate() {
                 
                 stopsRows += `<tr>
                     <td style="padding: 10px; border: 1px solid var(--border); text-align: center;">${stopCount}</td>
-                    <td style="padding: 10px; border: 1px solid var(--border); color: var(--muted);">Public charge (when battery reaches ${rechargeThreshold}%)</td>
+                    <td style="padding: 10px; border: 1px solid var(--border); color: var(--muted);">Public charge (when battery reaches ${rechargethreshhold}%)</td>
                     <td style="padding: 10px; border: 1px solid var(--border); text-align: center;">${distanceDriven.toFixed(0)}</td>
-                    <td style="padding: 10px; border: 1px solid var(--border);">Add ${(chargeToPercent - rechargeThreshold).toFixed(0)}% / ${kwhPerPublicCharge.toFixed(1)}kWh</td>
+                    <td style="padding: 10px; border: 1px solid var(--border);">Add ${(chargeToPercent - rechargethreshhold).toFixed(0)}% / ${kwhPerPublicCharge.toFixed(1)}kWh</td>
                     <td style="padding: 10px; border: 1px solid var(--border); text-align: center;">${chargeTimeFormatted}</td>
                 </tr>`;
                 currentChargePercent = chargeToPercent;
@@ -822,7 +822,7 @@ function calculate() {
                             ${stopsRows || '<tr><td colspan="5" style="padding: 20px; text-align: center;">No public charging stops required for this journey distance.</td></tr>'}
                         </tbody>
                     </table>
-                    <p style="font-size:0.85rem; margin-top:12px; opacity:0.8; !important;">Note: when there is more than one stop for public charging, the final charge will usually be less than previous charge(s). It represents the amount of final top-up charge needed to complete the journey and be left with a residual charge of ${rechargeThreshold}%.</p>
+                    <p style="font-size:0.85rem; margin-top:12px; opacity:0.8; !important;">Note: when there is more than one stop for public charging, the final charge will usually be less than previous charge(s). It represents the amount of final top-up charge needed to complete the journey and be left with a residual charge of ${rechargethreshhold}%.</p>
                 </div>
             </div>`;
         
