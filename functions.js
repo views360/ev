@@ -464,12 +464,15 @@ function calculate() {
     const mainTopUpCost = mainTopUpKwh * (inputs.startChargeRate / 100);
 
     let totalPreJourneyCost = mainTopUpCost;
+    
+    // Create the first line for the summary
     let preJourneyLinesHtml = `
         <div style="margin-left: 15px; opacity: 0.8; font-size: 0.85rem; margin-bottom: 4px;">
             Journey 1 (${inputs.rechargeAt}% - ${inputs.soc}% / ${mainTopUpKwh.toFixed(1)} kWh): £${mainTopUpCost.toFixed(2)}
         </div>`;
 
     // 2. Calculate Additional Journeys
+    // This part is what was missing: it loops through every extra journey you've added
     inputs.additionalJourneys.forEach((j, index) => {
         const extraTopUpKwh = Math.max(0, ((j.soc - inputs.rechargeAt) / 100) * inputs.batteryKwh);
         const extraTopUpCost = extraTopUpKwh * (j.rate / 100);
@@ -482,7 +485,7 @@ function calculate() {
     });
 
     // 3. Update the PAYG Summary UI
-    // Logic to switch between singular "cost" and plural "costs"
+    // This changes the header to plural "costs" if there is more than one journey
     const summaryHeader = inputs.additionalJourneys.length > 0 ? "Pre-journey battery charge costs" : "Pre-journey battery charge cost";
 
     document.getElementById("preChargeLine").innerHTML = `
