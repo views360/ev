@@ -503,19 +503,51 @@ function calculate() {
     // 3. Update the UI
     document.getElementById("preChargeLine").innerHTML = `<div class="guide-section" id="payg-summary">${preChargeHtml}</div>`;
     
-    // 4. RESTORE REQUIRED CALCULATIONS
-    const usableKwh = ((inputs.soc - inputs.rechargeAt) / 100) * inputs.batteryKwh;
-    const initialRange = usableKwh * inputs.efficiency;
-    const publicMiles = Math.max(0, inputs.journeyMiles - initialRange);
+    // 4. RANGE AND PUBLIC CHARGING CALCULATIONS
+    const mainInitialRange = ((inputs.soc - inputs.rechargeAt) / 100) * inputs.batteryKwh * inputs.efficiency;
+    let totalInitialRange = mainInitialRange;
+    
+    // Tooltip for the new range summary
+    const rangeTooltip = `<span class="tooltip-container"><span class="info-icon" style="font-size:0.8rem" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is the total number of miles you will be expected to drive across all journeys from the recharge threshold to each journey's respective starting state of charge.</span></span></span>`;
+
+    let rangeHtml = "";
+
+    if (inputs.additionalJourneys.length > 0) {
+        rangeHtml = `<p style="margin-bottom: 4px;"><strong>Pre-charged battery range:</strong></p>`;
+        
+        // Journey 1 range detail
+        rangeHtml += `<div style="font-size: 0.8rem; opacity: 0.8; margin-bottom: 2px; margin-left: 10px;">
+            Journey 1 range (${inputs.rechargeAt}% - ${inputs.soc}%): ${mainInitialRange.toFixed(0)} miles
+        </div>`;
+
+        // Calculate and list range for additional journeys
+        inputs.additionalJourneys.forEach((j, index) => {
+            const extraRange = Math.max(0, ((j.soc - inputs.rechargeAt) / 100) * inputs.batteryKwh * inputs.efficiency);
+            totalInitialRange += extraRange;
+            rangeHtml += `<div style="font-size: 0.8rem; opacity: 0.8; margin-bottom: 2px; margin-left: 10px;">
+                Journey ${index + 2} range (${inputs.rechargeAt}% - ${j.soc}%): ${extraRange.toFixed(0)} miles
+            </div>`;
+        });
+
+        // Total Range Line
+        rangeHtml += `<p style="margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 5px; margin-bottom: 0;">
+            ${rangeTooltip}<strong>Total pre-charged battery range for all journeys: ${totalInitialRange.toFixed(0)} miles</strong>
+        </p>`;
+    } else {
+        // Single journey view
+        rangeHtml = `<p style="margin-bottom: 0;">${rangeTooltip}Pre-charged battery range (${inputs.rechargeAt}% - ${inputs.soc}%): <strong>${mainInitialRange.toFixed(0)} miles</strong></p>`;
+    }
+
+    // Secondary Calculations for Public Charging
+    const publicMiles = Math.max(0, inputs.journeyMiles - totalInitialRange);
     const publicKwh = publicMiles / inputs.efficiency;
     const totalAdhocCost = totalPreJourneyCost + (publicKwh * (inputs.adhoc / 100));
-    
-    // 5. Update the remaining detail lines (with 0.8rem icons)
-    document.getElementById("homeRangeLine").innerHTML = `<span class="tooltip-container"><span class="info-icon" style="font-size:0.8rem" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is the distance you can expect to drive before your first public charge along your route. It is calculated from your starting charge level down to your recharge threshold (${inputs.rechargeAt}%).</span></span></span>Range from pre-charged battery: <strong>${initialRange.toFixed(0)} miles</strong>`;
+
+    // 5. Update UI Lines
+    document.getElementById("homeRangeLine").innerHTML = rangeHtml;
     document.getElementById("publicMilesLine").innerHTML = `<span class="tooltip-container"><span class="info-icon" style="font-size:0.8rem" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is how many miles of your journey will need to be covered by public charging. It accounts for your recharge threshold of ${inputs.rechargeAt}%.</span></span></span>PAYG public charging miles needed: <strong>${publicMiles.toFixed(0)} miles</strong>`;
     document.getElementById("publicKwhLine").innerHTML = `PAYG public charging energy needed: <strong>${publicKwh.toFixed(1)} kWh @ ${inputs.adhoc}p</strong>`;
     document.getElementById("adhocCostLine").innerHTML = `Total journey cost (pre-charge + standard PAYG): <strong>£${totalAdhocCost.toFixed(2)}</strong>`;
-    
     // Helper function to simulate trip with a given provider
     const simulateTripWithProvider = (providerRate, batteryKwh, rechargeThreshold, efficiency, journeyMiles, initialSoc) => {
         const chargeToPercent = 80; 
