@@ -464,38 +464,41 @@ function calculate() {
     const mainTopUpCost = mainTopUpKwh * (inputs.startChargeRate / 100);
 
     let totalPreJourneyCost = mainTopUpCost;
-    
-    // This builds the indented, smaller lines
-    let preJourneyLinesHtml = `
-        <div style="margin-left: 15px; opacity: 0.8; font-size: 0.85rem; margin-bottom: 4px;">
-            Journey 1 (${inputs.rechargeAt}% - ${inputs.soc}% / ${mainTopUpKwh.toFixed(1)} kWh): £${mainTopUpCost.toFixed(2)}
-        </div>`;
+    let preChargeHtml = "";
 
-    // 2. Loop through Additional Journeys
-    inputs.additionalJourneys.forEach((j, index) => {
-        const extraTopUpKwh = Math.max(0, ((j.soc - inputs.rechargeAt) / 100) * inputs.batteryKwh);
-        const extraTopUpCost = extraTopUpKwh * (j.rate / 100);
+    if (inputs.additionalJourneys.length > 0) {
+        // Multi-journey view header
+        preChargeHtml = `<h3>PAYG Summary</h3><p style="margin-bottom: 4px;"><strong>Pre-journey charge costs:</strong></p>`;
         
-        totalPreJourneyCost += extraTopUpCost;
-        preJourneyLinesHtml += `
-            <div style="margin-left: 15px; opacity: 0.8; font-size: 0.85rem; margin-bottom: 4px;">
-                Journey ${index + 2} (${inputs.rechargeAt}% - ${j.soc}% / ${extraTopUpKwh.toFixed(1)} kWh): £${extraTopUpCost.toFixed(2)}
-            </div>`;
-    });
-
-    // 3. Update the UI with the New Header and the List
-    const summaryHeader = inputs.additionalJourneys.length > 0 ? "Pre-journey battery charge costs" : "Pre-journey battery charge cost";
-
-    document.getElementById("preChargeLine").innerHTML = `
-        <div class="guide-section" id="payg-summary">
-            <h3>PAYG Summary</h3>
-            <p style="margin-bottom: 8px;"><strong>${summaryHeader}:</strong></p>
-            ${preJourneyLinesHtml}
-            <p style="margin-top: 10px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 5px;">
-                <strong>Total pre-journey battery charge costs: £${totalPreJourneyCost.toFixed(2)}</strong>
-            </p>
+        // Journey 1 detail line
+        preChargeHtml += `<div style="font-size: 0.8rem; margin-bottom: 2px; margin-left: 10px;">
+            Journey 1 pre-charge cost (${inputs.rechargeAt}% - ${inputs.soc}% / ${mainTopUpKwh.toFixed(1)} kWh): £${mainTopUpCost.toFixed(2)}
         </div>`;
 
+        // 2. Loop through Additional Journeys
+        inputs.additionalJourneys.forEach((j, index) => {
+            const extraKwh = Math.max(0, ((j.soc - inputs.rechargeAt) / 100) * inputs.batteryKwh);
+            const extraCost = extraKwh * (j.rate / 100);
+            totalPreJourneyCost += extraCost;
+            preChargeHtml += `<div style="font-size: 0.8rem; margin-bottom: 2px; margin-left: 10px;">
+                Journey ${index + 2} pre-charge cost (${inputs.rechargeAt}% - ${j.soc}% / ${extraKwh.toFixed(1)} kWh): £${extraCost.toFixed(2)}
+            </div>`;
+        });
+
+        // Total Line
+        preChargeHtml += `<p style="margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 5px;">
+            <strong>Total battery pre-charge cost for all journeys: £${totalPreJourneyCost.toFixed(2)}</strong>
+        </p>`;
+    } else {
+        // Original single-journey view with icon
+        preChargeHtml = `<h3>PAYG Summary</h3>
+            <p>💡 Pre-journey battery charge cost (${inputs.rechargeAt}% - ${inputs.soc}% / ${mainTopUpKwh.toFixed(1)} kWh): 
+            <strong>£${mainTopUpCost.toFixed(2)}</strong></p>`;
+    }
+
+    // 3. Update the UI
+    document.getElementById("preChargeLine").innerHTML = `<div class="guide-section" id="payg-summary">${preChargeHtml}</div>`;
+    
     // 4. RESTORE REQUIRED CALCULATIONS
     const usableKwh = ((inputs.soc - inputs.rechargeAt) / 100) * inputs.batteryKwh;
     const initialRange = usableKwh * inputs.efficiency;
@@ -647,28 +650,6 @@ function calculate() {
         const minSpeedSelect = document.getElementById("minSpeed");
         const minSpeedLabel = minSpeedSelect.options[minSpeedSelect.selectedIndex].text;
         const maxChargingSpeed = inputs.maxChargingSpeed;
-        // 1. Update the kWh calculation logic
-        const rechargeAt = inputs.rechargeAt; // This is your [X]
-        const startingSoc = inputs.soc;       // This is your [Y]
-        
-        // Calculate the kWh needed to go from Recharge Threshold to Starting SOC
-        const startChargeKwh = Math.max(0, ((startingSoc - rechargeAt) / 100) * inputs.batteryKwh); // This is your [Z]
-        const startChargeCost = startChargeKwh * (inputs.startChargeRate / 100);
-        
-        // 2. Update the HTML output string
-        document.getElementById("preChargeLine").innerHTML = `
-            <div class="guide-section" id="payg-summary">
-                <h3>PAYG Summary</h3>
-                <span class="tooltip-container">
-                    <span class="info-icon" style="font-size:0.8rem" onclick="toggleTooltip(this)">💡
-                        <span class="tooltip-box">
-                            This is a notional value for the charge required to bring your battery from your recharge threshold up to your starting level for this journey.
-                        </span>
-                    </span>
-                </span>
-                Pre-journey battery charge cost (${rechargeAt}% - ${startingSoc}% / ${startChargeKwh.toFixed(1)} kWh): 
-                <strong>£${startChargeCost.toFixed(2)}</strong>
-            </div>`;
         
         const formatChargingTime = (timeHours) => {
             if (timeHours < 1) {
