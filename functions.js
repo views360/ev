@@ -459,14 +459,42 @@ function calculate() {
     document.querySelector(".calc-lines").style.display = "block";
     document.querySelector(".chart-wrapper").style.display = "block";
 
-    const startChargeKwh = (inputs.soc / 100) * inputs.batteryKwh;
-    const startChargeCost = startChargeKwh * (inputs.startChargeRate / 100);
-    // Calculate usable kWh from soc% down to rechargeAt% (the recharge threshold)
-    const usableKwh = ((inputs.soc - inputs.rechargeAt) / 100) * inputs.batteryKwh;
+// Calculate Main Journey (Journey 1)
+    const mainTopUpKwh = Math.max(0, ((inputs.soc - inputs.rechargeAt) / 100) * inputs.batteryKwh);
+    const mainTopUpCost = mainTopUpKwh * (inputs.startChargeRate / 100);
+
+    let totalPreJourneyCost = mainTopUpCost;
+    let preJourneyLinesHtml = `
+        <div style="margin-left: 15px; opacity: 0.8; font-size: 0.85rem; margin-bottom: 4px;">
+            Journey 1 (${inputs.rechargeAt}% - ${inputs.soc}% / ${mainTopUpKwh.toFixed(1)} kWh): £${mainTopUpCost.toFixed(2)}
+        </div>`;
+
+    // Calculate Additional Journeys
+    inputs.additionalJourneys.forEach((j, index) => {
+        const extraTopUpKwh = Math.max(0, ((j.soc - inputs.rechargeAt) / 100) * inputs.batteryKwh);
+        const extraTopUpCost = extraTopUpKwh * (j.rate / 100);
+        
+        totalPreJourneyCost += extraTopUpCost;
+        preJourneyLinesHtml += `
+            <div style="margin-left: 15px; opacity: 0.8; font-size: 0.85rem; margin-bottom: 4px;">
+                Journey ${index + 2} (${inputs.rechargeAt}% - ${j.soc}% / ${extraTopUpKwh.toFixed(1)} kWh): £${extraTopUpCost.toFixed(2)}
+            </div>`;
+    });
+
+    // Update the PAYG Summary UI
+    document.getElementById("preChargeLine").innerHTML = `
+        <div class="guide-section" id="payg-summary">
+            <h3>PAYG Summary</h3>
+            <p style="margin-bottom: 8px;"><strong>Pre-journey battery charge costs:</strong></p>
+            ${preJourneyLinesHtml}
+            <p style="margin-top: 10px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 5px;">
+                <strong>Total pre-journey battery charge costs: £${totalPreJourneyCost.toFixed(2)}</strong>
+            </p>
+        </div>`;
     const initialRange = usableKwh * inputs.efficiency;
     const publicMiles = Math.max(0, inputs.journeyMiles - initialRange);
     const publicKwh = publicMiles / inputs.efficiency;
-    const totalAdhocCost = startChargeCost + (publicKwh * (inputs.adhoc / 100));
+    const totalAdhocCost = totalPreJourneyCost + (publicKwh * (inputs.adhoc / 100));
     
     document.getElementById("preChargeLine").innerHTML = `<div class="guide-section" id="payg-summary"><h3>PAYG Summary</h3><span class="tooltip-container"><span class="info-icon" style="font-size:0.8rem" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is a notional value for the entire ${inputs.soc}% state of charge before you set off for your journey (i.e., how much it cost to pre-charge your battery). This amount will be included in your total journey cost.</span></span></span>Pre-journey battery charge cost (${inputs.soc}% / ${startChargeKwh.toFixed(1)} kWh): <strong>£${startChargeCost.toFixed(2)}</strong></div>`;
     document.getElementById("homeRangeLine").innerHTML = `<span class="tooltip-container"><span class="info-icon" style="font-size:0.8rem" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is the distance you can expect to drive before your first public charge along your route. It is calculated from your starting charge level down to your recharge threshold (${inputs.rechargeAt}%).</span></span></span>Range from pre-charged battery: <strong>${initialRange.toFixed(0)} miles</strong></span>`;
@@ -541,7 +569,7 @@ function calculate() {
             inputs.soc
         );
         
-        const totalJourneyCost = subCost + startChargeCost + publicChargingCost;
+        const totalJourneyCost = subCost + totalPreJourneyCost + publicChargingCost;
         const pData = PRESETS.find(p => p.name === document.getElementById(`preset${id}`).value);
 
         providers.push({ 
