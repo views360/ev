@@ -481,17 +481,20 @@ function calculate() {
             </div>`;
     });
 
-    // 3. Update the PAYG Summary UI (This is the only assignment needed)
+    // 3. Update the PAYG Summary UI
+    // Logic to switch between singular "cost" and plural "costs"
+    const summaryHeader = inputs.additionalJourneys.length > 0 ? "Pre-journey battery charge costs" : "Pre-journey battery charge cost";
+
     document.getElementById("preChargeLine").innerHTML = `
         <div class="guide-section" id="payg-summary">
             <h3>PAYG Summary</h3>
-            <p style="margin-bottom: 8px;"><strong>Pre-journey battery charge costs:</strong></p>
+            <p style="margin-bottom: 8px;"><strong>${summaryHeader}:</strong></p>
             ${preJourneyLinesHtml}
             <p style="margin-top: 10px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 5px;">
                 <strong>Total pre-journey battery charge costs: £${totalPreJourneyCost.toFixed(2)}</strong>
             </p>
         </div>`;
-
+    
     // 4. Update the Range and Public Miles calculations
     const usableKwh = ((inputs.soc - inputs.rechargeAt) / 100) * inputs.batteryKwh;
     const initialRange = usableKwh * inputs.efficiency;
