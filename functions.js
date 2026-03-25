@@ -612,7 +612,28 @@ function calculate() {
         const minSpeedSelect = document.getElementById("minSpeed");
         const minSpeedLabel = minSpeedSelect.options[minSpeedSelect.selectedIndex].text;
         const maxChargingSpeed = inputs.maxChargingSpeed;
-        const rechargeAt = inputs.rechargeAt;
+        // 1. Update the kWh calculation logic
+        const rechargeAt = inputs.rechargeAt; // This is your [X]
+        const startingSoc = inputs.soc;       // This is your [Y]
+        
+        // Calculate the kWh needed to go from Recharge Threshold to Starting SOC
+        const startChargeKwh = Math.max(0, ((startingSoc - rechargeAt) / 100) * inputs.batteryKwh); // This is your [Z]
+        const startChargeCost = startChargeKwh * (inputs.startChargeRate / 100);
+        
+        // 2. Update the HTML output string
+        document.getElementById("preChargeLine").innerHTML = `
+            <div class="guide-section" id="payg-summary">
+                <h3>PAYG Summary</h3>
+                <span class="tooltip-container">
+                    <span class="info-icon" style="font-size:0.8rem" onclick="toggleTooltip(this)">💡
+                        <span class="tooltip-box">
+                            This is a notional value for the charge required to bring your battery from your recharge threshold up to your starting level for this journey.
+                        </span>
+                    </span>
+                </span>
+                Pre-journey battery charge cost (${rechargeAt}% - ${startingSoc}% / ${startChargeKwh.toFixed(1)} kWh): 
+                <strong>£${startChargeCost.toFixed(2)}</strong>
+            </div>`;
         
         const formatChargingTime = (timeHours) => {
             if (timeHours < 1) {
