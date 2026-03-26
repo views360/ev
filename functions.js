@@ -597,41 +597,56 @@ function calculate() {
         publicMilesHtml = `<p style="margin: 0px;"><span class="tooltip-container"><span class="info-icon" style="font-size:0.8rem" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is how many miles of your journey will need to be paid for with PAYG charging. It takes into account the range expected from pre-charging before the journey and your recharge threshold of ${inputs.rechargeAt}%.</span></span></span>PAYG charging miles needed: <strong>${journey1PublicMiles.toFixed(0)} miles</strong></p>`;
     }
 
-    // Update the rest of the dependent variables and UI
-    const publicKwh = totalPublicMiles / inputs.efficiency;
+    // 6. PAYG kWh NEEDED CALCULATIONS (JOURNEY BY JOURNEY)
+    
+    // Tooltip for the public kWh summary
+    const publicKwhTooltip = `<span class="tooltip-container"><span class="info-icon" style="font-size:0.8rem" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is the total number of kWh of charging you will need from your average PAYG provider for the PAYG part of your journey.</span></span></span>`;
+
+    let totalPublicKwh = 0;
+    let publicKwhHtml = "";
+
+    // Calculate Journey 1 PAYG kWh
+    const journey1PublicKwh = journey1PublicMiles / inputs.efficiency;
+    totalPublicKwh += journey1PublicKwh;
+
+    if (inputs.additionalJourneys.length > 0) {
+        // Multi-journey header with recharge threshold
+        publicKwhHtml = `<p style="opacity: 0.5; font-size: 0.8rem; margin: 0px"><strong>PAYG kWh needed (${inputs.rechargeAt}% recharge threshold):</strong></p>`;
+        
+        // Journey 1 detail line
+        publicKwhHtml += `<div style="font-size: 0.8rem; opacity: 0.5; margin-bottom: 2px; margin-left: 10px;">
+            Journey 1 PAYG kWh: ${journey1PublicKwh.toFixed(1)} kWh
+        </div>`;
+
+        // Calculate and list PAYG kWh for additional journeys
+        inputs.additionalJourneys.forEach((j, index) => {
+            const extraRange = Math.max(0, ((j.soc - inputs.rechargeAt) / 100) * inputs.batteryKwh * inputs.efficiency);
+            const extraPublicMiles = Math.max(0, j.miles - extraRange);
+            const extraPublicKwh = extraPublicMiles / inputs.efficiency;
+            totalPublicKwh += extraPublicKwh;
+            
+            publicKwhHtml += `<div style="font-size: 0.8rem; opacity: 0.5; margin-bottom: 2px; margin-left: 10px;">
+                Journey ${index + 2} PAYG kWh: ${extraPublicKwh.toFixed(1)} kWh
+            </div>`;
+        });
+
+        // Total Line with cost calculation and border separator
+        publicKwhHtml += `<p style="border-bottom: 1px solid rgba(255,255,255,0.2); margin:0; padding-bottom: 10px;">
+            ${publicKwhTooltip}Total PAYG kWh needed (${totalPublicKwh.toFixed(1)} kWh x ${inputs.adhoc}p): <strong>£${(totalPublicKwh * (inputs.adhoc / 100)).toFixed(2)}</strong></p>`;
+    } else {
+        // Single journey view
+        publicKwhHtml = `<p style="margin: 0px;">${publicKwhTooltip}PAYG kWh needed (${journey1PublicKwh.toFixed(1)} kWh x ${inputs.adhoc}p): <strong>£${(journey1PublicKwh * (inputs.adhoc / 100)).toFixed(2)}</strong></p>`;
+    }
+
+    // Assign to publicKwh for use in later conclusion text sections
+    const publicKwh = totalPublicKwh;
     const totalAdhocCost = totalPreJourneyCost + (publicKwh * (inputs.adhoc / 100));
 
+    // Update the UI
     document.getElementById("homeRangeLine").innerHTML = rangeHtml;
     document.getElementById("publicMilesLine").innerHTML = publicMilesHtml;
-    document.getElementById("publicKwhLine").innerHTML = `<span class="tooltip-container"><span class="info-icon" style="font-size:0.8rem" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is the total cost for PAYG kWh needed during your journey(s).</span></span></span>PAYG kWh needed (${inputs.rechargeAt}%→80%, ${publicKwh.toFixed(1)} kWh x ${inputs.adhoc}p): <strong>£${publicKwh.toFixed(1) * (inputs.adhoc / 100)}</strong>`;
-    document.getElementById("adhocCostLine").innerHTML = `<p style="margin: 0px; font-size: 1.2rem">Total PAYG journey cost (pre-charge + on-the-go charges): <strong>£${totalAdhocCost.toFixed(2)}</strong></p>`;
-    const simulateTripWithProvider = (providerRate, batteryKwh, rechargethreshhold, efficiency, journeyMiles, initialSoc) => {
-        const chargeToPercent = 80; 
-        const kwhPerCharge = ((chargeToPercent - rechargethreshhold) / 100) * batteryKwh; 
-        let distanceDriven = 0;
-        let publicChargeCost = 0;
-        let chargeCount = 0;
-        let currentSoc = initialSoc;
-        
-        while (distanceDriven < journeyMiles) {
-            const rangeOnCurrentCharge = ((currentSoc - rechargethreshhold) / 100) * batteryKwh * efficiency;
-            if (distanceDriven + rangeOnCurrentCharge >= journeyMiles) break;
-            
-            distanceDriven += rangeOnCurrentCharge;
-            chargeCount++;
-            const remainingDistance = journeyMiles - distanceDriven;
-            const kwhNeededForFinal = (remainingDistance / efficiency);
-            
-            if (kwhNeededForFinal <= kwhPerCharge) {
-                publicChargeCost += kwhNeededForFinal * (providerRate / 100);
-                break;
-            } else {
-                publicChargeCost += kwhPerCharge * (providerRate / 100);
-                currentSoc = chargeToPercent;
-            }
-        }
-        return publicChargeCost;
-    };
+    document.getElementById("publicKwhLine").innerHTML = publicKwhHtml;
+    document.getElementById("adhocCostLine").innerHTML = `<p style="margin: 0px; font-size: 1.2rem">Total journey cost (pre-charge + average PAYG of ${inputs.adhoc}p): <strong>£${totalAdhocCost.toFixed(2)}</strong></p>`;
     
     const providers = [];
     providerBoxes.forEach(box => {
