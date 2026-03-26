@@ -745,42 +745,39 @@ function calculate() {
 
     // --- Updated Conclusion Logic ---
     if (providers.length > 0) {
+        // Reuse the first provider from your sorted list
         const bestProvider = providers[0];
-        
-        // 1. Reuse existing 'inputs' and DOM elements to avoid "already declared" errors
-        const totalJourneysCount = 1 + inputs.additionalJourneys.length;
-        const totalMilesAllJourneys = inputs.journeyMiles + inputs.additionalJourneys.reduce((sum, j) => sum + j.miles, 0);
-        
-        // Use the existing 'minSpeed' element directly instead of re-declaring a constant
-        const minSpeedLabel = document.getElementById("minSpeed").options[document.getElementById("minSpeed").selectedIndex].text;
 
-        let conclusionHTML = "";
-        conclusionHTML += `<div class="conclusion-white-border guide-section" id="payg-vs-subscription">`;
+        // 1. Calculate Multi-Journey Totals
+        // (Note: Using 'var' or simple assignment here to ensure no 'const' redeclaration issues)
+        var totalJourneysCount = 1 + inputs.additionalJourneys.length;
+        var totalMilesAllJourneys = inputs.journeyMiles + inputs.additionalJourneys.reduce((sum, j) => sum + j.miles, 0);
         
+        // 2. Access the dropdown label directly
+        var currentMinSpeedEl = document.getElementById("minSpeed");
+        var minSpeedLabelText = currentMinSpeedEl.options[currentMinSpeedEl.selectedIndex].text;
+
+        // 3. Construct the dynamic text
+        var dynamicConclusionText = "";
         if (bestProvider.savings > 0) {
-            // Handle singular/plural for "journey"
-            const journeyWord = totalJourneysCount === 1 ? "journey" : "journeys";
+            var journeyWord = totalJourneysCount === 1 ? "journey" : "journeys";
             
-            conclusionHTML += `<h3>PAYG vs Subscription Conclusion</h3>
-                <p class="main-result">
-                    For ${totalJourneysCount} ${journeyWord} totalling <strong>${totalMilesAllJourneys.toFixed(0)} miles</strong> within a period of one month, 
-                    a subscription with <strong>${bestProvider.name}</strong> works out cheaper than a ${inputs.adhoc}p PAYG rate 
-                    based on the selected minimum charging rate of <strong>${minSpeedLabel}</strong> and the other information entered. 
-                    The total cost for all journeys will be <strong>£${bestProvider.totalJourneyCost.toFixed(2)}</strong>, 
-                    which represents a saving of <strong>£${bestProvider.savings.toFixed(2)}</strong> over the average PAYG rate you entered above.
-                </p>`;
+            dynamicConclusionText = `For ${totalJourneysCount} ${journeyWord} totalling <strong>${totalMilesAllJourneys.toFixed(0)} miles</strong> within a period of one month, a subscription with <strong>${bestProvider.name}</strong> works out cheaper than a ${inputs.adhoc}p PAYG rate based on the selected minimum charging rate of <strong>${minSpeedLabelText}</strong> and the other information entered. The total cost for all journeys will be <strong>£${bestProvider.totalJourneyCost.toFixed(2)}</strong>, which represents a saving of <strong>£${bestProvider.savings.toFixed(2)}</strong> over the average PAYG rate you entered above.`;
         } else {
-            // Default text if no provider offers a saving
-            conclusionHTML += `<h3>PAYG vs Subscription Conclusion</h3>
-                <p class="main-result">
-                    Based on the information entered, a subscription does not offer a saving for these ${totalJourneysCount} journeys 
-                    compared to your ${inputs.adhoc}p PAYG rate.
-                </p>`;
+            dynamicConclusionText = `For ${totalJourneysCount} journeys totalling <strong>${totalMilesAllJourneys.toFixed(0)} miles</strong>, a <strong>${inputs.adhoc}p PAYG rate</strong> is cheaper than the cheapest subscription based on the information entered.`;
         }
-        conclusionHTML += `</div>`;
 
-        // Update the conclusionsBox with the new HTML
-        conclusionsBox.innerHTML = conclusionHTML;
+        // 4. Update the UI directly using the ID of your box
+        if (conclusionsBox) {
+            conclusionsBox.innerHTML = `
+                <div class="conclusion-white-border guide-section" id="payg-vs-subscription">
+                    <h3>PAYG vs Subscription Conclusion</h3>
+                    <p class="main-result">${dynamicConclusionText}</p>
+                </div>`;
+        }
+
+        // --- DO NOT REMOVE: Your existing charging durations logic starts below ---
+        // The script continues with maxChargingSpeed, etc...
         
         const maxChargingTimeHours = maxChargingSpeed > 0 ? publicKwh / maxChargingSpeed : 0;
         const maxChargingTimeFormatted = formatChargingTime(maxChargingTimeHours);
