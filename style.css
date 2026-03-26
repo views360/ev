@@ -402,9 +402,8 @@ body.light-mode #providerResults th:nth-child(even) {
     border-radius: 8px;
 }
 
-.homeRangeLine p {
-    margin-top: 0;
-    padding-top: 0;
+.homeRangeLine p, .publicMilesLine p {
+    margin: 0px;
 }
 
 .conclusion-card {
