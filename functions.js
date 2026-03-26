@@ -515,12 +515,12 @@ function calculate() {
         // Total Range Line
         rangeHtml += `<p style="border-bottom: 1px solid rgba(255,255,255,0.2); margin: 0; padding-bottom: 10px;">
             ${rangeTooltip}Total pre-charged battery range for all journeys: ${totalInitialRange.toFixed(0)} miles</p>`;
-            const preChargeTooltip = `<span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)" style="font-size: 0.8rem;">💡<span class="tooltip-box">This is the combined cost for pre-charging your battery before each journey defined above.</span></span></span>`;
     } else {
         // Single journey view
         rangeHtml = `<p style="margin: 0px">${rangeTooltip}Pre-charged battery range: <strong>${mainInitialRange.toFixed(0)} miles</strong></p>`;
-        const preChargeTooltip = `<span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)" style="font-size: 0.8rem;">💡<span class="tooltip-box">This is the cost for pre-charging your battery before this journey.</span></span></span>`;
     }
+    const preChargeTooltip = `<span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)" style="font-size: 0.8rem;">💡<span class="tooltip-box">This is the combined cost for pre-charging your battery before each journey defined above.</span></span></span>`;
+
 
     // 1. Calculate Main Journey (Journey 1)
     const mainTopUpKwh = Math.max(0, ((inputs.soc - inputs.rechargeAt) / 100) * inputs.batteryKwh);
