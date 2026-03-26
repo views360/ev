@@ -505,9 +505,8 @@ function calculate() {
         });
 
         // Total Range Line
-        rangeHtml += `<p style="border-bottom: 1px solid rgba(255,255,255,0.2); margin: 0; padding-bottom: 3px;">
-            ${rangeTooltip}<strong>Total pre-charged battery range for all journeys: ${totalInitialRange.toFixed(0)} miles</strong>
-        </p>`;
+        rangeHtml += `<p style="border-bottom: 1px solid rgba(255,255,255,0.2); margin: 0; padding-bottom: 5px;">
+            ${rangeTooltip}Total pre-charged battery range for all journeys: ${totalInitialRange.toFixed(0)} miles</p>`;
     } else {
         // Single journey view
         rangeHtml = `<h3>PAYG Summary</h3><p>${rangeTooltip}Pre-charged battery range: <strong>${mainInitialRange.toFixed(0)} miles</strong></p>`;
@@ -544,9 +543,8 @@ function calculate() {
         });
 
         // Total Line (removed bottom margin)
-        preChargeHtml += `<p style="margin: 0px; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 3px;">
-            ${preChargeTooltip}<strong>Total battery pre-charge cost for all journeys: £${totalPreJourneyCost.toFixed(2)}</strong>
-        </p>`;
+        preChargeHtml += `<p style="margin: 0px; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 10px;">
+            ${preChargeTooltip}Total battery pre-charge cost for all journeys: £${totalPreJourneyCost.toFixed(2)}</p>`;
     } else {
         // Single-journey view (removed bottom margin, 0.8rem icon)
         preChargeHtml = `<p style="margin: 0px;">${preChargeTooltip}Pre-journey battery charge (${inputs.rechargeAt}% → ${inputs.soc}%, ${mainTopUpKwh.toFixed(1)} kWh x ${inputs.startChargeRate}p): 
@@ -590,8 +588,7 @@ function calculate() {
 
         // Total Public Miles Line with Tooltip
         publicMilesHtml += `<p style="border-bottom: 1px solid rgba(255,255,255,0.2); margin:0; padding-bottom: 3px;">
-            ${publicMilesTooltip}<strong>Total PAYG public charging miles involved: ${totalPublicMiles.toFixed(0)} miles</strong>
-        </p>`;
+            ${publicMilesTooltip}Total PAYG public charging miles involved: ${totalPublicMiles.toFixed(0)} miles</p>`;
     } else {
         // Single journey view
         publicMilesHtml = `<p style="margin: 0px;">${publicMilesTooltip}PAYG public charging miles needed: <strong>${journey1PublicMiles.toFixed(0)} miles</strong></p>`;
