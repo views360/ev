@@ -493,6 +493,8 @@ function calculate() {
     let rangeHtml = "";
 
     if (inputs.additionalJourneys.length > 0) {
+        const paygSubtitle = document.getElementById("paygSummarySubtitle");
+        paygSubtitle.textContent = `Here are the key PAYG values for your planned journeys.`;
         rangeHtml = `<p style="opacity: 0.5; margin: 0px; font-size: 0.8rem"><strong>Pre-charged battery range:</strong></p>`;
         
         // Journey 1 range detail
