@@ -505,7 +505,7 @@ function calculate() {
         });
 
         // Total Range Line
-        rangeHtml += `<p style="border-bottom: 1px solid rgba(255,255,255,0.2); margin: 0; padding-bottom: 5px;">
+        rangeHtml += `<p style="border-bottom: 1px solid rgba(255,255,255,0.2); margin: 0; padding-bottom: 10px;">
             ${rangeTooltip}Total pre-charged battery range for all journeys: ${totalInitialRange.toFixed(0)} miles</p>`;
     } else {
         // Single journey view
@@ -525,7 +525,7 @@ function calculate() {
 
     if (inputs.additionalJourneys.length > 0) {
         // Multi-journey view header
-        preChargeHtml = `<p style="margin-bottom: 4px; opacity: 0.5;"><strong>Pre-journey charge costs:</strong></p>`;
+        preChargeHtml = `<p style="margin-bottom: 4px; opacity: 0.5;"><h4>Pre-journey charge costs:</h4></p>`;
         
         // Journey 1 detail line (0.8 opacity)
         preChargeHtml += `<div style="font-size: 0.8rem; opacity: 0.5; margin-bottom: 2px; margin-left: 10px;">
@@ -587,7 +587,7 @@ function calculate() {
         });
 
         // Total Public Miles Line with Tooltip
-        publicMilesHtml += `<p style="border-bottom: 1px solid rgba(255,255,255,0.2); margin:0; padding-bottom: 3px;">
+        publicMilesHtml += `<p style="border-bottom: 1px solid rgba(255,255,255,0.2); margin:0; padding-bottom: 10px;">
             ${publicMilesTooltip}Total PAYG public charging miles involved: ${totalPublicMiles.toFixed(0)} miles</p>`;
     } else {
         // Single journey view
@@ -600,7 +600,7 @@ function calculate() {
 
     document.getElementById("homeRangeLine").innerHTML = rangeHtml;
     document.getElementById("publicMilesLine").innerHTML = publicMilesHtml;
-    document.getElementById("publicKwhLine").innerHTML = `PAYG public charging energy needed (${publicKwh.toFixed(1)} kWh x ${inputs.adhoc}p):<strong>£${publicKwh.toFixed(1) * (inputs.adhoc / 100)}</strong>`;
+    document.getElementById("publicKwhLine").innerHTML = `PAYG public charging energy needed (${publicKwh.toFixed(1)} kWh x ${inputs.adhoc}p): <strong>£${publicKwh.toFixed(1) * (inputs.adhoc / 100)}</strong>`;
     document.getElementById("adhocCostLine").innerHTML = `Total journey cost (pre-charge + standard PAYG): <strong>£${totalAdhocCost.toFixed(2)}</strong>`;// Helper function to simulate trip with a given provider
     const simulateTripWithProvider = (providerRate, batteryKwh, rechargethreshhold, efficiency, journeyMiles, initialSoc) => {
         const chargeToPercent = 80; 
