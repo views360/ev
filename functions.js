@@ -554,7 +554,7 @@ function calculate() {
         </p>`;
     } else {
         // Single journey view
-        rangeHtml = `<p style="margin-bottom: 0;">${rangeTooltip}Pre-charged battery range: <strong>${mainInitialRange.toFixed(0)} miles</strong></p>`;
+        rangeHtml = `<p style="margin: 0px;">${rangeTooltip}Pre-charged battery range: <strong>${mainInitialRange.toFixed(0)} miles</strong></p>`;
     }
 
     // 5. PUBLIC CHARGING CALCULATIONS (JOURNEY BY JOURNEY)
