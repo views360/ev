@@ -752,8 +752,8 @@ function calculate() {
         const totalMilesAllJourneys = inputs.journeyMiles + inputs.additionalJourneys.reduce((sum, j) => sum + j.miles, 0);
         
         // 2. Determine the charging speed label (D)
-        minSpeedSelect = document.getElementById("minSpeed");
-        const minSpeedLabel = minSpeedSelect.options[minSpeedSelect.selectedIndex].text;
+        let minSpeedSelect = document.getElementById("minSpeed");
+        let minSpeedLabel = minSpeedSelect.options[minSpeedSelect.selectedIndex].text;
     
         // 3. Construct the dynamic conclusion text
         let conclusionText = "";
@@ -765,13 +765,6 @@ function calculate() {
         } else {
             conclusionText = `Based on the information entered, a subscription does not offer a saving for these journeys compared to your ${inputs.adhoc}p PAYG rate.`;
         }
-    
-        // 4. Update the UI (Ensure the element ID matches your HTML)
-        const conclusionsBox = document.getElementById("conclusionsBox");
-        if (conclusionsBox) {
-            conclusionsBox.innerHTML = `<div class="conclusion-text">${conclusionText}</div>`;
-        }
-
     
         // 4. Update the UI (Ensure the element ID matches your HTML)
         const conclusionsBox = document.getElementById("conclusionsBox");
