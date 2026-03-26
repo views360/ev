@@ -745,23 +745,34 @@ function calculate() {
 
     if (providers.length > 0) {
         const bestProvider = providers[0];
-        const minSpeedSelect = document.getElementById("minSpeed");
-        const minSpeedLabel = minSpeedSelect.options[minSpeedSelect.selectedIndex].text;
-        const maxChargingSpeed = inputs.maxChargingSpeed;
         
-        const formatChargingTime = (timeHours) => {
-            if (timeHours < 1) {
-                const minutes = Math.round(timeHours * 60);
-                return `${minutes} minutes`;
-            } else {
-                const hours = Math.floor(timeHours);
-                const minutes = Math.round((timeHours - hours) * 60);
-                if (minutes === 0) {
-                    return `${hours} hour${hours > 1 ? 's' : ''}`;
-                }
-                return `${hours}h ${minutes}m`;
-            }
-        };
+        // --- SAFE DYNAMIC TEXT LOGIC ---
+        // Calculate totals based on existing 'inputs' object
+        const totalJourneysCount = 1 + inputs.additionalJourneys.length;
+        const totalMilesAllJourneys = inputs.journeyMiles + inputs.additionalJourneys.reduce((sum, j) => sum + j.miles, 0);
+        
+        // Get the current label from the dropdown (D)
+        const currentSpeedLabel = document.getElementById("minSpeed").options[document.getElementById("minSpeed").selectedIndex].text;
+
+        let conclusionContent = "";
+        if (bestProvider.savings > 0) {
+            const journeyWord = totalJourneysCount === 1 ? "journey" : "journeys";
+            conclusionContent = `For ${totalJourneysCount} ${journeyWord} totalling <strong>${totalMilesAllJourneys.toFixed(0)} miles</strong> within a period of one month, a subscription with <strong>${bestProvider.name}</strong> works out cheaper than a ${inputs.adhoc}p PAYG rate based on the selected minimum charging rate of <strong>${currentSpeedLabel}</strong> and the other information entered. The total cost for all journeys will be <strong>£${bestProvider.totalJourneyCost.toFixed(2)}</strong>, which represents a saving of <strong>£${bestProvider.savings.toFixed(2)}</strong> over the average PAYG rate you entered above.`;
+        } else {
+            conclusionContent = `For ${totalJourneysCount} journeys totalling <strong>${totalMilesAllJourneys.toFixed(0)} miles</strong>, a <strong>${inputs.adhoc}p PAYG rate</strong> is cheaper than the cheapest subscription based on the information entered.`;
+        }
+
+        // Update the UI using the existing conclusionsBox variable
+        if (conclusionsBox) {
+            conclusionsBox.innerHTML = `
+                <div class="conclusion-white-border guide-section" id="payg-vs-subscription">
+                    <h3>PAYG vs Subscription Conclusion</h3>
+                    <p class="main-result">${conclusionContent}</p>
+                </div>`;
+        }
+        // --- END SAFE LOGIC ---
+
+        // DO NOT TOUCH the code below this line (maxChargingSpeed, formatChargingTime, etc.)
         
         const maxChargingTimeHours = maxChargingSpeed > 0 ? publicKwh / maxChargingSpeed : 0;
         const maxChargingTimeFormatted = formatChargingTime(maxChargingTimeHours);
