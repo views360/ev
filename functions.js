@@ -744,48 +744,47 @@ function calculate() {
     });
 
     if (providers.length > 0) {
-        // 1. Establish the best provider and required labels
+        // 1. Identify best provider and the selected speed label
         var bestProvider = providers[0];
-        var minSpeedSelect = document.getElementById("minSpeed");
-        var activeMinSpeedLabel = minSpeedSelect.options[minSpeedSelect.selectedIndex].text;
+        var minSpeedDropdown = document.getElementById("minSpeed");
+        var activeSpeedLabel = minSpeedDropdown.options[minSpeedDropdown.selectedIndex].text;
 
-        // 2. Calculate Totals for the Conclusion
-        var totalJourneysCount = 1 + inputs.additionalJourneys.length;
-        var totalMilesAllJourneys = inputs.journeyMiles + inputs.additionalJourneys.reduce((sum, j) => sum + j.miles, 0);
-
-        // 3. Define the helper function locally using 'var'
-        // This makes it available to the table logic below, fixing the ReferenceError.
+        // 2. Define the helper function locally using 'var' to fix the ReferenceError
         var formatChargingTime = function(timeHours) {
             if (timeHours < 1) {
-                var minutes = Math.round(timeHours * 60);
-                return minutes + " minutes";
+                var mins = Math.round(timeHours * 60);
+                return mins + " minutes";
             } else {
-                var hours = Math.floor(timeHours);
-                var minutes = Math.round((timeHours - hours) * 60);
-                if (minutes === 0) return hours + " hour" + (hours > 1 ? 's' : '');
-                return hours + "h " + minutes + "m";
+                var hrs = Math.floor(timeHours);
+                var mins = Math.round((timeHours - hrs) * 60);
+                if (mins === 0) return hrs + " hour" + (hrs > 1 ? 's' : '');
+                return hrs + "h " + mins + "m";
             }
         };
 
-        // 4. Build the dynamic Conclusion Text
-        var dynamicResultHTML = "";
+        // 3. Calculate Totals (Journey 1 + all additional)
+        var totalJourneysCount = 1 + inputs.additionalJourneys.length;
+        var totalMilesAllJourneys = inputs.journeyMiles + inputs.additionalJourneys.reduce((sum, j) => sum + j.miles, 0);
+
+        // 4. Construct the summary text
+        var conclusionHTML = "";
         if (bestProvider.savings > 0) {
             var journeyWord = totalJourneysCount === 1 ? "journey" : "journeys";
-            dynamicResultHTML = `For ${totalJourneysCount} ${journeyWord} totalling <strong>${totalMilesAllJourneys.toFixed(0)} miles</strong> within a period of one month, a subscription with <strong>${bestProvider.name}</strong> works out cheaper than a ${inputs.adhoc}p PAYG rate based on the selected minimum charging rate of <strong>${activeMinSpeedLabel}</strong> and the other information entered. The total cost for all journeys will be <strong>£${bestProvider.totalJourneyCost.toFixed(2)}</strong>, which represents a saving of <strong>£${bestProvider.savings.toFixed(2)}</strong> over the average PAYG rate you entered above.`;
+            conclusionHTML = `For ${totalJourneysCount} ${journeyWord} totalling <strong>${totalMilesAllJourneys.toFixed(0)} miles</strong> within a period of one month, a subscription with <strong>${bestProvider.name}</strong> works out cheaper than a ${inputs.adhoc}p PAYG rate based on the selected minimum charging rate of <strong>${activeSpeedLabel}</strong> and the other information entered. The total cost for all journeys will be <strong>£${bestProvider.totalJourneyCost.toFixed(2)}</strong>, which represents a saving of <strong>£${bestProvider.savings.toFixed(2)}</strong> over the average PAYG rate you entered above.`;
         } else {
-            dynamicResultHTML = `Based on the information entered, a subscription does not offer a saving for these ${totalJourneysCount} journeys compared to your ${inputs.adhoc}p PAYG rate.`;
+            conclusionHTML = `Based on the information entered, a subscription does not offer a saving for these ${totalJourneysCount} journeys compared to your ${inputs.adhoc}p PAYG rate.`;
         }
 
-        // 5. Update the UI Box
+        // 5. Update the UI using the existing conclusionsBox variable
         if (conclusionsBox) {
-            conclusionsBox.innerHTML = `<div class="conclusion-white-border guide-section" id="payg-vs-subscription"><h3>PAYG vs Subscription Conclusion</h3><p class="main-result">${dynamicResultHTML}</p></div>`;
+            conclusionsBox.innerHTML = `<div class="conclusion-white-border guide-section" id="payg-vs-subscription"><h3>PAYG vs Subscription Conclusion</h3><p class="main-result">${conclusionHTML}</p></div>`;
         }
 
-        // --- THE REST OF YOUR CODE REMAINS UNCHANGED BELOW ---
+        // --- CONTINUE WITH YOUR EXISTING TABLE VARIABLES BELOW ---
         var maxChargingSpeed = inputs.maxChargingSpeed;
         var maxChargingTimeHours = maxChargingSpeed > 0 ? publicKwh / maxChargingSpeed : 0;
         
-        // This call will now work correctly
+        // This call will now work because formatChargingTime is defined as a 'var' above
         var maxChargingTimeFormatted = formatChargingTime(maxChargingTimeHours);
         
         const chargingSpeeds = [
