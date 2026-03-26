@@ -536,7 +536,7 @@ function calculate() {
         
         // Journey 1 range detail
         rangeHtml += `<div style="font-size: 0.8rem; opacity: 0.8; margin-bottom: 2px; margin-left: 10px;">
-            Journey 1 range (${inputs.rechargeAt}% - ${inputs.soc}%): ${mainInitialRange.toFixed(0)} miles
+            Journey 1 range: ${mainInitialRange.toFixed(0)} miles
         </div>`;
 
         // Calculate and list range for additional journeys
@@ -544,7 +544,7 @@ function calculate() {
             const extraRange = Math.max(0, ((j.soc - inputs.rechargeAt) / 100) * inputs.batteryKwh * inputs.efficiency);
             totalInitialRange += extraRange;
             rangeHtml += `<div style="font-size: 0.8rem; opacity: 0.8; margin-bottom: 2px; margin-left: 10px;">
-                Journey ${index + 2} range (${inputs.rechargeAt}% - ${j.soc}%): ${extraRange.toFixed(0)} miles
+                Journey ${index + 2} range: ${extraRange.toFixed(0)} miles
             </div>`;
         });
 
