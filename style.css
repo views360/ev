@@ -403,7 +403,7 @@ body.light-mode #providerResults th:nth-child(even) {
 }
 
 .homeRangeLine p, .publicMilesLine p {
-    margin: 0px;
+    margin: 0px !important;
 }
 
 .conclusion-card {
