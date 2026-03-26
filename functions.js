@@ -752,8 +752,8 @@ function calculate() {
         const totalMilesAllJourneys = inputs.journeyMiles + inputs.additionalJourneys.reduce((sum, j) => sum + j.miles, 0);
         
         // 2. Determine the charging speed label (D)
-        let minSpeedSelect = document.getElementById("minSpeed");
-        let minSpeedLabel = minSpeedSelect.options[minSpeedSelect.selectedIndex].text;
+        minSpeedSelect = document.getElementById("minSpeed");
+        minSpeedLabel = minSpeedSelect.options[minSpeedSelect.selectedIndex].text;
     
         // 3. Construct the dynamic conclusion text
         let conclusionText = "";
