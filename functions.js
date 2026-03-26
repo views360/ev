@@ -1563,23 +1563,35 @@ function loadProviderState() {
 }
 
 let journeyCount = 0;
+// Helper function to re-number all journey headings
+function reindexJourneys() {
+    const container = document.getElementById("additionalJourneysContainer");
+    const journeyBoxes = container.querySelectorAll(".additional-journey-box");
+    
+    journeyBoxes.forEach((box, index) => {
+        const title = box.querySelector("h4");
+        if (title) {
+            title.textContent = `Additional Journey #${index + 1}`;
+        }
+    });
+}
 
 function addJourneyField() {
-    journeyCount++;
     const container = document.getElementById("additionalJourneysContainer");
     const defaultSoc = document.getElementById("soc").value || "";
     const defaultRate = document.getElementById("startChargeRate").value || "";
+    
     const journeyDiv = document.createElement("div");
-    journeyDiv.className = "additional-journey-box"; // You can style this in CSS
+    journeyDiv.className = "additional-journey-box";
     journeyDiv.style.borderTop = "1px solid var(--accent)";
     journeyDiv.style.marginTop = "15px";
     journeyDiv.style.paddingTop = "10px";
-    journeyDiv.id = `journeyRow${journeyCount}`;
 
+    // The removal logic now removes the element and then re-indexes the list
     journeyDiv.innerHTML = `
         <div style="display: flex; justify-content: space-between; align-items: center;">
-            <h4>Additional Journey #${journeyCount}</h4>
-            <button class="remove-btn" onclick="document.getElementById('journeyRow${journeyCount}').remove(); calculate();">×</button>
+            <h4>Additional Journey</h4>
+            <button class="remove-btn" onclick="this.closest('.additional-journey-box').remove(); reindexJourneys(); calculate();">×</button>
         </div>
         <p style="font-size: 0.8rem">Enter or adjust the following details for this additional journey, which may differ from the first.</p>
         <div class="input-group">
@@ -1599,14 +1611,6 @@ function addJourneyField() {
     `;
     
     container.appendChild(journeyDiv);
-    updateJourneyIndices(); // Refresh the numbers
+    reindexJourneys(); // Update numbers immediately after adding
     calculate();
-}
-
-function updateJourneyIndices() {
-    const titles = document.querySelectorAll(".journey-title");
-    titles.forEach((title, index) => {
-        title.textContent = `Additional Journey #${index + 1}`;
-    });
-    calculate(); // Ensure the calculation reflects the removed/added data
 }
