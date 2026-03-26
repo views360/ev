@@ -515,7 +515,7 @@ function calculate() {
     } else {
         // Single-journey view (removed bottom margin, 0.8rem icon)
         preChargeHtml = `<h3>PAYG Summary</h3>
-            <p style="margin-bottom: 0;">${preChargeTooltip}Pre-journey battery charge cost (${inputs.rechargeAt}% - ${inputs.soc}%, ${mainTopUpKwh.toFixed(1)} kWh x ${inputs.startChargeRate}p): 
+            <p style="margin-bottom: 0;">${preChargeTooltip}Pre-journey battery charge (${inputs.rechargeAt}% - ${inputs.soc}%, ${mainTopUpKwh.toFixed(1)} kWh x ${inputs.startChargeRate}p): 
             <strong>£${mainTopUpCost.toFixed(2)}</strong></p>`;
     }
 
