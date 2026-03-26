@@ -488,7 +488,7 @@ function calculate() {
     let rangeHtml = "";
 
     if (inputs.additionalJourneys.length > 0) {
-        rangeHtml = `<p style="opacity: 0.5;"><strong>Pre-charged battery range:</strong></p>`;
+        rangeHtml = `<p style="opacity: 0.5; margin: 0px; font-size: 0.8rem"><strong>Pre-charged battery range:</strong></p>`;
         
         // Journey 1 range detail
         rangeHtml += `<div style="font-size: 0.8rem; opacity: 0.5; margin-bottom: 2px; margin-left: 10px;">
@@ -525,7 +525,7 @@ function calculate() {
 
     if (inputs.additionalJourneys.length > 0) {
         // Multi-journey view header
-        preChargeHtml = `<p style="opacity: 0.5; font-size: 0.9rem;"><strong>Pre-journey charge costs:</strong></p>`;
+        preChargeHtml = `<p style="opacity: 0.5; font-size: 0.8rem; margin: 0px"><strong>Pre-journey charge costs:</strong></p>`;
         
         // Journey 1 detail line (0.8 opacity)
         preChargeHtml += `<div style="font-size: 0.8rem; opacity: 0.5; margin-bottom: 2px; margin-left: 10px;">
@@ -568,7 +568,7 @@ function calculate() {
     totalPublicMiles += journey1PublicMiles;
 
     if (inputs.additionalJourneys.length > 0) {
-        publicMilesHtml = `<p style="opacity: 0.5; font-size: 0.9rem;"><strong>PAYG charging miles:</strong></p>`;
+        publicMilesHtml = `<p style="opacity: 0.5; font-size: 0.8rem; margin: 0px"><strong>PAYG charging miles:</strong></p>`;
         
         // Journey 1 detail line
         publicMilesHtml += `<div style="font-size: 0.8rem; opacity: 0.5; margin-bottom: 2px; margin-left: 10px;">
@@ -600,7 +600,7 @@ function calculate() {
 
     document.getElementById("homeRangeLine").innerHTML = rangeHtml;
     document.getElementById("publicMilesLine").innerHTML = publicMilesHtml;
-    document.getElementById("publicKwhLine").innerHTML = `PAYG public charging energy needed (${publicKwh.toFixed(1)} kWh x ${inputs.adhoc}p): <strong>£${publicKwh.toFixed(1) * (inputs.adhoc / 100)}</strong>`;
+    document.getElementById("publicKwhLine").innerHTML = `<span class="tooltip-container"><span class="info-icon" style="font-size:0.8rem" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is how many kWh of energy you will need from your average PAYG provider for the PAYG part of your journey.</span></span></span>PAYG public charging energy needed (${publicKwh.toFixed(1)} kWh x ${inputs.adhoc}p): <strong>£${publicKwh.toFixed(1) * (inputs.adhoc / 100)}</strong>`;
     document.getElementById("adhocCostLine").innerHTML = `Total journey cost (pre-charge + standard PAYG): <strong>£${totalAdhocCost.toFixed(2)}</strong>`;// Helper function to simulate trip with a given provider
     const simulateTripWithProvider = (providerRate, batteryKwh, rechargethreshhold, efficiency, journeyMiles, initialSoc) => {
         const chargeToPercent = 80; 
