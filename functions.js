@@ -1258,11 +1258,13 @@ function toggleProviders() {
         if (controls) controls.style.display = "block"; 
         btn.textContent = "Collapse Providers List";
         hiddenMsg.style.display = "none";
+        setCookie('providers_collapsed', false);
     } else {
         container.style.display = "none";
         if (controls) controls.style.display = "none"; 
         btn.textContent = "Expand Providers List";
         hiddenMsg.style.display = "block";
+        setCookie('providers_collapsed', true);
     }
 
     btn.classList.remove("empty-pulse");
@@ -1381,6 +1383,7 @@ function expandActiveSections() {
 // Initialize page highlighting on load
 document.addEventListener('DOMContentLoaded', () => {
     expandActiveSections();
+    loadProviderState();
     setTimeout(loadProvidersFromCookie, 100);
 });
 
@@ -1457,6 +1460,23 @@ function loadProvidersFromCookie() {
             }
         });
         calculate(); // Refresh the results
+    }
+}
+
+function loadProviderState() {
+    const isCollapsed = getCookie('providers_collapsed');
+    const container = document.getElementById("collapsibleProviders");
+    const controls = document.getElementById("providerControls");
+    const btn = document.getElementById("toggleProvidersBtn");
+    const hiddenMsg = document.getElementById("providersHiddenMsg");
+
+    // Only apply if the cookie explicitly says the list was collapsed
+    if (isCollapsed === true && container && btn) {
+        container.style.display = "none";
+        if (controls) controls.style.display = "none";
+        btn.textContent = "Expand Providers List";
+        if (hiddenMsg) hiddenMsg.style.display = "block";
+        btn.classList.remove("empty-pulse");
     }
 }
 
