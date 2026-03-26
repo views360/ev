@@ -483,7 +483,7 @@ function calculate() {
     let totalInitialRange = mainInitialRange;
     
     // Tooltip for the new range summary
-    const rangeTooltip = `<span class="tooltip-container"><span class="info-icon" style="font-size:0.8rem" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is the combined range you <i>should</i> expect from pre-charging your battery before all journeys you have defined (based on charging from your recharge threshhold to each journey's respective starting SOC). It forms part of the calculation for how many miles of public charging will be needed across all journeys.</span></span></span>`;
+    const rangeTooltip = `<span class="tooltip-container"><span class="info-icon" style="font-size:0.8rem" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is the combined range (for all journeys) you <i>should</i> expect from pre-charging each time (based on charging from your recharge threshhold of ${inputs.rechargeAt}% to each journey's respective starting SOC). It forms part of the calculation for how many miles of public charging will be needed across all journeys.</span></span></span>`;
 
     let rangeHtml = "";
 
@@ -519,7 +519,7 @@ function calculate() {
     let totalPreJourneyCost = mainTopUpCost;
     
     // Updated Tooltip with 0.8rem icon and requested text
-    const preChargeTooltip = `<span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)" style="font-size: 0.8rem;">💡<span class="tooltip-box">This is the total pre-journey battery charge cost for charging from your recharge threshhold (${inputs.rechargeAt}%) to the specified starting state of charge (SOC).</span></span></span>`;
+    const preChargeTooltip = `<span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)" style="font-size: 0.8rem;">💡<span class="tooltip-box">This is the total cost for pre-charging your battery before all journeys defined above.</span></span></span>`;
 
     let preChargeHtml = "";
 
@@ -558,7 +558,7 @@ function calculate() {
     // 5. PUBLIC CHARGING CALCULATIONS (JOURNEY BY JOURNEY)
     
     // Tooltip for the public miles summary
-    const publicMilesTooltip = `<span class="tooltip-container"><span class="info-icon" style="font-size:0.8rem" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is how many miles of your journey will need to be covered by public charging. It accounts for your recharge threshold of ${inputs.rechargeAt}% and the range expected from pre-charging before your journey.</span></span></span>`;
+    const publicMilesTooltip = `<span class="tooltip-container"><span class="info-icon" style="font-size:0.8rem" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is how many miles of your journey will need to be covered by public charging. It accounts for your recharge threshold of ${inputs.rechargeAt}% and the range expected from pre-charging before each journey.</span></span></span>`;
 
     let totalPublicMiles = 0;
     let publicMilesHtml = "";
@@ -601,7 +601,7 @@ function calculate() {
     document.getElementById("homeRangeLine").innerHTML = rangeHtml;
     document.getElementById("publicMilesLine").innerHTML = publicMilesHtml;
     document.getElementById("publicKwhLine").innerHTML = `<span class="tooltip-container"><span class="info-icon" style="font-size:0.8rem" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is the total number of kWh of charging you will need from your average PAYG provider for the PAYG part of your journey.</span></span></span>PAYG public charging energy needed (${publicKwh.toFixed(1)} kWh x ${inputs.adhoc}p): <strong>£${publicKwh.toFixed(1) * (inputs.adhoc / 100)}</strong>`;
-    document.getElementById("adhocCostLine").innerHTML = `Total journey cost (pre-charge + standard PAYG): <strong>£${totalAdhocCost.toFixed(2)}</strong>`;// Helper function to simulate trip with a given provider
+    document.getElementById("adhocCostLine").innerHTML = `<p style="margin: 0px; font-size: 1.1rem">Total journey cost (pre-charge + standard PAYG): <strong>£${totalAdhocCost.toFixed(2)}</strong></p>`;
     const simulateTripWithProvider = (providerRate, batteryKwh, rechargethreshhold, efficiency, journeyMiles, initialSoc) => {
         const chargeToPercent = 80; 
         const kwhPerCharge = ((chargeToPercent - rechargethreshhold) / 100) * batteryKwh; 
