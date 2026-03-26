@@ -594,7 +594,7 @@ function calculate() {
         </p>`;
     } else {
         // Single journey view
-        publicMilesHtml = `<p style="margin-bottom: 0;">${publicMilesTooltip}PAYG public charging miles needed: <strong>${journey1PublicMiles.toFixed(0)} miles</strong></p>`;
+        publicMilesHtml = `<p style="margin: 0px;">${publicMilesTooltip}PAYG public charging miles needed: <strong>${journey1PublicMiles.toFixed(0)} miles</strong></p>`;
     }
 
     // Update the rest of the dependent variables and UI
