@@ -1044,6 +1044,19 @@ function init() {
         }
 
         updateProviderInfo();
+
+        // ADD THIS: Apply the saved provider list state
+        const isVisible = getCookie('providersVisible');
+        const p = document.getElementById("providers");
+        const b = document.getElementById("toggleProvidersBtn");
+    
+        // We only need to force a change if the cookie explicitly says it should be hidden
+        // (Since the HTML defaults to showing it)
+        if (isVisible === false && p && b) {
+            p.style.display = "none";
+            b.textContent = "Expand Providers List";
+        }
+        
         calculate();
     });
 }
