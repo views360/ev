@@ -490,9 +490,6 @@ function calculate() {
     const mainInitialRange = ((inputs.soc - inputs.rechargeAt) / 100) * inputs.batteryKwh * inputs.efficiency;
     let totalInitialRange = mainInitialRange;
     
-    // Tooltip for the new range summary
-    const rangeTooltip = `<span class="tooltip-container"><span class="info-icon" style="font-size:0.8rem" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is the range you <i>should</i> expect from pre-charging at your start location from your recharge threshhold of ${inputs.rechargeAt}% to your SOC of ${inputs.soc}%). It forms part of the calculation for how many miles of public charging will be needed across all journeys.</span></span></span>`;
-
     let rangeHtml = "";
 
     if (inputs.additionalJourneys.length > 0) {
@@ -514,14 +511,11 @@ function calculate() {
 
         // Total Range Line
         rangeHtml += `<p style="border-bottom: 1px solid rgba(255,255,255,0.2); margin: 0; padding-bottom: 10px;">
-            ${rangeTooltip}Total pre-charged battery range for all journeys: ${totalInitialRange.toFixed(0)} miles</p>`;
+            <span class="tooltip-container"><span class="info-icon" style="font-size:0.8rem" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is the range you <i>should</i> expect from pre-charging at your start location(s) from your recharge threshhold of ${inputs.rechargeAt}% to your SOC of ${inputs.soc}%). It forms part of the calculation for how many miles of public charging will be needed across all journeys.</span></span></span>Total pre-charged battery range for all journeys: ${totalInitialRange.toFixed(0)} miles</p>`;
     } else {
         // Single journey view
-        rangeHtml = `<p style="margin: 0px">${rangeTooltip}Pre-charged battery range: <strong>${mainInitialRange.toFixed(0)} miles</strong></p>`;
+        rangeHtml = `<p style="margin: 0px"><span class="tooltip-container"><span class="info-icon" style="font-size:0.8rem" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is the range you <i>should</i> expect from pre-charging at your start location from your recharge threshhold of ${inputs.rechargeAt}% to your SOC of ${inputs.soc}%). It forms part of the calculation for how many miles of public charging will be needed for this journey.</span></span></span>Pre-charged battery range: <strong>${mainInitialRange.toFixed(0)} miles</strong></p>`;
     }
-    
-    const preChargeTooltip = `<span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)" style="font-size: 0.8rem;">💡<span class="tooltip-box">This is the combined cost for pre-charging your battery before each journey defined above.</span></span></span>`;
-
 
     // 1. Calculate Main Journey (Journey 1)
     const mainTopUpKwh = Math.max(0, ((inputs.soc - inputs.rechargeAt) / 100) * inputs.batteryKwh);
@@ -553,10 +547,10 @@ function calculate() {
 
         // Total Line (removed bottom margin)
         preChargeHtml += `<p style="margin: 0px; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 10px;">
-            ${preChargeTooltip}Total battery pre-charge cost for all journeys: £${totalPreJourneyCost.toFixed(2)}</p>`;
+            <span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)" style="font-size: 0.8rem;">💡<span class="tooltip-box">This is the combined cost for pre-charging your battery before each journey defined above.</span></span></span>Total battery pre-charge cost for all journeys: £${totalPreJourneyCost.toFixed(2)}</p>`;
     } else {
         // Single-journey view (removed bottom margin, 0.8rem icon)
-        preChargeHtml = `<p style="margin: 0px;">${preChargeTooltip}Pre-journey battery charge (${inputs.rechargeAt}%→${inputs.soc}%, ${mainTopUpKwh.toFixed(1)} kWh x ${inputs.startChargeRate}p): 
+        preChargeHtml = `<p style="margin: 0px;"><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)" style="font-size: 0.8rem;">💡<span class="tooltip-box">This is the combined cost for pre-charging your battery before your journey.</span></span></span>Pre-journey battery charge (${inputs.rechargeAt}%→${inputs.soc}%, ${mainTopUpKwh.toFixed(1)} kWh x ${inputs.startChargeRate}p): 
             <strong>£${mainTopUpCost.toFixed(2)}</strong></p>`;
     }
 
