@@ -488,10 +488,10 @@ function calculate() {
     let rangeHtml = "<h3>PAYG Summary</h3>";
 
     if (inputs.additionalJourneys.length > 0) {
-        rangeHtml = `<h3>PAYG Summary</h3><p style="margin-bottom: 4px; opacity: 0.8;"><strong>Pre-charged battery range:</strong></p>`;
+        rangeHtml = `<h3>PAYG Summary</h3><p style="margin-bottom: 4px; opacity: 0.5;"><strong>Pre-charged battery range:</strong></p>`;
         
         // Journey 1 range detail
-        rangeHtml += `<div style="font-size: 0.8rem; opacity: 0.8; margin-bottom: 2px; margin-left: 10px;">
+        rangeHtml += `<div style="font-size: 0.8rem; opacity: 0.5; margin-bottom: 2px; margin-left: 10px;">
             Journey 1 range: ${mainInitialRange.toFixed(0)} miles
         </div>`;
 
@@ -499,7 +499,7 @@ function calculate() {
         inputs.additionalJourneys.forEach((j, index) => {
             const extraRange = Math.max(0, ((j.soc - inputs.rechargeAt) / 100) * inputs.batteryKwh * inputs.efficiency);
             totalInitialRange += extraRange;
-            rangeHtml += `<div style="font-size: 0.8rem; opacity: 0.8; margin-bottom: 2px; margin-left: 10px;">
+            rangeHtml += `<div style="font-size: 0.8rem; opacity: 0.5; margin-bottom: 2px; margin-left: 10px;">
                 Journey ${index + 2} range: ${extraRange.toFixed(0)} miles
             </div>`;
         });
@@ -526,10 +526,10 @@ function calculate() {
 
     if (inputs.additionalJourneys.length > 0) {
         // Multi-journey view header
-        preChargeHtml = `<p style="margin-bottom: 4px; opacity: 0.8;"><strong>Pre-journey charge costs:</strong></p>`;
+        preChargeHtml = `<p style="margin-bottom: 4px; opacity: 0.5;"><strong>Pre-journey charge costs:</strong></p>`;
         
         // Journey 1 detail line (0.8 opacity)
-        preChargeHtml += `<div style="font-size: 0.8rem; opacity: 0.8; margin-bottom: 2px; margin-left: 10px;">
+        preChargeHtml += `<div style="font-size: 0.8rem; opacity: 0.5; margin-bottom: 2px; margin-left: 10px;">
             Journey 1 pre-charge cost (${inputs.rechargeAt}% → ${inputs.soc}%, ${mainTopUpKwh.toFixed(1)} kWh x  ${inputs.startChargeRate}): £${mainTopUpCost.toFixed(2)}
         </div>`;
 
@@ -538,7 +538,7 @@ function calculate() {
             const extraKwh = Math.max(0, ((j.soc - inputs.rechargeAt) / 100) * inputs.batteryKwh);
             const extraCost = extraKwh * (j.rate / 100);
             totalPreJourneyCost += extraCost;
-            preChargeHtml += `<div style="font-size: 0.8rem; opacity: 0.8; margin-bottom: 2px; margin-left: 10px;">
+            preChargeHtml += `<div style="font-size: 0.8rem; opacity: 0.5; margin-bottom: 2px; margin-left: 10px;">
                 Journey ${index + 2} pre-charge cost (${inputs.rechargeAt}% → ${j.soc}%, ${extraKwh.toFixed(1)} kWh x ${j.rate}p): £${extraCost.toFixed(2)}
             </div>`;
         });
@@ -549,7 +549,7 @@ function calculate() {
         </p>`;
     } else {
         // Single-journey view (removed bottom margin, 0.8rem icon)
-        preChargeHtml = `<p style="margin-bottom: 0;">${preChargeTooltip}Pre-journey battery charge (${inputs.rechargeAt}% → ${inputs.soc}%, ${mainTopUpKwh.toFixed(1)} kWh x ${inputs.startChargeRate}p): 
+        preChargeHtml = `<p style="margin: 0px;">${preChargeTooltip}Pre-journey battery charge (${inputs.rechargeAt}% → ${inputs.soc}%, ${mainTopUpKwh.toFixed(1)} kWh x ${inputs.startChargeRate}p): 
             <strong>£${mainTopUpCost.toFixed(2)}</strong></p>`;
     }
 
@@ -570,10 +570,10 @@ function calculate() {
     totalPublicMiles += journey1PublicMiles;
 
     if (inputs.additionalJourneys.length > 0) {
-        publicMilesHtml = `<p style="margin-bottom: 4px; opacity: 0.8;"><strong>PAYG charging miles:</strong></p>`;
+        publicMilesHtml = `<p style="margin-bottom: 4px; opacity: 0.5;"><strong>PAYG charging miles:</strong></p>`;
         
         // Journey 1 detail line
-        publicMilesHtml += `<div style="font-size: 0.8rem; opacity: 0.8; margin-bottom: 2px; margin-left: 10px;">
+        publicMilesHtml += `<div style="font-size: 0.8rem; opacity: 0.5; margin-bottom: 2px; margin-left: 10px;">
             Journey 1 PAYG miles: ${journey1PublicMiles.toFixed(0)} miles
         </div>`;
 
@@ -583,7 +583,7 @@ function calculate() {
             const extraPublicMiles = Math.max(0, j.miles - extraRange);
             totalPublicMiles += extraPublicMiles;
             
-            publicMilesHtml += `<div style="font-size: 0.8rem; opacity: 0.8; margin-bottom: 2px; margin-left: 10px;">
+            publicMilesHtml += `<div style="font-size: 0.8rem; opacity: 0.5; margin-bottom: 2px; margin-left: 10px;">
                 Journey ${index + 2} PAYG miles: ${extraPublicMiles.toFixed(0)} miles
             </div>`;
         });
