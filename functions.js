@@ -1265,8 +1265,7 @@ function toggleProviders() {
     const controls = document.getElementById("providerControls"); 
     const btn = document.getElementById("toggleProvidersBtn");
     const hiddenMsg = document.getElementById("providersHiddenMsg");
-    
-    
+  
     if (container.style.display === "none") {
         container.style.display = "block";
         if (controls) controls.style.display = "block"; 
@@ -1280,7 +1279,6 @@ function toggleProviders() {
         hiddenMsg.style.display = "block";
         setCookie('providersVisible', false);
     }
-
     btn.classList.remove("empty-pulse");
 }
 
@@ -1518,23 +1516,17 @@ function addJourneyField() {
 
 function loadProviderState() {
     const isVisible = getCookie('providersVisible'); 
-    const p = document.getElementById("providers");
-    const b = document.getElementById("toggleProvidersBtn");
-    const addAllBtn = document.getElementById("addAllBtn");
+    const container = document.getElementById("collapsibleProviders");
+    const controls = document.getElementById("providerControls");
+    const btn = document.getElementById("toggleProvidersBtn");
+    const hiddenMsg = document.getElementById("providersHiddenMsg");
 
-    // If the cookie is explicitly false (user collapsed it), 
-    // we must hide the list AND update all related UI elements.
-    if (isVisible === false && p && b) {
-        // 1. Hide the container
-        p.style.display = "none";
-        
-        // 2. Update the toggle button text
-        b.textContent = "Expand Providers List";
-        
-        // 3. Sync the 'pulse' effect (matching your addAllProviders logic)
-        b.classList.remove("empty-pulse");
-        if (addAllBtn) {
-            addAllBtn.classList.add("empty-pulse");
-        }
+    // If the cookie is explicitly false, we hide everything to match the toggle logic
+    if (isVisible === false && container && btn) {
+        container.style.display = "none";
+        if (controls) controls.style.display = "none";
+        btn.textContent = "Expand Providers List";
+        if (hiddenMsg) hiddenMsg.style.display = "block";
+        btn.classList.remove("empty-pulse");
     }
 }
