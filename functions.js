@@ -1044,19 +1044,6 @@ function init() {
         }
 
         updateProviderInfo();
-
-        // ADD THIS: Apply the saved provider list state
-        const isVisible = getCookie('providersVisible');
-        const p = document.getElementById("providers");
-        const b = document.getElementById("toggleProvidersBtn");
-    
-        // We only need to force a change if the cookie explicitly says it should be hidden
-        // (Since the HTML defaults to showing it)
-        if (isVisible === false && p && b) {
-            p.style.display = "none";
-            b.textContent = "Expand Providers List";
-        }
-        
         calculate();
     });
 }
@@ -1264,21 +1251,20 @@ function toggleProviders() {
     const container = document.getElementById("collapsibleProviders");
     const controls = document.getElementById("providerControls"); 
     const btn = document.getElementById("toggleProvidersBtn");
-    const hiddenMsg = document.getElementById("providersHiddenMsg");
-  
+    const hiddenMsg = document.getElementById("providersHiddenMsg"); 
+    
     if (container.style.display === "none") {
         container.style.display = "block";
         if (controls) controls.style.display = "block"; 
         btn.textContent = "Collapse Providers List";
         hiddenMsg.style.display = "none";
-        setCookie('providersVisible', true);
     } else {
         container.style.display = "none";
         if (controls) controls.style.display = "none"; 
         btn.textContent = "Expand Providers List";
         hiddenMsg.style.display = "block";
-        setCookie('providersVisible', false);
     }
+
     btn.classList.remove("empty-pulse");
 }
 
@@ -1512,21 +1498,4 @@ function addJourneyField() {
     
     container.appendChild(journeyDiv);
     calculate();
-}
-
-function loadProviderState() {
-    const isVisible = getCookie('providersVisible'); 
-    const container = document.getElementById("collapsibleProviders");
-    const controls = document.getElementById("providerControls");
-    const btn = document.getElementById("toggleProvidersBtn");
-    const hiddenMsg = document.getElementById("providersHiddenMsg");
-
-    // If the cookie is explicitly false, we hide everything to match the toggle logic
-    if (isVisible === false && container && btn) {
-        container.style.display = "none";
-        if (controls) controls.style.display = "none";
-        btn.textContent = "Expand Providers List";
-        if (hiddenMsg) hiddenMsg.style.display = "block";
-        btn.classList.remove("empty-pulse");
-    }
 }
