@@ -505,7 +505,7 @@ function calculate() {
         });
 
         // Total Range Line
-        rangeHtml += `<p style="margin-top: 8px; border-bottom: 1px solid rgba(255,255,255,0.2); padding-top: 5px; margin-bottom: 0;">
+        rangeHtml += `<p style="border-bottom: 1px solid rgba(255,255,255,0.2); margin: 0; padding-bottom: 3px;">
             ${rangeTooltip}<strong>Total pre-charged battery range for all journeys: ${totalInitialRange.toFixed(0)} miles</strong>
         </p>`;
     } else {
@@ -544,7 +544,7 @@ function calculate() {
         });
 
         // Total Line (removed bottom margin)
-        preChargeHtml += `<p style="margin: 0px; border-bottom: 1px solid rgba(255,255,255,0.2); padding-top: 5px; margin-bottom: 0;">
+        preChargeHtml += `<p style="margin: 0px; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 3px;">
             ${preChargeTooltip}<strong>Total battery pre-charge cost for all journeys: £${totalPreJourneyCost.toFixed(2)}</strong>
         </p>`;
     } else {
@@ -589,7 +589,7 @@ function calculate() {
         });
 
         // Total Public Miles Line with Tooltip
-        publicMilesHtml += `<p style="margin-top: 8px; border-bottom: 1px solid rgba(255,255,255,0.2); padding-top: 5px; margin-bottom: 0;">
+        publicMilesHtml += `<p style="border-bottom: 1px solid rgba(255,255,255,0.2); margin:0; padding-bottom: 3px;">
             ${publicMilesTooltip}<strong>Total PAYG public charging miles involved: ${totalPublicMiles.toFixed(0)} miles</strong>
         </p>`;
     } else {
