@@ -402,8 +402,18 @@ body.light-mode #providerResults th:nth-child(even) {
     border-radius: 8px;
 }
 
-.homeRangeLine p, .publicMilesLine p {
-    margin: 0px !important;
+/* Target the p tags specifically within these containers */
+div.homeRangeLine p, 
+div.publicMilesLine p {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    padding-top: 0 !important;
+}
+
+/* Also ensure the container isn't adding flex gap or padding */
+.homeRangeLine, .publicMilesLine {
+    display: block; /* Ensure it's not flex if you don't need it */
+    padding-top: 0 !important;
 }
 
 .conclusion-card {
@@ -488,12 +498,12 @@ tr.bad td { color: var(--danger); }
     margin-bottom: 20px !important;
 }
 
-. {
+/*. {
     width: 100%;
     margin: 15px 0 20px 0;
     display: flex;
     justify-content: center;
-}
+}*/
 
 .toggle-wrapper {
     display: flex;
