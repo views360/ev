@@ -495,7 +495,7 @@ function calculate() {
         
         // Journey 1 detail line (0.8 opacity)
         preChargeHtml += `<div style="font-size: 0.8rem; opacity: 0.8; margin-bottom: 2px; margin-left: 10px;">
-            Journey 1 pre-charge cost (${inputs.rechargeAt}% - ${inputs.soc}%, ${mainTopUpKwh.toFixed(1)} kWh x  ${inputs.startChargeRate}): £${mainTopUpCost.toFixed(2)}
+            Journey 1 pre-charge cost (${inputs.rechargeAt}% → ${inputs.soc}%, ${mainTopUpKwh.toFixed(1)} kWh x  ${inputs.startChargeRate}): £${mainTopUpCost.toFixed(2)}
         </div>`;
 
         // 2. Loop through Additional Journeys
@@ -504,7 +504,7 @@ function calculate() {
             const extraCost = extraKwh * (j.rate / 100);
             totalPreJourneyCost += extraCost;
             preChargeHtml += `<div style="font-size: 0.8rem; opacity: 0.8; margin-bottom: 2px; margin-left: 10px;">
-                Journey ${index + 2} pre-charge cost (${inputs.rechargeAt}% - ${j.soc}%, ${extraKwh.toFixed(1)} kWh x ${j.rate}p): £${extraCost.toFixed(2)}
+                Journey ${index + 2} pre-charge cost (${inputs.rechargeAt}% → ${j.soc}%, ${extraKwh.toFixed(1)} kWh x ${j.rate}p): £${extraCost.toFixed(2)}
             </div>`;
         });
 
@@ -515,7 +515,7 @@ function calculate() {
     } else {
         // Single-journey view (removed bottom margin, 0.8rem icon)
         preChargeHtml = `<h3>PAYG Summary</h3>
-            <p style="margin-bottom: 0;">${preChargeTooltip}Pre-journey battery charge (${inputs.rechargeAt}% - ${inputs.soc}%, ${mainTopUpKwh.toFixed(1)} kWh x ${inputs.startChargeRate}p): 
+            <p style="margin-bottom: 0;">${preChargeTooltip}Pre-journey battery charge (${inputs.rechargeAt}% → ${inputs.soc}%, ${mainTopUpKwh.toFixed(1)} kWh x ${inputs.startChargeRate}p): 
             <strong>£${mainTopUpCost.toFixed(2)}</strong></p>`;
     }
 
