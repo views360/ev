@@ -485,10 +485,10 @@ function calculate() {
     // Tooltip for the new range summary
     const rangeTooltip = `<span class="tooltip-container"><span class="info-icon" style="font-size:0.8rem" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is the combined range you <i>should</i> expect from pre-charging your battery before all journeys you have defined (based on charging from your recharge threshhold to each journey's respective starting SOC). It forms part of the calculation for how many miles of public charging will be needed across all journeys.</span></span></span>`;
 
-    let rangeHtml = "<h3>PAYG Summary</h3>";
+    let rangeHtml = "";
 
     if (inputs.additionalJourneys.length > 0) {
-        rangeHtml = `<h3>PAYG Summary</h3><p style="margin-bottom: 4px; opacity: 0.5;"><strong>Pre-charged battery range:</strong></p>`;
+        rangeHtml = `<p style="margin-bottom: 4px; opacity: 0.5;"><strong>Pre-charged battery range:</strong></p>`;
         
         // Journey 1 range detail
         rangeHtml += `<div style="font-size: 0.8rem; opacity: 0.5; margin-bottom: 2px; margin-left: 10px;">
@@ -509,7 +509,7 @@ function calculate() {
             ${rangeTooltip}Total pre-charged battery range for all journeys: ${totalInitialRange.toFixed(0)} miles</p>`;
     } else {
         // Single journey view
-        rangeHtml = `<h3>PAYG Summary</h3><p>${rangeTooltip}Pre-charged battery range: <strong>${mainInitialRange.toFixed(0)} miles</strong></p>`;
+        rangeHtml = `<p>${rangeTooltip}Pre-charged battery range: <strong>${mainInitialRange.toFixed(0)} miles</strong></p>`;
     }
 
     // 1. Calculate Main Journey (Journey 1)
