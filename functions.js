@@ -519,6 +519,7 @@ function calculate() {
         // Single journey view
         rangeHtml = `<p style="margin: 0px">${rangeTooltip}Pre-charged battery range: <strong>${mainInitialRange.toFixed(0)} miles</strong></p>`;
     }
+    
     const preChargeTooltip = `<span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)" style="font-size: 0.8rem;">💡<span class="tooltip-box">This is the combined cost for pre-charging your battery before each journey defined above.</span></span></span>`;
 
 
