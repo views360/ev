@@ -488,7 +488,7 @@ function calculate() {
     let rangeHtml = "";
 
     if (inputs.additionalJourneys.length > 0) {
-        rangeHtml = `<p style="margin-bottom: 4px; opacity: 0.5;"><strong>Pre-charged battery range:</strong></p>`;
+        rangeHtml = `<p style="opacity: 0.5;"><strong>Pre-charged battery range:</strong></p>`;
         
         // Journey 1 range detail
         rangeHtml += `<div style="font-size: 0.8rem; opacity: 0.5; margin-bottom: 2px; margin-left: 10px;">
@@ -509,7 +509,7 @@ function calculate() {
             ${rangeTooltip}Total pre-charged battery range for all journeys: ${totalInitialRange.toFixed(0)} miles</p>`;
     } else {
         // Single journey view
-        rangeHtml = `<p>${rangeTooltip}Pre-charged battery range: <strong>${mainInitialRange.toFixed(0)} miles</strong></p>`;
+        rangeHtml = `<p style="margin: 0px">${rangeTooltip}Pre-charged battery range: <strong>${mainInitialRange.toFixed(0)} miles</strong></p>`;
     }
 
     // 1. Calculate Main Journey (Journey 1)
@@ -525,7 +525,7 @@ function calculate() {
 
     if (inputs.additionalJourneys.length > 0) {
         // Multi-journey view header
-        preChargeHtml = `<p style="margin-bottom: 4px; opacity: 0.5; font-size: 0.9rem;"><strong>Pre-journey charge costs:</strong></p>`;
+        preChargeHtml = `<p style="opacity: 0.5; font-size: 0.9rem;"><strong>Pre-journey charge costs:</strong></p>`;
         
         // Journey 1 detail line (0.8 opacity)
         preChargeHtml += `<div style="font-size: 0.8rem; opacity: 0.5; margin-bottom: 2px; margin-left: 10px;">
@@ -568,7 +568,7 @@ function calculate() {
     totalPublicMiles += journey1PublicMiles;
 
     if (inputs.additionalJourneys.length > 0) {
-        publicMilesHtml = `<p style="margin-bottom: 4px; opacity: 0.5; font-size: 0.9rem;"><strong>PAYG charging miles:</strong></p>`;
+        publicMilesHtml = `<p style="opacity: 0.5; font-size: 0.9rem;"><strong>PAYG charging miles:</strong></p>`;
         
         // Journey 1 detail line
         publicMilesHtml += `<div style="font-size: 0.8rem; opacity: 0.5; margin-bottom: 2px; margin-left: 10px;">
