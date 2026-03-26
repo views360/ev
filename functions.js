@@ -494,7 +494,7 @@ function calculate() {
     const paygSubtitle = document.getElementById("paygSummarySubtitle");
     
     if (inputs.additionalJourneys.length > 0) {
-        paygSubtitle.textContent = `Here is the key information for your journey if you opt for PAYG.`;
+        paygSubtitle.textContent = `Here is the key information for your journeys if you choose PAYG.`;
         rangeHtml = `<p style="opacity: 0.5; margin: 0px; font-size: 0.8rem"><strong>Pre-charged battery range:</strong></p>`;
         
         // Journey 1 range detail
@@ -516,7 +516,7 @@ function calculate() {
             <span class="tooltip-container"><span class="info-icon" style="font-size:0.8rem" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is the range you <i>should</i> expect from pre-charging at your start location(s) from your recharge threshhold of ${inputs.rechargeAt}% to your SOC of ${inputs.soc}%). It forms part of the calculation for how many miles of public charging will be needed across all journeys.</span></span></span>Total pre-charged battery range for all journeys: ${totalInitialRange.toFixed(0)} miles</p>`;
     } else {
         // Single journey view
-        paygSubtitle.textContent = `Here is the key information for your journeys if you opt for PAYG.`;
+        paygSubtitle.textContent = `Here is the key information for your journey if you choose PAYG.`;
         rangeHtml = `<p style="margin: 0px"><span class="tooltip-container"><span class="info-icon" style="font-size:0.8rem" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is the range you <i>should</i> expect from pre-charging at your start location from your recharge threshhold of ${inputs.rechargeAt}% to your SOC of ${inputs.soc}%). It forms part of the calculation for how many miles of public charging will be needed for this journey.</span></span></span>Pre-charged battery range: <strong>${mainInitialRange.toFixed(0)} miles</strong></p>`;
     }
 
