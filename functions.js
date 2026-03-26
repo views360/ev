@@ -491,7 +491,7 @@ function calculate() {
 
     if (inputs.additionalJourneys.length > 0) {
         // Multi-journey view header
-        preChargeHtml = `<h3>PAYG Summary</h3><p style="margin-bottom: 4px;"><strong>Pre-journey charge costs:</strong></p>`;
+        preChargeHtml = `<h3>PAYG Summary</h3><p style="margin-bottom: 4px; opacity: 0.8;"><strong>Pre-journey charge costs:</strong></p>`;
         
         // Journey 1 detail line (0.8 opacity)
         preChargeHtml += `<div style="font-size: 0.8rem; opacity: 0.8; margin-bottom: 2px; margin-left: 10px;">
@@ -509,7 +509,7 @@ function calculate() {
         });
 
         // Total Line (removed bottom margin)
-        preChargeHtml += `<p style="margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 5px; margin-bottom: 0;">
+        preChargeHtml += `<p style="margin-top: 8px; border-bottom: 1px solid rgba(255,255,255,0.2); padding-top: 5px; margin-bottom: 0;">
             ${preChargeTooltip}<strong>Total battery pre-charge cost for all journeys: £${totalPreJourneyCost.toFixed(2)}</strong>
         </p>`;
     } else {
@@ -532,7 +532,7 @@ function calculate() {
     let rangeHtml = "";
 
     if (inputs.additionalJourneys.length > 0) {
-        rangeHtml = `<p style="margin-bottom: 4px;"><strong>Pre-charged battery range:</strong></p>`;
+        rangeHtml = `<p style="margin-bottom: 4px; opacity: 0.8;"><strong>Pre-charged battery range:</strong></p>`;
         
         // Journey 1 range detail
         rangeHtml += `<div style="font-size: 0.8rem; opacity: 0.8; margin-bottom: 2px; margin-left: 10px;">
@@ -549,7 +549,7 @@ function calculate() {
         });
 
         // Total Range Line
-        rangeHtml += `<p style="margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 5px; margin-bottom: 0;">
+        rangeHtml += `<p style="margin-top: 8px; border-bottom: 1px solid rgba(255,255,255,0.2); padding-top: 5px; margin-bottom: 0;">
             ${rangeTooltip}<strong>Total pre-charged battery range for all journeys: ${totalInitialRange.toFixed(0)} miles</strong>
         </p>`;
     } else {
@@ -570,7 +570,7 @@ function calculate() {
     totalPublicMiles += journey1PublicMiles;
 
     if (inputs.additionalJourneys.length > 0) {
-        publicMilesHtml = `<p style="margin-bottom: 4px;"><strong>PAYG charging miles:</strong></p>`;
+        publicMilesHtml = `<p style="margin-bottom: 4px; opacity: 0.8;"><strong>PAYG charging miles:</strong></p>`;
         
         // Journey 1 detail line
         publicMilesHtml += `<div style="font-size: 0.8rem; opacity: 0.8; margin-bottom: 2px; margin-left: 10px;">
@@ -589,7 +589,7 @@ function calculate() {
         });
 
         // Total Public Miles Line with Tooltip
-        publicMilesHtml += `<p style="margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 5px; margin-bottom: 0;">
+        publicMilesHtml += `<p style="margin-top: 8px; border-bottom: 1px solid rgba(255,255,255,0.2); padding-top: 5px; margin-bottom: 0;">
             ${publicMilesTooltip}<strong>Total PAYG public charging miles involved: ${totalPublicMiles.toFixed(0)} miles</strong>
         </p>`;
     } else {
