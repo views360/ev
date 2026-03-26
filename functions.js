@@ -429,6 +429,14 @@ function calculate() {
     if (uiResults) uiResults.style.display = "block";
 
     const inputs = getInputs();
+    const paygTitle = document.getElementById("paygSummaryTitle");
+    if (paygTitle) {
+        if (inputs.adhoc > 0) {
+            paygTitle.textContent = `PAYG Summary (Based on ${inputs.adhoc}p/kWh)`;
+        } else {
+            paygTitle.textContent = `PAYG Summary`;
+        }
+    }
     const uiShare = document.getElementById("shareBtn");
     const uiPdf = document.getElementById("pdfBtn");
 
