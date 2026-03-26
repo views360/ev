@@ -402,6 +402,11 @@ body.light-mode #providerResults th:nth-child(even) {
     border-radius: 8px;
 }
 
+.homeRangeLine p {
+    margin-top: 0;
+    padding-top: 0;
+}
+
 .conclusion-card {
     padding: 24px;
     border-radius: 12px;
