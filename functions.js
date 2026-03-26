@@ -515,7 +515,7 @@ function calculate() {
     } else {
         // Single-journey view (removed bottom margin, 0.8rem icon)
         preChargeHtml = `<h3>PAYG Summary</h3>
-            <p style="margin-bottom: 0;">${preChargeTooltip}Pre-journey battery charge cost (${inputs.rechargeAt}% - ${inputs.soc}% / ${mainTopUpKwh.toFixed(1)} kWh): 
+            <p style="margin-bottom: 0;">${preChargeTooltip}Pre-journey battery charge cost (${inputs.rechargeAt}% - ${inputs.soc}%, ${mainTopUpKwh.toFixed(1)} kWh): 
             <strong>£${mainTopUpCost.toFixed(2)}</strong></p>`;
     }
 
@@ -554,7 +554,7 @@ function calculate() {
         </p>`;
     } else {
         // Single journey view
-        rangeHtml = `<p style="margin-bottom: 0;">${rangeTooltip}Pre-charged battery range (${inputs.rechargeAt}% - ${inputs.soc}%): <strong>${mainInitialRange.toFixed(0)} miles</strong></p>`;
+        rangeHtml = `<p style="margin-bottom: 0;">${rangeTooltip}Pre-charged battery range: <strong>${mainInitialRange.toFixed(0)} miles</strong></p>`;
     }
 
     // 5. PUBLIC CHARGING CALCULATIONS (JOURNEY BY JOURNEY)
