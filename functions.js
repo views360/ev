@@ -743,25 +743,44 @@ function calculate() {
         if (!el._ftScrollBound) { el._ftScrollBound = true; el.addEventListener("scroll", () => { if (typeof _ftActive !== 'undefined' && _ftActive) _ftHide(); }, { passive: true }); }
     });
 
+    // --- Updated Conclusion Logic ---
     if (providers.length > 0) {
         const bestProvider = providers[0];
-        const minSpeedSelect = document.getElementById("minSpeed");
-        const minSpeedLabel = minSpeedSelect.options[minSpeedSelect.selectedIndex].text;
-        const maxChargingSpeed = inputs.maxChargingSpeed;
         
-        const formatChargingTime = (timeHours) => {
-            if (timeHours < 1) {
-                const minutes = Math.round(timeHours * 60);
-                return `${minutes} minutes`;
-            } else {
-                const hours = Math.floor(timeHours);
-                const minutes = Math.round((timeHours - hours) * 60);
-                if (minutes === 0) {
-                    return `${hours} hour${hours > 1 ? 's' : ''}`;
-                }
-                return `${hours}h ${minutes}m`;
-            }
-        };
+        // 1. Reuse existing 'inputs' and DOM elements to avoid "already declared" errors
+        const totalJourneysCount = 1 + inputs.additionalJourneys.length;
+        const totalMilesAllJourneys = inputs.journeyMiles + inputs.additionalJourneys.reduce((sum, j) => sum + j.miles, 0);
+        
+        // Use the existing 'minSpeed' element directly instead of re-declaring a constant
+        const minSpeedLabel = document.getElementById("minSpeed").options[document.getElementById("minSpeed").selectedIndex].text;
+
+        let conclusionHTML = "";
+        conclusionHTML += `<div class="conclusion-white-border guide-section" id="payg-vs-subscription">`;
+        
+        if (bestProvider.savings > 0) {
+            // Handle singular/plural for "journey"
+            const journeyWord = totalJourneysCount === 1 ? "journey" : "journeys";
+            
+            conclusionHTML += `<h3>PAYG vs Subscription Conclusion</h3>
+                <p class="main-result">
+                    For ${totalJourneysCount} ${journeyWord} totalling <strong>${totalMilesAllJourneys.toFixed(0)} miles</strong> within a period of one month, 
+                    a subscription with <strong>${bestProvider.name}</strong> works out cheaper than a ${inputs.adhoc}p PAYG rate 
+                    based on the selected minimum charging rate of <strong>${minSpeedLabel}</strong> and the other information entered. 
+                    The total cost for all journeys will be <strong>£${bestProvider.totalJourneyCost.toFixed(2)}</strong>, 
+                    which represents a saving of <strong>£${bestProvider.savings.toFixed(2)}</strong> over the average PAYG rate you entered above.
+                </p>`;
+        } else {
+            // Default text if no provider offers a saving
+            conclusionHTML += `<h3>PAYG vs Subscription Conclusion</h3>
+                <p class="main-result">
+                    Based on the information entered, a subscription does not offer a saving for these ${totalJourneysCount} journeys 
+                    compared to your ${inputs.adhoc}p PAYG rate.
+                </p>`;
+        }
+        conclusionHTML += `</div>`;
+
+        // Update the conclusionsBox with the new HTML
+        conclusionsBox.innerHTML = conclusionHTML;
         
         const maxChargingTimeHours = maxChargingSpeed > 0 ? publicKwh / maxChargingSpeed : 0;
         const maxChargingTimeFormatted = formatChargingTime(maxChargingTimeHours);
