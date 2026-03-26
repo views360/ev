@@ -743,54 +743,28 @@ function calculate() {
         if (!el._ftScrollBound) { el._ftScrollBound = true; el.addEventListener("scroll", () => { if (typeof _ftActive !== 'undefined' && _ftActive) _ftHide(); }, { passive: true }); }
     });
 
-    // --- Updated Conclusion Logic ---
-   if (providers.length > 0) {
-        // 1. Identify the best provider
-        var bestProvider = providers[0];
-
-        // 2. Calculate Journey Totals (Journey 1 + all additional)
-        var totalJourneysCount = 1 + inputs.additionalJourneys.length;
-        var totalMilesAllJourneys = inputs.journeyMiles + inputs.additionalJourneys.reduce((sum, j) => sum + j.miles, 0);
+    if (providers.length > 0) {
+        const bestProvider = providers[0];
+        const minSpeedSelect = document.getElementById("minSpeed");
+        const minSpeedLabel = minSpeedSelect.options[minSpeedSelect.selectedIndex].text;
+        const maxChargingSpeed = inputs.maxChargingSpeed;
         
-        // 3. Get the dropdown label without re-declaring 'minSpeedSelect'
-        var currentDropdown = document.getElementById("minSpeed");
-        var finalMinSpeedLabel = currentDropdown.options[currentDropdown.selectedIndex].text;
-
-        // 4. Define the helper function using 'var' so it's globally accessible in this scope
-        var formatChargingTime = function(timeHours) {
+        const formatChargingTime = (timeHours) => {
             if (timeHours < 1) {
-                var minutes = Math.round(timeHours * 60);
-                return minutes + " minutes";
+                const minutes = Math.round(timeHours * 60);
+                return `${minutes} minutes`;
             } else {
-                var hours = Math.floor(timeHours);
-                var minutes = Math.round((timeHours - hours) * 60);
+                const hours = Math.floor(timeHours);
+                const minutes = Math.round((timeHours - hours) * 60);
                 if (minutes === 0) {
-                    return hours + " hour" + (hours > 1 ? 's' : '');
+                    return `${hours} hour${hours > 1 ? 's' : ''}`;
                 }
-                return hours + "h " + minutes + "m";
+                return `${hours}h ${minutes}m`;
             }
         };
-
-        // 5. Build your dynamic Conclusion Text
-        var conclusionText = "";
-        if (bestProvider.savings > 0) {
-            var journeyWord = totalJourneysCount === 1 ? "journey" : "journeys";
-            
-            conclusionText = `For ${totalJourneysCount} ${journeyWord} totalling <strong>${totalMilesAllJourneys.toFixed(0)} miles</strong> within a period of one month, a subscription with <strong>${bestProvider.name}</strong> works out cheaper than a ${inputs.adhoc}p PAYG rate based on the selected minimum charging rate of <strong>${finalMinSpeedLabel}</strong> and the other information entered. The total cost for all journeys will be <strong>£${bestProvider.totalJourneyCost.toFixed(2)}</strong>, which represents a saving of <strong>£${bestProvider.savings.toFixed(2)}</strong> over the average PAYG rate you entered above.`;
-        } else {
-            conclusionText = `Based on the information entered, a subscription does not offer a saving for these ${totalJourneysCount} journeys compared to your ${inputs.adhoc}p PAYG rate.`;
-        }
-
-        // 6. Update the UI
-        if (conclusionsBox) {
-            conclusionsBox.innerHTML = `<div class="conclusion-white-border guide-section" id="payg-vs-subscription"><h3>PAYG vs Subscription Conclusion</h3><p class="main-result">${conclusionText}</p></div>`;
-        }
-
-        // 7. Duration Table Variables (Now safe to use)
-        var maxChargingSpeed = inputs.maxChargingSpeed;
-        var maxChargingTimeHours = maxChargingSpeed > 0 ? publicKwh / maxChargingSpeed : 0;
-        var maxChargingTimeFormatted = formatChargingTime(maxChargingTimeHours);
-
+        
+        const maxChargingTimeHours = maxChargingSpeed > 0 ? publicKwh / maxChargingSpeed : 0;
+        const maxChargingTimeFormatted = formatChargingTime(maxChargingTimeHours);
         
         const chargingSpeeds = [
             { speed: 7, type: 'AC', descriptor: 'Standard' },
