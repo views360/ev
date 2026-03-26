@@ -634,16 +634,33 @@ function toggleMenuSection(toggleId, itemsId) {
 }
 
 function clearSavedProviders() {
-    // Delete the cookie by setting it to empty with past date
+    // 1. Delete the cookies
     document.cookie = "ev_providers=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;";
+    document.cookie = "providers_collapsed=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;";
     
-	// Clear the UI
-	document.getElementById("providers").innerHTML = "";
-	document.getElementById("providersHiddenMsg").style.display="none";
-	
-	calculate();
-	}
-	loadMenu();
+    // 2. Clear the UI list
+    const providersContainer = document.getElementById("providers");
+    if (providersContainer) providersContainer.innerHTML = "";
+    
+    // 3. Revert the UI state to expanded
+    const controls = document.getElementById("providerControls");
+    const collapsible = document.getElementById("collapsibleProviders");
+    const hiddenMsg = document.getElementById("providersHiddenMsg");
+    const toggleBtn = document.getElementById("toggleProvidersBtn");
+
+    if (controls) controls.style.display = "block";
+    if (collapsible) collapsible.style.display = "block";
+    if (hiddenMsg) hiddenMsg.style.display = "none";
+    if (toggleBtn) toggleBtn.textContent = "Collapse Providers List";
+    
+    // 4. Update calculations
+    if (typeof calculate === 'function') {
+        calculate();
+    }
+}
+
+// Ensure the menu loads on every page refresh
+loadMenu();
 </script>
 </body>
 </html>
