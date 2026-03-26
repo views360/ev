@@ -1599,5 +1599,14 @@ function addJourneyField() {
     `;
     
     container.appendChild(journeyDiv);
+    updateJourneyIndices(); // Refresh the numbers
     calculate();
+}
+
+function updateJourneyIndices() {
+    const titles = document.querySelectorAll(".journey-title");
+    titles.forEach((title, index) => {
+        title.textContent = `Additional Journey #${index + 1}`;
+    });
+    calculate(); // Ensure the calculation reflects the removed/added data
 }
