@@ -402,20 +402,6 @@ body.light-mode #providerResults th:nth-child(even) {
     border-radius: 8px;
 }
 
-/* Target the p tags specifically within these containers */
-div.homeRangeLine p, 
-div.publicMilesLine p {
-    margin-top: 0 !important;
-    margin-bottom: 0 !important;
-    padding-top: 0 !important;
-}
-
-/* Also ensure the container isn't adding flex gap or padding */
-.homeRangeLine, .publicMilesLine {
-    display: block; /* Ensure it's not flex if you don't need it */
-    padding-top: 0 !important;
-}
-
 .conclusion-card {
     padding: 24px;
     border-radius: 12px;
