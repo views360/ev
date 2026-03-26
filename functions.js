@@ -544,13 +544,12 @@ function calculate() {
         });
 
         // Total Line (removed bottom margin)
-        preChargeHtml += `<p style="margin-top: 8px; border-bottom: 1px solid rgba(255,255,255,0.2); padding-top: 5px; margin-bottom: 0;">
+        preChargeHtml += `<p style="margin: 0px; border-bottom: 1px solid rgba(255,255,255,0.2); padding-top: 5px; margin-bottom: 0;">
             ${preChargeTooltip}<strong>Total battery pre-charge cost for all journeys: £${totalPreJourneyCost.toFixed(2)}</strong>
         </p>`;
     } else {
         // Single-journey view (removed bottom margin, 0.8rem icon)
-        preChargeHtml = `<h3>PAYG Summary</h3>
-            <p style="margin-bottom: 0;">${preChargeTooltip}Pre-journey battery charge (${inputs.rechargeAt}% → ${inputs.soc}%, ${mainTopUpKwh.toFixed(1)} kWh x ${inputs.startChargeRate}p): 
+        preChargeHtml = `<p style="margin-bottom: 0;">${preChargeTooltip}Pre-journey battery charge (${inputs.rechargeAt}% → ${inputs.soc}%, ${mainTopUpKwh.toFixed(1)} kWh x ${inputs.startChargeRate}p): 
             <strong>£${mainTopUpCost.toFixed(2)}</strong></p>`;
     }
 
