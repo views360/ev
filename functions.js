@@ -525,7 +525,7 @@ function calculate() {
 
     if (inputs.additionalJourneys.length > 0) {
         // Multi-journey view header
-        preChargeHtml = `<p style="margin-bottom: 4px; opacity: 0.5;"><h4>Pre-journey charge costs:</h4></p>`;
+        preChargeHtml = `<p style="margin-bottom: 4px; opacity: 0.5; font-size: 0.9rem;"><strong>Pre-journey charge costs:</strong></p>`;
         
         // Journey 1 detail line (0.8 opacity)
         preChargeHtml += `<div style="font-size: 0.8rem; opacity: 0.5; margin-bottom: 2px; margin-left: 10px;">
@@ -568,7 +568,7 @@ function calculate() {
     totalPublicMiles += journey1PublicMiles;
 
     if (inputs.additionalJourneys.length > 0) {
-        publicMilesHtml = `<p style="margin-bottom: 4px; opacity: 0.5;"><strong>PAYG charging miles:</strong></p>`;
+        publicMilesHtml = `<p style="margin-bottom: 4px; opacity: 0.5; font-size: 0.9rem;"><strong>PAYG charging miles:</strong></p>`;
         
         // Journey 1 detail line
         publicMilesHtml += `<div style="font-size: 0.8rem; opacity: 0.5; margin-bottom: 2px; margin-left: 10px;">
