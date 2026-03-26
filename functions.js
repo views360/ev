@@ -488,7 +488,7 @@ function calculate() {
     let rangeHtml = "<h3>PAYG Summary</h3>";
 
     if (inputs.additionalJourneys.length > 0) {
-        rangeHtml = `<p style="margin-bottom: 4px; opacity: 0.8;"><h3>PAYG Summary</h3><strong>Pre-charged battery range:</strong></p>`;
+        rangeHtml = `<h3>PAYG Summary</h3><p style="margin-bottom: 4px; opacity: 0.8;"><strong>Pre-charged battery range:</strong></p>`;
         
         // Journey 1 range detail
         rangeHtml += `<div style="font-size: 0.8rem; opacity: 0.8; margin-bottom: 2px; margin-left: 10px;">
@@ -510,7 +510,7 @@ function calculate() {
         </p>`;
     } else {
         // Single journey view
-        rangeHtml = `<p style="margin: 0px;">${rangeTooltip}Pre-charged battery range: <strong>${mainInitialRange.toFixed(0)} miles</strong></p>`;
+        rangeHtml = `<h3>PAYG Summary</h3><p style="margin-bottom: 4px; opacity: 0.8;">${rangeTooltip}Pre-charged battery range: <strong>${mainInitialRange.toFixed(0)} miles</strong></p>`;
     }
 
     // 1. Calculate Main Journey (Journey 1)
