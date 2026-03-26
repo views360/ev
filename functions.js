@@ -1517,13 +1517,24 @@ function addJourneyField() {
 }
 
 function loadProviderState() {
-    const isVisible = getCookie('providersVisible'); // Retrieve state
+    const isVisible = getCookie('providersVisible'); 
     const p = document.getElementById("providers");
     const b = document.getElementById("toggleProvidersBtn");
+    const addAllBtn = document.getElementById("addAllBtn");
 
-    // If the cookie is explicitly false, hide the list
+    // If the cookie is explicitly false (user collapsed it), 
+    // we must hide the list AND update all related UI elements.
     if (isVisible === false && p && b) {
+        // 1. Hide the container
         p.style.display = "none";
+        
+        // 2. Update the toggle button text
         b.textContent = "Expand Providers List";
+        
+        // 3. Sync the 'pulse' effect (matching your addAllProviders logic)
+        b.classList.remove("empty-pulse");
+        if (addAllBtn) {
+            addAllBtn.classList.add("empty-pulse");
+        }
     }
 }
