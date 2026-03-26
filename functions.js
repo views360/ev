@@ -228,6 +228,25 @@ function enforceSpeedRules() {
 
 
 function calculate() {
+    // 1. Initialize variables (using your exact naming conventions)
+    const providersContainer = document.getElementById("providers");
+    const collapseBtn = document.getElementById("toggleProvidersBtn");
+    const clearBtn = document.querySelector('button[onclick="clearSavedProviders()"]');
+    const hiddenMsg = document.getElementById("providersHiddenMsg");
+
+    // 2. Check if any provider boxes exist
+    const hasProviders = providersContainer && providersContainer.querySelectorAll(".provider-box").length > 0;
+
+    // 3. Update visibility based on whether the list is empty
+    if (!hasProviders) {
+        if (collapseBtn) collapseBtn.style.display = "none";
+        if (clearBtn) clearBtn.style.display = "none";
+        if (hiddenMsg) hiddenMsg.style.display = "none";
+    } else {
+        if (collapseBtn) collapseBtn.style.display = "block";
+        if (clearBtn) clearBtn.style.display = "block";
+        // hiddenMsg visibility remains managed by your toggleProviders logic
+    }
     const activePill = document.querySelector('.calc-tab.active');
     const isTripMode = activePill && activePill.textContent.trim() === "Cost Reduction";
     const conclusionsBox = document.getElementById("conclusionsBox");
