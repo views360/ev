@@ -1244,7 +1244,7 @@ function exportPdf() {
                     <th>Provider</th>
                     <th>Sub. Fee</th>
                     <th>Disc. Rate</th>
-                    <th>Cost of Journey(s)</th>
+                    <th>${journeyCostHeader}</th>
                     <th>vs PAYG</th>
                     <th>Break Even Miles<br />(Exc. Battery Pre-Charge)</th>
                 </tr>
