@@ -233,10 +233,10 @@ function buildItineraryTable(stopsRows, rechargethreshold) {
                         <th style="padding: 10px; border: 1px solid var(--border);">Mile Mark</th>
                         <th style="padding: 10px; border: 1px solid var(--border); text-align: left;">Action</th>
                         <th style="padding: 10px; border: 1px solid var(--border);">
-                            ⚡ Duration (@${document.getElementById("maxChargingSpeed").value}kW)
+                            ⚡ Duration<br />${document.getElementById("maxChargingSpeed").value}kW
                         </th>
                         <th style="padding: 10px; border: 1px solid var(--border);">
-                            🐢 Duration (@${document.getElementById("minSpeed").value}kW)
+                            🐢 Duration<br />${document.getElementById("minSpeed").value}kW
                         </th>
 
 
@@ -370,10 +370,12 @@ function buildStopsRowsForJourney(journeyMiles, startSoc, rechargeAt, efficiency
 
         // Otherwise: INTERMEDIATE STOP (full charge to 80%)
         /*const durationMins = Math.round((kwhFullCharge / 50) * 60);*/
-        const durationMax = Math.round((kwhFullCharge  / maxChargingSpeed) * 60);
-        const durationMin = Math.round((kwhFullCharge  / minSpeed) * 60);
-        totalDurationMax += durationMax;
-        totalDurationMin += durationMin;
+        const tmpDurationMax = Math.round((kwhFullCharge  / maxChargingSpeed) * 60);
+        const tmpDurationMin = Math.round((kwhFullCharge  / minSpeed) * 60);
+        totalDurationMax += tmpDurationMax;
+        totalDurationMin += tmpDurationMin;
+        const durationMax = formatDuration(tmpDurationMax);
+        const durationMin = formatDuration(tmpDurationMin);
         const eventLabel = stop === 1 ? "First public charge" : "Public charge";
 
         rows += `
