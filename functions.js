@@ -1087,7 +1087,7 @@ function calculate() {
         // Build tabbed itinerary
         let assessmentBoxHTML = buildTabbedItinerary(allJourneys, itineraryRowsArray, inputs.rechargeAt);
         
-        const locationDisclaimer = `Note: Charging durations exclude the initial ramp-up phase. Since you should only charge above 80% in exceptional circumstances, the 80-to-100% charging slowdown is of no consequence. Read the section on <a href="mastery.html#sec-slow" style="color: var(--accent); text-decoration: underline;">Slow Charging</a> to find out more.</p>`;
+        const locationDisclaimer = `<p style="font-size:0.85rem; margin-top:12px; opacity:0.8;">Note: Charging durations exclude the initial ramp-up phase. Since you should only charge above 80% in exceptional circumstances, the 80-to-100% charging slowdown is of no consequence. Read the section on <a href="mastery.html#sec-slow" style="color: var(--accent); text-decoration: underline;">Slow Charging</a> to find out more.</p>`;
     
         const contentsHTML = `
             <div id="toc" class="conclusion-white-border">
@@ -1105,7 +1105,7 @@ function calculate() {
         
         document.getElementById("contentsBox").innerHTML = contentsHTML;
         let conclusionHTML = "";
-        const extraNote = "<p style="font-size:0.85rem; margin-top:12px; opacity:0.8; color:var(--neon-green) !important;">Note: Before purchasing a subscription, check that your chosen provider has charging stations in your planned area of travel — else your subscription will be wasted.</p><p style="font-size:0.85rem; margin-top:12px; opacity:0.8;">"
+        const extraNote = `<p style="font-size:0.85rem; margin-top:12px; opacity:0.8; color:var(--neon-green) !important;">Note: Before purchasing a subscription, check that your chosen provider has charging stations in your planned area of travel — else your subscription will be wasted.</p>`
         conclusionHTML += `<div class="conclusion-white-border guide-section" id="payg-vs-subscription">`; 
         
         if (bestProvider.savings > 0) {
