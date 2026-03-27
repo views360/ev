@@ -718,11 +718,17 @@ function calculate() {
         return 0;
     });
 
+    const isMultiJourney = inputs.additionalJourneys.length > 0;
+const journeyCostHeader = isMultiJourney ? "Cost of All Journeys" : "Journey Cost";
+const journeyCostTooltip = isMultiJourney 
+    ? "This is expected total charging cost for all journeys using this provider and including your stated battery pre-charge and price per kWh for all journeys. If it is displayed in green, it is cheaper than the equivalent journey using PAYG charging at the rate you entered above." 
+    : "This is the expected total charging cost of your journey using this provider and including your stated battery pre-charge. If it is displayed in green, it is cheaper than the equivalent journey using PAYG charging at the rate you entered above.";
+
     let html = `<div class="mobile-only-text" style="font-size: 0.8em; text-align: center; color: var(--neon-green)">Slide table left to view hidden columns.</div><div class="results-scroll"><table><thead><tr>
         <th>Provider (click hyperlink to view subscription info)</th>
         <th><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)" style="font-size: 0.8rem;">💡<span class="tooltip-box">This is the provider's subscription fee, which gives you access to their discounted charge rate for ONE MONTH.</span></span></span>Sub. Fee</th>
         <th><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)" style="font-size: 0.8rem;">💡<span class="tooltip-box">This is the provider's discounted charge rate (per kWh) that is available after subscribing for one month. Note that some providers have variable charge rates depending on location and time of day. The rate listed here may be an average. Click the provider's link to confirm pricing.</span></span></span>Disc. Rate</th>
-        <th><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)" style="font-size: 0.8rem;">💡<span class="tooltip-box">This is the expected <strong>total charging cost</strong> of your journey using this provider and including your stated battery pre-charge. If it is displayed in green, it is cheaper than the equivalent journey using PAYG charging at the rate you entered above.</span></span></span>Journey Cost</th>
+        <th><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)" style="font-size: 0.8rem;">💡<span class="tooltip-box">${journeyCostTooltip}</span></span></span>${journeyCostHeader}</th>
         <th><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)" style="font-size: 0.8rem;">💡<span class="tooltip-box">This is the amount by which the discounted charge rate will either be cheaper or more expensive than your average PAYG rate for the same distance. Green means cheaper; red means more expensive. Bear in mind that you can continue to use a provider's subscription for one full month.</span></span></span>vs. PAYG</th>
         <th><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)" style="font-size: 0.8rem;">💡<span class="tooltip-box">This is the number of miles you must drive on the provider's discounted charge rate to pay off the subscription fee. <strong>Important! This is not the total miles of your journey</strong> — it is the number of miles you must drive from your first charge with this provider. Remember, a subscription lasts for an entire month.</span></span></span>Break-Even Miles</th>
         <th><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)" style="font-size: 0.8rem;">💡<span class="tooltip-box">This is the break-even miles PLUS the initial number of miles your vehicle can drive based on its precharged state.</span></span></span>Break Even + Battery</th>
@@ -1238,9 +1244,9 @@ function exportPdf() {
                     <th>Provider</th>
                     <th>Sub. Fee</th>
                     <th>Disc. Rate</th>
-                    <th>Journey Cost</th>
-                    <th>vs. PAYG</th>
-                    <th>Break Even<br />(Exc. Battery Pre-Charge)</th>
+                    <th>Cost of Journey(s)</th>
+                    <th>vs PAYG</th>
+                    <th>Break Even Miles<br />(Exc. Battery Pre-Charge)</th>
                 </tr>
             </thead>
             <tbody>`;
