@@ -958,7 +958,7 @@ function calculate() {
         const pData = PRESETS.find(p => p.id === presetId);
 
         if (!pData) {
-            console.warn("Preset not found:", presetName);
+            console.warn("Preset not found:", presetId);
         }
 
         providers.push({ 
