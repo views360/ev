@@ -703,24 +703,15 @@ comments: pData?.subscription?.comments || ""
 });
 });
 
-    // 1. Identify the absolute cheapest provider BEFORE any custom sorting occurs
-    // We create a shallow copy and sort it specifically by cost to find the "best"
-    const cheapestEntry = [...providers].sort((a, b) => a.totalJourneyCost - b.totalJourneyCost)[0];
-    
-    // 2. Store these values for use in the Conclusion box
-    const cheapestTotalCost = cheapestEntry.totalJourneyCost;
-    const totalSavings = cheapestEntry.savings;
-    const bestProviderName = cheapestEntry.name;
-    
 const sortVal = document.getElementById("sortResults").value;
 providers.sort((a, b) => {
+        if (sortVal === "cheapest") return a.totalJourneyCost - b.totalJourneyCost;
         if (sortVal === "cheapest") {
             const cheapestProvider = providers[0]; 
             const cheapestTotalCost = cheapestProvider.totalJourneyCost;
             const totalSavings = cheapestProvider.savings;
             return a.totalJourneyCost - b.totalJourneyCost;
         }
-        if (sortVal === "cheapest") return a.totalJourneyCost - b.totalJourneyCost;
 if (sortVal === "breakeven") {
 const aNever = a.rate >= inputs.adhoc;
 const bNever = b.rate >= inputs.adhoc;
@@ -736,9 +727,8 @@ return 0;
 const isMultiJourney = inputs.additionalJourneys.length > 0;
 const journeyCostHeader = isMultiJourney ? "Cost of All Journeys" : "Journey Cost";
 const journeyCostTooltip = isMultiJourney 
-    const journeyCostHeader = isMultiJourney ? "Cost of All Journeys" : "Journey Cost";
-    const journeyCostTooltip = isMultiJourney 
-? "This is the expected total charging cost for all journeys using this provider and including your stated battery pre-charge and price per kWh for all journeys. If it is displayed in green, it is cheaper than the equivalent journey using PAYG charging at the rate you entered above." 
+    ? "This is expected total charging cost for all journeys using this provider and including your stated battery pre-charge and price per kWh for all journeys. If it is displayed in green, it is cheaper than the equivalent journey using PAYG charging at the rate you entered above." 
+    ? "This is the expected total charging cost for all journeys using this provider and including your stated battery pre-charge and price per kWh for all journeys. If it is displayed in green, it is cheaper than the equivalent journey using PAYG charging at the rate you entered above." 
 : "This is the expected total charging cost of your journey using this provider and including your stated battery pre-charge. If it is displayed in green, it is cheaper than the equivalent journey using PAYG charging at the rate you entered above.";
 
 let html = `<div class="mobile-only-text" style="font-size: 0.8em; text-align: center; color: var(--neon-green)">Slide table left to view hidden columns.</div><div class="results-scroll"><table><thead><tr>
@@ -997,13 +987,15 @@ totalSavings = bestProvider.savings;
 conclusionHTML += `<div class="conclusion-white-border guide-section" id="payg-vs-subscription">`; 
 if (totalSavings > 0) {
 if (journeyCount > 1) {
-conclusionHTML += `<h3>PAYG vs Subscription Conclusion</h3><p class="main-result">For <strong>${journeyCount} journeys</strong> that total <strong>${totalMiles} miles</strong>, a one-month subscription with <strong>${bestProvider.name}</strong> works out cheaper than a ${inputs.adhoc}p PAYG rate based on the selected minimum charging rate of <strong>${minSpeedLabel}</strong> and the other information entered. The total cost of all journeys will be <strong>£${cheapestTotalCost.toFixed(2)}</strong>, which represents a saving of <strong>£${totalSavings.toFixed(2)}</strong> compared with the average PAYG rate you entered above.</p>`;
+                conclusionHTML += `<h3>PAYG vs Subscription Conclusion</h3><p class="main-result">For <strong>${journeyCount} journeys</strong> that total <strong>${totalMiles} miles</strong>, a one-month subscription with <strong>${bestProvider.name}</strong> works out cheaper than a ${inputs.adhoc}p PAYG rate based on the selected minimum charging rate of <strong>${minSpeedLabel}</strong> and the other information entered. The total journey cost will be <strong>£${totalCostAllJourneys.toFixed(2)}</strong>, which represents a saving of <strong>£${totalSavings.toFixed(2)}</strong> compared with the average PAYG rate you entered above.</p>`;
+                conclusionHTML += `<h3>PAYG vs Subscription Conclusion</h3><p class="main-result">For <strong>${journeyCount} journeys</strong> that total <strong>${totalMiles} miles</strong>, a one-month subscription with <strong>${bestProvider.name}</strong> works out cheaper than a ${inputs.adhoc}p PAYG rate based on the selected minimum charging rate of <strong>${minSpeedLabel}</strong> and the other information entered. The total cost of all journeys will be <strong>£${cheapestTotalCost.toFixed(2)}</strong>, which represents a saving of <strong>£${totalSavings.toFixed(2)}</strong> compared with the average PAYG rate you entered above.</p>`;
 } else {
 conclusionHTML += `<h3>PAYG vs Subscription Conclusion</h3><p class="main-result">For a journey of <strong>${inputs.journeyMiles} miles</strong>, a one-month subscription with <strong>${bestProvider.name}</strong> works out cheaper than a ${inputs.adhoc}p PAYG rate based on the selected minimum charging rate of <strong>${minSpeedLabel}</strong> and the other information entered. The total journey cost will be <strong>£${bestProvider.totalJourneyCost.toFixed(2)}</strong>, which represents a saving of <strong>£${bestProvider.savings.toFixed(2)}</strong> compared with the average PAYG rate you entered above.</p>`;
 }
 } else {
 if (journeyCount > 1) {
-conclusionHTML += `<h3>PAYG vs SUBSCRIPTION CONCLUSION</h3><p class="main-result">For <strong>${journeyCount} journeys</strong> that total <strong>${totalMiles} miles</strong>, a <strong>${inputs.adhoc}p PAYG rate</strong> is cheaper than the cheapest subscription at the selected minimum charging rate of <strong>${minSpeedLabel}</strong> and the other information entered. The total cost of all journeys based on PAYG will be <strong>£${totalAdhocCost.toFixed(2)}</strong>. Before opting for PAYG rates, however, consider whether you will go on any other journeys within the month that will require public charging because this may make a one-month subscription more cost effective.</p>`;
+                conclusionHTML += `<h3>PAYG vs SUBSCRIPTION CONCLUSION</h3><p class="main-result">For <strong>${journeyCount} journeys</strong> that total <strong>${totalMiles} miles</strong>, a <strong>${inputs.adhoc}p PAYG rate</strong> is cheaper than the cheapest subscription at the selected minimum charging rate of <strong>${minSpeedLabel}</strong> and the other information entered. The total journey cost based on PAYG will be <strong>£${totalAdhocCost.toFixed(2)}</strong>. Before opting for PAYG rates, however, consider whether you will go on any other journeys within the month that will require public charging because this may make a one-month subscription more cost effective.</p>`;
+                conclusionHTML += `<h3>PAYG vs SUBSCRIPTION CONCLUSION</h3><p class="main-result">For <strong>${journeyCount} journeys</strong> that total <strong>${totalMiles} miles</strong>, a <strong>${inputs.adhoc}p PAYG rate</strong> is cheaper than the cheapest subscription at the selected minimum charging rate of <strong>${minSpeedLabel}</strong> and the other information entered. The total cost of all journeys based on PAYG will be <strong>£${totalAdhocCost.toFixed(2)}</strong>. Before opting for PAYG rates, however, consider whether you will go on any other journeys within the month that will require public charging because this may make a one-month subscription more cost effective.</p>`;
 } else {
 conclusionHTML += `<h3>PAYG vs SUBSCRIPTION CONCLUSION</h3><p class="main-result">For a journey of <strong>${inputs.journeyMiles} miles</strong>, a <strong>${inputs.adhoc}p PAYG rate</strong> is cheaper than the cheapest subscription at the selected minimum charging rate of <strong>${minSpeedLabel}</strong> and the other information entered. The total journey cost based on PAYG will be <strong>£${totalAdhocCost.toFixed(2)}</strong>. Before opting for PAYG rates, however, consider whether you will go on any other journeys within the month that will require public charging because this may make a one-month subscription more cost effective.</p>`;
 }
