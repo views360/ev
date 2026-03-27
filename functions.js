@@ -282,7 +282,60 @@ function selectItineraryTab(index) {
     });
 }
 
+function buildStopsRowsForJourney(journeyMiles, startSoc, rechargeAt, efficiency, batteryKwh) {
+    let rows = "";
+    let stop = 1;
+    let distanceDriven = 0;
+    let currentSoc = startSoc;
 
+    const chargeToPercent = 80;
+    const kwhPerCharge = ((chargeToPercent - rechargeAt) / 100) * batteryKwh;
+
+    while (distanceDriven < journeyMiles) {
+        const rangeOnCurrentCharge = ((currentSoc - rechargeAt) / 100) * batteryKwh * efficiency;
+
+        // If this charge gets us to the end, no more stops
+        if (distanceDriven + rangeOnCurrentCharge >= journeyMiles) break;
+
+        // Add a stop row
+        const mileMark = Math.round(distanceDriven + rangeOnCurrentCharge);
+        const kwhNeeded = kwhPerCharge;
+        const durationMins = Math.round((kwhNeeded / 50) * 60); // assume 50kW average
+
+        rows += `
+            <tr>
+                <td style="padding: 10px; border: 1px solid var(--border);">${stop}</td>
+                <td style="padding: 10px; border: 1px solid var(--border);">Public Charge</td>
+                <td style="padding: 10px; border: 1px solid var(--border);">${mileMark} miles</td>
+                <td style="padding: 10px; border: 1px solid var(--border);">Charge to ${chargeToPercent}%</td>
+                <td style="padding: 10px; border: 1px solid var(--border);">${durationMins} mins</td>
+            </tr>
+        `;
+
+        distanceDriven += rangeOnCurrentCharge;
+        currentSoc = chargeToPercent;
+        stop++;
+    }
+
+    // Final top‑up (if needed)
+    const remainingMiles = journeyMiles - distanceDriven;
+    if (remainingMiles > 0) {
+        const finalKwh = remainingMiles / efficiency;
+        const finalDuration = Math.round((finalKwh / 50) * 60);
+
+        rows += `
+            <tr>
+                <td style="padding: 10px; border: 1px solid var(--border);">${stop}</td>
+                <td style="padding: 10px; border: 1px solid var(--border);">Final Charge</td>
+                <td style="padding: 10px; border: 1px solid var(--border);">${journeyMiles} miles</td>
+                <td style="padding: 10px; border: 1px solid var(--border);">Top‑up to finish journey</td>
+                <td style="padding: 10px; border: 1px solid var(--border);">${finalDuration} mins</td>
+            </tr>
+        `;
+    }
+
+    return rows;
+}
 
 
 
