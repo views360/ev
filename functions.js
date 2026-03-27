@@ -222,6 +222,66 @@ function enforceSpeedRules() {
     });
 }
 
+function buildItineraryTable(stopsRows, rechargethreshhold) {
+    return `
+        <div class="results-scroll" style="width: fit-content; max-width: 100%; margin: 0;">
+            <table style="border-collapse: collapse; margin-top: 10px; border: 1px solid var(--border); font-size: 0.8rem;">
+                <thead>
+                    <tr style="background: rgba(57, 255, 20, 0.05); color: var(--text);">
+                        <th style="padding: 10px; border: 1px solid var(--border);">Stop</th>
+                        <th style="padding: 10px; border: 1px solid var(--border); text-align: left;">Event</th>
+                        <th style="padding: 10px; border: 1px solid var(--border);">Mile Mark</th>
+                        <th style="padding: 10px; border: 1px solid var(--border); text-align: left;">Action</th>
+                        <th style="padding: 10px; border: 1px solid var(--border);">Duration</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${stopsRows || `<tr><td colspan="5" style="padding: 20px; text-align: center;">No public charging stops required for this journey distance.</td></tr>`}
+                </tbody>
+            </table>
+        </div>
+    `;
+}
+
+function buildTabbedItinerary(journeys, itineraryRowsArray, rechargethreshhold) {
+    let tabs = '';
+    let contents = '';
+
+    journeys.forEach((j, index) => {
+        const active = index === 0 ? 'active' : '';
+        tabs += `<div class="itinerary-tab-btn ${active}" onclick="selectItineraryTab(${index})">Journey ${index + 1}</div>`;
+
+        contents += `
+            <div class="itinerary-tab-panel" id="itinerary-panel-${index}" style="display:${index === 0 ? 'block' : 'none'};">
+                ${buildItineraryTable(itineraryRowsArray[index], rechargethreshhold)}
+            </div>
+        `;
+    });
+
+    return `
+        <div class="conclusion-white-border guide-section" id="real-world-assessment">
+            <h3>Real-World Charging Itinerary</h3>
+
+            <div id="itineraryTabs">
+                <div class="itinerary-tab-buttons">${tabs}</div>
+                <div class="itinerary-tab-content">${contents}</div>
+            </div>
+
+            <p class="itinerary-note">Note: when there is more than one stop for public charging, the final charge will usually be less than previous charge(s). It represents the amount of final top-up charge needed to complete the journey and be left with a residual charge of ${rechargethreshhold}%.</p>
+        </div>
+    `;
+}
+
+function selectItineraryTab(index) {
+    document.querySelectorAll('.itinerary-tab-btn').forEach((btn, i) => {
+        btn.classList.toggle('active', i === index);
+    });
+
+    document.querySelectorAll('.itinerary-tab-panel').forEach((panel, i) => {
+        panel.style.display = i === index ? 'block' : 'none';
+    });
+}
+
 
 
 
@@ -906,27 +966,13 @@ function calculate() {
             }
         }
 
-        let assessmentBoxHTML = `
-            <div class="conclusion-white-border guide-section" id="real-world-assessment">
-                <h3>Real-World Charging Itinerary</h3>
-                <div class="results-scroll" style="width: fit-content; max-width: 100%; margin: 0;">
-                    <table style="border-collapse: collapse; margin-top: 10px; border: 1px solid var(--border); font-size: 0.8rem;">
-                        <thead>
-                            <tr style="background: rgba(57, 255, 20, 0.05); color: var(--text);">
-                                <th style="padding: 10px; border: 1px solid var(--border);">Stop</th>
-                                <th style="padding: 10px; border: 1px solid var(--border); text-align: left;">Event</th>
-                                <th style="padding: 10px; border: 1px solid var(--border);">Mile Mark</th>
-                                <th style="padding: 10px; border: 1px solid var(--border); text-align: left;">Action</th>
-                                <th style="padding: 10px; border: 1px solid var(--border);">Duration</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${stopsRows || '<tr><td colspan="5" style="padding: 20px; text-align: center;">No public charging stops required for this journey distance.</td></tr>'}
-                        </tbody>
-                    </table>
-                    <p style="font-size:0.85rem; margin-top:12px; opacity:0.8; !important;">Note: when there is more than one stop for public charging, the final charge will usually be less than previous charge(s). It represents the amount of final top-up charge needed to complete the journey and be left with a residual charge of ${rechargethreshhold}%.</p>
-                </div>
-            </div>`;
+        // Build itinerary rows for each journey
+        const itineraryRowsArray = allJourneys.map((j, idx) => {
+            return buildStopsRowsForJourney(j.miles, j.soc, inputs.rechargeAt, inputs.efficiency, inputs.batteryKwh);
+        });
+        
+        // Build tabbed itinerary
+        let assessmentBoxHTML = buildTabbedItinerary(allJourneys, itineraryRowsArray, inputs.rechargeAt);
         
         const locationDisclaimer = `<p style="font-size:0.85rem; margin-top:12px; opacity:0.8; color:var(--neon-green) !important;">Note 1: Before purchasing a subscription, check that your chosen provider has charging stations in your planned area of travel — else your subscription will be wasted.</p><p style="font-size:0.85rem; margin-top:12px; opacity:0.8;">Note 2: Charging durations exclude the initial ramp-up phase. Since you should only charge above 80% in exceptional circumstances, the 80-to-100% charging slowdown is of no consequence. Read the section on <a href="mastery.html#sec-slow" style="color: var(--accent); text-decoration: underline;">Slow Charging</a> to find out more.</p>`;
     
