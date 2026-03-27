@@ -100,8 +100,14 @@ function createProviderBox(preset) {
     const id = providerCount;
     const { minSpeed } = getInputs();
     const sortedPresets = getSortedPresets(minSpeed);
-    const presetOptions = ['Custom', ...sortedPresets.map(p => p.name)]
-        .map(name => `<option value="${name}">${name}</option>`).join("");
+    const presetOptions = ['Custom', ...sortedPresets.map(p => p.id)]
+        .map(id => {
+            if (id === 'Custom') return `<option value="Custom">Custom</option>`;
+            const preset = sortedPresets.find(p => p.id === id);
+            return `<option value="${preset.id}">${preset.name}</option>`;
+        })
+        .join("");
+
 
     const box = document.createElement("div");
     box.className = "provider-box";
@@ -163,8 +169,8 @@ function addAllProviders() {
 }
 
 function updateProviderFields(id) {
-    const presetName = document.getElementById(`preset${id}`).value;
-    const p = PRESETS.find(x => x.name === presetName);
+    const presetId = document.getElementById(`preset${id}`).value;
+    const p = PRESETS.find(x => x.id === presetId);
     const speedRow = document.getElementById(`speedRow${id}`);
     
     if (presetName === 'Custom' || !p) {
@@ -191,8 +197,8 @@ function updateProviderFields(id) {
 }
 
 function updateRateFromSpeed(id) {
-    const presetName = document.getElementById(`preset${id}`).value;
-    const speed = document.getElementById(`speed${id}`).value;
+    const presetId = document.getElementById(`preset${id}`).value;
+    const p = PRESETS.find(x => x.id === presetId);
     const p = PRESETS.find(x => x.name === presetName);
     if (p?.rates) document.getElementById(`rate${id}`).value = p.rates[speed];
     calculate();
@@ -949,8 +955,9 @@ function calculate() {
         });
         
         const totalJourneyCost = subCost + totalPreJourneyCost + publicChargingCost;
-        const presetName = document.getElementById(`preset${id}`).value;
-        const pData = PRESETS.find(p => p.name.trim().toLowerCase() === presetName.trim().toLowerCase());
+        const presetId = document.getElementById(`preset${id}`).value;
+        const pData = PRESETS.find(p => p.id === presetId);
+
         if (!pData) {
             console.warn("Preset not found:", presetName);
         }
