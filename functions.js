@@ -267,7 +267,7 @@ function buildTabbedItinerary(journeys, itineraryRowsArray, rechargethreshhold) 
                 <div class="itinerary-tab-content">${contents}</div>
             </div>
 
-            <p class="itinerary-note">Note: when there is more than one stop for public charging, the final charge will usually be less than previous charge(s). It represents the amount of final top-up charge needed to complete the journey and be left with a residual charge of ${rechargethreshhold}%.</p>
+            <p class="itinerary-note">Note: the final charge is calculated such that you will reach your destination at the specified journey recharge threshhold.</p>
         </div>
     `;
 }
