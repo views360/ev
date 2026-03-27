@@ -703,14 +703,18 @@ function calculate() {
         });
     });
 
+    // 1. Identify the absolute cheapest provider BEFORE any custom sorting occurs
+    // We create a shallow copy and sort it specifically by cost to find the "best"
+    const cheapestEntry = [...providers].sort((a, b) => a.totalJourneyCost - b.totalJourneyCost)[0];
+    
+    // 2. Store these values for use in the Conclusion box
+    const cheapestTotalCost = cheapestEntry.totalJourneyCost;
+    const totalSavings = cheapestEntry.savings;
+    const bestProviderName = cheapestEntry.name;
+    
     const sortVal = document.getElementById("sortResults").value;
     providers.sort((a, b) => {
-        if (sortVal === "cheapest") {
-            const cheapestProvider = providers[0]; 
-            const cheapestTotalCost = cheapestProvider.totalJourneyCost;
-            const totalSavings = cheapestProvider.savings;
-            return a.totalJourneyCost - b.totalJourneyCost;
-        }
+        if (sortVal === "cheapest") return a.totalJourneyCost - b.totalJourneyCost;
         if (sortVal === "breakeven") {
             const aNever = a.rate >= inputs.adhoc;
             const bNever = b.rate >= inputs.adhoc;
@@ -724,8 +728,8 @@ function calculate() {
     });
 
     const isMultiJourney = inputs.additionalJourneys.length > 0;
-const journeyCostHeader = isMultiJourney ? "Cost of All Journeys" : "Journey Cost";
-const journeyCostTooltip = isMultiJourney 
+    const journeyCostHeader = isMultiJourney ? "Cost of All Journeys" : "Journey Cost";
+    const journeyCostTooltip = isMultiJourney 
     ? "This is the expected total charging cost for all journeys using this provider and including your stated battery pre-charge and price per kWh for all journeys. If it is displayed in green, it is cheaper than the equivalent journey using PAYG charging at the rate you entered above." 
     : "This is the expected total charging cost of your journey using this provider and including your stated battery pre-charge. If it is displayed in green, it is cheaper than the equivalent journey using PAYG charging at the rate you entered above.";
 
