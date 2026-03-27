@@ -966,6 +966,16 @@ function calculate() {
             }
         }
 
+        // Build unified journey list (Journey 1 + additional journeys)
+        const allJourneys = [
+            {
+                miles: inputs.journeyMiles,
+                soc: inputs.soc,
+                rate: inputs.startChargeRate
+            },
+            ...inputs.additionalJourneys
+        ];
+
         // Build itinerary rows for each journey
         const itineraryRowsArray = allJourneys.map((j, idx) => {
             return buildStopsRowsForJourney(j.miles, j.soc, inputs.rechargeAt, inputs.efficiency, inputs.batteryKwh);
