@@ -1126,8 +1126,8 @@ function calculate() {
         conclusionHTML += `</div>`;
         
         conclusionHTML += `<div class="conclusion-white-border guide-section" id="charging-times-section"><h3>4. Charging Durations</h3>`;
-        const journeyCount = 1 + inputs.additionalJourneys.length;
-        const totalMiles = inputs.journeyMiles + inputs.additionalJourneys.reduce((sum, j) => sum + j.miles, 0);
+        journeyCount = 1 + inputs.additionalJourneys.length;
+        totalMiles = inputs.journeyMiles + inputs.additionalJourneys.reduce((sum, j) => sum + j.miles, 0);
         
         let durationIntro = "";
         
