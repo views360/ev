@@ -793,8 +793,23 @@ function calculate() {
 
     document.getElementById("homeRangeLine").innerHTML = rangeHtml;
     document.getElementById("publicMilesLine").innerHTML = publicMilesHtml;
-    document.getElementById("adhocCostLine").innerHTML = `<p style="margin: 0px; font-size: 1.2rem">Total PAYG journey cost (pre-charge + on-the-go charges): <strong>£${totalAdhocCost.toFixed(2)}</strong></p>`;
-    const simulateTripWithProvider = (providerRate, batteryKwh, rechargethreshold, efficiency, journeyMiles, initialSoc) => {
+    
+    const paygJourneyCount = 1 + inputs.additionalJourneys.length;
+    const paygTotalMiles = inputs.journeyMiles + inputs.additionalJourneys.reduce((sum, j) => sum + j.miles, 0);
+    
+    let paygIntro = "";
+    
+    if (paygJourneyCount === 1) {
+        paygIntro = `Total PAYG cost for a ${inputs.journeyMiles}-mile journey (pre-charge + on-the-go charges):`;
+    } else {
+        paygIntro = `Total PAYG cost for ${paygJourneyCount} journeys totalling ${paygTotalMiles} miles (pre-charge + on-the-go charges):`;
+    }
+
+    document.getElementById("adhocCostLine").innerHTML =
+        `<p style="margin: 0px; font-size: 1.2rem">
+            ${paygIntro} <strong>£${totalAdhocCost.toFixed(2)}</strong>
+        </p>`;
+        const simulateTripWithProvider = (providerRate, batteryKwh, rechargethreshold, efficiency, journeyMiles, initialSoc) => {
         const chargeToPercent = 80; 
         const kwhPerCharge = ((chargeToPercent - rechargethreshold) / 100) * batteryKwh; 
         let distanceDriven = 0;
