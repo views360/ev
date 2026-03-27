@@ -645,6 +645,23 @@ if (inputs.additionalJourneys.length > 0) {
 }
 
 // Now correctly define totalAdhocCost using the simulation results
+// 1. Calculate the simulated PAYG cost for Journey 1
+const journey1PaygSimCost = simulateTripWithProvider(
+ inputs.adhoc, inputs.batteryKwh, inputs.rechargeAt, inputs.efficiency, inputs.journeyMiles, inputs.soc
+);
+
+let totalPaygSimulatedCost = journey1PaygSimCost;
+
+// 2. Add simulated PAYG costs for any additional journeys
+if (inputs.additionalJourneys.length > 0) {
+ inputs.additionalJourneys.forEach((j) => {
+     totalPaygSimulatedCost += simulateTripWithProvider(
+         inputs.adhoc, inputs.batteryKwh, inputs.rechargeAt, inputs.efficiency, j.miles, j.soc
+     );
+ });
+}
+
+// 3. This is the value that ensures your 'Savings' calculation is accurate
 const totalAdhocCost = totalPreJourneyCost + totalPaygSimulatedCost;
 
 document.getElementById("publicKwhLine").innerHTML = breakoutHtml;
