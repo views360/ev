@@ -319,9 +319,6 @@ function buildStopsRowsForJourney(journeyMiles, startSoc, rechargeAt, efficiency
     `;
 
     while (true) {
-        totalDurationMax += durationMax;
-        totalDurationMin += durationMin;
-
         
         // Range available on current charge
         const rangeOnCurrentCharge = ((currentSoc - rechargeAt) / 100) * batteryKwh * efficiency;
@@ -342,6 +339,9 @@ function buildStopsRowsForJourney(journeyMiles, startSoc, rechargeAt, efficiency
             /*const durationMins = Math.round((requiredKwh / 50) * 60); // assume 50kW*/
             const durationMax = Math.round((requiredKwh / maxChargingSpeed) * 60);
             const durationMin = Math.round((requiredKwh / minSpeed) * 60);
+            totalDurationMax += durationMax;
+            totalDurationMin += durationMin;
+
 
             rows += `
                 <tr>
@@ -363,6 +363,8 @@ function buildStopsRowsForJourney(journeyMiles, startSoc, rechargeAt, efficiency
         /*const durationMins = Math.round((kwhFullCharge / 50) * 60);*/
         const durationMax = Math.round((requiredKwh / maxChargingSpeed) * 60);
         const durationMin = Math.round((requiredKwh / minSpeed) * 60);
+        totalDurationMax += durationMax;
+        totalDurationMin += durationMin;
         const eventLabel = stop === 1 ? "First public charge" : "Public charge";
 
         rows += `
