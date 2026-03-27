@@ -260,7 +260,7 @@ function buildTabbedItinerary(journeys, itineraryRowsArray, rechargethreshhold) 
 
     return `
         <div class="conclusion-white-border guide-section" id="real-world-assessment">
-            <h3>Real-World Charging Itinerary</h3>
+            <h3>5. Real-World Charging Itinerary</h3>
 
             <div id="itineraryTabs">
                 <div class="itinerary-tab-buttons">${tabs}</div>
@@ -583,9 +583,9 @@ function calculate() {
     const paygTitle = document.getElementById("paygSummaryTitle");
     if (paygTitle) {
         if (inputs.adhoc > 0) {
-            paygTitle.textContent = `PAYG Summary (Based on ${inputs.adhoc}p/kWh)`;
+            paygTitle.textContent = `1. PAYG Summary (Based on ${inputs.adhoc}p/kWh)`;
         } else {
-            paygTitle.textContent = `PAYG Summary`;
+            paygTitle.textContent = `1. PAYG Summary`;
         }
     }
     const uiShare = document.getElementById("shareBtn");
@@ -1081,12 +1081,12 @@ function calculate() {
             <div id="toc" class="conclusion-white-border">
                 <h3>RESULTS CONTENTS</h3>
                 <ul style="margin:0; padding-left:20px; font-size:0.95rem;">
-                    <li><a href="#payg-summary" style="color: var(--accent); text-decoration:none;">PAYG Summary (Based on ${inputs.adhoc}p/kWh)</a></li>
-                    <li><a href="#providerResults" style="color: var(--accent); text-decoration:none;">Providers & Subscriptions</a></li>
-                    <li><a href="#payg-vs-subscription" style="color: var(--accent); text-decoration:none;">PAYG vs Subscription Conclusion</a></li>
-                    <li><a href="#charging-times-section" style="color: var(--accent); text-decoration:none;">Charging Durations</a></li>
-                    <li><a href="#real-world-assessment" style="color: var(--accent); text-decoration:none;">Real-World Charging Itinerary</a></li>
-                    <li><a href="#graph-section" style="color: var(--accent); text-decoration:none;">Subscriptions Break-Even Graph</a></li>
+                    <li><a href="#payg-summary" style="color: var(--accent); text-decoration:none;">1. PAYG Summary (Based on ${inputs.adhoc}p/kWh)</a></li>
+                    <li><a href="#providerResults" style="color: var(--accent); text-decoration:none;">2. Providers &amp; Subscriptions</a></li>
+                    <li><a href="#payg-vs-subscription" style="color: var(--accent); text-decoration:none;">3. PAYG vs Subscription Conclusion</a></li>
+                    <li><a href="#charging-times-section" style="color: var(--accent); text-decoration:none;">4. Charging Durations</a></li>
+                    <li><a href="#real-world-assessment" style="color: var(--accent); text-decoration:none;">5. Real-World Charging Itinerary</a></li>
+                    <li><a href="#graph-section" style="color: var(--accent); text-decoration:none;">6. Subscriptions Break-Even Graph</a></li>
                 </ul>
             </div>
         `;
@@ -1096,9 +1096,9 @@ function calculate() {
         
         conclusionHTML += `<div class="conclusion-white-border guide-section" id="payg-vs-subscription">`; 
         if (bestProvider.savings > 0) {
-            conclusionHTML += `<h3>PAYG vs Subscription Conclusion</h3><p class="main-result">For a journey of <strong>${inputs.journeyMiles} miles</strong>, a one-month subscription with <strong>${bestProvider.name}</strong> works out cheaper than a ${inputs.adhoc}p PAYG rate based on the selected minimum charging rate of <strong>${minSpeedLabel}</strong> and the other information entered. The total journey cost will be <strong>£${bestProvider.totalJourneyCost.toFixed(2)}</strong>, which represents a saving of <strong>£${bestProvider.savings.toFixed(2)}</strong> over the average PAYG rate you entered above.</p>`;
+            conclusionHTML += `<h3>3. PAYG vs Subscription Conclusion</h3><p class="main-result">For a journey of <strong>${inputs.journeyMiles} miles</strong>, a one-month subscription with <strong>${bestProvider.name}</strong> works out cheaper than a ${inputs.adhoc}p PAYG rate based on the selected minimum charging rate of <strong>${minSpeedLabel}</strong> and the other information entered. The total journey cost will be <strong>£${bestProvider.totalJourneyCost.toFixed(2)}</strong>, which represents a saving of <strong>£${bestProvider.savings.toFixed(2)}</strong> over the average PAYG rate you entered above.</p>`;
         } else {
-            conclusionHTML += `<h3>PAYG vs SUBSCRIPTION CONCLUSION</h3><p class="main-result">For a journey of <strong>${inputs.journeyMiles} miles</strong>, a <strong>${inputs.adhoc}p PAYG rate</strong> is cheaper than the cheapest subscription at the selected minimum charging rate of <strong>${minSpeedLabel}</strong> and the other information entered. The total journey cost based on PAYG will be <strong>£${totalAdhocCost.toFixed(2)}</strong>. Before opting for PAYG rates, however, consider whether you will go on any other journeys within the month that will require public charging because this may make a one-month subscription more cost effective.</p>`;
+            conclusionHTML += `<h3>3. PAYG vs SUBSCRIPTION CONCLUSION</h3><p class="main-result">For a journey of <strong>${inputs.journeyMiles} miles</strong>, a <strong>${inputs.adhoc}p PAYG rate</strong> is cheaper than the cheapest subscription at the selected minimum charging rate of <strong>${minSpeedLabel}</strong> and the other information entered. The total journey cost based on PAYG will be <strong>£${totalAdhocCost.toFixed(2)}</strong>. Before opting for PAYG rates, however, consider whether you will go on any other journeys within the month that will require public charging because this may make a one-month subscription more cost effective.</p>`;
         }
         conclusionHTML += `</div>`;
         
