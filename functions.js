@@ -1126,18 +1126,17 @@ function calculate() {
         conclusionHTML += `</div>`;
         
         conclusionHTML += `<div class="conclusion-white-border guide-section" id="charging-times-section"><h3>4. Charging Durations</h3>`;
-        journeyCount = 1 + inputs.additionalJourneys.length;
-        totalMiles = inputs.journeyMiles + inputs.additionalJourneys.reduce((sum, j) => sum + j.miles, 0);
+        const durationJourneyCount = 1 + inputs.additionalJourneys.length;
+        const durationTotalMiles = inputs.journeyMiles + inputs.additionalJourneys.reduce((sum, j) => sum + j.miles, 0);
         
         let durationIntro = "";
         
-        if (journeyCount === 1) {
+        if (durationJourneyCount === 1) {
             durationIntro = `Your proposed <strong>${inputs.journeyMiles}-mile</strong> journey`;
         } else {
-            durationIntro = `Your ${journeyCount} proposed journeys totalling <strong>${totalMiles} miles</strong>`;
+            durationIntro = `Your ${durationJourneyCount} proposed journeys totalling <strong>${durationTotalMiles} miles</strong>`;
         }
-
-        
+     
         if (maxChargingSpeed > 0) {
             conclusionHTML += `<p class="main-result">${durationIntro} will require <strong>${publicKwh.toFixed(1)} kWh</strong> of public charging (either PAYG or subscription based) after your pre-charged battery reduces to your specified recharge threshold of ${inputs.rechargeAt}%. At your maximum supported speed of <strong>${maxChargingSpeed} kW</strong>, total recharging duration for the entire journey will be approximately <strong>${maxChargingTimeFormatted}</strong>.</p>`;
         } else {
