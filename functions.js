@@ -949,7 +949,11 @@ function calculate() {
         });
         
         const totalJourneyCost = subCost + totalPreJourneyCost + publicChargingCost;
-        const pData = PRESETS.find(p => p.name === document.getElementById(`preset${id}`).value);
+        const presetName = document.getElementById(`preset${id}`).value;
+        const pData = PRESETS.find(p => p.name.trim().toLowerCase() === presetName.trim().toLowerCase());
+        if (!pData) {
+            console.warn("Preset not found:", presetName);
+        }
 
         providers.push({ 
             name, subCost, rate, totalJourneyCost, 
