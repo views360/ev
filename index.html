@@ -302,7 +302,7 @@
                 <div class="input-group">
                     <label for="journeyMiles">
                         <span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">How far 
-							do you plan to travel? Adjust this value, and the results will auto-update.</span></span></span>Journey distance (miles)
+							do you plan to travel? Adjust this value, and the results will auto-update. Note: you may add more journeys after this one.</span></span></span>Journey distance (miles)
                     </label>
                     <input type="number" id="journeyMiles" oninput="calculate()" placeholder="e.g., 250">
                 </div>
@@ -319,7 +319,7 @@
                 <div class="input-group">
                     <label for="soc">
                         <span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">How much 
-							charge will your EV have when you begin your journey?</span></span></span>Starting state of charge (%)</label>
+							charge will your battery have when you begin your journey? It is acceptable to slow charge up to 100% before departing on a long journey.</span></span></span>Starting state of charge (%)</label>
                     <input type="number" id="soc" oninput="calculate()" placeholder="e.g., 90">
                 </div>
                 <div class="input-group">
@@ -351,13 +351,13 @@
                 <div class="input-group">
                     <label for="startChargeRate">
                         <span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">When you 
-							charge your battery before the journey, how much will the rate be?</span></span></span>Battery Pre-Charge rate (pence per kWh)                        
+							charge your battery before this journey, how much will the rate be?</span></span></span>Battery Pre-Charge rate (pence per kWh)                        
                     </label>
                     <input type="number" id="startChargeRate" oninput="calculate()" placeholder="e.g., 7.5">
                 </div>
                 <div class="input-group">
                     <label for="maxChargingSpeed">
-                        <span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">What is the maximum charging speed your vehicle supports? You may need to check your user manual or Google it. If you have noticed a lower-than-advertised speed while charging, enter <i>that</i> speed.</span></span></span>Max. Charging Speed (kW)                        
+                        <span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">What is the maximum charging speed your vehicle supports? You may need to check your user manual or do a web search for it. If you have experienced a lower-than-advertised speed while charging, enter <i>that</i> speed.</span></span></span>Max. Charging Speed (kW)                        
                     </label>
                     <input type="number" id="maxChargingSpeed" oninput="calculate()" placeholder="e.g., 150">
                 </div>
@@ -374,7 +374,7 @@
                     <span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is the 
 						average amount you would ordinarily expect to pay during your journey while using PAYG chargers.
 						If you already get a discount (e.g., 8% from Electroverse), input the discounted rate. This will be the 
-						baseline for calculating whether it is possible to make your journey cheaper.</span></span></span>Typical average PAYG public rate you pay (pence per kWh)                    
+						baseline for calculating whether it is possible to make your journey cheaper. You may adjust this as many times as you wish to view the effects.</span></span></span>Typical average PAYG public rate you pay (pence per kWh)                    
                 </label>
                 <input type="number" id="adhoc" oninput="calculate()" placeholder="e.g., 62 (62p is the 50kW Lidl+ app price)">
             </div>
@@ -384,7 +384,7 @@
 			    <button type="button" class="btn secondary empty-pulse" id="addJourneyBtn" onclick="addJourneyField()">
 			        <span class="tooltip-container">
 			            <span class="info-icon" onclick="toggleTooltip(this)">💡
-			                <span class="tooltip-box">If you plan to go on more than one journey within one month of the first, include that journey (or journeys), too. The results will adjust accordingly.</span>
+			                <span class="tooltip-box">If you plan to go on more than one journey within one month of the first, include that journey (or journeys), too, because a subscription charge is only paid once for an entire month, and this will significantly affect the overall cost. The results will adjust accordingly.</span>
 			            </span>Include Another Journey?
 			        </span>
 			    </button>
