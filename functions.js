@@ -319,7 +319,7 @@ function buildStopsRowsForJourney(journeyMiles, startSoc, rechargeAt, efficiency
                     <td style="padding: 10px; border: 1px solid var(--border);">Final Public Charge</td>
                     <td style="padding: 10px; border: 1px solid var(--border);">${Math.round(mileMarkAtRecharge)} miles</td>
                     <td style="padding: 10px; border: 1px solid var(--border);">
-                        Recharge from ${rechargeAt}% to ${requiredPercent.toFixed(0)}%
+                        Recharge from ${rechargeAt}%→${requiredPercent.toFixed(0)}%, ${requiredKwh.toFixed(1)} kWh
                     </td>
                     <td style="padding: 10px; border: 1px solid var(--border);">${durationMins} mins</td>
                 </tr>
@@ -330,13 +330,15 @@ function buildStopsRowsForJourney(journeyMiles, startSoc, rechargeAt, efficiency
         // Otherwise: INTERMEDIATE STOP (full charge to 80%)
         const durationMins = Math.round((kwhFullCharge / 50) * 60); // assume 50kW
 
+        const eventLabel = stop === 1 ? "First Public Charge" : "Public Charge";
+
         rows += `
             <tr>
                 <td style="padding: 10px; border: 1px solid var(--border);">${stop}</td>
-                <td style="padding: 10px; border: 1px solid var(--border);">Public Charge</td>
+                <td style="padding: 10px; border: 1px solid var(--border);">${eventLabel}</td>
                 <td style="padding: 10px; border: 1px solid var(--border);">${Math.round(mileMarkAtRecharge)} miles</td>
                 <td style="padding: 10px; border: 1px solid var(--border);">
-                    Recharge from ${rechargeAt}% to ${chargeToPercent}%
+                    Recharge from ${rechargeAt}%→${chargeToPercent}%, ${kwhFullCharge.toFixed(1)} kWh
                 </td>
                 <td style="padding: 10px; border: 1px solid var(--border);">${durationMins} mins</td>
             </tr>
