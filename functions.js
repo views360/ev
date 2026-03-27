@@ -386,8 +386,8 @@ function buildStopsRowsForJourney(journeyMiles, startSoc, rechargeAt, efficiency
                 <td style="padding: 10px; border: 1px solid var(--border);">
                     Recharge from ${rechargeAt}%→${chargeToPercent}%, ${kwhFullCharge.toFixed(1)} kWh
                 </td>
-                <td style="padding: 10px; border: 1px solid var(--border);">${durationMax} mins</td>
-                <td style="padding: 10px; border: 1px solid var(--border);">${durationMin} mins</td>
+                <td style="padding: 10px; border: 1px solid var(--border);">${durationMax}</td>
+                <td style="padding: 10px; border: 1px solid var(--border);">${durationMin}</td>
             </tr>
         `;
 
