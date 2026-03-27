@@ -673,9 +673,29 @@ function calculate() {
             breakEvenMiles = kwhNeeded * inputs.efficiency;
         }
         
-        const publicChargingCost = simulateTripWithProvider(
-            rate, inputs.batteryKwh, inputs.rechargeAt, inputs.efficiency, inputs.journeyMiles, inputs.soc
+        let publicChargingCost = 0;
+
+        // Journey 1
+        publicChargingCost += simulateTripWithProvider(
+            rate,
+            inputs.batteryKwh,
+            inputs.rechargeAt,
+            inputs.efficiency,
+            inputs.journeyMiles,
+            inputs.soc
         );
+        
+        // Additional journeys
+        inputs.additionalJourneys.forEach(j => {
+            publicChargingCost += simulateTripWithProvider(
+                rate,
+                inputs.batteryKwh,
+                inputs.rechargeAt,
+                inputs.efficiency,
+                j.miles,
+                j.soc
+            );
+        });
         
         const totalJourneyCost = subCost + totalPreJourneyCost + publicChargingCost;
         const pData = PRESETS.find(p => p.name === document.getElementById(`preset${id}`).value);
