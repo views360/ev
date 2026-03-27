@@ -434,6 +434,18 @@ function calculate() {
         }
     });
 
+    const addJourneyBtn = document.querySelector('button[onclick="addAdditionalJourney()"]');
+    const extraJourneys = document.querySelectorAll(".extra-journey-miles");
+    
+    if (addJourneyBtn) {
+        // If at least one extra journey exists, remove the pulse; otherwise, keep it.
+        if (extraJourneys.length > 0) {
+            addJourneyBtn.classList.remove("empty-pulse");
+        } else {
+            addJourneyBtn.classList.add("empty-pulse");
+        }
+    }
+
     document.querySelectorAll(".extra-journey-miles").forEach(input => {
         const val = parseFloat(input.value);
         if (!input.value || isNaN(val) || val <= 0) {
