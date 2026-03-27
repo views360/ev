@@ -173,7 +173,7 @@ function updateProviderFields(id) {
     const p = PRESETS.find(x => x.id === presetId);
     const speedRow = document.getElementById(`speedRow${id}`);
     
-    if (presetName === 'Custom' || !p) {
+    if (presetId === 'Custom' || !p) {
         speedRow.style.display = "none";
         calculate();
         return;
@@ -199,7 +199,6 @@ function updateProviderFields(id) {
 function updateRateFromSpeed(id) {
     const presetId = document.getElementById(`preset${id}`).value;
     const p = PRESETS.find(x => x.id === presetId);
-    const p = PRESETS.find(x => x.name === presetName);
     if (p?.rates) document.getElementById(`rate${id}`).value = p.rates[speed];
     calculate();
 }
