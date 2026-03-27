@@ -232,7 +232,14 @@ function buildItineraryTable(stopsRows, rechargethreshold) {
                         <th style="padding: 10px; border: 1px solid var(--border); text-align: left;">Event</th>
                         <th style="padding: 10px; border: 1px solid var(--border);">Mile Mark</th>
                         <th style="padding: 10px; border: 1px solid var(--border); text-align: left;">Action</th>
-                        <th style="padding: 10px; border: 1px solid var(--border);">Duration</th>
+                        <th style="padding: 10px; border: 1px solid var(--border);">
+                            ⚡ Duration (@${document.getElementById("maxChargingSpeed").value}kW)
+                        </th>
+                        <th style="padding: 10px; border: 1px solid var(--border);">
+                            🐢 Duration (@${document.getElementById("minSpeed").value}kW)
+                        </th>
+
+
                     </tr>
                 </thead>
                 <tbody>
@@ -287,11 +294,19 @@ function buildStopsRowsForJourney(journeyMiles, startSoc, rechargeAt, efficiency
     let stop = 1;
     let distanceDriven = 0;
     let currentSoc = startSoc;
+    let totalDurationMax = 0;
+    let totalDurationMin = 0;
 
     const chargeToPercent = 80;
     const kwhFullCharge = ((chargeToPercent - rechargeAt) / 100) * batteryKwh;
     const maxRangeFromFullCharge = kwhFullCharge * efficiency;
 
+    const maxChargingSpeed = parseFloat(document.getElementById("maxChargingSpeed").value);
+    const minSpeed = parseFloat(document.getElementById("minSpeed").value);
+
+    const maxChargingSpeed = parseFloat(document.getElementById("maxChargingSpeed").value);
+    const minSpeed = parseFloat(document.getElementById("minSpeed").value);
+    
     // --- STOP 0: DEPART ---
     rows += `
         <tr>
@@ -302,10 +317,15 @@ function buildStopsRowsForJourney(journeyMiles, startSoc, rechargeAt, efficiency
                 Depart with ${startSoc}% battery
             </td>
             <td style="padding: 10px; border: 1px solid var(--border);">–</td>
+            <td style="padding: 10px; border: 1px solid var(--border);">–</td>
         </tr>
     `;
 
     while (true) {
+        totalDurationMax += durationMax;
+        totalDurationMin += durationMin;
+
+        
         // Range available on current charge
         const rangeOnCurrentCharge = ((currentSoc - rechargeAt) / 100) * batteryKwh * efficiency;
 
@@ -322,7 +342,9 @@ function buildStopsRowsForJourney(journeyMiles, startSoc, rechargeAt, efficiency
         if (remainingMiles <= maxRangeFromFullCharge) {
             const requiredKwh = remainingMiles / efficiency;
             const requiredPercent = rechargeAt + (requiredKwh / batteryKwh) * 100;
-            const durationMins = Math.round((requiredKwh / 50) * 60); // assume 50kW
+            /*const durationMins = Math.round((requiredKwh / 50) * 60); // assume 50kW*/
+            const durationMax = Math.round((requiredKwh / maxChargingSpeed) * 60);
+            const durationMin = Math.round((requiredKwh / minSpeed) * 60);
 
             rows += `
                 <tr>
@@ -332,7 +354,8 @@ function buildStopsRowsForJourney(journeyMiles, startSoc, rechargeAt, efficiency
                     <td style="padding: 10px; border: 1px solid var(--border);">
                         Recharge from ${rechargeAt}%→${requiredPercent.toFixed(0)}%, ${requiredKwh.toFixed(1)} kWh
                     </td>
-                    <td style="padding: 10px; border: 1px solid var(--border);">${durationMins} mins</td>
+                    <td style="padding: 10px; border: 1px solid var(--border);">${durationMax} mins</td>
+                    <td style="padding: 10px; border: 1px solid var(--border);">${durationMin} mins</td>
                 </tr>
             `;
             stop++;
@@ -340,7 +363,9 @@ function buildStopsRowsForJourney(journeyMiles, startSoc, rechargeAt, efficiency
         }
 
         // Otherwise: INTERMEDIATE STOP (full charge to 80%)
-        const durationMins = Math.round((kwhFullCharge / 50) * 60);
+        /*const durationMins = Math.round((kwhFullCharge / 50) * 60);*/
+        const durationMax = Math.round((requiredKwh / maxChargingSpeed) * 60);
+        const durationMin = Math.round((requiredKwh / minSpeed) * 60);
         const eventLabel = stop === 1 ? "First public charge" : "Public charge";
 
         rows += `
@@ -351,7 +376,8 @@ function buildStopsRowsForJourney(journeyMiles, startSoc, rechargeAt, efficiency
                 <td style="padding: 10px; border: 1px solid var(--border);">
                     Recharge from ${rechargeAt}%→${chargeToPercent}%, ${kwhFullCharge.toFixed(1)} kWh
                 </td>
-                <td style="padding: 10px; border: 1px solid var(--border);">${durationMins} mins</td>
+                <td style="padding: 10px; border: 1px solid var(--border);">${durationMax} mins</td>
+                <td style="padding: 10px; border: 1px solid var(--border);">${durationMin} mins</td>
             </tr>
         `;
 
@@ -370,8 +396,24 @@ function buildStopsRowsForJourney(journeyMiles, startSoc, rechargeAt, efficiency
                 Arrive with ${rechargeAt}% battery
             </td>
             <td style="padding: 10px; border: 1px solid var(--border);">–</td>
+            <td style="padding: 10px; border: 1px solid var(--border);">–</td>
         </tr>
     `;
+
+    rows += `
+        <tr style="background: rgba(255,255,255,0.05); font-weight: bold;">
+            <td style="padding: 10px; border: 1px solid var(--border);" colspan="4">
+                Total Charging Time
+            </td>
+            <td style="padding: 10px; border: 1px solid var(--border);">
+                ⚡ ${totalDurationMax} mins
+            </td>
+            <td style="padding: 10px; border: 1px solid var(--border);">
+                🐢 ${totalDurationMin} mins
+            </td>
+        </tr>
+    `;
+
 
     return rows;
 }
