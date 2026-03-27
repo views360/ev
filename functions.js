@@ -361,8 +361,8 @@ function buildStopsRowsForJourney(journeyMiles, startSoc, rechargeAt, efficiency
 
         // Otherwise: INTERMEDIATE STOP (full charge to 80%)
         /*const durationMins = Math.round((kwhFullCharge / 50) * 60);*/
-        const durationMax = Math.round((requiredKwh / maxChargingSpeed) * 60);
-        const durationMin = Math.round((requiredKwh / minSpeed) * 60);
+        const durationMax = Math.round((kwhFullCharge  / maxChargingSpeed) * 60);
+        const durationMin = Math.round((kwhFullCharge  / minSpeed) * 60);
         totalDurationMax += durationMax;
         totalDurationMin += durationMin;
         const eventLabel = stop === 1 ? "First public charge" : "Public charge";
