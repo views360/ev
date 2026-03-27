@@ -289,49 +289,63 @@ function buildStopsRowsForJourney(journeyMiles, startSoc, rechargeAt, efficiency
     let currentSoc = startSoc;
 
     const chargeToPercent = 80;
-    const kwhPerCharge = ((chargeToPercent - rechargeAt) / 100) * batteryKwh;
+    const kwhFullCharge = ((chargeToPercent - rechargeAt) / 100) * batteryKwh;
+    const maxRangeFromFullCharge = kwhFullCharge * efficiency;
 
-    while (distanceDriven < journeyMiles) {
+    while (true) {
+        // Range available on current charge
         const rangeOnCurrentCharge = ((currentSoc - rechargeAt) / 100) * batteryKwh * efficiency;
 
-        // If this charge gets us to the end, no more stops
-        if (distanceDriven + rangeOnCurrentCharge >= journeyMiles) break;
+        // If this charge gets us all the way, no more public stops needed
+        if (distanceDriven + rangeOnCurrentCharge >= journeyMiles) {
+            break;
+        }
 
-        // Add a stop row
-        const mileMark = Math.round(distanceDriven + rangeOnCurrentCharge);
-        const kwhNeeded = kwhPerCharge;
-        const durationMins = Math.round((kwhNeeded / 50) * 60); // assume 50kW average
+        // Mile mark where we hit rechargeAt%
+        const mileMarkAtRecharge = distanceDriven + rangeOnCurrentCharge;
+        const remainingMiles = journeyMiles - mileMarkAtRecharge;
+
+        // Check if this is the FINAL stop
+        if (remainingMiles <= maxRangeFromFullCharge) {
+            // Only charge enough to cover remaining miles
+            const requiredKwh = remainingMiles / efficiency;
+            const requiredPercent = rechargeAt + (requiredKwh / batteryKwh) * 100;
+
+            const durationMins = Math.round((requiredKwh / 50) * 60); // assume 50kW
+
+            rows += `
+                <tr>
+                    <td style="padding: 10px; border: 1px solid var(--border);">${stop}</td>
+                    <td style="padding: 10px; border: 1px solid var(--border);">Final Public Charge</td>
+                    <td style="padding: 10px; border: 1px solid var(--border);">${Math.round(mileMarkAtRecharge)} miles</td>
+                    <td style="padding: 10px; border: 1px solid var(--border);">
+                        Recharge from ${rechargeAt}% to ${requiredPercent.toFixed(0)}%
+                    </td>
+                    <td style="padding: 10px; border: 1px solid var(--border);">${durationMins} mins</td>
+                </tr>
+            `;
+            break;
+        }
+
+        // Otherwise: INTERMEDIATE STOP (full charge to 80%)
+        const durationMins = Math.round((kwhFullCharge / 50) * 60); // assume 50kW
 
         rows += `
             <tr>
                 <td style="padding: 10px; border: 1px solid var(--border);">${stop}</td>
                 <td style="padding: 10px; border: 1px solid var(--border);">Public Charge</td>
-                <td style="padding: 10px; border: 1px solid var(--border);">${mileMark} miles</td>
-                <td style="padding: 10px; border: 1px solid var(--border);">Charge to ${chargeToPercent}%</td>
+                <td style="padding: 10px; border: 1px solid var(--border);">${Math.round(mileMarkAtRecharge)} miles</td>
+                <td style="padding: 10px; border: 1px solid var(--border);">
+                    Recharge from ${rechargeAt}% to ${chargeToPercent}%
+                </td>
                 <td style="padding: 10px; border: 1px solid var(--border);">${durationMins} mins</td>
             </tr>
         `;
 
-        distanceDriven += rangeOnCurrentCharge;
+        // Move forward
+        distanceDriven = mileMarkAtRecharge;
         currentSoc = chargeToPercent;
         stop++;
-    }
-
-    // Final top‑up (if needed)
-    const remainingMiles = journeyMiles - distanceDriven;
-    if (remainingMiles > 0) {
-        const finalKwh = remainingMiles / efficiency;
-        const finalDuration = Math.round((finalKwh / 50) * 60);
-
-        rows += `
-            <tr>
-                <td style="padding: 10px; border: 1px solid var(--border);">${stop}</td>
-                <td style="padding: 10px; border: 1px solid var(--border);">Final Charge</td>
-                <td style="padding: 10px; border: 1px solid var(--border);">${journeyMiles} miles</td>
-                <td style="padding: 10px; border: 1px solid var(--border);">Top‑up to finish journey</td>
-                <td style="padding: 10px; border: 1px solid var(--border);">${finalDuration} mins</td>
-            </tr>
-        `;
     }
 
     return rows;
