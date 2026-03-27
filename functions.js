@@ -303,9 +303,6 @@ function buildStopsRowsForJourney(journeyMiles, startSoc, rechargeAt, efficiency
 
     const maxChargingSpeed = parseFloat(document.getElementById("maxChargingSpeed").value);
     const minSpeed = parseFloat(document.getElementById("minSpeed").value);
-
-    const maxChargingSpeed = parseFloat(document.getElementById("maxChargingSpeed").value);
-    const minSpeed = parseFloat(document.getElementById("minSpeed").value);
     
     // --- STOP 0: DEPART ---
     rows += `
