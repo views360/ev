@@ -1102,7 +1102,7 @@ function calculate() {
         }
         conclusionHTML += `</div>`;
         
-        conclusionHTML += `<div class="conclusion-white-border guide-section" id="charging-times-section"><h3>Charging Durations</h3>`;
+        conclusionHTML += `<div class="conclusion-white-border guide-section" id="charging-times-section"><h3>4. Charging Durations</h3>`;
         if (maxChargingSpeed > 0) {
             conclusionHTML += `<p class="main-result">Your proposed ${inputs.journeyMiles}-mile journey will require <strong>${publicKwh.toFixed(1)} kWh</strong> of public charging after your pre-charged battery reduces to your specified recharge threshhold of ${inputs.rechargeAt}%. At your maximum supported speed of <strong>${maxChargingSpeed} kW</strong>, total recharging duration for the entire journey will be approximately <strong>${maxChargingTimeFormatted}</strong>.</p>`;
         } else {
