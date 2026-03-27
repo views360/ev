@@ -289,6 +289,15 @@ function selectItineraryTab(index) {
     });
 }
 
+function formatDuration(totalMinutes) {
+    if (totalMinutes < 60) {
+        return `${totalMinutes} mins`;
+    }
+    const h = Math.floor(totalMinutes / 60);
+    const m = totalMinutes % 60;
+    return `${h}h ${m}m`;
+}
+
 function buildStopsRowsForJourney(journeyMiles, startSoc, rechargeAt, efficiency, batteryKwh) {
     let rows = "";
     let stop = 1;
@@ -399,20 +408,22 @@ function buildStopsRowsForJourney(journeyMiles, startSoc, rechargeAt, efficiency
         </tr>
     `;
 
+    const formattedMax = formatDuration(totalDurationMax);
+    const formattedMin = formatDuration(totalDurationMin);
+    
     rows += `
         <tr style="background: rgba(255,255,255,0.05); font-weight: bold;">
-            <td style="padding: 10px; border: 1px solid var(--border);" colspan="4">
+            <td colspan="4" style="padding: 10px; border: 1px solid var(--border);">
                 Total Charging Time
             </td>
             <td style="padding: 10px; border: 1px solid var(--border);">
-                ⚡ ${totalDurationMax} mins
+                ⚡ ${formattedMax}
             </td>
             <td style="padding: 10px; border: 1px solid var(--border);">
-                🐢 ${totalDurationMin} mins
+                🐢 ${formattedMin}
             </td>
         </tr>
     `;
-
 
     return rows;
 }
@@ -1005,7 +1016,7 @@ function calculate() {
         const formatChargingTime = (timeHours) => {
             if (timeHours < 1) {
                 const minutes = Math.round(timeHours * 60);
-                return `${minutes} minutes`;
+                return `${minutes} mins`;
             } else {
                 const hours = Math.floor(timeHours);
                 const minutes = Math.round((timeHours - hours) * 60);
