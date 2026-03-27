@@ -673,11 +673,24 @@ function calculate() {
             breakEvenMiles = kwhNeeded * inputs.efficiency;
         }
         
-        const publicChargingCost = simulateTripWithProvider(
+        // Calculate public charging cost for Journey 1
+        const journey1PublicChargingCost = simulateTripWithProvider(
             rate, inputs.batteryKwh, inputs.rechargeAt, inputs.efficiency, inputs.journeyMiles, inputs.soc
         );
         
-        const totalJourneyCost = subCost + totalPreJourneyCost + publicChargingCost;
+        let totalPublicChargingCost = journey1PublicChargingCost;
+        
+        // Calculate and accumulate public charging costs for additional journeys
+        if (inputs.additionalJourneys.length > 0) {
+            inputs.additionalJourneys.forEach((j) => {
+                const additionalJourneyPublicChargingCost = simulateTripWithProvider(
+                    rate, inputs.batteryKwh, inputs.rechargeAt, inputs.efficiency, j.miles, j.soc
+                );
+                totalPublicChargingCost += additionalJourneyPublicChargingCost;
+            });
+        }
+        
+        const totalJourneyCost = subCost + totalPreJourneyCost + totalPublicChargingCost;
         const pData = PRESETS.find(p => p.name === document.getElementById(`preset${id}`).value);
 
         providers.push({ 
