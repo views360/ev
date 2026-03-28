@@ -141,7 +141,7 @@ function createProviderBox(preset) {
     `;
     document.getElementById("providers").appendChild(box);
     if (preset) {
-        document.getElementById(`preset${id}`).value = preset.name;
+        document.getElementById(`preset${id}`).value = preset.id;
         updateProviderFields(id);
     }
     calculate();
@@ -1398,10 +1398,12 @@ function init() {
                     document.getElementById(`name${id}`).value = p.name;
                     document.getElementById(`subCost${id}`).value = p.sub;
                     document.getElementById(`rate${id}`).value = p.rate;
-                    document.getElementById(`preset${id}`).value = p.preset;
-                    if(p.preset !== 'Custom') {
-                        updateProviderFields(id);
-                        document.getElementById(`rate${id}`).value = p.rate;
+                    const presetSelect = document.getElementById(`preset${id}`);
+                    const validPreset = PRESETS.some(x => x.id === p.preset);
+                    presetSelect.value = validPreset ? p.preset : "Custom";
+                    updateProviderFields(id);
+                    if (p.speed && document.getElementById(`speed${id}`)) {
+                        document.getElementById(`speed${id}`).value = p.speed;
                     }
                 });
             } catch (e) {
@@ -1424,6 +1426,18 @@ function init() {
             provEl.value = savedValues.provider;
         }
 
+        document.querySelectorAll(".provider-box").forEach(box => {
+            const id = box.dataset.id;
+            const presetSelect = document.getElementById(`preset${id}`);
+    
+            // If preset is empty or invalid, default to "Custom"
+            if (!presetSelect.value || !PRESETS.some(p => p.id === presetSelect.value)) {
+                presetSelect.value = "Custom";
+            }
+    
+            updateProviderFields(id);
+        });
+     
         updateProviderInfo();
         calculate();
     });
