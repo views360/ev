@@ -1807,7 +1807,7 @@ function saveProvidersToCookie() {
     });
 
     console.log("Saving providers to cookie:", providers);
-    setCookie('ev_providers', providers);
+    setCookie('ev_providers', providers)f;
 }
 
 function loadProvidersFromCookie() {
