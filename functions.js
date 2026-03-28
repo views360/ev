@@ -918,6 +918,12 @@ function calculate() {
     const providers = [];
     providerBoxes.forEach(box => {
         const id = box.dataset.id;
+    
+        console.log("Preset value for provider", id, "=", document.getElementById(`preset${id}`).value);
+    
+        const presetId = document.getElementById(`preset${id}`).value;
+        const pData = PRESETS.find(p => p.id === presetId);
+
         const name = document.getElementById(`name${id}`).value || "Unnamed";
         const subCost = parseFloat(document.getElementById(`subCost${id}`).value) || 0;
         const rate = parseFloat(document.getElementById(`rate${id}`).value) || 0;
