@@ -45,6 +45,7 @@ function getInputs() {
     return {
         journeyMiles: getVal("journeyMiles"),
         batteryKwh: getVal("batteryKwh"),
+        prechargeSoc: getVal("prechargeSoc"),
         soc: getVal("soc"),
         efficiency: getVal("efficiency"),
         adhoc: getVal("adhoc"),
@@ -52,9 +53,6 @@ function getInputs() {
         maxChargingSpeed: getVal("maxChargingSpeed"),
         rechargeAt: getVal("rechargeAt") || 20,
         minSpeed: getVal("minSpeed"),
-
-        // NEW FIELD (single journey)
-        prechargeSoc: getVal("prechargeSoc"),
 
         additionalJourneys: extraMiles.map((miles, i) => ({
             miles,
@@ -511,9 +509,9 @@ function calculate() {
     });
 
     // NEW — pulse multi‑journey pre‑charge SOC fields
-    document.querySelectorAll(".extra-journey-prechargesoc").forEach(input => {
+    document.querySelectorAll("#prechargeSoc, .extra-journey-prechargesoc").forEach(input => {
         const val = parseFloat(input.value);
-        if (!input.value || isNaN(val) || val < 0) {
+        if (!input.value || isNaN(val) || val <= 0) {
             input.classList.add('empty-pulse');
         } else {
             input.classList.remove('empty-pulse');
