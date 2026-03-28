@@ -1223,6 +1223,7 @@ function calculate() {
     drawGraph(inputs, providers);
     const dataToSave = getInputs();
     setCookie("ev_trip_values", dataToSave);
+    console.log("calculate() triggered → saving providers");
     saveProvidersToCookie();
 }
 
@@ -1788,10 +1789,12 @@ function saveProvidersToCookie() {
             speed: document.getElementById(`speed${id}`) ? document.getElementById(`speed${id}`).value : null
         });
     });
+    console.log("Saving providers to cookie:", providers);
     setCookie('ev_providers', providers); // Uses your existing setCookie function
 }
 
 function loadProvidersFromCookie() {
+    console.log("Loading providers from cookie:", saved);
     const saved = getCookie('ev_providers'); // Uses your existing getCookie function
     if (saved && Array.isArray(saved)) {
         // Clear any default or existing boxes first
