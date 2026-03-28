@@ -1794,30 +1794,32 @@ function saveProvidersToCookie() {
 }
 
 function loadProvidersFromCookie() {
-    console.log("Loading providers from cookie:", saved);
-    const saved = getCookie('ev_providers'); // Uses your existing getCookie function
+    const saved = getCookie('ev_providers');   // declare first
+    console.log("Saved providers:", saved);    // THEN log it
+
     if (saved && Array.isArray(saved)) {
-        // Clear any default or existing boxes first
+        console.log("Loading providers from cookie…");
+
         document.getElementById("providers").innerHTML = "";
-        
+
         saved.forEach(p => {
-            // Use your existing function to create the box structure
-            createProviderBox(); 
+            createProviderBox();
             const id = providerCount;
-            
-            // Repopulate the fields
+
             document.getElementById(`name${id}`).value = p.name;
             document.getElementById(`subCost${id}`).value = p.subCost;
             document.getElementById(`rate${id}`).value = p.rate;
             document.getElementById(`preset${id}`).value = p.preset;
-            
-            // Handle speed dropdown if it exists for this preset
+
             if (p.speed && document.getElementById(`speed${id}`)) {
-                updateProviderFields(id); // Rebuilds speed options
+                updateProviderFields(id);
                 document.getElementById(`speed${id}`).value = p.speed;
             }
         });
-        calculate(); // Refresh the results
+
+        calculate();
+    } else {
+        console.log("No provider cookie found.");
     }
 }
 
