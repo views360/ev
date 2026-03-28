@@ -160,6 +160,7 @@ function addAllProviders() {
     if (collapseBtn) {
         collapseBtn.classList.add("empty-pulse");
     }
+    calculate();
 }
 
 function updateProviderFields(id) {
