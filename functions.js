@@ -1785,6 +1785,7 @@ function closeBeReminder() {
 }
 
 function saveProvidersToCookie() {
+    console.log("saveProvidersToCookie() CALLED");
     const providers = [];
     document.querySelectorAll(".provider-box").forEach(box => {
         const id = box.dataset.id;
