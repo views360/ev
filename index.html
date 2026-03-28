@@ -474,11 +474,6 @@
 </div>
 </div><!-- end content-wrap -->
 
-<script type="module">
-    import { calculate } from './js/core/calculate/calculate.js';
-    window.calculate = calculate;
-</script>
-
 <div id="cookieBanner" class="cookie-banner" style="display: none;">
     <div class="cookie-content">
         <p>
@@ -673,6 +668,10 @@ function clearSavedProviders() {
 
 // Ensure the menu loads on every page refresh
 loadMenu();
+</script>
+<script type="module">
+    import { calculate } from './js/core/calculate/calculate.js';
+    window.calculate = calculate;
 </script>
 </body>
 </html>
