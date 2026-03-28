@@ -102,6 +102,7 @@ function toggleTheme() {
 }
 
 function createProviderBox(preset) {
+    console.log("createProviderBox START", preset);
     providerCount++;
     const id = providerCount;
     const { minSpeed } = getInputs();
@@ -145,6 +146,8 @@ function createProviderBox(preset) {
         updateProviderFields(id);
     }
     calculate();
+    console.log("createProviderBox END", id);
+
 }
 
 function addAllProviders() {
