@@ -228,25 +228,6 @@ function enforceSpeedRules() {
 
 
 function calculate() {
-    // 1. Initialize variables (using your exact naming conventions)
-    const providersContainer = document.getElementById("providers");
-    const collapseBtn = document.getElementById("toggleProvidersBtn");
-    const clearBtn = document.querySelector('button[onclick="clearSavedProviders()"]');
-    const hiddenMsg = document.getElementById("providersHiddenMsg");
-
-    // 2. Check if any provider boxes exist
-    const hasProviders = providersContainer && providersContainer.querySelectorAll(".provider-box").length > 0;
-
-    // 3. Update visibility based on whether the list is empty
-    if (!hasProviders) {
-        if (collapseBtn) collapseBtn.style.display = "none";
-        if (clearBtn) clearBtn.style.display = "none";
-        if (hiddenMsg) hiddenMsg.style.display = "none";
-    } else {
-        if (collapseBtn) collapseBtn.style.display = "block";
-        if (clearBtn) clearBtn.style.display = "block";
-        // hiddenMsg visibility remains managed by your toggleProviders logic
-    }
     const activePill = document.querySelector('.calc-tab.active');
     const isTripMode = activePill && activePill.textContent.trim() === "Cost Reduction";
     const conclusionsBox = document.getElementById("conclusionsBox");
@@ -429,14 +410,6 @@ function calculate() {
     if (uiResults) uiResults.style.display = "block";
 
     const inputs = getInputs();
-    const paygTitle = document.getElementById("paygSummaryTitle");
-    if (paygTitle) {
-        if (inputs.adhoc > 0) {
-            paygTitle.textContent = `PAYG Summary (Based on ${inputs.adhoc}p/kWh)`;
-        } else {
-            paygTitle.textContent = `PAYG Summary`;
-        }
-    }
     const uiShare = document.getElementById("shareBtn");
     const uiPdf = document.getElementById("pdfBtn");
 
@@ -486,40 +459,6 @@ function calculate() {
     document.querySelector(".calc-lines").style.display = "block";
     document.querySelector(".chart-wrapper").style.display = "block";
 
-    // 1. RANGE AND PUBLIC CHARGING CALCULATIONS
-    const mainInitialRange = ((inputs.soc - inputs.rechargeAt) / 100) * inputs.batteryKwh * inputs.efficiency;
-    let totalInitialRange = mainInitialRange;
-    
-    let rangeHtml = "";
-    const paygSubtitle = document.getElementById("paygSummarySubtitle");
-    
-    if (inputs.additionalJourneys.length > 0) {
-        paygSubtitle.textContent = `Here is the key information for your journeys if you choose PAYG.`;
-        rangeHtml = `<p style="opacity: 0.5; margin: 0px; font-size: 0.8rem"><strong>Pre-charged battery range:</strong></p>`;
-        
-        // Journey 1 range detail
-        rangeHtml += `<div style="font-size: 0.8rem; opacity: 0.5; margin-bottom: 2px; margin-left: 10px;">
-            Journey 1 range: ${mainInitialRange.toFixed(0)} miles
-        </div>`;
-
-        // Calculate and list range for additional journeys
-        inputs.additionalJourneys.forEach((j, index) => {
-            const extraRange = Math.max(0, ((j.soc - inputs.rechargeAt) / 100) * inputs.batteryKwh * inputs.efficiency);
-            totalInitialRange += extraRange;
-            rangeHtml += `<div style="font-size: 0.8rem; opacity: 0.5; margin-bottom: 2px; margin-left: 10px;">
-                Journey ${index + 2} range: ${extraRange.toFixed(0)} miles
-            </div>`;
-        });
-
-        // Total Range Line
-        rangeHtml += `<p style="border-bottom: 1px solid rgba(255,255,255,0.2); margin: 0; padding-bottom: 10px;">
-            <span class="tooltip-container"><span class="info-icon" style="font-size:0.8rem" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is the range you <i>should</i> expect from pre-charging at your start location(s) from your recharge threshhold of ${inputs.rechargeAt}% to your specified departure SOC for each journey. It forms part of the calculation for how many miles of PAYG charging will be needed across all journeys.</span></span></span>Total pre-charged battery range for all journeys: ${totalInitialRange.toFixed(0)} miles</p>`;
-    } else {
-        // Single journey view
-        paygSubtitle.textContent = `Here is the key information for your journey if you choose PAYG.`;
-        rangeHtml = `<p style="margin: 0px"><span class="tooltip-container"><span class="info-icon" style="font-size:0.8rem" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is the range you <i>should</i> expect from pre-charging at your start location from your recharge threshhold of ${inputs.rechargeAt}% to your specified departure SOC of ${inputs.soc}%). It forms part of the calculation for how many miles of PAYG charging will be needed for this journey.</span></span></span>Pre-charged battery range: <strong>${mainInitialRange.toFixed(0)} miles</strong></p>`;
-    }
-
     // 1. Calculate Main Journey (Journey 1)
     const mainTopUpKwh = Math.max(0, ((inputs.soc - inputs.rechargeAt) / 100) * inputs.batteryKwh);
     const mainTopUpCost = mainTopUpKwh * (inputs.startChargeRate / 100);
@@ -527,15 +466,17 @@ function calculate() {
     let totalPreJourneyCost = mainTopUpCost;
     
     // Updated Tooltip with 0.8rem icon and requested text
+    const preChargeTooltip = `<span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)" style="font-size: 0.8rem;">💡<span class="tooltip-box">This is the total pre-journey battery charge cost for charging from your recharge threshhold (${inputs.rechargeAt}%) to the specified starting state of charge (SOC).</span></span></span>`;
+
     let preChargeHtml = "";
 
     if (inputs.additionalJourneys.length > 0) {
         // Multi-journey view header
-        preChargeHtml = `<p style="opacity: 0.5; font-size: 0.8rem; margin: 0px"><strong>Pre-journey charge costs:</strong></p>`;
+        preChargeHtml = `<h3>PAYG Summary</h3><p style="margin-bottom: 4px;"><strong>Pre-journey charge costs:</strong></p>`;
         
         // Journey 1 detail line (0.8 opacity)
-        preChargeHtml += `<div style="font-size: 0.8rem; opacity: 0.5; margin-bottom: 2px; margin-left: 10px;">
-            Journey 1 pre-charge cost (${inputs.rechargeAt}%→${inputs.soc}%, ${mainTopUpKwh.toFixed(1)} kWh x  ${inputs.startChargeRate}p): £${mainTopUpCost.toFixed(2)}
+        preChargeHtml += `<div style="font-size: 0.8rem; opacity: 0.8; margin-bottom: 2px; margin-left: 10px;">
+            Journey 1 pre-charge cost (${inputs.rechargeAt}% - ${inputs.soc}% / ${mainTopUpKwh.toFixed(1)} kWh): £${mainTopUpCost.toFixed(2)}
         </div>`;
 
         // 2. Loop through Additional Journeys
@@ -543,94 +484,71 @@ function calculate() {
             const extraKwh = Math.max(0, ((j.soc - inputs.rechargeAt) / 100) * inputs.batteryKwh);
             const extraCost = extraKwh * (j.rate / 100);
             totalPreJourneyCost += extraCost;
-            preChargeHtml += `<div style="font-size: 0.8rem; opacity: 0.5; margin-bottom: 2px; margin-left: 10px;">
-                Journey ${index + 2} pre-charge cost (${inputs.rechargeAt}%→${j.soc}%, ${extraKwh.toFixed(1)} kWh x ${j.rate}p): £${extraCost.toFixed(2)}
+            preChargeHtml += `<div style="font-size: 0.8rem; opacity: 0.8; margin-bottom: 2px; margin-left: 10px;">
+                Journey ${index + 2} pre-charge cost (${inputs.rechargeAt}% - ${j.soc}% / ${extraKwh.toFixed(1)} kWh): £${extraCost.toFixed(2)}
             </div>`;
         });
 
         // Total Line (removed bottom margin)
-        preChargeHtml += `<p style="margin: 0px; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 10px;">
-            <span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)" style="font-size: 0.8rem;">💡<span class="tooltip-box">This is the combined cost for pre-charging your battery before each journey defined above.</span></span></span>Total battery pre-charge cost for all journeys: £${totalPreJourneyCost.toFixed(2)}</p>`;
+        preChargeHtml += `<p style="margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 5px; margin-bottom: 0;">
+            ${preChargeTooltip}<strong>Total battery pre-charge cost for all journeys: £${totalPreJourneyCost.toFixed(2)}</strong>
+        </p>`;
     } else {
         // Single-journey view (removed bottom margin, 0.8rem icon)
-        preChargeHtml = `<p style="margin: 0px;"><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)" style="font-size: 0.8rem;">💡<span class="tooltip-box">This is the cost of pre-charging your battery at your start location before your journey.</span></span></span>Pre-journey battery charge (${inputs.rechargeAt}%→${inputs.soc}%, ${mainTopUpKwh.toFixed(1)} kWh x ${inputs.startChargeRate}p): 
+        preChargeHtml = `<h3>PAYG Summary</h3>
+            <p style="margin-bottom: 0;">${preChargeTooltip}Pre-journey battery charge cost (${inputs.rechargeAt}% - ${inputs.soc}% / ${mainTopUpKwh.toFixed(1)} kWh): 
             <strong>£${mainTopUpCost.toFixed(2)}</strong></p>`;
     }
 
     // 3. Update the UI
     document.getElementById("preChargeLine").innerHTML = `<div class="guide-section" id="payg-summary">${preChargeHtml}</div>`;
     
-
-    // 5. PUBLIC CHARGING CALCULATIONS (JOURNEY BY JOURNEY)
+    // 4. RANGE AND PUBLIC CHARGING CALCULATIONS
+    const mainInitialRange = ((inputs.soc - inputs.rechargeAt) / 100) * inputs.batteryKwh * inputs.efficiency;
+    let totalInitialRange = mainInitialRange;
     
-    let totalPublicMiles = 0;
-    let publicMilesHtml = "";
+    // Tooltip for the new range summary
+    const rangeTooltip = `<span class="tooltip-container"><span class="info-icon" style="font-size:0.8rem" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is the combined range you <i>should</i> expect from pre-charging your battery before all journeys you have defined (based on charging from your recharge threshhold to each journey's respective starting SOC). It forms part of the calculation for how many miles of public charging will be needed across all journeys.</span></span></span>`;
 
-    // Calculate Journey 1 PAYG miles
-    const journey1PublicMiles = Math.max(0, inputs.journeyMiles - mainInitialRange);
-    totalPublicMiles += journey1PublicMiles;
+    let rangeHtml = "";
 
     if (inputs.additionalJourneys.length > 0) {
-        publicMilesHtml = `<p style="opacity: 0.5; font-size: 0.8rem; margin: 0px"><strong>PAYG charging miles:</strong></p>`;
+        rangeHtml = `<p style="margin-bottom: 4px;"><strong>Pre-charged battery range:</strong></p>`;
         
-        // Journey 1 detail line
-        publicMilesHtml += `<div style="font-size: 0.8rem; opacity: 0.5; margin-bottom: 2px; margin-left: 10px;">
-            Journey 1 PAYG miles: ${journey1PublicMiles.toFixed(0)} miles
+        // Journey 1 range detail
+        rangeHtml += `<div style="font-size: 0.8rem; opacity: 0.8; margin-bottom: 2px; margin-left: 10px;">
+            Journey 1 range (${inputs.rechargeAt}% - ${inputs.soc}%): ${mainInitialRange.toFixed(0)} miles
         </div>`;
 
-        // Calculate and list PAYG miles for additional journeys
+        // Calculate and list range for additional journeys
         inputs.additionalJourneys.forEach((j, index) => {
             const extraRange = Math.max(0, ((j.soc - inputs.rechargeAt) / 100) * inputs.batteryKwh * inputs.efficiency);
-            const extraPublicMiles = Math.max(0, j.miles - extraRange);
-            totalPublicMiles += extraPublicMiles;
-            
-            publicMilesHtml += `<div style="font-size: 0.8rem; opacity: 0.5; margin-bottom: 2px; margin-left: 10px;">
-                Journey ${index + 2} PAYG miles: ${extraPublicMiles.toFixed(0)} miles
+            totalInitialRange += extraRange;
+            rangeHtml += `<div style="font-size: 0.8rem; opacity: 0.8; margin-bottom: 2px; margin-left: 10px;">
+                Journey ${index + 2} range (${inputs.rechargeAt}% - ${j.soc}%): ${extraRange.toFixed(0)} miles
             </div>`;
         });
 
-        // Total Public Miles Line with Tooltip
-        publicMilesHtml += `<p style="border-bottom: 1px solid rgba(255,255,255,0.2); margin:0; padding-bottom: 10px;">
-            <span class="tooltip-container"><span class="info-icon" style="font-size:0.8rem" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is the total number of miles of your combined journey distance that will need to be paid for with PAYG charging. It takes into account the range expected from pre-charging before each journey and your recharge threshold of ${inputs.rechargeAt}%.</span></span></span>Total PAYG charging miles involved: ${totalPublicMiles.toFixed(0)} miles</p>`;
+        // Total Range Line
+        rangeHtml += `<p style="margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 5px; margin-bottom: 0;">
+            ${rangeTooltip}<strong>Total pre-charged battery range for all journeys: ${totalInitialRange.toFixed(0)} miles</strong>
+        </p>`;
     } else {
         // Single journey view
-        publicMilesHtml = `<p style="margin: 0px;"><span class="tooltip-container"><span class="info-icon" style="font-size:0.8rem" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is how many miles of your journey will need to be paid for with PAYG charging. It takes into account the range expected from pre-charging before the journey and your recharge threshold of ${inputs.rechargeAt}%.</span></span></span>PAYG charging miles needed: <strong>${journey1PublicMiles.toFixed(0)} miles</strong></p>`;
+        rangeHtml = `<p style="margin-bottom: 0;">${rangeTooltip}Pre-charged battery range (${inputs.rechargeAt}% - ${inputs.soc}%): <strong>${mainInitialRange.toFixed(0)} miles</strong></p>`;
     }
 
-    // Update the rest of the dependent variables and UI
-    // --- kWh Breakout Logic ---
-    let breakoutKwh = 0;
-    let breakoutHtml = "";
-    
-    // Journey 1
-    const j1Kwh = journey1PublicMiles / inputs.efficiency;
-    breakoutKwh += j1Kwh;
-
-    if (inputs.additionalJourneys.length > 0) {
-        breakoutHtml = `<p style="opacity: 0.5; font-size: 0.8rem; margin: 0px"><strong>PAYG kWh needed:</strong></p>`;
-        breakoutHtml += `<div style="font-size: 0.8rem; opacity: 0.5; margin-bottom: 2px; margin-left: 10px;">Journey 1 PAYG kWh: ${j1Kwh.toFixed(1)} kWh</div>`;
-
-        inputs.additionalJourneys.forEach((j, index) => {
-            const extraRange = Math.max(0, ((j.soc - inputs.rechargeAt) / 100) * inputs.batteryKwh * inputs.efficiency);
-            const extraKwh = Math.max(0, j.miles - extraRange) / inputs.efficiency;
-            breakoutKwh += extraKwh;
-            breakoutHtml += `<div style="font-size: 0.8rem; opacity: 0.5; margin-bottom: 2px; margin-left: 10px;">Journey ${index + 2} PAYG kWh: ${extraKwh.toFixed(1)} kWh</div>`;
-        });
-
-        breakoutHtml += `<p style="border-bottom: 1px solid rgba(255,255,255,0.2); margin:0; padding-bottom: 10px;"><span class="tooltip-container"><span class="info-icon" style="font-size:0.8rem" onclick="toggleTooltip(this)">💡<span class="tooltip-box">Total energy needed from public chargers across all journeys.</span></span></span>Total PAYG kWh: ${breakoutKwh.toFixed(1)} kWh</p>`;
-    } else {
-        breakoutHtml = `<p style="margin: 0px;"><span class="tooltip-container"><span class="info-icon" style="font-size:0.8rem" onclick="toggleTooltip(this)">💡<span class="tooltip-box">Energy needed from public chargers for this journey.</span></span></span>PAYG kWh needed (${j1Kwh.toFixed(1)} kWh x ${inputs.adhoc}p): <strong>£${(j1Kwh * (inputs.adhoc / 100)).toFixed(2)}</strong></p>`;
-    }
-
-    // Re-assigning to your existing variables so the rest of the file works
-    const publicKwh = breakoutKwh;
+    // Secondary Calculations for Public Charging
+    const publicMiles = Math.max(0, inputs.journeyMiles - totalInitialRange);
+    const publicKwh = publicMiles / inputs.efficiency;
     const totalAdhocCost = totalPreJourneyCost + (publicKwh * (inputs.adhoc / 100));
 
-    document.getElementById("publicKwhLine").innerHTML = breakoutHtml;
-
+    // 5. Update UI Lines
     document.getElementById("homeRangeLine").innerHTML = rangeHtml;
-    document.getElementById("publicMilesLine").innerHTML = publicMilesHtml;
-    document.getElementById("adhocCostLine").innerHTML = `<p style="margin: 0px; font-size: 1.2rem">Total PAYG journey cost (pre-charge + on-the-go charges): <strong>£${totalAdhocCost.toFixed(2)}</strong></p>`;
+    document.getElementById("publicMilesLine").innerHTML = `<span class="tooltip-container"><span class="info-icon" style="font-size:0.8rem" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is how many miles of your journey will need to be covered by public charging. It accounts for your recharge threshhold of ${inputs.rechargeAt}%.</span></span></span>PAYG public charging miles needed: <strong>${publicMiles.toFixed(0)} miles</strong>`;
+    document.getElementById("publicKwhLine").innerHTML = `PAYG public charging energy needed: <strong>${publicKwh.toFixed(1)} kWh @ ${inputs.adhoc}p</strong>`;
+    document.getElementById("adhocCostLine").innerHTML = `Total journey cost (pre-charge + standard PAYG): <strong>£${totalAdhocCost.toFixed(2)}</strong>`;
+    // Helper function to simulate trip with a given provider
     const simulateTripWithProvider = (providerRate, batteryKwh, rechargethreshhold, efficiency, journeyMiles, initialSoc) => {
         const chargeToPercent = 80; 
         const kwhPerCharge = ((chargeToPercent - rechargethreshhold) / 100) * batteryKwh; 
@@ -914,7 +832,7 @@ function calculate() {
             <div id="toc" class="conclusion-white-border">
                 <h3>RESULTS CONTENTS</h3>
                 <ul style="margin:0; padding-left:20px; font-size:0.95rem;">
-                    <li><a href="#payg-summary" style="color: var(--accent); text-decoration:none;">PAYG Summary (Based on ${inputs.adhoc}p/kWh)</a></li>
+                    <li><a href="#payg-summary" style="color: var(--accent); text-decoration:none;">PAYG Summary</a></li>
                     <li><a href="#providerResults" style="color: var(--accent); text-decoration:none;">Providers & Subscriptions</a></li>
                     <li><a href="#payg-vs-subscription" style="color: var(--accent); text-decoration:none;">PAYG vs Subscription Conclusion</a></li>
                     <li><a href="#charging-times-section" style="color: var(--accent); text-decoration:none;">Charging Durations</a></li>
@@ -1340,13 +1258,11 @@ function toggleProviders() {
         if (controls) controls.style.display = "block"; 
         btn.textContent = "Collapse Providers List";
         hiddenMsg.style.display = "none";
-        setCookie('providers_collapsed', false);
     } else {
         container.style.display = "none";
         if (controls) controls.style.display = "none"; 
         btn.textContent = "Expand Providers List";
         hiddenMsg.style.display = "block";
-        setCookie('providers_collapsed', true);
     }
 
     btn.classList.remove("empty-pulse");
@@ -1465,7 +1381,6 @@ function expandActiveSections() {
 // Initialize page highlighting on load
 document.addEventListener('DOMContentLoaded', () => {
     expandActiveSections();
-    loadProviderState();
     setTimeout(loadProvidersFromCookie, 100);
 });
 
@@ -1542,23 +1457,6 @@ function loadProvidersFromCookie() {
             }
         });
         calculate(); // Refresh the results
-    }
-}
-
-function loadProviderState() {
-    const isCollapsed = getCookie('providers_collapsed');
-    const container = document.getElementById("collapsibleProviders");
-    const controls = document.getElementById("providerControls");
-    const btn = document.getElementById("toggleProvidersBtn");
-    const hiddenMsg = document.getElementById("providersHiddenMsg");
-
-    // Only apply if the cookie explicitly says the list was collapsed
-    if (isCollapsed === true && container && btn) {
-        container.style.display = "none";
-        if (controls) controls.style.display = "none";
-        btn.textContent = "Expand Providers List";
-        if (hiddenMsg) hiddenMsg.style.display = "block";
-        btn.classList.remove("empty-pulse");
     }
 }
 
