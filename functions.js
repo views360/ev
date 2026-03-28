@@ -923,20 +923,24 @@ function calculate() {
     
         const presetId = document.getElementById(`preset${id}`).value;
         const pData = PRESETS.find(p => p.id === presetId);
-
+    
+        if (!pData) {
+            console.warn("Preset not found:", presetId);
+        }
+    
         const name = document.getElementById(`name${id}`).value || "Unnamed";
         const subCost = parseFloat(document.getElementById(`subCost${id}`).value) || 0;
         const rate = parseFloat(document.getElementById(`rate${id}`).value) || 0;
-       
+    
         const savingPerKwh = (inputs.adhoc - rate) / 100;
         let breakEvenMiles = 0;
         if (savingPerKwh > 0) {
             const kwhNeeded = subCost / savingPerKwh;
             breakEvenMiles = kwhNeeded * inputs.efficiency;
         }
-        
+    
         let publicChargingCost = 0;
-
+    
         // Journey 1
         publicChargingCost += simulateTripWithProvider(
             rate,
@@ -946,7 +950,7 @@ function calculate() {
             inputs.journeyMiles,
             inputs.soc
         );
-        
+    
         // Additional journeys
         inputs.additionalJourneys.forEach(j => {
             publicChargingCost += simulateTripWithProvider(
@@ -958,17 +962,14 @@ function calculate() {
                 j.soc
             );
         });
-        
+    
         const totalJourneyCost = subCost + totalPreJourneyCost + publicChargingCost;
-        const presetId = document.getElementById(`preset${id}`).value;
-        const pData = PRESETS.find(p => p.id === presetId);
-
-        if (!pData) {
-            console.warn("Preset not found:", presetId);
-        }
-
-        providers.push({ 
-            name, subCost, rate, totalJourneyCost, 
+    
+        providers.push({
+            name,
+            subCost,
+            rate,
+            totalJourneyCost,
             breakEvenMiles,
             totalWithBattery: breakEvenMiles + mainInitialRange,
             savings: totalAdhocCost - totalJourneyCost,
@@ -977,6 +978,7 @@ function calculate() {
         });
     });
 
+    
     const sortVal = document.getElementById("sortResults").value;
     providers.sort((a, b) => {
         if (sortVal === "cheapest") return a.totalJourneyCost - b.totalJourneyCost;
