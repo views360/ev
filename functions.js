@@ -1811,9 +1811,32 @@ function saveProvidersToCookie() {
 }
 
 function loadProvidersFromCookie() {
-    const saved = getCookie('ev_providers');   // declare first
-    console.log("Saved providers:", saved);    // THEN log it
+    const saved = getCookie('ev_providers');
+    console.log("Saved providers:", saved);
 
+    // ⭐ Restore journey inputs BEFORE creating provider boxes
+    const trip = getCookie('ev_trip_values');
+    if (trip) {
+        console.log("Restoring trip values…");
+
+        const set = (id, val) => {
+            const el = document.getElementById(id);
+            if (el && val !== undefined && val !== null) el.value = val;
+        }; // ← this semicolon is important
+
+        set("journeyMiles", trip.journeyMiles);
+        set("batteryKwh", trip.batteryKwh);
+        set("prechargeSoc", trip.soc);
+        set("soc", trip.soc);
+        set("efficiency", trip.efficiency);
+        set("adhoc", trip.adhoc);
+        set("startChargeRate", trip.startChargeRate);
+        set("maxChargingSpeed", trip.maxChargingSpeed);
+        set("rechargeAt", trip.rechargeAt);
+        set("minSpeed", trip.minSpeed);
+    }
+
+    // ⭐ Now restore providers
     if (saved && Array.isArray(saved)) {
         console.log("Loading providers from cookie…");
 
