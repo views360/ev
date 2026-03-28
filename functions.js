@@ -32,14 +32,14 @@ function updateProviderInfo() {
 }
 
 function getInputs() {
-    const extraMiles = Array.from(document.querySelectorAll(".extra-journey-miles")).map(el => parseFloat(el.value) || 0);
-    const extraSocs = Array.from(document.querySelectorAll(".extra-journey-soc")).map(el => parseFloat(el.value) || 0);
-    const extraRates = Array.from(document.querySelectorAll(".extra-journey-rate")).map(el => parseFloat(el.value) || 0);
-
     const getVal = id => {
         const el = document.getElementById(id);
         return el ? parseFloat(el.value) || 0 : 0;
     };
+
+    const extraMiles = Array.from(document.querySelectorAll(".extra-journey-miles")).map(el => parseFloat(el.value) || 0);
+    const extraSocs = Array.from(document.querySelectorAll(".extra-journey-soc")).map(el => parseFloat(el.value) || 0);
+    const extraRates = Array.from(document.querySelectorAll(".extra-journey-rate")).map(el => parseFloat(el.value) || 0);
 
     return {
         journeyMiles: getVal("journeyMiles"),
@@ -52,7 +52,7 @@ function getInputs() {
         rechargeAt: getVal("rechargeAt") || 20,
         minSpeed: getVal("minSpeed"),
         additionalJourneys: extraMiles.map((miles, i) => ({
-            miles: miles,
+            miles,
             soc: extraSocs[i],
             rate: extraRates[i]
         }))
