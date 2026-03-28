@@ -38,6 +38,7 @@ function getInputs() {
     return {
         journeyMiles: parseFloat(document.getElementById("journeyMiles").value) || 0,
         batteryKwh: parseFloat(document.getElementById("batteryKwh").value) || 0,
+        prechargeSoc: parseFloat(document.getElementById("prechargeSoc").value) || 0,
         soc: parseFloat(document.getElementById("soc").value) || 0,
         efficiency: parseFloat(document.getElementById("efficiency").value) || 0,
         adhoc: parseFloat(document.getElementById("adhoc").value) || 0,
@@ -57,7 +58,7 @@ function shareLink() {
     const params = new URLSearchParams();
     params.set("mode", "trip-savings");
 
-    const tripIds = ["journeyMiles", "batteryKwh", "soc", "efficiency", "adhoc", "startChargeRate", "maxChargingSpeed", "rechargeAt", "minSpeed"];
+    const tripIds = ["journeyMiles", "batteryKwh", "prechargeSoc", "soc", "efficiency", "adhoc", "startChargeRate", "maxChargingSpeed", "rechargeAt", "minSpeed"];
     
     tripIds.forEach(id => {
         const el = document.getElementById(id);
@@ -498,9 +499,27 @@ function calculate() {
         }
     });
 
-
+    // NEW — pulse multi‑journey pre‑charge SOC fields
+    document.querySelectorAll(".extra-journey-prechargesoc").forEach(input => {
+        const val = parseFloat(input.value);
+        if (!input.value || isNaN(val) || val < 0) {
+            input.classList.add('empty-pulse');
+        } else {
+            input.classList.remove('empty-pulse');
+        }
+    });
     
-
+    // NEW — pulse single‑journey pre‑charge SOC field
+    const prechargeSoc = document.getElementById("prechargeSoc");
+    if (prechargeSoc) {
+        const val = parseFloat(prechargeSoc.value);
+        if (!prechargeSoc.value || isNaN(val) || val < 0) {
+            prechargeSoc.classList.add('empty-pulse');
+        } else {
+            prechargeSoc.classList.remove('empty-pulse');
+        }
+    }
+    
     document.querySelectorAll(".provider-box input[type='number'], .provider-box input[type='text']").forEach(input => {
         if (!input.value || input.value === "0") {
             input.classList.add('empty-pulse');
@@ -700,7 +719,7 @@ function calculate() {
     const paygSubtitle = document.getElementById("paygSummarySubtitle");
     
     if (inputs.additionalJourneys.length > 0) {
-        paygSubtitle.textContent = `Here is the key information for your journeys if you choose PAYG.`;
+        paygSubtitle.textContent = `Here is the key information for your journeys if you choose PAYG. Note: you may see a rounding error of +/- 1p and/or 1 mile.`;
         rangeHtml = `<p style="opacity: 0.5; margin: 0px; font-size: 0.8rem"><strong>Pre-charged battery range:</strong></p>`;
         
         // Journey 1 range detail
@@ -1879,8 +1898,7 @@ function addJourneyField() {
         </div>
         <div class="input-row">
         	<div class="input-group">
-                    <label for="prechargesoc">
-                        <span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">The battery percentage you expect your car to be at before you top up to your departure battery level. Used for calculating the cost of pre‑charging before the journey.</span></span></span>Pre‑Charge Battery Level (%)</label>
+                    <label><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">The battery percentage you expect your car to be at before you top up to your departure battery level. Used for calculating the cost of pre‑charging before the journey.</span></span></span>Pre‑Charge Battery Level (%)</label>
                     <input type="number"class="extra-journey-prechargesoc" oninput="calculate()" placeholder="e.g., 20">
                 </div>
             <div class="input-group">
