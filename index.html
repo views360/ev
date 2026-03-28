@@ -215,7 +215,7 @@
 				<p>You can also use our <strong>AI assistant</strong> for instant UK-specific EV advice. The assistant is accessed via the floating widget on the left side of each page or from the menu.</p>
                 <div class="help-footer">
                     <button class="btn" onclick="moveSlide(-1)">&lt;&nbsp;Back</button>
-                    <button class="btn secondary empty-pulse" onclick="closeHelp()">Get Started</button>
+                    <button class="btn secondary empty-pulse" onclick="closeHelp()">Get&nbsp;Started</button>
                 </div>
             </div>
         </div>
@@ -269,7 +269,7 @@
     <div class="input-group">
         <label for="efficiencyBE"><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is likely 
 			to be between 2.5 and 5, depending on the time of year and your driving style and habits. You can either estimate it for the time of year when you will travel, 
-			or you can reset your journey counter and calculate it if your journey is imminent.</span></span></span>Vehicle efficiency (miles/kWh)</label>
+			or you can reset your journey counter and calculate it if your journey is imminent.</span></span></span>Vehicle efficiency (miles per kWh)</label>
         <input type="number" id="efficiencyBE" oninput="calculate()" placeholder="e.g., 3.5" step="0.1">
     </div>
     <div class="input-group">
@@ -290,7 +290,7 @@
             <span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is 
 				the average amount you would ordinarily expect to pay during your journey while using PAYG 
 				chargers. If you get a discount (e.g., 8% from Electroverse), input the discounted rate.</span></span></span>Standard PAYG 
-			rate (p/kWh)</label>
+			rate (pence per kWh)</label>
         <input type="number" id="adhocBE" oninput="calculate()" placeholder="e.g., 62 (62p is the 50kW Lidl+ app price)" step="0.1">
     </div>
 </div>
@@ -316,15 +316,19 @@
             </div>
 
             <div class="input-row">
-				<div class="input-group">
-                    <label for="prechargesoc">
-                        <span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">The battery percentage you expect your car to be at before you top up to your departure battery level. Used for calculating the cost of pre‑charging before the journey.</span></span></span>Pre‑Charge Battery Level (%)</label>
-                    <input type="number" id="prechargesoc" oninput="calculate()" placeholder="e.g., 20">
-                </div>
                 <div class="input-group">
                     <label for="soc">
-                        <span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">The battery percentage your car will be at when you begin your journey. It is acceptable to slow charge up to 100% before departing on a long journey.</span></span></span>Departure Battery Level (%)</label>
+                        <span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">How much 
+							charge will your battery have when you begin your journey? It is acceptable to slow charge up to 100% before departing on a long journey.</span></span></span>Starting state of charge (%)</label>
                     <input type="number" id="soc" oninput="calculate()" placeholder="e.g., 90">
+                </div>
+                <div class="input-group">
+                    <label for="efficiency">
+                        <span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is likely 
+							to be between 2.5 and 5, depending on the time of year and your driving style and habits. 
+							You can either estimate it for the time of year when you will travel, or you can reset your 
+							journey counter and calculate it if your journey is imminent.</span></span></span>Vehicle efficiency (miles per kWh)</label>
+                    <input type="number" id="efficiency" oninput="calculate()" placeholder="e.g., 3.5">
                 </div>
             </div>
 
@@ -345,22 +349,12 @@
 
             <div class="input-row">
                 <div class="input-group">
-                    <label for="efficiency">
-                        <span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is the number of miles per kWh you will be getting when you depart on your journey(s). It is likely 
-							to be between 2.5 and 5, depending on the time of year and your driving style and habits. 
-							You can either estimate it for the time of year when you will travel, or you can reset your 
-							journey counter and calculate it if your journey is imminent.</span></span></span>Vehicle efficiency (miles/kWh)</label>
-                    <input type="number" id="efficiency" oninput="calculate()" placeholder="e.g., 3.5">
-                </div>
-				<div class="input-group">
                     <label for="startChargeRate">
                         <span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">When you 
-							charge your battery before this journey, how much will the rate be (pence per kWh)?</span></span></span>Pre-Charge Rate (p/kWh)                        
+							charge your battery before this journey, how much will the rate be?</span></span></span>Battery Pre-Charge rate (pence per kWh)                        
                     </label>
                     <input type="number" id="startChargeRate" oninput="calculate()" placeholder="e.g., 7.5">
                 </div>
-			</div>
-			<div class="input-row">
                 <div class="input-group">
                     <label for="maxChargingSpeed">
                         <span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">What is the maximum charging speed your vehicle supports? You may need to check your user manual or do a web search for it. If you have experienced a lower-than-advertised speed while charging, enter <i>that</i> speed.</span></span></span>Max. Charging Speed (kW)                        
@@ -369,9 +363,9 @@
                 </div>
                 <div class="input-group">
                     <label for="rechargeAt">
-                        <span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is the state of charge (SOC) % from which you ordinarily recharge your battery. This will be applied to all charging stops during your journey(s). Following the 80/20 rule (see MENU > EV GUIDES > MASTERY), we recommend recharging when you drop to 20% and stopping at 80% to maximize long-term battery health.</span></span></span>Recharge Threshold (%)                        
+                        <span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is the state of charge (SOC) from which you recharge your battery. Following the <strong>80/20 rule</strong> (see <strong>Menu > EV Guides > Mastery</strong>), we recommend recharging when you drop to <strong>20%</strong> and stopping at <strong>80%</strong> to maximize long-term battery health.</span></span></span>Recharge Threshhold (battery %)                        
                     </label>
-                    <input type="number" id="rechargeAt" oninput="calculate()" value="20" min="1" max="80" placeholder="e.g., 20">
+                    <input type="number" id="rechargeAt" oninput="calculate()" value="20" min="1" max="80">
                 </div>
             </div>
 
@@ -380,7 +374,7 @@
                     <span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is the 
 						average amount you would ordinarily expect to pay during your journey while using PAYG chargers.
 						If you already get a discount (e.g., 8% from Electroverse), input the discounted rate. This will be the 
-						baseline for calculating whether it is possible to make your journey cheaper. You may adjust this as many times as you wish to view the effects.</span></span></span>Typical average PAYG public rate you pay (p/kWh)                    
+						baseline for calculating whether it is possible to make your journey cheaper. You may adjust this as many times as you wish to view the effects.</span></span></span>Typical average PAYG public rate you pay (pence per kWh)                    
                 </label>
                 <input type="number" id="adhoc" oninput="calculate()" placeholder="e.g., 62 (62p is the 50kW Lidl+ app price)">
             </div>
