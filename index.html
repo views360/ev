@@ -269,7 +269,7 @@
     <div class="input-group">
         <label for="efficiencyBE"><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is likely 
 			to be between 2.5 and 5, depending on the time of year and your driving style and habits. You can either estimate it for the time of year when you will travel, 
-			or you can reset your journey counter and calculate it if your journey is imminent.</span></span></span>Vehicle efficiency (miles per kWh)</label>
+			or you can reset your journey counter and calculate it if your journey is imminent.</span></span></span>Vehicle efficiency (miles/kWh)</label>
         <input type="number" id="efficiencyBE" oninput="calculate()" placeholder="e.g., 3.5" step="0.1">
     </div>
     <div class="input-group">
@@ -355,7 +355,7 @@
 				<div class="input-group">
                     <label for="startChargeRate">
                         <span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">When you 
-							charge your battery before this journey, how much will the rate be?</span></span></span>Battery Pre-Charge Rate (p/kWh)                        
+							charge your battery before this journey, how much will the rate be (pence per kWh)?</span></span></span>Pre-Charge Rate (p/kWh)                        
                     </label>
                     <input type="number" id="startChargeRate" oninput="calculate()" placeholder="e.g., 7.5">
                 </div>
@@ -369,7 +369,7 @@
                 </div>
                 <div class="input-group">
                     <label for="rechargeAt">
-                        <span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is the state of charge (SOC) from which you ordinarily recharge your battery. This will be applied to all charging stops during your journey(s). Following the 80/20 rule (see Menu > EV Guides > Mastery), we recommend recharging when you drop to 20% and stopping at 80% to maximize long-term battery health.</span></span></span>Recharge Threshhold (battery %)                        
+                        <span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is the state of charge (SOC) % from which you ordinarily recharge your battery. This will be applied to all charging stops during your journey(s). Following the 80/20 rule (see MENU > EV GUIDES > MASTERY), we recommend recharging when you drop to 20% and stopping at 80% to maximize long-term battery health.</span></span></span>Recharge Threshold (%)                        
                     </label>
                     <input type="number" id="rechargeAt" oninput="calculate()" value="20" min="1" max="80">
                 </div>
