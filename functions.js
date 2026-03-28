@@ -1340,15 +1340,16 @@ function setToggle(mode, btn) {
 function init() {
     const savedValues = getCookie("ev_trip_values");
     const urlParams = new URLSearchParams(window.location.search);
-    
+
     const speedTrip = document.getElementById("minSpeed");
     const speedBE = document.getElementById("minSpeedBE");
 
+    // Sync min speed fields
     const syncAndCalc = (e) => {
         const newValue = e.target.value;
         speedTrip.value = newValue;
         speedBE.value = newValue;
-        calculate(); 
+        calculate();
     };
 
     if (speedTrip && speedBE) {
@@ -1356,10 +1357,19 @@ function init() {
         speedBE.addEventListener('change', syncAndCalc);
     }
 
+    // ⭐ Load presets FIRST
     fetch("providers.json").then(r => r.json()).then(data => {
         PRESETS = data.providers;
 
-        const tripIds = ["journeyMiles", "batteryKwh", "soc", "efficiency", "adhoc", "startChargeRate", "maxChargingSpeed", "rechargeAt", "minSpeed"];        
+        // -------------------------------
+        // 1. Restore trip inputs
+        // -------------------------------
+        const tripIds = [
+            "journeyMiles", "batteryKwh", "soc", "efficiency",
+            "adhoc", "startChargeRate", "maxChargingSpeed",
+            "rechargeAt", "minSpeed"
+        ];
+
         tripIds.forEach(id => {
             const el = document.getElementById(id);
             if (!el) return;
@@ -1369,83 +1379,137 @@ function init() {
             } else if (savedValues && savedValues[id] !== undefined) {
                 el.value = savedValues[id];
             }
+
             el.addEventListener('input', calculate);
         });
 
+        // Sync efficiency + adhoc between tabs
         const effTrip = document.getElementById("efficiency");
         const effBE = document.getElementById("efficiencyBE");
         const adhocTrip = document.getElementById("adhoc");
         const adhocBE = document.getElementById("adhocBE");
-        
+
         const syncFields = (source, target) => {
             source.addEventListener('input', () => {
                 target.value = source.value;
                 calculate();
             });
         };
-        
+
         if (effTrip && effBE) {
-            effBE.value = effTrip.value; 
+            effBE.value = effTrip.value;
             syncFields(effTrip, effBE);
             syncFields(effBE, effTrip);
         }
-        
+
         if (adhocTrip && adhocBE) {
             adhocBE.value = adhocTrip.value;
             syncFields(adhocTrip, adhocBE);
             syncFields(adhocBE, adhocTrip);
         }
 
+        // -------------------------------
+        // 2. Restore providers from URL share
+        // -------------------------------
+        let providersRestored = false;
+
         if (urlParams.has("p")) {
             try {
                 const sharedProviders = JSON.parse(urlParams.get("p"));
-                document.getElementById("providers").innerHTML = ""; 
+                document.getElementById("providers").innerHTML = "";
+
                 sharedProviders.forEach(p => {
-                    createProviderBox(); 
+                    createProviderBox();
                     const id = providerCount;
+
                     document.getElementById(`name${id}`).value = p.name;
                     document.getElementById(`subCost${id}`).value = p.sub;
                     document.getElementById(`rate${id}`).value = p.rate;
+
                     const presetSelect = document.getElementById(`preset${id}`);
                     const validPreset = PRESETS.some(x => x.id === p.preset);
                     presetSelect.value = validPreset ? p.preset : "Custom";
+
                     updateProviderFields(id);
+
                     if (p.speed && document.getElementById(`speed${id}`)) {
                         document.getElementById(`speed${id}`).value = p.speed;
                     }
                 });
+
+                providersRestored = true;
             } catch (e) {
                 console.error("Error parsing shared providers:", e);
             }
         }
 
-        const modeParam = urlParams.get("mode");
-        if (modeParam === "trip-savings") {
-            const tripBtn = document.querySelector('.calc-tab:nth-child(2)'); 
-            if (tripBtn) setToggle('trip-savings', tripBtn);
-        } else {
-            const activeTab = document.querySelector('.calc-tab.active');
-            const currentMode = activeTab.textContent.trim() === "Cost Reduction" ? 'trip-savings' : 'break-even';
-            setToggle(currentMode, activeTab);
+        // -------------------------------
+        // 3. Restore providers from cookies
+        // -------------------------------
+        if (!providersRestored && savedValues?.providers) {
+            document.getElementById("providers").innerHTML = "";
+
+            savedValues.providers.forEach(p => {
+                createProviderBox();
+                const id = providerCount;
+
+                document.getElementById(`name${id}`).value = p.name;
+                document.getElementById(`subCost${id}`).value = p.sub;
+                document.getElementById(`rate${id}`).value = p.rate;
+
+                const presetSelect = document.getElementById(`preset${id}`);
+                const validPreset = PRESETS.some(x => x.id === p.preset);
+                presetSelect.value = validPreset ? p.preset : "Custom";
+
+                updateProviderFields(id);
+
+                if (p.speed && document.getElementById(`speed${id}`)) {
+                    document.getElementById(`speed${id}`).value = p.speed;
+                }
+            });
+
+            providersRestored = true;
         }
 
-        const provEl = document.getElementById("provider");
-        if (provEl && savedValues && savedValues.provider) {
-            provEl.value = savedValues.provider;
+        // -------------------------------
+        // 4. If no providers restored, create one
+        // -------------------------------
+        if (!providersRestored) {
+            createProviderBox();
         }
 
+        // -------------------------------
+        // 5. Validate preset IDs + update fields
+        // -------------------------------
         document.querySelectorAll(".provider-box").forEach(box => {
             const id = box.dataset.id;
             const presetSelect = document.getElementById(`preset${id}`);
-    
-            // If preset is empty or invalid, default to "Custom"
+
             if (!presetSelect.value || !PRESETS.some(p => p.id === presetSelect.value)) {
                 presetSelect.value = "Custom";
             }
-    
+
             updateProviderFields(id);
         });
-     
+
+        // -------------------------------
+        // 6. Restore mode
+        // -------------------------------
+        const modeParam = urlParams.get("mode");
+        if (modeParam === "trip-savings") {
+            const tripBtn = document.querySelector('.calc-tab:nth-child(2)');
+            if (tripBtn) setToggle('trip-savings', tripBtn);
+        } else {
+            const activeTab = document.querySelector('.calc-tab.active');
+            const currentMode = activeTab.textContent.trim() === "Cost Reduction"
+                ? 'trip-savings'
+                : 'break-even';
+            setToggle(currentMode, activeTab);
+        }
+
+        // -------------------------------
+        // 7. Final update + calculation
+        // -------------------------------
         updateProviderInfo();
         calculate();
     });
