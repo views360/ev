@@ -1877,7 +1877,7 @@ function addJourneyField() {
                 <input type="number" class="extra-journey-soc" placeholder="e.g. 100" value="${defaultSoc}" oninput="calculate()">
             </div>
             <div class="input-group">
-                <label><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">While it is to be expected that you will depart from your usual place (e.g., home) and charge at your usual rate, you may have other plans — so this allows the results to take that into account.</span></span></span>Battery Precharge Rate (Pence per kWh)</label>
+                <label><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">While it is to be expected that you will depart from your usual place (e.g., home) and charge at your usual rate, you may have other plans — so this allows the results to take that into account.</span></span></span>Battery Precharge Rate (p/kWh)</label>
                 <input type="number" class="extra-journey-rate" placeholder="e.g. 7.5" value="${defaultRate}" oninput="calculate()">
             </div>
         </div>
