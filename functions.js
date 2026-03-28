@@ -1867,18 +1867,25 @@ function addJourneyField() {
             <button class="remove-btn" onclick="this.closest('.additional-journey-box').remove(); reindexJourneys(); calculate();">×</button>
         </div>
         <p style="font-size: 0.8rem">Enter or adjust the following details for this additional journey, which may differ from the first.</p>
-        <div class="input-group">
-            <label><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">The is the total distance for this additional journey, start to finish.</span></span></span>Journey Distance (Miles)</label>
-            <input type="number" class="extra-journey-miles" placeholder="e.g. 150" oninput="calculate()">
-        </div>
         <div class="input-row">
             <div class="input-group">
-                <label><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is the level to which you will pre-charge your battery for this additional trip. It defaults to the departing SOC of your first journey, but you may adjust it if appropriate.</span></span></span>Departing State of Charge (%)</label>
-                <input type="number" class="extra-journey-soc" placeholder="e.g. 100" value="${defaultSoc}" oninput="calculate()">
+                <label><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">The is the total distance for this additional journey, start to finish.</span></span></span>Journey Distance (Miles)</label>
+                <input type="number" class="extra-journey-miles" placeholder="e.g. 150" oninput="calculate()">
             </div>
             <div class="input-group">
                 <label><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">While it is to be expected that you will depart from your usual place (e.g., home) and charge at your usual rate, you may have other plans — so this allows the results to take that into account.</span></span></span>Battery Pre-Charge Rate (p/kWh)</label>
                 <input type="number" class="extra-journey-rate" placeholder="e.g. 7.5" value="${defaultRate}" oninput="calculate()">
+            </div>
+        </div>
+        <div class="input-row">
+        	<div class="input-group">
+                    <label for="pre-chargesoc">
+                        <span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">The battery percentage your car is at before you top up to your departure level. Used to calculate the cost of pre‑charging before the journey.</span></span></span>Pre‑Charge Battery Level (%)</label>
+                    <input type="number" id="soc" oninput="calculate()" placeholder="e.g., 90">
+                </div>
+            <div class="input-group">
+                <label><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is the level to which you will pre-charge your battery for this additional trip. It defaults to the departing SOC of your first journey, but you may adjust it if appropriate.</span></span></span>Departing State of Charge (%)</label>
+                <input type="number" class="extra-journey-soc" placeholder="e.g. 100" value="${defaultSoc}" oninput="calculate()">
             </div>
         </div>
     `;
