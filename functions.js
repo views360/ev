@@ -508,9 +508,6 @@ function calculate() {
         }
     });
 
-
-    
-
     document.querySelectorAll(".provider-box input[type='number'], .provider-box input[type='text']").forEach(input => {
         if (!input.value || input.value === "0") {
             input.classList.add('empty-pulse');
@@ -519,6 +516,8 @@ function calculate() {
         }
     });
 
+    saveProvidersToCookie();
+    
     if (!isTripMode) {
         conclusionsBox.style.display = "none";
         const efficiency = parseFloat(document.getElementById("efficiencyBE").value);
