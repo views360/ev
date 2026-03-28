@@ -69,7 +69,7 @@ function shareLink() {
         const id = box.dataset.id;
         providers.push({
             name: document.getElementById(`name${id}`).value,
-            sub: document.getElementById(`subCost${id}`).value,
+            subCost: document.getElementById(`subCost${id}`).value,
             rate: document.getElementById(`rate${id}`).value,
             preset: document.getElementById(`preset${id}`).value
         });
@@ -174,7 +174,7 @@ function updateProviderFields(id) {
     }
 
     document.getElementById(`name${id}`).value = p.name;
-    document.getElementById(`subCost${id}`).value = p.subscription.monthlyCost;
+    document.getElementById(`subCost${id}`).value = p.subscription.subCost;
 
     if (p.rates && !p.rates.default) {
         const { minSpeed } = getInputs();
@@ -531,7 +531,7 @@ function calculate() {
         let beData = [];
 
         PRESETS.forEach(p => {
-            const sub = p.subscription.monthlyCost;
+            const subCost = p.subscription.subCost;
             const rates = p.rates;
             const speedKeys = Object.keys(rates);
             
@@ -552,7 +552,7 @@ function calculate() {
                     const kwhNeeded = sub / savingPerKwh;
                     breakEvenMiles = Math.round(kwhNeeded * efficiency);
                     displayMiles = breakEvenMiles + " miles";
-                } else if (sub > 0) {
+                } else if (subCost > 0) {
                     displayMiles = "Never (Rate ≥ PAYG)";
                 } else {
                     breakEvenMiles = 0;
@@ -564,7 +564,7 @@ function calculate() {
                     url: p.subscription?.url,
                     comments: p.subscription?.comments || "",
                     speedDisplay: speedDisplay,
-                    subCost: sub,
+                    subCost: subCost,
                     rate: rate,
                     miles: breakEvenMiles,
                     displayText: displayMiles
@@ -1370,7 +1370,7 @@ function init() {
                     createProviderBox(); 
                     const id = providerCount;
                     document.getElementById(`name${id}`).value = p.name;
-                    document.getElementById(`subCost${id}`).value = p.sub;
+                    document.getElementById(`subCost${id}`).value = p.subCost;
                     document.getElementById(`rate${id}`).value = p.rate;
                     document.getElementById(`preset${id}`).value = p.preset;
                     if(p.preset !== 'Custom') {
@@ -1380,6 +1380,42 @@ function init() {
                 });
             } catch (e) {
                 console.error("Error parsing shared providers:", e);
+            }
+        } 
+        
+        else {
+            // No providers in the URL? Check the 'ev_providers' cookie instead.
+            const savedProviders = getCookie("ev_providers");
+            if (savedProviders && Array.isArray(savedProviders)) {
+                // Clear the default empty list
+                document.getElementById("providers").innerHTML = ""; 
+                
+                savedProviders.forEach(p => {
+                    createProviderBox(); // This creates a new empty box and increments providerCount
+                    const id = providerCount;
+                    
+                    // Fill the newly created box with the cookie data
+                    document.getElementById(`name${id}`).value = p.name;
+                    document.getElementById(`subCost${id}`).value = p.subCost;
+                    document.getElementById(`rate${id}`).value = p.rate;
+                    document.getElementById(`preset${id}`).value = p.preset;
+
+                    // If it's a preset (like BP Pulse), we trigger the dropdown 
+                    // logic to make sure the speed options appear
+                    if (p.preset !== 'Custom') {
+                        updateProviderFields(id);
+                        
+                        // We re-apply these because updateProviderFields might 
+                        // have overwritten them with default values
+                        document.getElementById(`rate${id}`).value = p.rate;
+                        document.getElementById(`subCost${id}`).value = p.subCost;
+                        
+                        // Restore the chosen charging speed if it was saved
+                        if (p.speed && document.getElementById(`speed${id}`)) {
+                            document.getElementById(`speed${id}`).value = p.speed;
+                        }
+                    }
+                });
             }
         }
 
