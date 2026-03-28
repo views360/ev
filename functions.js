@@ -1788,19 +1788,26 @@ function closeBeReminder() {
 
 function saveProvidersToCookie() {
     console.log("saveProvidersToCookie() CALLED");
+    const providerBoxes = document.querySelectorAll(".provider-box");
+    if (providerBoxes.length === 0) {
+        console.log("Not saving providers: none exist.");
+        return;
+    }
+
     const providers = [];
-    document.querySelectorAll(".provider-box").forEach(box => {
+    providerBoxes.forEach(box => {
         const id = box.dataset.id;
         providers.push({
             name: document.getElementById(`name${id}`).value,
             subCost: document.getElementById(`subCost${id}`).value,
             rate: document.getElementById(`rate${id}`).value,
             preset: document.getElementById(`preset${id}`).value,
-            speed: document.getElementById(`speed${id}`) ? document.getElementById(`speed${id}`).value : null
+            speed: document.getElementById(`speed${id}`)?.value || null
         });
     });
+
     console.log("Saving providers to cookie:", providers);
-    setCookie('ev_providers', providers); // Uses your existing setCookie function
+    setCookie('ev_providers', providers);
 }
 
 function loadProvidersFromCookie() {
