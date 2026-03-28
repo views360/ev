@@ -1873,11 +1873,11 @@ function addJourneyField() {
         </div>
         <div class="input-row">
             <div class="input-group">
-                <label><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is the level to which you will precharge your battery for this additional trip. It defaults to the threshold of your first journey, but you may adjust it if appropriate.</span></span></span>Starting State of Charge (%)</label>
+                <label><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is the level to which you will precharge your battery for this additional trip. It defaults to the departing SOC of your first journey, but you may adjust it if appropriate.</span></span></span>Departing State of Charge (%)</label>
                 <input type="number" class="extra-journey-soc" placeholder="e.g. 100" value="${defaultSoc}" oninput="calculate()">
             </div>
             <div class="input-group">
-                <label><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">While it is to be expected that you will depart from your usual place (e.g., home) and charge at your usual rate, you may have other plans — so this allows the results to take that into account.</span></span></span>Starting Rate (Pence per kWh)</label>
+                <label><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">While it is to be expected that you will depart from your usual place (e.g., home) and charge at your usual rate, you may have other plans — so this allows the results to take that into account.</span></span></span>Battery Precharge Rate (Pence per kWh)</label>
                 <input type="number" class="extra-journey-rate" placeholder="e.g. 7.5" value="${defaultRate}" oninput="calculate()">
             </div>
         </div>
