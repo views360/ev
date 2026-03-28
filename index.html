@@ -349,9 +349,19 @@
 
             <div class="input-row">
                 <div class="input-group">
+                    <label for="startChargeType">
+                        <span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">Before you 
+							begin your journey, will you have charged your battery at home or using PAYG charging?</span></span></span>Starting charge type           
+                    </label>
+                    <select id="startChargeType">
+                        <option value="home">Cheap home charging</option>
+                        <option value="public">PAYG Public charging</option>
+                    </select>
+                </div>
+                <div class="input-group">
                     <label for="startChargeRate">
                         <span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">When you 
-							charge your battery before the journey, how much will the rate be?</span></span></span>Battery Pre-Charge rate (pence per kWh)                        
+							charge your battery before the journey, how much will the rate be?</span></span></span>Starting rate (pence per kWh)                        
                     </label>
                     <input type="number" id="startChargeRate" oninput="calculate()" placeholder="e.g., 7.5">
                 </div>
@@ -378,17 +388,6 @@
                 </label>
                 <input type="number" id="adhoc" oninput="calculate()" placeholder="e.g., 62 (62p is the 50kW Lidl+ app price)">
             </div>
-			<div id="additionalJourneysContainer"></div>
-
-			<div class="input-group" style="margin-top: 10px;">
-			    <button type="button" class="btn secondary" id="addJourneyBtn" onclick="addJourneyField()">
-			        <span class="tooltip-container">
-			            <span class="info-icon" onclick="toggleTooltip(this)">💡
-			                <span class="tooltip-box">If you plan to go on more than one journey within one month of the first, include that journey (or journeys), too. The results will adjust accordingly.</span>
-			            </span>Include Another Journey?
-			        </span>
-			    </button>
-			</div>
         </div>
 
         <div class="card">
