@@ -100,14 +100,8 @@ function createProviderBox(preset) {
     const id = providerCount;
     const { minSpeed } = getInputs();
     const sortedPresets = getSortedPresets(minSpeed);
-    const presetOptions = ['Custom', ...sortedPresets.map(p => p.id)]
-        .map(id => {
-            if (id === 'Custom') return `<option value="Custom">Custom</option>`;
-            const preset = sortedPresets.find(p => p.id === id);
-            return `<option value="${preset.id}">${preset.name}</option>`;
-        })
-        .join("");
-
+    const presetOptions = ['Custom', ...sortedPresets.map(p => p.name)]
+        .map(name => `<option value="${name}">${name}</option>`).join("");
 
     const box = document.createElement("div");
     box.className = "provider-box";
@@ -141,7 +135,7 @@ function createProviderBox(preset) {
     `;
     document.getElementById("providers").appendChild(box);
     if (preset) {
-        document.getElementById(`preset${id}`).value = preset.id;
+        document.getElementById(`preset${id}`).value = preset.name;
         updateProviderFields(id);
     }
     calculate();
@@ -169,11 +163,11 @@ function addAllProviders() {
 }
 
 function updateProviderFields(id) {
-    const presetId = document.getElementById(`preset${id}`).value;
-    const p = PRESETS.find(x => x.id === presetId);
+    const presetName = document.getElementById(`preset${id}`).value;
+    const p = PRESETS.find(x => x.name === presetName);
     const speedRow = document.getElementById(`speedRow${id}`);
     
-    if (presetId === 'Custom' || !p) {
+    if (presetName === 'Custom' || !p) {
         speedRow.style.display = "none";
         calculate();
         return;
@@ -197,8 +191,9 @@ function updateProviderFields(id) {
 }
 
 function updateRateFromSpeed(id) {
-    const presetId = document.getElementById(`preset${id}`).value;
-    const p = PRESETS.find(x => x.id === presetId);
+    const presetName = document.getElementById(`preset${id}`).value;
+    const speed = document.getElementById(`speed${id}`).value;
+    const p = PRESETS.find(x => x.name === presetName);
     if (p?.rates) document.getElementById(`rate${id}`).value = p.rates[speed];
     calculate();
 }
@@ -619,13 +614,8 @@ function calculate() {
 
             html += `<tr>
                 <td>
-                    <span class="tooltip-container">
-                        <span class="info-icon" onclick="toggleTooltip(this)" style="font-size: 0.8rem;">
-                            💡
-                            <span class="tooltip-box">${p.comments}</span>
-                        </span>
-                    </span>
-                    ${providerLink}
+                    <span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">${row.comments}</span>
+                    </span></span> ${providerLink}
                 </td>
                 <td>${row.speedDisplay}</td>
                 <td>£${row.subCost.toFixed(2)}</td>
@@ -918,29 +908,19 @@ function calculate() {
     const providers = [];
     providerBoxes.forEach(box => {
         const id = box.dataset.id;
-    
-        console.log("Preset value for provider", id, "=", document.getElementById(`preset${id}`).value);
-    
-        const presetId = document.getElementById(`preset${id}`).value;
-        const pData = PRESETS.find(p => p.id === presetId);
-    
-        if (!pData) {
-            console.warn("Preset not found:", presetId);
-        }
-    
         const name = document.getElementById(`name${id}`).value || "Unnamed";
         const subCost = parseFloat(document.getElementById(`subCost${id}`).value) || 0;
         const rate = parseFloat(document.getElementById(`rate${id}`).value) || 0;
-    
+       
         const savingPerKwh = (inputs.adhoc - rate) / 100;
         let breakEvenMiles = 0;
         if (savingPerKwh > 0) {
             const kwhNeeded = subCost / savingPerKwh;
             breakEvenMiles = kwhNeeded * inputs.efficiency;
         }
-    
+        
         let publicChargingCost = 0;
-    
+
         // Journey 1
         publicChargingCost += simulateTripWithProvider(
             rate,
@@ -950,7 +930,7 @@ function calculate() {
             inputs.journeyMiles,
             inputs.soc
         );
-    
+        
         // Additional journeys
         inputs.additionalJourneys.forEach(j => {
             publicChargingCost += simulateTripWithProvider(
@@ -962,14 +942,12 @@ function calculate() {
                 j.soc
             );
         });
-    
+        
         const totalJourneyCost = subCost + totalPreJourneyCost + publicChargingCost;
-    
-        providers.push({
-            name,
-            subCost,
-            rate,
-            totalJourneyCost,
+        const pData = PRESETS.find(p => p.name === document.getElementById(`preset${id}`).value);
+
+        providers.push({ 
+            name, subCost, rate, totalJourneyCost, 
             breakEvenMiles,
             totalWithBattery: breakEvenMiles + mainInitialRange,
             savings: totalAdhocCost - totalJourneyCost,
@@ -978,7 +956,6 @@ function calculate() {
         });
     });
 
-    
     const sortVal = document.getElementById("sortResults").value;
     providers.sort((a, b) => {
         if (sortVal === "cheapest") return a.totalJourneyCost - b.totalJourneyCost;
@@ -1340,16 +1317,15 @@ function setToggle(mode, btn) {
 function init() {
     const savedValues = getCookie("ev_trip_values");
     const urlParams = new URLSearchParams(window.location.search);
-
+    
     const speedTrip = document.getElementById("minSpeed");
     const speedBE = document.getElementById("minSpeedBE");
 
-    // Sync min speed fields
     const syncAndCalc = (e) => {
         const newValue = e.target.value;
-        if (speedTrip) speedTrip.value = newValue;
-        if (speedBE) speedBE.value = newValue;
-        calculate();
+        speedTrip.value = newValue;
+        speedBE.value = newValue;
+        calculate(); 
     };
 
     if (speedTrip && speedBE) {
@@ -1357,17 +1333,10 @@ function init() {
         speedBE.addEventListener('change', syncAndCalc);
     }
 
-    // Load presets FIRST
     fetch("providers.json").then(r => r.json()).then(data => {
         PRESETS = data.providers;
 
-        // 1. Restore trip inputs
-        const tripIds = [
-            "journeyMiles", "batteryKwh", "soc", "efficiency",
-            "adhoc", "startChargeRate", "maxChargingSpeed",
-            "rechargeAt", "minSpeed"
-        ];
-
+        const tripIds = ["journeyMiles", "batteryKwh", "soc", "efficiency", "adhoc", "startChargeRate", "maxChargingSpeed", "rechargeAt", "minSpeed"];        
         tripIds.forEach(id => {
             const el = document.getElementById(id);
             if (!el) return;
@@ -1377,131 +1346,69 @@ function init() {
             } else if (savedValues && savedValues[id] !== undefined) {
                 el.value = savedValues[id];
             }
-
             el.addEventListener('input', calculate);
         });
 
-        // Sync efficiency + adhoc between tabs
         const effTrip = document.getElementById("efficiency");
         const effBE = document.getElementById("efficiencyBE");
         const adhocTrip = document.getElementById("adhoc");
         const adhocBE = document.getElementById("adhocBE");
-
+        
         const syncFields = (source, target) => {
-            if (!source || !target) return;
             source.addEventListener('input', () => {
                 target.value = source.value;
                 calculate();
             });
         };
-
+        
         if (effTrip && effBE) {
-            effBE.value = effTrip.value;
+            effBE.value = effTrip.value; 
             syncFields(effTrip, effBE);
             syncFields(effBE, effTrip);
         }
-
+        
         if (adhocTrip && adhocBE) {
             adhocBE.value = adhocTrip.value;
             syncFields(adhocTrip, adhocBE);
             syncFields(adhocBE, adhocTrip);
         }
 
-        // 2. Restore providers (URL share > cookie > default)
-        let providersRestored = false;
-        const providersContainer = document.getElementById("providers");
-        if (providersContainer) providersContainer.innerHTML = "";
-
-        // 2a. From URL share
         if (urlParams.has("p")) {
             try {
                 const sharedProviders = JSON.parse(urlParams.get("p"));
+                document.getElementById("providers").innerHTML = ""; 
                 sharedProviders.forEach(p => {
-                    createProviderBox(); // uses PRESETS + minSpeed
+                    createProviderBox(); 
                     const id = providerCount;
-
                     document.getElementById(`name${id}`).value = p.name;
                     document.getElementById(`subCost${id}`).value = p.sub;
                     document.getElementById(`rate${id}`).value = p.rate;
-
-                    const presetSelect = document.getElementById(`preset${id}`);
-                    const validPreset = PRESETS.some(x => x.id === p.preset);
-                    presetSelect.value = validPreset ? p.preset : "Custom";
-
-                    updateProviderFields(id);
-
-                    if (p.speed && document.getElementById(`speed${id}`)) {
-                        document.getElementById(`speed${id}`).value = p.speed;
+                    document.getElementById(`preset${id}`).value = p.preset;
+                    if(p.preset !== 'Custom') {
+                        updateProviderFields(id);
+                        document.getElementById(`rate${id}`).value = p.rate;
                     }
                 });
-                providersRestored = true;
             } catch (e) {
                 console.error("Error parsing shared providers:", e);
             }
         }
 
-        // 2b. From cookie (if you store providers there)
-        if (!providersRestored && savedValues && Array.isArray(savedValues.providers)) {
-            savedValues.providers.forEach(p => {
-                createProviderBox();
-                const id = providerCount;
-
-                document.getElementById(`name${id}`).value = p.name;
-                document.getElementById(`subCost${id}`).value = p.sub;
-                document.getElementById(`rate${id}`).value = p.rate;
-
-                const presetSelect = document.getElementById(`preset${id}`);
-                const validPreset = PRESETS.some(x => x.id === p.preset);
-                presetSelect.value = validPreset ? p.preset : "Custom";
-
-                updateProviderFields(id);
-
-                if (p.speed && document.getElementById(`speed${id}`)) {
-                    document.getElementById(`speed${id}`).value = p.speed;
-                }
-            });
-            providersRestored = true;
-        }
-
-        // 2c. If nothing restored, create one blank provider
-        if (!providersRestored) {
-            createProviderBox();
-        }
-
-        // 3. Validate presets + refresh fields
-        document.querySelectorAll(".provider-box").forEach(box => {
-            const id = box.dataset.id;
-            const presetSelect = document.getElementById(`preset${id}`);
-
-            if (!presetSelect.value || !PRESETS.some(p => p.id === presetSelect.value)) {
-                presetSelect.value = "Custom";
-            }
-
-            updateProviderFields(id);
-        });
-
-        // 4. Restore mode
         const modeParam = urlParams.get("mode");
         if (modeParam === "trip-savings") {
-            const tripBtn = document.querySelector('.calc-tab:nth-child(2)');
+            const tripBtn = document.querySelector('.calc-tab:nth-child(2)'); 
             if (tripBtn) setToggle('trip-savings', tripBtn);
         } else {
             const activeTab = document.querySelector('.calc-tab.active');
-            if (activeTab) {
-                const currentMode = activeTab.textContent.trim() === "Cost Reduction"
-                    ? 'trip-savings'
-                    : 'break-even';
-                setToggle(currentMode, activeTab);
-            }
+            const currentMode = activeTab.textContent.trim() === "Cost Reduction" ? 'trip-savings' : 'break-even';
+            setToggle(currentMode, activeTab);
         }
 
-        // 5. Provider selector (if used)
         const provEl = document.getElementById("provider");
         if (provEl && savedValues && savedValues.provider) {
             provEl.value = savedValues.provider;
         }
 
-        // 6. Final update + calculation
         updateProviderInfo();
         calculate();
     });
