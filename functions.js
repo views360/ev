@@ -309,7 +309,7 @@ function buildStopsRowsForJourney(journeyMiles, startSoc, rechargeAt, efficiency
     const maxRangeFromFullCharge = kwhFullCharge * efficiency;
 
     // Range available from the initial pre-charge (from startSoc down to rechargeAt)
-    const pre-chargedRange = ((startSoc - rechargeAt) / 100) * batteryKwh * efficiency;
+    const preChargedRange = ((startSoc - rechargeAt) / 100) * batteryKwh * efficiency;
 
     // --- STOP 0: DEPART ---
     rows += `
@@ -325,7 +325,7 @@ function buildStopsRowsForJourney(journeyMiles, startSoc, rechargeAt, efficiency
     `;
 
     // --- CASE 1: Journey is fully covered by the pre-charged battery (no public charging) ---
-    if (journeyMiles <= pre-chargedRange) {
+    if (journeyMiles <= preChargedRange) {
         const kwhUsed = journeyMiles / efficiency;
         const percentUsed = (kwhUsed / batteryKwh) * 100;
 
@@ -701,7 +701,7 @@ function calculate() {
     
     if (inputs.additionalJourneys.length > 0) {
         paygSubtitle.textContent = `Here is the key information for your journeys if you choose PAYG.`;
-        rangeHtml = `<p style="opacity: 0.5; margin: 0px; font-size: 0.8rem"><strong>Pre-Charged battery range:</strong></p>`;
+        rangeHtml = `<p style="opacity: 0.5; margin: 0px; font-size: 0.8rem"><strong>Pre-charged battery range:</strong></p>`;
         
         // Journey 1 range detail
         rangeHtml += `<div style="font-size: 0.8rem; opacity: 0.5; margin-bottom: 2px; margin-left: 10px;">
@@ -723,7 +723,7 @@ function calculate() {
     } else {
         // Single journey view
         paygSubtitle.textContent = `Here is the key information for your journey if you choose PAYG.`;
-        rangeHtml = `<p style="margin: 0px"><span class="tooltip-container"><span class="info-icon" style="font-size:0.8rem" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is the initial range you should expect for each journey based on pre-charging at your start/departure location from your recharge threshold of ${inputs.rechargeAt}% to your specified departure SOC of ${inputs.soc}%). It forms part of the calculation for how many miles of PAYG charging will be needed to complete this journey.</span></span></span>Pre-Charged battery range: <strong>${mainInitialRange.toFixed(0)} miles</strong></p>`;
+        rangeHtml = `<p style="margin: 0px"><span class="tooltip-container"><span class="info-icon" style="font-size:0.8rem" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is the initial range you should expect for each journey based on pre-charging at your start/departure location from your recharge threshold of ${inputs.rechargeAt}% to your specified departure SOC of ${inputs.soc}%). It forms part of the calculation for how many miles of PAYG charging will be needed to complete this journey.</span></span></span>Pre-charged battery range: <strong>${mainInitialRange.toFixed(0)} miles</strong></p>`;
     }
 
     // 1. Calculate Main Journey (Journey 1)
@@ -737,7 +737,7 @@ function calculate() {
 
     if (inputs.additionalJourneys.length > 0) {
         // Multi-journey view header
-        preChargeHtml = `<p style="opacity: 0.5; font-size: 0.8rem; margin: 0px"><strong>Pre-Charge battery costs:</strong></p>`;
+        preChargeHtml = `<p style="opacity: 0.5; font-size: 0.8rem; margin: 0px"><strong>Pre-charge battery costs:</strong></p>`;
         
         // Journey 1 detail line (0.8 opacity)
         preChargeHtml += `<div style="font-size: 0.8rem; opacity: 0.5; margin-bottom: 2px; margin-left: 10px;">
@@ -1879,7 +1879,7 @@ function addJourneyField() {
         </div>
         <div class="input-row">
         	<div class="input-group">
-                    <label for="pre-chargesoc">
+                    <label for="prechargesoc">
                         <span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">The battery percentage your car is at before you top up to your departure level. Used to calculate the cost of pre‑charging before the journey.</span></span></span>Pre‑Charge Battery Level (%)</label>
                     <input type="number" id="soc" oninput="calculate()" placeholder="e.g., 90">
                 </div>
