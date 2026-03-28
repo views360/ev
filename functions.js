@@ -1881,7 +1881,7 @@ function addJourneyField() {
         	<div class="input-group">
                     <label for="prechargesoc">
                         <span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">The battery percentage your car is at before you top up to your departure level. Used to calculate the cost of pre‑charging before the journey.</span></span></span>Pre‑Charge Battery Level (%)</label>
-                    <input type="number" id="soc" oninput="calculate()" placeholder="e.g., 90">
+                    <input type="number"class="extra-journey-prechargesoc" oninput="calculate()" placeholder="e.g., 20">
                 </div>
             <div class="input-group">
                 <label><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is the level to which you will pre-charge your battery for this additional trip. It defaults to the departing SOC of your first journey, but you may adjust it if appropriate.</span></span></span>Departing State of Charge (%)</label>
