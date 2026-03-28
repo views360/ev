@@ -351,17 +351,27 @@ function buildStopsRowsForJourney(journeyMiles, startSoc, rechargeAt, efficiency
             totalDurationMax += durationMax;
             totalDurationMin += durationMin;
 
-
+            let arrivalSoc;
+            
+            if (stop === 1) {
+                // Journey completed on the initial precharge
+                const kwhUsed = journeyMiles / efficiency;
+                const percentUsed = (kwhUsed / batteryKwh) * 100;
+                arrivalSoc = Math.max(0, startSoc - percentUsed);
+            } else {
+                // Public charging occurred → arrival SOC is always the recharge threshold
+                arrivalSoc = rechargeAt;
+            }
+            
             rows += `
                 <tr>
                     <td style="padding: 10px; border: 1px solid var(--border);">${stop}</td>
-                    <td style="padding: 10px; border: 1px solid var(--border);">Final public charge</td>
-                    <td style="padding: 10px; border: 1px solid var(--border);">${Math.round(mileMarkAtRecharge)} miles</td>
+                    <td style="padding: 10px; border: 1px solid var(--border);">Finish journey</td>
+                    <td style="padding: 10px; border: 1px solid var(--border);">${journeyMiles} miles</td>
                     <td style="padding: 10px; border: 1px solid var(--border);">
-                        Recharge from ${rechargeAt}%→${requiredPercent.toFixed(0)}%, ${requiredKwh.toFixed(1)} kWh
+                        Arrive with ${arrivalSoc.toFixed(0)}% battery
                     </td>
-                    <td style="padding: 10px; border: 1px solid var(--border);">${durationMax} mins</td>
-                    <td style="padding: 10px; border: 1px solid var(--border);">${durationMin} mins</td>
+                    <td style="padding: 10px; border: 1px solid var(--border);">–</td>
                 </tr>
             `;
             stop++;
