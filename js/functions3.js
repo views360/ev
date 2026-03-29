@@ -81,6 +81,7 @@ function runBreakEvenAnalysis(efficiency, adhocRate, minSpeedSelection, uiResult
 }
 
 function getInputs() {
+    // Basic inputs
     const journeyMiles = parseFloat(document.getElementById("journeyMiles")?.value) || 0;
     const batteryKwh = parseFloat(document.getElementById("batteryKwh")?.value) || 0;
     const soc = parseFloat(document.getElementById("soc")?.value) || 0;
@@ -90,17 +91,29 @@ function getInputs() {
     const maxChargingSpeed = parseFloat(document.getElementById("maxChargingSpeed")?.value) || 0;
     const rechargeAt = parseFloat(document.getElementById("rechargeAt")?.value) || 0;
 
+    // Extra Journeys
     const additionalJourneys = [];
     document.querySelectorAll(".extra-journey-row").forEach(row => {
         const miles = parseFloat(row.querySelector(".extra-journey-miles")?.value) || 0;
-        const soc = parseFloat(row.querySelector(".extra-journey-soc")?.value) || 0;
+        const socVal = parseFloat(row.querySelector(".extra-journey-soc")?.value) || 0;
         const rate = parseFloat(row.querySelector(".extra-journey-rate")?.value) || 0;
-        additionalJourneys.push({ miles, soc, rate });
+        additionalJourneys.push({ miles, soc: socVal, rate });
+    });
+
+    // Providers (This is what was missing)
+    const providers = [];
+    document.querySelectorAll(".provider-box").forEach(box => {
+        const id = box.id.replace("provider-", "");
+        const name = document.getElementById("name" + id)?.value || "Unknown";
+        const subCost = parseFloat(document.getElementById("subCost" + id)?.value) || 0;
+        const rate = parseFloat(document.getElementById("rate" + id)?.value) || 0;
+        providers.push({ id, name, subCost, rate });
     });
 
     return {
         journeyMiles, batteryKwh, soc, efficiency, adhoc,
-        startChargeRate, maxChargingSpeed, rechargeAt, additionalJourneys
+        startChargeRate, maxChargingSpeed, rechargeAt, 
+        additionalJourneys, providers
     };
 }
 
