@@ -1,3 +1,55 @@
+function updateConclusionsAndItineraryUI(inputs, providers, publicKwh, totalAdhocCost, conclusionsBox) {
+    const bestProvider = providers[0];
+    const minSpeedSelect = document.getElementById("minSpeed");
+    const minSpeedLabel = minSpeedSelect.options[minSpeedSelect.selectedIndex].text;
+    
+    const speedData = generateSpeedComparisonHtml(publicKwh, inputs.maxChargingSpeed, inputs);
+    const formatChargingTime = speedData.formatChargingTime;
+    const maxChargingTimeFormatted = formatChargingTime(inputs.maxChargingSpeed > 0 ? publicKwh / inputs.maxChargingSpeed : 0);
+
+    const itineraryData = generateRealWorldItineraryHtml(inputs, publicKwh, formatChargingTime);
+
+    const contentsHTML = `
+        <div id="toc" class="conclusion-white-border">
+            <h3>RESULTS CONTENTS</h3>
+            <ul style="margin:0; padding-left:20px; font-size:0.95rem;">
+                <li><a href="#payg-summary" style="color: var(--accent); text-decoration:none;">1. PAYG Summary (Based on ${inputs.adhoc}p/kWh)</a></li>
+                <li><a href="#providerResults" style="color: var(--accent); text-decoration:none;">2. Providers &amp; Subscriptions</a></li>
+                <li><a href="#payg-vs-subscription" style="color: var(--accent); text-decoration:none;">3. PAYG vs Subscription Conclusion</a></li>
+                <li><a href="#charging-times-section" style="color: var(--accent); text-decoration:none;">4. Charging Durations</a></li>
+                <li><a href="#real-world-assessment" style="color: var(--accent); text-decoration:none;">5. Real-World Charging Itinerary</a></li>
+                <li><a href="#graph-section" style="color: var(--accent); text-decoration:none;">6. Subscriptions Break-Even Graph</a></li>
+            </ul>
+        </div>`;
+    
+    document.getElementById("contentsBox").innerHTML = contentsHTML;
+    
+    let conclusionHTML = `<div class="conclusion-white-border guide-section" id="payg-vs-subscription">`; 
+    const journeyCount = 1 + inputs.additionalJourneys.length;
+    const totalMiles = inputs.journeyMiles + inputs.additionalJourneys.reduce((sum, j) => sum + j.miles, 0);
+    let journeyIntro = (journeyCount === 1) ? `For a journey of <strong>${inputs.journeyMiles} miles</strong>` : `For ${journeyCount} journeys totalling <strong>${totalMiles} miles</strong>`;
+
+    const extraNote = `<p style="font-size:0.85rem; margin-top:12px; opacity:0.8; color:var(--neon-green) !important;">Note: Before purchasing a subscription, check that your chosen provider has charging stations in your planned area of travel — else your subscription will be wasted.</p>`;
+
+    if (bestProvider.savings > 0) {
+        conclusionHTML += `<h3>3. PAYG vs Subscription Conclusion</h3><p class="main-result">${journeyIntro}, a one-month subscription with <strong>${bestProvider.name}</strong> works out cheaper than PAYG based on the selected minimum charging rate of <strong>${minSpeedLabel}</strong>. The total journey cost will be <strong>£${bestProvider.totalJourneyCost.toFixed(2)}</strong>, which represents a saving of <strong>£${bestProvider.savings.toFixed(2)}</strong> over the average PAYG rate of ${inputs.adhoc}p/kWh.</p>${extraNote}`;
+    } else {
+        conclusionHTML += `<h3>3. PAYG vs SUBSCRIPTION CONCLUSION</h3><p class="main-result">${journeyIntro}, a <strong>${inputs.adhoc}p PAYG rate</strong> is cheaper than the cheapest subscription. The total journey cost based on PAYG will be <strong>£${totalAdhocCost.toFixed(2)}</strong>. Consider future journeys this month before deciding.</p>${extraNote}`;
+    }
+    conclusionHTML += `</div>`;
+    
+    conclusionHTML += `<div class="conclusion-white-border guide-section" id="charging-times-section"><h3>4. Charging Durations</h3>`;
+    let durationIntro = (journeyCount === 1) ? `Your proposed <strong>${inputs.journeyMiles}-mile</strong> journey` : `Your ${journeyCount} proposed journeys totalling <strong>${totalMiles} miles</strong>`;
+ 
+    if (inputs.maxChargingSpeed > 0) {
+        conclusionHTML += `<p class="main-result">${durationIntro} will require <strong>${publicKwh.toFixed(1)} kWh</strong> of public charging. At <strong>${inputs.maxChargingSpeed} kW</strong>, total duration will be approx <strong>${maxChargingTimeFormatted}</strong>.</p>`;
+    } else {
+        conclusionHTML += `<p class="main-result">Enter your vehicle's <strong>Max. Charging Speed</strong> above to see estimated charging durations.</p>`;
+    }
+    conclusionHTML += `${speedData.speedTableHtml}${itineraryData.locationDisclaimer}</div>`;
+    conclusionsBox.innerHTML = conclusionHTML + itineraryData.assessmentBoxHTML;
+}
+
 function updatePaygSummaryUI(inputs, mainInitialRange) {
     const rangeData = calculateRangeHtml(inputs, mainInitialRange);
     const mainTopUpKwh = Math.max(0, ((inputs.soc - inputs.rechargeAt) / 100) * inputs.batteryKwh);
@@ -674,68 +726,11 @@ const providerResultsHtml = generateProviderResultsHtml(providers, inputs);
         if (!el._ftScrollBound) { el._ftScrollBound = true; el.addEventListener("scroll", () => { if (typeof _ftActive !== 'undefined' && _ftActive) _ftHide(); }, { passive: true }); }
     });
 
-    if (providers.length > 0) {
-        const bestProvider = providers[0];
-        const minSpeedSelect = document.getElementById("minSpeed");
-        const minSpeedLabel = minSpeedSelect.options[minSpeedSelect.selectedIndex].text;
-        const maxChargingSpeed = inputs.maxChargingSpeed;
-          
-const speedData = generateSpeedComparisonHtml(publicKwh, inputs.maxChargingSpeed, inputs);
-    const speedTableHtml = speedData.speedTableHtml;
-    const formatChargingTime = speedData.formatChargingTime;
-    const maxChargingTimeFormatted = formatChargingTime(inputs.maxChargingSpeed > 0 ? publicKwh / inputs.maxChargingSpeed : 0);
-
-const itineraryData = generateRealWorldItineraryHtml(inputs, publicKwh, formatChargingTime);
-        const assessmentBoxHTML = itineraryData.assessmentBoxHTML;
-        const locationDisclaimer = itineraryData.locationDisclaimer;
-    
-        const contentsHTML = `
-            <div id="toc" class="conclusion-white-border">
-                <h3>RESULTS CONTENTS</h3>
-                <ul style="margin:0; padding-left:20px; font-size:0.95rem;">
-                    <li><a href="#payg-summary" style="color: var(--accent); text-decoration:none;">1. PAYG Summary (Based on ${inputs.adhoc}p/kWh)</a></li>
-                    <li><a href="#providerResults" style="color: var(--accent); text-decoration:none;">2. Providers &amp; Subscriptions</a></li>
-                    <li><a href="#payg-vs-subscription" style="color: var(--accent); text-decoration:none;">3. PAYG vs Subscription Conclusion</a></li>
-                    <li><a href="#charging-times-section" style="color: var(--accent); text-decoration:none;">4. Charging Durations</a></li>
-                    <li><a href="#real-world-assessment" style="color: var(--accent); text-decoration:none;">5. Real-World Charging Itinerary</a></li>
-                    <li><a href="#graph-section" style="color: var(--accent); text-decoration:none;">6. Subscriptions Break-Even Graph</a></li>
-                </ul>
-            </div>
-        `;
-        
-        document.getElementById("contentsBox").innerHTML = contentsHTML;
-        let conclusionHTML = "";
-        const extraNote = `<p style="font-size:0.85rem; margin-top:12px; opacity:0.8; color:var(--neon-green) !important;">Note: Before purchasing a subscription, check that your chosen provider has charging stations in your planned area of travel — else your subscription will be wasted.</p>`
-        conclusionHTML += `<div class="conclusion-white-border guide-section" id="payg-vs-subscription">`; 
-        const journeyCount = 1 + inputs.additionalJourneys.length;
-        const totalMiles = inputs.journeyMiles + inputs.additionalJourneys.reduce((sum, j) => sum + j.miles, 0);
-        
-        let journeyIntro = (journeyCount === 1) 
-            ? `For a journey of <strong>${inputs.journeyMiles} miles</strong>` 
-            : `For ${journeyCount} journeys totalling <strong>${totalMiles} miles</strong>`;
-
-        if (bestProvider.savings > 0) {
-            conclusionHTML += `<h3>3. PAYG vs Subscription Conclusion</h3><p class="main-result">${journeyIntro}, a one-month subscription with <strong>${bestProvider.name}</strong> works out cheaper than PAYG based on the selected minimum charging rate of <strong>${minSpeedLabel}</strong>. The total journey cost will be <strong>£${bestProvider.totalJourneyCost.toFixed(2)}</strong>, which represents a saving of <strong>£${bestProvider.savings.toFixed(2)}</strong> over the average PAYG rate of ${inputs.adhoc}p/kWh.</p>${extraNote}`
-        } else {
-            conclusionHTML += `<h3>3. PAYG vs SUBSCRIPTION CONCLUSION</h3><p class="main-result">${journeyIntro}, a <strong>${inputs.adhoc}p PAYG rate</strong> is cheaper than the cheapest subscription. The total journey cost based on PAYG will be <strong>£${totalAdhocCost.toFixed(2)}</strong>. Consider future journeys this month before deciding.</p>${extraNote}`
-        }
-        conclusionHTML += `</div>`;
-        
-        conclusionHTML += `<div class="conclusion-white-border guide-section" id="charging-times-section"><h3>4. Charging Durations</h3>`;
-        let durationIntro = (journeyCount === 1) 
-            ? `Your proposed <strong>${inputs.journeyMiles}-mile</strong> journey` 
-            : `Your ${journeyCount} proposed journeys totalling <strong>${totalMiles} miles</strong>`;
-     
-        if (inputs.maxChargingSpeed > 0) {
-            conclusionHTML += `<p class="main-result">${durationIntro} will require <strong>${publicKwh.toFixed(1)} kWh</strong> of public charging. At <strong>${inputs.maxChargingSpeed} kW</strong>, total duration will be approx <strong>${maxChargingTimeFormatted}</strong>.</p>`;
-        } else {
-            conclusionHTML += `<p class="main-result">Enter your vehicle's <strong>Max. Charging Speed</strong> above to see estimated charging durations.</p>`;
-        }
-        conclusionHTML += `${speedTableHtml}${locationDisclaimer}</div>`;
-  conclusionsBox.innerHTML = conclusionHTML + assessmentBoxHTML;
+if (providers.length > 0) {
+        updateConclusionsAndItineraryUI(inputs, providers, publicKwh, totalAdhocCost, conclusionsBox);
     } else {
         conclusionsBox.innerHTML = "";
     }
-    
+
     updateOutputsAndStorage(inputs, providers);
 }
