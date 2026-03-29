@@ -1,3 +1,42 @@
+function generateProviderResultsHtml(providers, inputs) {
+    let html = `<div class="mobile-only-text" style="font-size: 0.8em; text-align: center; color: var(--neon-green)">Slide table left to view hidden columns.</div><div class="results-scroll"><table><thead><tr>
+        <th>Provider (click hyperlink to view subscription info)</th>
+        <th><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)" style="font-size: 0.8rem;">💡<span class="tooltip-box">This is the provider's subscription fee, which gives you access to their discounted charge rate for ONE MONTH.</span></span></span>Sub. Fee</th>
+        <th><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)" style="font-size: 0.8rem;">💡<span class="tooltip-box">This is the provider's discounted charge rate (per kWh) that is available after subscribing for an entire month. Note: Some providers have variable charge rates depending on location and time of day. The rate listed here may be an average. Click the provider's link to confirm pricing.</span></span></span>Disc. Rate</th>
+        <th><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)" style="font-size: 0.8rem;">💡<span class="tooltip-box">This is the expected <strong>total charging cost</strong> of your journey using this provider and including your stated battery pre-charge. If the value is displayed in green, it is cheaper than the equivalent journey using PAYG charging at the rate you entered above (${inputs.adhoc}p/kWh).</span></span></span>Journey Cost</th>
+        <th><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)" style="font-size: 0.8rem;">💡<span class="tooltip-box">This is the amount by which the discounted charge rate will either be cheaper or more expensive than your average PAYG rate for the same distance. Green means cheaper; red means more expensive. Bear in mind that you can continue to use a provider's subscription for an entire month.</span></span></span>vs. PAYG</th>
+        <th><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)" style="font-size: 0.8rem;">💡<span class="tooltip-box">This is the number of miles you must drive on the provider's discounted charge rate to pay off the subscription fee. <strong>Important! This is not the total miles of your journey</strong> — it is the number of miles you must drive from your first charge with this provider. Remember, a subscription lasts for an entire month.</span></span></span>Break-Even Miles</th>
+        <th><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)" style="font-size: 0.8rem;">💡<span class="tooltip-box">This is the break-even miles PLUS the initial number of miles your vehicle can drive based on its pre-charged state. The number of journeys has no impact on this value.</span></span></span>Break Even + Battery</th>
+        </tr></thead><tbody>`;
+    
+    providers.forEach(p => {
+        const rowClass = p.savings > 0 ? "good" : (p.savings < 0 ? "bad" : "");
+        const providerLink = p.url 
+            ? `<a href="${p.url}" target="_blank" style="color:inherit; text-decoration:underline;">${p.name}</a>` 
+            : p.name;
+        const breakEvenText = p.rate < inputs.adhoc 
+            ? `${p.breakEvenMiles.toFixed(0)} miles` 
+            : "Never";
+        const totalMilesText = p.rate < inputs.adhoc 
+            ? `${p.totalWithBattery.toFixed(0)} miles` 
+            : "N/A";
+        html += `<tr class="${rowClass}">
+            <td>
+                <span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)" style="font-size: 0.8rem;">💡<span class="tooltip-box">${p.comments}</span>
+                </span></span> ${providerLink}
+            </td>
+            <td>£${p.subCost.toFixed(2)}</td>
+            <td>${p.rate.toFixed(1)}p</td>
+            <td><strong>£${p.totalJourneyCost.toFixed(2)}</strong></td>
+            <td>${p.savings > 0 ? 'Save £' : 'Cost £'}${Math.abs(p.savings).toFixed(2)}</td>
+            <td><strong>${breakEvenText}</strong></td>
+            <td><strong>${totalMilesText}</strong></td>
+        </tr>`;
+    });
+    
+    return html + `</tbody></table></div>`;
+}
+
 function processProviderData(providerBoxes, inputs, totalAdhocCost, totalPreJourneyCost, mainInitialRange) {
     const providers = [];
     const simulateTripWithProvider = (providerRate, batteryKwh, rechargethreshold, efficiency, journeyMiles, initialSoc) => {
@@ -391,41 +430,9 @@ function handleBreakEvenMode(uiPreText, uiResults) {
         return a.name.localeCompare(b.name);
     });
 
-    let html = `<h2 class="results-heading" style="text-align: center">BREAK-EVEN ANALYSIS</h2>
-                <div class="mobile-only-text" style="font-size: 0.8em; text-align: center; color: var(--neon-green)">Slide table left to view hidden columns.</div>
-                <div class="results-scroll">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Provider (click hyperlink to view subscription info)</th>
-                            <th><span class="tooltip-container">
-                                <span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">If the provider's discounted charge rate is tied to a charging speed (selected in the form above), it will be specified in this column. If the provider offers more than one speed at the same discounted charge rate, you will see <strong>'Max. available'</strong>.</span></span>
-                            </span></span>Charging Speed</th>
-                            <th><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is the provider's subscription fee, which gives you access to their discounted charge rate for ONE MONTH.</span></span></span>Sub. Fee</th>
-                            <th><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is the provider's discounted charge rate (per kWh) that is available after subscribing for one month. Note that some providers have variable charge rates depending on location and time of day. The rate listed here may be an average. Click the provider's link to confirm pricing.</span></span></span>Disc. Rate</th>
-                            <th><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is the number of miles you must drive on the provider's discounted charge rate to pay off the subscription fee. <strong>Important! This is not the total miles of your journey</strong> — it is the number of miles you must drive from your first charge with this provider. Remember, a subscription lasts for an entire month. The number of journeys has no impact on this value.</span></span></span>Break-Even Miles</th>
-                        </tr>
-                    </thead>
-                    <tbody>`;
+const providerResultsHtml = generateProviderResultsHtml(providers, inputs);
+    document.getElementById("providerResults").innerHTML = providerResultsHtml;
 
-    beData.forEach(row => {
-        const providerLink = row.url 
-            ? `<a href="${row.url}" target="_blank" style="color:inherit; text-decoration:underline;">${row.name}</a>` 
-            : row.name;
-
-        html += `<tr>
-            <td>
-                <span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">${row.comments}</span>
-                </span></span> ${providerLink}
-            </td>
-            <td>${row.speedDisplay}</td>
-            <td>£${row.subCost.toFixed(2)}</td>
-            <td>${row.rate.toFixed(1)}p</td>
-            <td><strong>${row.displayText}</strong></td>
-        </tr>`;
-    });
-
-    document.getElementById("providerResults").innerHTML = html + `</tbody></table></div>`;
     document.querySelectorAll(".results-scroll").forEach(el => {
         if (!el._ftScrollBound) { el._ftScrollBound = true; el.addEventListener("scroll", () => { if (typeof _ftActive !== 'undefined' && _ftActive) _ftHide(); }, { passive: true }); }
     });
