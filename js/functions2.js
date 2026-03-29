@@ -1,4 +1,4 @@
-function checkIncompleteTrip(inputs, providerBoxes, uiPreText, uiResults, resultsHeader, uiShare, uiPdf) {
+function checkIncompleteTrip(inputs, providerList, uiPreText, uiResults, resultsHeader, uiShare, uiPdf) {
     const tripIncomplete = 
         inputs.journeyMiles <= 0 || 
         inputs.batteryKwh <= 0 || 
@@ -21,6 +21,8 @@ function checkIncompleteTrip(inputs, providerBoxes, uiPreText, uiResults, result
         return true; 
     }
 
+    // Check providers directly from the DOM since the variable isn't defined yet
+    const providerBoxes = providerList ? providerList.querySelectorAll(".provider-box") : [];
     if (providerBoxes.length === 0) {
         uiPreText.innerHTML = "Before you may view the results, you must select at least one provider from the list of providers (above). It is simplest to add <i>all</i> providers.";
         uiPreText.style.display = "block";
