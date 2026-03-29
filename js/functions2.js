@@ -45,17 +45,14 @@ function applyPulsing() {
     });
 }
 
-function calculate() {
-    // 1. Initialize variables (using your exact naming conventions)
+function handleModeVisibility(isTripMode) {
     const providersContainer = document.getElementById("providers");
     const collapseBtn = document.getElementById("toggleProvidersBtn");
     const clearBtn = document.querySelector('button[onclick="clearSavedProviders()"]');
     const hiddenMsg = document.getElementById("providersHiddenMsg");
 
-    // 2. Check if any provider boxes exist
     const hasProviders = providersContainer && providersContainer.querySelectorAll(".provider-box").length > 0;
 
-    // 3. Update visibility based on whether the list is empty
     if (!hasProviders) {
         if (collapseBtn) collapseBtn.style.display = "none";
         if (clearBtn) clearBtn.style.display = "none";
@@ -63,11 +60,8 @@ function calculate() {
     } else {
         if (collapseBtn) collapseBtn.style.display = "block";
         if (clearBtn) clearBtn.style.display = "block";
-        // hiddenMsg visibility remains managed by your toggleProviders logic
     }
-    const activePill = document.querySelector('.calc-tab.active');
-    const isTripMode = activePill && activePill.textContent.trim() === "Cost Reduction";
-    const conclusionsBox = document.getElementById("conclusionsBox");
+
     const beCard = document.getElementById("breakEvenCard");
     if (beCard) beCard.style.display = isTripMode ? "none" : "block";
     
@@ -75,7 +69,6 @@ function calculate() {
     const resultsHeader = document.getElementById("resultsHeader");
     const btnRow = document.querySelector(".btn-row");
     const uiResults = document.getElementById("results");
-    const uiPreText = document.getElementById("preConclusionsText");
     const sortContainer = document.getElementById("sortContainer");
 
     if (sortContainer) sortContainer.style.display = isTripMode ? "block" : "none";
@@ -83,6 +76,14 @@ function calculate() {
     if (resultsHeader) resultsHeader.style.display = isTripMode ? "flex" : "none";
     if (uiResults) uiResults.style.display = isTripMode ? "flex" : "none";
     if (btnRow) btnRow.style.display = isTripMode ? "flex" : "none";
+}
+
+function calculate() {
+    // 1. Initialize variables (using your exact naming conventions)
+    const activePill = document.querySelector('.calc-tab.active');
+    const isTripMode = activePill && activePill.textContent.trim() === "Cost Reduction";
+    
+    handleModeVisibility(isTripMode);   
 
     applyPulsing(); 
 
