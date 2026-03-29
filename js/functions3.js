@@ -329,61 +329,39 @@ function calculate() {
     document.querySelector(".calc-lines").style.display = "block";
     document.querySelector(".chart-wrapper").style.display = "block";
 
-// --- START REPLACEMENT: CONSOLIDATED JOURNEY LOGIC ---
-    const allJourneys = [
-        { miles: inputs.journeyMiles, soc: inputs.soc, rate: inputs.startChargeRate },
-        ...inputs.additionalJourneys
-    ];
+// --- START CONSOLIDATED LOGIC ---
+    const allJs = [{ miles: inputs.journeyMiles, soc: inputs.soc, rate: inputs.startChargeRate }, ...inputs.additionalJourneys];
+    let totalInitialRange = 0, totalPreJourneyCost = 0, totalPublicKwh = 0;
+    let rangeDetailsHtml = "", preChargeDetailsHtml = "", publicMilesDetailsHtml = "";
 
-    let totalInitialRange = 0;
-    let totalPreJourneyCost = 0;
-    let totalPublicKwh = 0;
-    let rangeDetailsHtml = "";
-    let preChargeDetailsHtml = "";
-    let publicMilesDetailsHtml = "";
-
-    allJourneys.forEach((j, index) => {
-        const initialRange = Math.max(0, ((j.soc - inputs.rechargeAt) / 100) * inputs.batteryKwh * inputs.efficiency);
-        const preChargeKwh = Math.max(0, ((j.soc - inputs.rechargeAt) / 100) * inputs.batteryKwh);
-        const preChargeCost = preChargeKwh * (j.rate / 100);
-        
+    allJs.forEach((j, idx) => {
+        const initRange = Math.max(0, ((j.soc - inputs.rechargeAt) / 100) * inputs.batteryKwh * inputs.efficiency);
+        const preKwh = Math.max(0, ((j.soc - inputs.rechargeAt) / 100) * inputs.batteryKwh);
+        const preCost = preKwh * (j.rate / 100);
         const sim = runJourneySimulation({
-            miles: j.miles,
-            batteryKwh: inputs.batteryKwh,
-            efficiency: inputs.efficiency,
-            rechargeAt: inputs.rechargeAt,
-            chargeToPercent: 80,
-            rate: inputs.adhoc,
-            initialSoc: j.soc
+            miles: j.miles, batteryKwh: inputs.batteryKwh, efficiency: inputs.efficiency,
+            rechargeAt: inputs.rechargeAt, chargeToPercent: 80, rate: inputs.adhoc, initialSoc: j.soc
         });
-
-        totalInitialRange += initialRange;
-        totalPreJourneyCost += preChargeCost;
+        totalInitialRange += initRange;
+        totalPreJourneyCost += preCost;
         totalPublicKwh += sim.totalPublicKwh;
 
-        const label = `Journey ${index + 1}`;
-        rangeDetailsHtml += `<div style="font-size: 0.8rem; opacity: 0.5; margin-bottom: 2px; margin-left: 10px;">${label} range: ${initialRange.toFixed(0)} miles</div>`;
-        preChargeDetailsHtml += `<div style="font-size: 0.8rem; opacity: 0.5; margin-bottom: 2px; margin-left: 10px;">${label} pre-charge cost (${inputs.rechargeAt}%→${j.soc}%, ${preChargeKwh.toFixed(1)} kWh x ${j.rate}p): £${preChargeCost.toFixed(2)}</div>`;
-        publicMilesDetailsHtml += `<div style="font-size: 0.8rem; opacity: 0.5; margin-bottom: 2px; margin-left: 10px;">${label} PAYG miles: ${Math.max(0, j.miles - initialRange).toFixed(0)} miles</div>`;
+        const label = `Journey ${idx + 1}`;
+        rangeDetailsHtml += `<div style="font-size: 0.8rem; opacity: 0.5; margin-left: 10px;">${label} range: ${initRange.toFixed(0)} miles</div>`;
+        preChargeDetailsHtml += `<div style="font-size: 0.8rem; opacity: 0.5; margin-left: 10px;">${label} cost: £${preCost.toFixed(2)}</div>`;
+        publicMilesDetailsHtml += `<div style="font-size: 0.8rem; opacity: 0.5; margin-left: 10px;">${label} PAYG: ${Math.max(0, j.miles - initRange).toFixed(0)} miles</div>`;
     });
 
     const totalAdhocCost = totalPreJourneyCost + (totalPublicKwh * (inputs.adhoc / 100));
-    const publicKwh = totalPublicKwh;
+    const publicKwh = totalPublicKwh; // This satisfies the existing dependency below
 
-    // Update UI with consolidated data
-    const paygSubtitle = document.getElementById("paygSummarySubtitle");
-    if (paygSubtitle) {
-        paygSubtitle.textContent = allJourneys.length > 1 ? "Key information for your journeys (PAYG)." : "Key information for your journey (PAYG).";
-    }
-
-    document.getElementById("homeRangeLine").innerHTML = `<p style="opacity: 0.5; margin: 0px; font-size: 0.8rem"><strong>Pre-charged battery range:</strong></p>${rangeDetailsHtml}<p style="border-bottom: 1px solid rgba(255,255,255,0.2); margin: 0; padding-bottom: 10px;">Total pre-charged range: ${totalInitialRange.toFixed(0)} miles</p>`;
-    document.getElementById("preChargeLine").innerHTML = `<div class="guide-section"><p style="opacity: 0.5; font-size: 0.8rem; margin: 0px"><strong>Pre-charge battery costs:</strong></p>${preChargeDetailsHtml}<p style="margin: 0px; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 10px;">Total pre-charge cost: £${totalPreJourneyCost.toFixed(2)}</p></div>`;
-    document.getElementById("publicMilesLine").innerHTML = `<p style="opacity: 0.5; font-size: 0.8rem; margin: 0px"><strong>PAYG miles:</strong></p>${publicMilesDetailsHtml}<p style="border-bottom: 1px solid rgba(255,255,255,0.2); margin:0; padding-bottom: 10px;">Total PAYG miles: ${Math.max(0, (inputs.journeyMiles + inputs.additionalJourneys.reduce((s, n) => s + n.miles, 0)) - totalInitialRange).toFixed(0)} miles</p>`;
-    document.getElementById("publicKwhLine").innerHTML = `<p style="margin: 0px">Total Public kWh required: <strong>${totalPublicKwh.toFixed(1)} kWh</strong></p>`;
-    
-    const paygTotalMiles = inputs.journeyMiles + inputs.additionalJourneys.reduce((sum, j) => sum + j.miles, 0);
-    document.getElementById("adhocCostLine").innerHTML = `<p style="margin: 0px; font-size: 1.2rem">${allJourneys.length > 1 ? `Total PAYG cost (${paygTotalMiles} miles):` : `Total PAYG cost (${inputs.journeyMiles} miles):`} <strong>£${totalAdhocCost.toFixed(2)}</strong></p>`;
-    // --- END REPLACEMENT ---
+    document.getElementById("paygSummarySubtitle").textContent = allJs.length > 1 ? `Key info for your journeys (PAYG).` : `Key info for your journey (PAYG).`;
+    document.getElementById("homeRangeLine").innerHTML = `<p style="opacity: 0.5; margin: 0; font-size: 0.8rem"><strong>Pre-charged range:</strong></p>${rangeDetailsHtml}<p style="border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 10px;">Total: ${totalInitialRange.toFixed(0)} miles</p>`;
+    document.getElementById("preChargeLine").innerHTML = `<div class="guide-section"><p style="opacity: 0.5; font-size: 0.8rem; margin: 0"><strong>Pre-charge costs:</strong></p>${preChargeDetailsHtml}<p style="border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 10px;">Total: £${totalPreJourneyCost.toFixed(2)}</p></div>`;
+    document.getElementById("publicMilesLine").innerHTML = `<p style="opacity: 0.5; font-size: 0.8rem; margin: 0"><strong>PAYG miles:</strong></p>${publicMilesDetailsHtml}<p style="border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 10px;">Total PAYG: ${Math.max(0, (inputs.journeyMiles + inputs.additionalJourneys.reduce((s, n) => s + n.miles, 0)) - totalInitialRange).toFixed(0)} miles</p>`;
+    document.getElementById("publicKwhLine").innerHTML = `<p style="margin: 0">Total Public kWh: <strong>${totalPublicKwh.toFixed(1)} kWh</strong></p>`;
+    document.getElementById("adhocCostLine").innerHTML = `<p style="margin: 0; font-size: 1.2rem">Total PAYG cost: <strong>£${totalAdhocCost.toFixed(2)}</strong></p>`;
+    // --- END CONSOLIDATED LOGIC ---
        
 
  const providers = [];
