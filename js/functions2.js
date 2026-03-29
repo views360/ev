@@ -1,11 +1,14 @@
-function initializeUI() {
+function calculate() {
+    // 1. Initialize variables (using your exact naming conventions)
     const providersContainer = document.getElementById("providers");
     const collapseBtn = document.getElementById("toggleProvidersBtn");
     const clearBtn = document.querySelector('button[onclick="clearSavedProviders()"]');
     const hiddenMsg = document.getElementById("providersHiddenMsg");
 
+    // 2. Check if any provider boxes exist
     const hasProviders = providersContainer && providersContainer.querySelectorAll(".provider-box").length > 0;
 
+    // 3. Update visibility based on whether the list is empty
     if (!hasProviders) {
         if (collapseBtn) collapseBtn.style.display = "none";
         if (clearBtn) clearBtn.style.display = "none";
@@ -13,19 +16,31 @@ function initializeUI() {
     } else {
         if (collapseBtn) collapseBtn.style.display = "block";
         if (clearBtn) clearBtn.style.display = "block";
+        // hiddenMsg visibility remains managed by your toggleProviders logic
     }
-
     const activePill = document.querySelector('.calc-tab.active');
     const isTripMode = activePill && activePill.textContent.trim() === "Cost Reduction";
     const conclusionsBox = document.getElementById("conclusionsBox");
     const beCard = document.getElementById("breakEvenCard");
-    const uiPreText = document.getElementById("preConclusionsText");
-
     if (beCard) beCard.style.display = isTripMode ? "none" : "block";
+    
+    const tripGrid = document.querySelector(".grid");
+    const resultsHeader = document.getElementById("resultsHeader");
+    const btnRow = document.querySelector(".btn-row");
+    const uiResults = document.getElementById("results");
+    const uiPreText = document.getElementById("preConclusionsText");
+    const sortContainer = document.getElementById("sortContainer");
 
-    const fieldIds = isTripMode ? 
-        ["journeyMiles", "batteryKwh", "soc", "efficiency", "adhoc", "startChargeRate", "maxChargingSpeed", "rechargeAt"] :
-        ["efficiencyBE", "adhocBE"];
+    if (sortContainer) sortContainer.style.display = isTripMode ? "block" : "none";
+    if (tripGrid) tripGrid.style.display = isTripMode ? "grid" : "none";
+    if (resultsHeader) resultsHeader.style.display = isTripMode ? "flex" : "none";
+    if (uiResults) uiResults.style.display = isTripMode ? "flex" : "none";
+    if (btnRow) btnRow.style.display = isTripMode ? "flex" : "none";
+
+    const fieldIds = [
+        "journeyMiles", "batteryKwh", "soc", "efficiency", 
+        "adhoc", "startChargeRate", "maxChargingSpeed", "efficiencyBE", "adhocBE", "rechargeAt"
+    ];
 
     fieldIds.forEach(id => {
         const el = document.getElementById(id);
@@ -43,14 +58,15 @@ function initializeUI() {
     const extraJourneys = document.querySelectorAll(".extra-journey-miles");
     
     if (addJourneyBtn) {
-        if (extraJourneys.length === 0) {
-            addJourneyBtn.classList.add("empty-pulse");
-        } else {
+        // If at least one extra journey exists, remove the pulse; otherwise, keep it.
+        if (extraJourneys.length > 0) {
             addJourneyBtn.classList.remove("empty-pulse");
+        } else {
+            addJourneyBtn.classList.add("empty-pulse");
         }
     }
 
-    extraJourneys.forEach(input => {
+    document.querySelectorAll(".extra-journey-miles").forEach(input => {
         const val = parseFloat(input.value);
         if (!input.value || isNaN(val) || val <= 0) {
             input.classList.add('empty-pulse');
@@ -59,21 +75,8 @@ function initializeUI() {
         }
     });
 
-    document.querySelectorAll(".provider-box input[type='number'], .provider-box input[type='text']").forEach(input => {
-        if (!input.value || input.value === "0") {
-            input.classList.add('empty-pulse');
-        } else {
-            input.classList.remove('empty-pulse');
-        }
-    });
 
-    // We return these so calculate() can use them without error
-    return { isTripMode, conclusionsBox, uiPreText };
-}
-
-function calculate() {
-
-const { isTripMode, conclusionsBox, uiPreText } = initializeUI();
+    
 
     document.querySelectorAll(".provider-box input[type='number'], .provider-box input[type='text']").forEach(input => {
         if (!input.value || input.value === "0") {
