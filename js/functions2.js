@@ -1,3 +1,68 @@
+function generateSpeedComparisonHtml(publicKwh, maxChargingSpeed, inputs) {
+    const formatChargingTime = (timeHours) => {
+        if (timeHours < 1) {
+            const minutes = Math.round(timeHours * 60);
+            return `${minutes} mins`;
+        } else {
+            const hours = Math.floor(timeHours);
+            const minutes = Math.round((timeHours - hours) * 60);
+            if (minutes === 0) {
+                return `${hours} hour${hours > 1 ? 's' : ''}`;
+            }
+            return `${hours}h ${minutes}m`;
+        }
+    };
+
+    const chargingSpeeds = [
+        { speed: 7, type: 'AC', descriptor: 'Standard' },
+        { speed: 11, type: 'AC', descriptor: 'Standard Plus' },
+        { speed: 22, type: 'AC', descriptor: 'Fast' },
+        { speed: 50, type: 'DC', descriptor: 'Rapid' },
+        { speed: 60, type: 'DC', descriptor: 'Rapid' },
+        { speed: 75, type: 'DC', descriptor: 'Rapid Plus' },
+        { speed: 90, type: 'DC', descriptor: 'Rapid Plus' },
+        { speed: 100, type: 'DC', descriptor: 'Rapid Plus' },
+        { speed: 120, type: 'DC', descriptor: 'Ultra-Rapid' },
+        { speed: 150, type: 'DC', descriptor: 'Ultra-Rapid' },
+        { speed: 175, type: 'DC', descriptor: 'Ultra-Rapid' },
+        { speed: 250, type: 'DC', descriptor: 'Ultra-Rapid' },
+        { speed: 300, type: 'DC', descriptor: 'Hyper-Rapid' },
+        { speed: 350, type: 'DC', descriptor: 'Hyper-Rapid' },
+        { speed: 360, type: 'DC', descriptor: 'Hyper-Rapid' }
+    ];
+
+    let speedsToDisplay = [...chargingSpeeds];
+    if (maxChargingSpeed > 0 && !speedsToDisplay.some(s => Math.abs(s.speed - maxChargingSpeed) < 0.01)) {
+        speedsToDisplay.push({ speed: maxChargingSpeed, type: 'Custom', descriptor: 'Vehicle Max' });
+        speedsToDisplay.sort((a, b) => a.speed - b.speed);
+    }
+
+    let tableRows = '';
+    speedsToDisplay.forEach(speedObj => {
+        const timeHours = publicKwh / speedObj.speed;
+        const timeFormatted = formatChargingTime(timeHours);
+        const isMaxSpeed = Math.abs(maxChargingSpeed - speedObj.speed) < 0.01;
+        const highlightStyle = isMaxSpeed ? 'font-weight:bold; color:#4A9EFF;' : '';
+        tableRows += `<tr style="${highlightStyle}"><td>${speedObj.speed}kW</td><td>${speedObj.type}</td><td>${speedObj.descriptor}</td><td>${timeFormatted}</td></tr>`;
+    });
+
+    const speedTableHtml = `
+        <div class="speed-comparison-container" style="width: fit-content; max-width: 100%; margin: 0;">
+            <p style="font-size: 0.85rem; margin-bottom: 10px;">
+                <span class="tooltip-container">
+                    <span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">A comparison of estimated total journey charge durations...</span></span>
+                </span>
+                <strong>Estimated Total Public Charging Duration Required</strong>
+            </p>
+            <table class="mini-table">
+                <thead><tr><th>Charging Speed</th><th>Type</th><th>Descriptor</th><th>Journey Charging Duration</th></tr></thead>
+                <tbody>${tableRows}</tbody>
+            </table>
+        </div>`;
+
+    return { speedTableHtml, formatChargingTime };
+}
+
 function generateProviderResultsHtml(providers, inputs) {
     let html = `<div class="mobile-only-text" style="font-size: 0.8em; text-align: center; color: var(--neon-green)">Slide table left to view hidden columns.</div><div class="results-scroll"><table><thead><tr>
         <th>Provider (click hyperlink to view subscription info)</th>
@@ -628,80 +693,13 @@ const providers = processProviderData(providerBoxes, inputs, totalAdhocCost, tot
         const minSpeedSelect = document.getElementById("minSpeed");
         const minSpeedLabel = minSpeedSelect.options[minSpeedSelect.selectedIndex].text;
         const maxChargingSpeed = inputs.maxChargingSpeed;
-        
-        const formatChargingTime = (timeHours) => {
-            if (timeHours < 1) {
-                const minutes = Math.round(timeHours * 60);
-                return `${minutes} mins`;
-            } else {
-                const hours = Math.floor(timeHours);
-                const minutes = Math.round((timeHours - hours) * 60);
-                if (minutes === 0) {
-                    return `${hours} hour${hours > 1 ? 's' : ''}`;
-                }
-                return `${hours}h ${minutes}m`;
-            }
-        };
-        
-        const maxChargingTimeHours = maxChargingSpeed > 0 ? publicKwh / maxChargingSpeed : 0;
-        const maxChargingTimeFormatted = formatChargingTime(maxChargingTimeHours);
-        
-        const chargingSpeeds = [
-            { speed: 7, type: 'AC', descriptor: 'Standard' },
-            { speed: 11, type: 'AC', descriptor: 'Standard Plus' },
-            { speed: 22, type: 'AC', descriptor: 'Fast' },
-            { speed: 50, type: 'DC', descriptor: 'Rapid' },
-            { speed: 60, type: 'DC', descriptor: 'Rapid' },
-            { speed: 75, type: 'DC', descriptor: 'Rapid Plus' },
-            { speed: 90, type: 'DC', descriptor: 'Rapid Plus' },
-            { speed: 100, type: 'DC', descriptor: 'Rapid Plus' },
-            { speed: 120, type: 'DC', descriptor: 'Ultra-Rapid' },
-            { speed: 150, type: 'DC', descriptor: 'Ultra-Rapid' },
-            { speed: 175, type: 'DC', descriptor: 'Ultra-Rapid' },
-            { speed: 250, type: 'DC', descriptor: 'Ultra-Rapid' },
-            { speed: 300, type: 'DC', descriptor: 'Hyper-Rapid' },
-            { speed: 350, type: 'DC', descriptor: 'Hyper-Rapid' },
-            { speed: 360, type: 'DC', descriptor: 'Hyper-Rapid' }
-        ];
-        
-        let speedsToDisplay = [...chargingSpeeds];
-        if (maxChargingSpeed > 0 && !speedsToDisplay.some(s => Math.abs(s.speed - maxChargingSpeed) < 0.01)) {
-            speedsToDisplay.push({
-                speed: maxChargingSpeed,
-                type: 'Custom',
-                descriptor: 'Vehicle Max'
-            });
-            speedsToDisplay.sort((a, b) => a.speed - b.speed);
-        }
-        
-        let tableRows = '';
-        speedsToDisplay.forEach(speedObj => {
-            const timeHours = publicKwh / speedObj.speed;
-            const timeFormatted = formatChargingTime(timeHours);
-            const isMaxSpeed = Math.abs(maxChargingSpeed - speedObj.speed) < 0.01;
-            const highlightStyle = isMaxSpeed ? 'font-weight:bold; color:#4A9EFF;' : '';
-            tableRows += `<tr style="${highlightStyle}"><td>${speedObj.speed}kW</td><td>${speedObj.type}</td><td>${speedObj.descriptor}</td><td>${timeFormatted}</td></tr>`;
-        });
-        
-        const speedTableHtml = `
-            <div class="speed-comparison-container" style="width: fit-content; max-width: 100%; margin: 0;">
-                <p style="font-size: 0.85rem; margin-bottom: 10px;">
-                    <span class="tooltip-container">
-                        <span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">A comparison of estimated total journey charge durations at various speeds for the public-charging section of your journey assumes that charging will begin each time the battery reaches your recharge threshold (${inputs.rechargeAt}%) and that you will charge to 80% (except for the final charge, which only charges enough to reach your destination with a ${inputs.rechargeAt}% reserve). All charges use the vehicle's maximum charging speed of ${inputs.maxChargingSpeed}kW.</span></span>
-                    </span>
-                    <strong>Estimated Total Public Charging Duration Required</strong>
-                </p>
-                <table class="mini-table">
-                    <thead>
-                        <tr><th>Charging Speed</th><th>Type</th><th>Descriptor</th><th>Journey Charging Duration</th></tr>
-                    </thead>
-                    <tbody>
-                        ${tableRows}
-                    </tbody>
-                </table>
-            </div>`;
-        
-        // --- REAL WORLD SECTION ---
+          
+const speedData = generateSpeedComparisonHtml(publicKwh, inputs.maxChargingSpeed, inputs);
+    const speedTableHtml = speedData.speedTableHtml;
+    const formatChargingTime = speedData.formatChargingTime;
+    const maxChargingTimeFormatted = formatChargingTime(inputs.maxChargingSpeed > 0 ? publicKwh / inputs.maxChargingSpeed : 0);
+
+ // --- REAL WORLD SECTION ---
         const chargeSpeed = inputs.maxChargingSpeed || 101;
         const rechargethreshold = inputs.rechargeAt;
         const chargeToPercent = 80; // Charge to 80% at each public stop (except final)
