@@ -38,7 +38,8 @@ function applyPulsing() {
         }
     }
 
-    document.querySelectorAll(".extra-journey-row input[type='number'], .extra-journey-row input[type='text']").forEach(input => {
+    const extraFields = document.querySelectorAll(".extra-journey-miles, .extra-journey-soc, .extra-journey-prechargesoc");
+    extraFields.forEach(input => {
         const val = parseFloat(input.value);
         if (!input.value || isNaN(val) || val <= 0) {
             input.classList.add('empty-pulse');
