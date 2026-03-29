@@ -1,34 +1,4 @@
-function validateInputs(isTripMode) {
-    const fieldIds = [
-        "journeyMiles", "batteryKwh", "soc", "efficiency", 
-        "adhoc", "startChargeRate", "maxChargingSpeed", "efficiencyBE", "adhocBE", "rechargeAt"
-    ];
-
-    fieldIds.forEach(id => {
-        const el = document.getElementById(id);
-        if (el) {
-            const val = parseFloat(el.value);
-            el.classList.toggle('empty-pulse', !el.value || isNaN(val) || val <= 0);
-        }
-    });
-
-    const addJourneyBtn = document.querySelector('button[onclick="addAdditionalJourney()"]');
-    const extraJourneys = document.querySelectorAll(".extra-journey-miles");
-    if (addJourneyBtn) {
-        addJourneyBtn.classList.toggle("empty-pulse", extraJourneys.length === 0);
-    }
-
-    extraJourneys.forEach(input => {
-        const val = parseFloat(input.value);
-        input.classList.toggle('empty-pulse', !input.value || isNaN(val) || val <= 0);
-    });
-
-    document.querySelectorAll(".provider-box input[type='number'], .provider-box input[type='text']").forEach(input => {
-        input.classList.toggle('empty-pulse', !input.value || input.value === "0");
-    });
-}
-
-function calculate() {
+function initializeUI() {
     // 1. Initialize variables (using your exact naming conventions)
     const providersContainer = document.getElementById("providers");
     const collapseBtn = document.getElementById("toggleProvidersBtn");
@@ -46,29 +16,72 @@ function calculate() {
     } else {
         if (collapseBtn) collapseBtn.style.display = "block";
         if (clearBtn) clearBtn.style.display = "block";
-        // hiddenMsg visibility remains managed by your toggleProviders logic
     }
+
     const activePill = document.querySelector('.calc-tab.active');
     const isTripMode = activePill && activePill.textContent.trim() === "Cost Reduction";
     const conclusionsBox = document.getElementById("conclusionsBox");
     const beCard = document.getElementById("breakEvenCard");
     if (beCard) beCard.style.display = isTripMode ? "none" : "block";
+
+    const fieldIds = isTripMode ? 
+        ["journeyMiles", "batteryKwh", "soc", "efficiency", "adhoc", "startChargeRate", "maxChargingSpeed", "rechargeAt"] :
+        ["efficiencyBE", "adhocBE"];
+
+    fieldIds.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            const val = parseFloat(el.value);
+            if (!el.value || isNaN(val) || val <= 0) {
+                el.classList.add('empty-pulse');
+            } else {
+                el.classList.remove('empty-pulse');
+            }
+        }
+    });
+
+    const addJourneyBtn = document.querySelector('button[onclick="addAdditionalJourney()"]');
+    const extraJourneys = document.querySelectorAll(".extra-journey-miles");
     
-    const tripGrid = document.querySelector(".grid");
-    const resultsHeader = document.getElementById("resultsHeader");
-    const btnRow = document.querySelector(".btn-row");
-    const uiResults = document.getElementById("results");
-    const uiPreText = document.getElementById("preConclusionsText");
-    const sortContainer = document.getElementById("sortContainer");
+    if (addJourneyBtn) {
+        if (extraJourneys.length === 0) {
+            addJourneyBtn.classList.add("empty-pulse");
+        } else {
+            addJourneyBtn.classList.remove("empty-pulse");
+        }
+    }
 
-    if (sortContainer) sortContainer.style.display = isTripMode ? "block" : "none";
-    if (tripGrid) tripGrid.style.display = isTripMode ? "grid" : "none";
-    if (resultsHeader) resultsHeader.style.display = isTripMode ? "flex" : "none";
-    if (uiResults) uiResults.style.display = isTripMode ? "flex" : "none";
-    if (btnRow) btnRow.style.display = isTripMode ? "flex" : "none";
+    extraJourneys.forEach(input => {
+        const val = parseFloat(input.value);
+        if (!input.value || isNaN(val) || val <= 0) {
+            input.classList.add('empty-pulse');
+        } else {
+            input.classList.remove('empty-pulse');
+        }
+    });
 
-    // Perform input validation and UI pulsing
-    validateInputs(isTripMode);
+    document.querySelectorAll(".provider-box input[type='number'], .provider-box input[type='text']").forEach(input => {
+        if (!input.value || input.value === "0") {
+            input.classList.add('empty-pulse');
+        } else {
+            input.classList.remove('empty-pulse');
+        }
+    });
+
+    return { isTripMode, conclusionsBox };
+}
+
+function calculate() {
+
+const { isTripMode, conclusionsBox } = initializeUI();
+
+    document.querySelectorAll(".provider-box input[type='number'], .provider-box input[type='text']").forEach(input => {
+        if (!input.value || input.value === "0") {
+            input.classList.add('empty-pulse');
+        } else {
+            input.classList.remove('empty-pulse');
+        }
+    });
 
     if (!isTripMode) {
         conclusionsBox.style.display = "none";
