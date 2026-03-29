@@ -1,3 +1,48 @@
+function getInputs() {
+    const journeyMiles = parseFloat(document.getElementById("journeyMiles")?.value) || 0;
+    const batteryKwh = parseFloat(document.getElementById("batteryKwh")?.value) || 0;
+    const soc = parseFloat(document.getElementById("soc")?.value) || 0;
+    const efficiency = parseFloat(document.getElementById("efficiency")?.value) || 0;
+    const adhoc = parseFloat(document.getElementById("adhoc")?.value) || 0;
+    const startChargeRate = parseFloat(document.getElementById("startChargeRate")?.value) || 0;
+    const maxChargingSpeed = parseFloat(document.getElementById("maxChargingSpeed")?.value) || 0;
+    const rechargeAt = parseFloat(document.getElementById("rechargeAt")?.value) || 0;
+
+    const additionalJourneys = [];
+    document.querySelectorAll(".extra-journey-row").forEach(row => {
+        const miles = parseFloat(row.querySelector(".extra-journey-miles")?.value) || 0;
+        const soc = parseFloat(row.querySelector(".extra-journey-soc")?.value) || 0;
+        const rate = parseFloat(row.querySelector(".extra-journey-rate")?.value) || 0;
+        additionalJourneys.push({ miles, soc, rate });
+    });
+
+    return {
+        journeyMiles, batteryKwh, soc, efficiency, adhoc,
+        startChargeRate, maxChargingSpeed, rechargeAt, additionalJourneys
+    };
+}
+
+function validateFields(isTripMode) {
+    const fieldIds = isTripMode ? 
+        ["journeyMiles", "batteryKwh", "soc", "efficiency", "adhoc", "startChargeRate", "maxChargingSpeed", "rechargeAt"] :
+        ["efficiencyBE", "adhocBE"];
+
+    let allValid = true;
+    fieldIds.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            const val = parseFloat(el.value);
+            if (!el.value || isNaN(val) || val <= 0) {
+                el.classList.add('empty-pulse');
+                allValid = false;
+            } else {
+                el.classList.remove('empty-pulse');
+            }
+        }
+    });
+    return allValid;
+}
+
 function calculate() {
     // 1. Initialize variables (using your exact naming conventions)
     const providersContainer = document.getElementById("providers");
@@ -18,6 +63,8 @@ function calculate() {
         if (clearBtn) clearBtn.style.display = "block";
         // hiddenMsg visibility remains managed by your toggleProviders logic
     }
+    
+
     const activePill = document.querySelector('.calc-tab.active');
     const isTripMode = activePill && activePill.textContent.trim() === "Cost Reduction";
     const conclusionsBox = document.getElementById("conclusionsBox");
@@ -37,22 +84,8 @@ function calculate() {
     if (uiResults) uiResults.style.display = isTripMode ? "flex" : "none";
     if (btnRow) btnRow.style.display = isTripMode ? "flex" : "none";
 
-    const fieldIds = [
-        "journeyMiles", "batteryKwh", "soc", "efficiency", 
-        "adhoc", "startChargeRate", "maxChargingSpeed", "efficiencyBE", "adhocBE", "rechargeAt"
-    ];
-
-    fieldIds.forEach(id => {
-        const el = document.getElementById(id);
-        if (el) {
-            const val = parseFloat(el.value);
-            if (!el.value || isNaN(val) || val <= 0) {
-                el.classList.add('empty-pulse');
-            } else {
-                el.classList.remove('empty-pulse');
-            }
-        }
-    });
+    // Replaces the manual fieldIds.forEach loop
+    validateFields(isTripMode);
 
     const addJourneyBtn = document.querySelector('button[onclick="addAdditionalJourney()"]');
     const extraJourneys = document.querySelectorAll(".extra-journey-miles");
