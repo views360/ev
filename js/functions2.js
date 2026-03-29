@@ -1,3 +1,10 @@
+function calculateMainJourneyBasics(inputs) {
+    const mainInitialRange = (inputs.soc / 100) * inputs.batteryKwh * inputs.efficiency;
+    const mainTopUpKwh = Math.max(0, ((inputs.soc - inputs.prechargesoc) / 100) * inputs.batteryKwh);
+    const mainTopUpCost = mainTopUpKwh * (inputs.startChargeRate / 100);
+    return { mainInitialRange, mainTopUpKwh, mainTopUpCost };
+}
+
 function updateOutputsAndStorage(inputs, providers) {
     drawGraph(inputs, providers);
     const dataToSave = getInputs();
@@ -420,6 +427,7 @@ function applyPulsing() {
         }
     });
 
+    // This is the section we are keeping here and removing from calculate()
     document.querySelectorAll(".provider-box input[type='number'], .provider-box input[type='text']").forEach(input => {
         if (!input.value || input.value === "0") {
             input.classList.add('empty-pulse');
@@ -551,28 +559,16 @@ const providerResultsHtml = generateProviderResultsHtml(providers, inputs);
 }
 
 function calculate() {
-    // 1. Initialize variables (using your exact naming conventions)
     const activePill = document.querySelector('.calc-tab.active');
     const isTripMode = activePill && activePill.textContent.trim() === "Cost Reduction";
     
-    // Define UI variables here so they are available to all following blocks
     const uiResults = document.getElementById("results");
     const uiPreText = document.getElementById("preConclusionsText");
     const conclusionsBox = document.getElementById("conclusionsBox");
     const resultsHeader = document.getElementById("resultsHeader");
     
     handleModeVisibility(isTripMode); 
-
     applyPulsing(); 
-
-    document.querySelectorAll(".provider-box input[type='number'], .provider-box input[type='text']").forEach(input => {
-        if (!input.value || input.value === "0") {
-            input.classList.add('empty-pulse');
-        } else {
-            input.classList.remove('empty-pulse');
-        }
-    });
-
 
     if (!isTripMode) {
         conclusionsBox.style.display = "none";
@@ -580,13 +576,17 @@ function calculate() {
         return; 
     }
 
-
     if (uiPreText) uiPreText.style.display = "block";
     if (uiResults) uiResults.style.display = "block";
 
     const inputs = getInputs();
-    
     updatePaygTitle(inputs.adhoc);
+
+
+
+
+
+
 
     const uiShare = document.getElementById("shareBtn");
     const uiPdf = document.getElementById("pdfBtn");
