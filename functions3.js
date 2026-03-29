@@ -56,7 +56,10 @@ function runJourneySimulation(params) {
 }
 
 function calculate() {
-    // 1. Initialize variables
+    // 1. GATHER INPUTS FIRST (Prevents ReferenceErrors)
+    const inputs = getInputs();
+
+    // 2. Initialize UI variables
     const providersContainer = document.getElementById("providers");
     const collapseBtn = document.getElementById("toggleProvidersBtn");
     const clearBtn = document.querySelector('button[onclick="clearSavedProviders()"]');
@@ -91,9 +94,6 @@ function calculate() {
     if (resultsHeader) resultsHeader.style.display = isTripMode ? "flex" : "none";
     if (uiResults) uiResults.style.display = isTripMode ? "flex" : "none";
     if (btnRow) btnRow.style.display = isTripMode ? "flex" : "none";
-
-    // FIX: Define inputs early to prevent ReferenceErrors
-    const inputs = getInputs();
 
     const fieldIds = [
         "journeyMiles", "batteryKwh", "soc", "efficiency", 
