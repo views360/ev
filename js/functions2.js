@@ -1,14 +1,11 @@
 function initializeUI() {
-    // 1. Initialize variables (using your exact naming conventions)
     const providersContainer = document.getElementById("providers");
     const collapseBtn = document.getElementById("toggleProvidersBtn");
     const clearBtn = document.querySelector('button[onclick="clearSavedProviders()"]');
     const hiddenMsg = document.getElementById("providersHiddenMsg");
 
-    // 2. Check if any provider boxes exist
     const hasProviders = providersContainer && providersContainer.querySelectorAll(".provider-box").length > 0;
 
-    // 3. Update visibility based on whether the list is empty
     if (!hasProviders) {
         if (collapseBtn) collapseBtn.style.display = "none";
         if (clearBtn) clearBtn.style.display = "none";
@@ -22,6 +19,8 @@ function initializeUI() {
     const isTripMode = activePill && activePill.textContent.trim() === "Cost Reduction";
     const conclusionsBox = document.getElementById("conclusionsBox");
     const beCard = document.getElementById("breakEvenCard");
+    const uiPreText = document.getElementById("preConclusionsText");
+
     if (beCard) beCard.style.display = isTripMode ? "none" : "block";
 
     const fieldIds = isTripMode ? 
@@ -68,12 +67,13 @@ function initializeUI() {
         }
     });
 
-    return { isTripMode, conclusionsBox };
+    // We return these so calculate() can use them without error
+    return { isTripMode, conclusionsBox, uiPreText };
 }
 
 function calculate() {
 
-const { isTripMode, conclusionsBox } = initializeUI();
+const { isTripMode, conclusionsBox, uiPreText } = initializeUI();
 
     document.querySelectorAll(".provider-box input[type='number'], .provider-box input[type='text']").forEach(input => {
         if (!input.value || input.value === "0") {
