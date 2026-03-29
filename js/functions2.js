@@ -775,10 +775,13 @@ const itineraryData = generateRealWorldItineraryHtml(inputs, publicKwh, formatCh
             conclusionHTML += `<p class="main-result">Enter your vehicle's <strong>Max. Charging Speed</strong> above to see estimated charging durations.</p>`;
         }
         conclusionHTML += `${speedTableHtml}${locationDisclaimer}</div>`;
-        conclusionsBox.innerHTML = conclusionHTML + assessmentBoxHTML;
+  conclusionsBox.innerHTML = conclusionHTML + assessmentBoxHTML;
+    } else {
+        conclusionsBox.innerHTML = "";
+    }
     
     drawGraph(inputs, providers);
     const dataToSave = getInputs();
     setCookie("ev_trip_values", dataToSave);
     saveProvidersToCookie();
-}
+} 
