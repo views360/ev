@@ -1,3 +1,33 @@
+function validateInputs(isTripMode) {
+    const fieldIds = [
+        "journeyMiles", "batteryKwh", "soc", "efficiency", 
+        "adhoc", "startChargeRate", "maxChargingSpeed", "efficiencyBE", "adhocBE", "rechargeAt"
+    ];
+
+    fieldIds.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            const val = parseFloat(el.value);
+            el.classList.toggle('empty-pulse', !el.value || isNaN(val) || val <= 0);
+        }
+    });
+
+    const addJourneyBtn = document.querySelector('button[onclick="addAdditionalJourney()"]');
+    const extraJourneys = document.querySelectorAll(".extra-journey-miles");
+    if (addJourneyBtn) {
+        addJourneyBtn.classList.toggle("empty-pulse", extraJourneys.length === 0);
+    }
+
+    extraJourneys.forEach(input => {
+        const val = parseFloat(input.value);
+        input.classList.toggle('empty-pulse', !input.value || isNaN(val) || val <= 0);
+    });
+
+    document.querySelectorAll(".provider-box input[type='number'], .provider-box input[type='text']").forEach(input => {
+        input.classList.toggle('empty-pulse', !input.value || input.value === "0");
+    });
+}
+
 function calculate() {
     // 1. Initialize variables (using your exact naming conventions)
     const providersContainer = document.getElementById("providers");
@@ -37,54 +67,8 @@ function calculate() {
     if (uiResults) uiResults.style.display = isTripMode ? "flex" : "none";
     if (btnRow) btnRow.style.display = isTripMode ? "flex" : "none";
 
-    const fieldIds = [
-        "journeyMiles", "batteryKwh", "soc", "efficiency", 
-        "adhoc", "startChargeRate", "maxChargingSpeed", "efficiencyBE", "adhocBE", "rechargeAt"
-    ];
-
-    fieldIds.forEach(id => {
-        const el = document.getElementById(id);
-        if (el) {
-            const val = parseFloat(el.value);
-            if (!el.value || isNaN(val) || val <= 0) {
-                el.classList.add('empty-pulse');
-            } else {
-                el.classList.remove('empty-pulse');
-            }
-        }
-    });
-
-    const addJourneyBtn = document.querySelector('button[onclick="addAdditionalJourney()"]');
-    const extraJourneys = document.querySelectorAll(".extra-journey-miles");
-    
-    if (addJourneyBtn) {
-        // If at least one extra journey exists, remove the pulse; otherwise, keep it.
-        if (extraJourneys.length > 0) {
-            addJourneyBtn.classList.remove("empty-pulse");
-        } else {
-            addJourneyBtn.classList.add("empty-pulse");
-        }
-    }
-
-    document.querySelectorAll(".extra-journey-miles").forEach(input => {
-        const val = parseFloat(input.value);
-        if (!input.value || isNaN(val) || val <= 0) {
-            input.classList.add('empty-pulse');
-        } else {
-            input.classList.remove('empty-pulse');
-        }
-    });
-
-
-    
-
-    document.querySelectorAll(".provider-box input[type='number'], .provider-box input[type='text']").forEach(input => {
-        if (!input.value || input.value === "0") {
-            input.classList.add('empty-pulse');
-        } else {
-            input.classList.remove('empty-pulse');
-        }
-    });
+    // Perform input validation and UI pulsing
+    validateInputs(isTripMode);
 
     if (!isTripMode) {
         conclusionsBox.style.display = "none";
