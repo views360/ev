@@ -12,7 +12,7 @@ function updatePaygTitle(adhoc) {
 function applyPulsing() {
     const fieldIds = [
         "journeyMiles", "batteryKwh", "soc", "efficiency", 
-        "adhoc", "startChargeRate", "maxChargingSpeed", "efficiencyBE", "adhocBE", "rechargeAt"
+        "adhoc", "startChargeRate", "maxChargingSpeed", "efficiencyBE", "adhocBE", "rechargeAt", "prechargesoc"
     ];
 
     fieldIds.forEach(id => {
@@ -38,7 +38,7 @@ function applyPulsing() {
         }
     }
 
-    const extraFields = document.querySelectorAll(".extra-journey-miles, .extra-journey-soc, .extra-journey-prechargesoc");
+    const extraFields = document.querySelectorAll(".extra-journey-miles, .extra-journey-soc, .extra-journey-prechargesoc, .extra-journey-rate");
     extraFields.forEach(input => {
         const val = parseFloat(input.value);
         if (!input.value || isNaN(val) || val <= 0) {
