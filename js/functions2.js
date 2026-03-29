@@ -1,6 +1,3 @@
-
-
-
 function calculate() {
     // 1. Initialize variables (using your exact naming conventions)
     const providersContainer = document.getElementById("providers");
@@ -111,7 +108,7 @@ function calculate() {
         let beData = [];
 
         PRESETS.forEach(p => {
-            const sub = p.subscription.monthlyCost;
+            const subCost = p.subscription.subCost;
             const rates = p.rates;
             const speedKeys = Object.keys(rates);
             
@@ -129,10 +126,10 @@ function calculate() {
 
                 if (rate < adhocRate) {
                     const savingPerKwh = (adhocRate - rate) / 100;
-                    const kwhNeeded = sub / savingPerKwh;
+                    const kwhNeeded = subCost / savingPerKwh;
                     breakEvenMiles = Math.round(kwhNeeded * efficiency);
                     displayMiles = breakEvenMiles + " miles";
-                } else if (sub > 0) {
+                } else if (subCost > 0) {
                     displayMiles = "Never (Rate ≥ PAYG)";
                 } else {
                     breakEvenMiles = 0;
@@ -144,7 +141,7 @@ function calculate() {
                     url: p.subscription?.url,
                     comments: p.subscription?.comments || "",
                     speedDisplay: speedDisplay,
-                    subCost: sub,
+                    subCost: subCost,
                     rate: rate,
                     miles: breakEvenMiles,
                     displayText: displayMiles

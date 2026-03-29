@@ -131,7 +131,7 @@ function init() {
                     createProviderBox(); 
                     const id = providerCount;
                     document.getElementById(`name${id}`).value = p.name;
-                    document.getElementById(`subCost${id}`).value = p.sub;
+                    document.getElementById(`subCost${id}`).value = p.subCost;
                     document.getElementById(`rate${id}`).value = p.rate;
                     document.getElementById(`preset${id}`).value = p.preset;
                     if(p.preset !== 'Custom') {

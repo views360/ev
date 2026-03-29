@@ -69,7 +69,7 @@ function shareLink() {
         const id = box.dataset.id;
         providers.push({
             name: document.getElementById(`name${id}`).value,
-            sub: document.getElementById(`subCost${id}`).value,
+            subCost: document.getElementById(`subCost${id}`).value,
             rate: document.getElementById(`rate${id}`).value,
             preset: document.getElementById(`preset${id}`).value
         });
@@ -174,7 +174,7 @@ function updateProviderFields(id) {
     }
 
     document.getElementById(`name${id}`).value = p.name;
-    document.getElementById(`subCost${id}`).value = p.subscription.monthlyCost;
+    document.getElementById(`subCost${id}`).value = p.subscription.subCost;
 
     if (p.rates && !p.rates.default) {
         const { minSpeed } = getInputs();
