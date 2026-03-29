@@ -1,4 +1,4 @@
-function checkIncompleteTrip(inputs, providerList, uiPreText, uiResults, resultsHeader, uiShare, uiPdf) {
+function checkIncompleteTrip(inputs, uiPreText, uiResults, resultsHeader, uiShare, uiPdf) {
     const tripIncomplete = 
         inputs.journeyMiles <= 0 || 
         inputs.batteryKwh <= 0 || 
@@ -19,20 +19,6 @@ function checkIncompleteTrip(inputs, providerList, uiPreText, uiResults, results
         const toc = document.getElementById("toc");
         if (toc) toc.style.display = "none";
         return true; 
-    }
-
-    // Check providers directly from the DOM since the variable isn't defined yet
-    const providerBoxes = providerList ? providerList.querySelectorAll(".provider-box") : [];
-    if (providerBoxes.length === 0) {
-        uiPreText.innerHTML = "Before you may view the results, you must select at least one provider from the list of providers (above). It is simplest to add <i>all</i> providers.";
-        uiPreText.style.display = "block";
-        uiResults.style.display = "none";
-        const toc = document.getElementById("toc");
-        if (toc) toc.style.display = "none";
-        if (resultsHeader) resultsHeader.style.display = "none";
-        if (uiShare) uiShare.style.display = "none";
-        if (uiPdf) uiPdf.style.display = "none";
-        return true;
     }
     return false;
 }
@@ -290,7 +276,7 @@ function calculate() {
     const uiShare = document.getElementById("shareBtn");
     const uiPdf = document.getElementById("pdfBtn");
 
-    if (checkIncompleteTrip(inputs, providerBoxes, uiPreText, uiResults, resultsHeader, uiShare, uiPdf)) {
+    if (checkIncompleteTrip(inputs, uiPreText, uiResults, resultsHeader, uiShare, uiPdf)) {
         return;
     }
 
