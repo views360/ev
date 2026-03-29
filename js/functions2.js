@@ -1,3 +1,33 @@
+function checkTripReadiness(inputs, uiPreText, uiResults, resultsHeader, uiShare, uiPdf, providerBoxes) {
+    if (checkIncompleteTrip(inputs, uiPreText, uiResults, resultsHeader, uiShare, uiPdf)) {
+        return false;
+    }
+
+    if (providerBoxes.length === 0) {
+        uiPreText.innerHTML = "Before you may view the results, you must select at least one provider from the list of providers (above). It is simplest to add <i>all</i> providers.";
+        uiPreText.style.display = "block";
+        uiResults.style.display = "none";
+        const toc = document.getElementById("toc");
+        if (toc) toc.style.display = "none";
+        if (resultsHeader) resultsHeader.style.display = "none";
+        if (uiShare) uiShare.style.display = "none";
+        if (uiPdf) uiPdf.style.display = "none";
+        return false;
+    }
+
+    uiPreText.style.display = "none";
+    uiResults.style.display = "block";
+    const conclusionsBox = document.getElementById("conclusionsBox");
+    if (conclusionsBox) conclusionsBox.style.display = "block";
+    const toc = document.getElementById("toc");
+    if (toc) toc.style.display = "block";
+    if (uiShare) uiShare.style.display = "";
+    if (uiPdf) uiPdf.style.display = "";
+    document.querySelector(".calc-lines").style.display = "block";
+    document.querySelector(".chart-wrapper").style.display = "block";
+    return true;
+}
+
 function updateConclusionsAndItineraryUI(inputs, providers, publicKwh, totalAdhocCost, conclusionsBox) {
     const bestProvider = providers[0];
     const minSpeedSelect = document.getElementById("minSpeed");
@@ -688,31 +718,7 @@ function calculate() {
 
 const providerBoxes = document.querySelectorAll(".provider-box");
 
-    if (checkIncompleteTrip(inputs, uiPreText, uiResults, resultsHeader, uiShare, uiPdf)) {
-        return;
-    }
-
-    if (providerBoxes.length === 0) {
-        uiPreText.innerHTML = "Before you may view the results, you must select at least one provider from the list of providers (above). It is simplest to add <i>all</i> providers.";
-        uiPreText.style.display = "block";
-        uiResults.style.display = "none";
-        const toc = document.getElementById("toc");
-        if (toc) toc.style.display = "none";
-        if (resultsHeader) resultsHeader.style.display = "none";
-        if (uiShare) uiShare.style.display = "none";
-        if (uiPdf) uiPdf.style.display = "none";
-        return;
-    }
-
-    uiPreText.style.display = "none";
-    uiResults.style.display = "block";
-    conclusionsBox.style.display = "block";
-    const toc = document.getElementById("toc");
-    if (toc) toc.style.display = "block";
-    if (uiShare) uiShare.style.display = "";
-    if (uiPdf) uiPdf.style.display = "";
-    document.querySelector(".calc-lines").style.display = "block";
-    document.querySelector(".chart-wrapper").style.display = "block";
+if (!checkTripReadiness(inputs, uiPreText, uiResults, resultsHeader, uiShare, uiPdf, providerBoxes)) return;
 
 const mainInitialRange = ((inputs.soc - inputs.rechargeAt) / 100) * inputs.batteryKwh * inputs.efficiency;
 const { totalAdhocCost, totalPreJourneyCost, publicKwh } = updatePaygSummaryUI(inputs, mainInitialRange);
