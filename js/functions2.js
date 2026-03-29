@@ -1,3 +1,14 @@
+function updatePaygTitle(adhoc) {
+    const paygTitle = document.getElementById("paygSummaryTitle");
+    if (paygTitle) {
+        if (adhoc > 0) {
+            paygTitle.textContent = `1. PAYG Summary (Based on ${adhoc}p/kWh)`;
+        } else {
+            paygTitle.textContent = `1. PAYG Summary`;
+        }
+    }
+}
+
 function applyPulsing() {
     const fieldIds = [
         "journeyMiles", "batteryKwh", "soc", "efficiency", 
@@ -233,14 +244,9 @@ function calculate() {
     if (uiResults) uiResults.style.display = "block";
 
     const inputs = getInputs();
-    const paygTitle = document.getElementById("paygSummaryTitle");
-    if (paygTitle) {
-        if (inputs.adhoc > 0) {
-            paygTitle.textContent = `1. PAYG Summary (Based on ${inputs.adhoc}p/kWh)`;
-        } else {
-            paygTitle.textContent = `1. PAYG Summary`;
-        }
-    }
+    
+    updatePaygTitle(inputs.adhoc);
+
     const uiShare = document.getElementById("shareBtn");
     const uiPdf = document.getElementById("pdfBtn");
 
