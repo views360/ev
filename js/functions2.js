@@ -1,3 +1,85 @@
+function processProviderData(providerBoxes, inputs, totalAdhocCost, totalPreJourneyCost, mainInitialRange) {
+    const providers = [];
+    const simulateTripWithProvider = (providerRate, batteryKwh, rechargethreshold, efficiency, journeyMiles, initialSoc) => {
+        const chargeToPercent = 80; 
+        const kwhPerCharge = ((chargeToPercent - rechargethreshold) / 100) * batteryKwh; 
+        let distanceDriven = 0;
+        let publicChargeCost = 0;
+        let chargeCount = 0;
+        let currentSoc = initialSoc;
+        
+        while (distanceDriven < journeyMiles) {
+            const rangeOnCurrentCharge = ((currentSoc - rechargethreshold) / 100) * batteryKwh * efficiency;
+            if (distanceDriven + rangeOnCurrentCharge >= journeyMiles) break;
+            
+            distanceDriven += rangeOnCurrentCharge;
+            chargeCount++;
+            const remainingDistance = journeyMiles - distanceDriven;
+            const kwhNeededForFinal = (remainingDistance / efficiency);
+            
+            if (kwhNeededForFinal <= kwhPerCharge) {
+                publicChargeCost += kwhNeededForFinal * (providerRate / 100);
+                break;
+            } else {
+                publicChargeCost += kwhPerCharge * (providerRate / 100);
+                currentSoc = chargeToPercent;
+            }
+        }
+        return publicChargeCost;
+    };
+
+    providerBoxes.forEach(box => {
+        const id = box.dataset.id;
+        const name = document.getElementById(`name${id}`).value || "Unnamed";
+        const subCost = parseFloat(document.getElementById(`subCost${id}`).value) || 0;
+        const rate = parseFloat(document.getElementById(`rate${id}`).value) || 0;
+       
+        const savingPerKwh = (inputs.adhoc - rate) / 100;
+        let breakEvenMiles = 0;
+        if (savingPerKwh > 0) {
+            const kwhNeeded = subCost / savingPerKwh;
+            breakEvenMiles = kwhNeeded * inputs.efficiency;
+        }
+        
+        let publicChargingCost = 0;
+
+        // Journey 1
+        publicChargingCost += simulateTripWithProvider(
+            rate,
+            inputs.batteryKwh,
+            inputs.rechargeAt,
+            inputs.efficiency,
+            inputs.journeyMiles,
+            inputs.soc
+        );
+        
+        // Additional journeys
+        inputs.additionalJourneys.forEach(j => {
+            publicChargingCost += simulateTripWithProvider(
+                rate,
+                inputs.batteryKwh,
+                inputs.rechargeAt,
+                inputs.efficiency,
+                j.miles,
+                j.soc
+            );
+        });
+        
+        const totalJourneyCost = subCost + totalPreJourneyCost + publicChargingCost;
+        const pData = PRESETS.find(p => p.name === document.getElementById(`preset${id}`).value);
+
+        providers.push({ 
+            name, subCost, rate, totalJourneyCost, 
+            breakEvenMiles,
+            totalWithBattery: breakEvenMiles + mainInitialRange,
+            savings: totalAdhocCost - totalJourneyCost,
+            url: pData?.subscription?.url,
+            comments: pData?.subscription?.comments || ""
+        });
+    });
+    return providers;
+}
+
 function generateKwhBreakoutHtml(inputs, journey1PublicMiles) {
     let breakoutKwh = 0;
     let breakoutHtml = "";
@@ -478,84 +560,8 @@ const kwhData = generateKwhBreakoutHtml(inputs, journey1PublicMiles);
         `<p style="margin: 0px; font-size: 1.2rem">
             ${paygIntro} <strong>£${totalAdhocCost.toFixed(2)}</strong>
         </p>`;
-        const simulateTripWithProvider = (providerRate, batteryKwh, rechargethreshold, efficiency, journeyMiles, initialSoc) => {
-        const chargeToPercent = 80; 
-        const kwhPerCharge = ((chargeToPercent - rechargethreshold) / 100) * batteryKwh; 
-        let distanceDriven = 0;
-        let publicChargeCost = 0;
-        let chargeCount = 0;
-        let currentSoc = initialSoc;
         
-        while (distanceDriven < journeyMiles) {
-            const rangeOnCurrentCharge = ((currentSoc - rechargethreshold) / 100) * batteryKwh * efficiency;
-            if (distanceDriven + rangeOnCurrentCharge >= journeyMiles) break;
-            
-            distanceDriven += rangeOnCurrentCharge;
-            chargeCount++;
-            const remainingDistance = journeyMiles - distanceDriven;
-            const kwhNeededForFinal = (remainingDistance / efficiency);
-            
-            if (kwhNeededForFinal <= kwhPerCharge) {
-                publicChargeCost += kwhNeededForFinal * (providerRate / 100);
-                break;
-            } else {
-                publicChargeCost += kwhPerCharge * (providerRate / 100);
-                currentSoc = chargeToPercent;
-            }
-        }
-        return publicChargeCost;
-    };
-    
-    const providers = [];
-    providerBoxes.forEach(box => {
-        const id = box.dataset.id;
-        const name = document.getElementById(`name${id}`).value || "Unnamed";
-        const subCost = parseFloat(document.getElementById(`subCost${id}`).value) || 0;
-        const rate = parseFloat(document.getElementById(`rate${id}`).value) || 0;
-       
-        const savingPerKwh = (inputs.adhoc - rate) / 100;
-        let breakEvenMiles = 0;
-        if (savingPerKwh > 0) {
-            const kwhNeeded = subCost / savingPerKwh;
-            breakEvenMiles = kwhNeeded * inputs.efficiency;
-        }
-        
-        let publicChargingCost = 0;
-
-        // Journey 1
-        publicChargingCost += simulateTripWithProvider(
-            rate,
-            inputs.batteryKwh,
-            inputs.rechargeAt,
-            inputs.efficiency,
-            inputs.journeyMiles,
-            inputs.soc
-        );
-        
-        // Additional journeys
-        inputs.additionalJourneys.forEach(j => {
-            publicChargingCost += simulateTripWithProvider(
-                rate,
-                inputs.batteryKwh,
-                inputs.rechargeAt,
-                inputs.efficiency,
-                j.miles,
-                j.soc
-            );
-        });
-        
-        const totalJourneyCost = subCost + totalPreJourneyCost + publicChargingCost;
-        const pData = PRESETS.find(p => p.name === document.getElementById(`preset${id}`).value);
-
-        providers.push({ 
-            name, subCost, rate, totalJourneyCost, 
-            breakEvenMiles,
-            totalWithBattery: breakEvenMiles + mainInitialRange,
-            savings: totalAdhocCost - totalJourneyCost,
-            url: pData?.subscription?.url,
-            comments: pData?.subscription?.comments || ""
-        });
-    });
+const providers = processProviderData(providerBoxes, inputs, totalAdhocCost, totalPreJourneyCost, mainInitialRange);
 
     const sortVal = document.getElementById("sortResults").value;
     providers.sort((a, b) => {
