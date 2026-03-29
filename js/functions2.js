@@ -83,7 +83,13 @@ function calculate() {
     const activePill = document.querySelector('.calc-tab.active');
     const isTripMode = activePill && activePill.textContent.trim() === "Cost Reduction";
     
-    handleModeVisibility(isTripMode);   
+    // Define UI variables here so they are available to all following blocks
+    const uiResults = document.getElementById("results");
+    const uiPreText = document.getElementById("preConclusionsText");
+    const conclusionsBox = document.getElementById("conclusionsBox");
+    const resultsHeader = document.getElementById("resultsHeader");
+    
+    handleModeVisibility(isTripMode); 
 
     applyPulsing(); 
 
