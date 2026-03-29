@@ -97,13 +97,54 @@ function calculate() {
     if (uiResults) uiResults.style.display = isTripMode ? "flex" : "none";
     if (btnRow) btnRow.style.display = isTripMode ? "flex" : "none";
 
-   
+    const fieldIds = [
+        "journeyMiles", "batteryKwh", "soc", "efficiency", 
+        "adhoc", "startChargeRate", "maxChargingSpeed", "efficiencyBE", "adhocBE", "rechargeAt"
+    ];
 
-validateInputsUI();
+    fieldIds.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            const val = parseFloat(el.value);
+            if (!el.value || isNaN(val) || val <= 0) {
+                el.classList.add('empty-pulse');
+            } else {
+                el.classList.remove('empty-pulse');
+            }
+        }
+    });
+
+    const addJourneyBtn = document.querySelector('button[onclick="addAdditionalJourney()"]');
+    const extraJourneys = document.querySelectorAll(".extra-journey-miles");
+    
+    if (addJourneyBtn) {
+        // If at least one extra journey exists, remove the pulse; otherwise, keep it.
+        if (extraJourneys.length > 0) {
+            addJourneyBtn.classList.remove("empty-pulse");
+        } else {
+            addJourneyBtn.classList.add("empty-pulse");
+        }
+    }
+
+    document.querySelectorAll(".extra-journey-miles").forEach(input => {
+        const val = parseFloat(input.value);
+        if (!input.value || isNaN(val) || val <= 0) {
+            input.classList.add('empty-pulse');
+        } else {
+            input.classList.remove('empty-pulse');
+        }
+    });
 
 
+    
 
-
+    document.querySelectorAll(".provider-box input[type='number'], .provider-box input[type='text']").forEach(input => {
+        if (!input.value || input.value === "0") {
+            input.classList.add('empty-pulse');
+        } else {
+            input.classList.remove('empty-pulse');
+        }
+    });
 
     if (!isTripMode) {
         conclusionsBox.style.display = "none";
@@ -804,49 +845,3 @@ validateInputsUI();
     saveProvidersToCookie();
 }
 
-function validateInputsUI() {
-    const fieldIds = [
-        "journeyMiles", "batteryKwh", "soc", "efficiency", 
-        "adhoc", "startChargeRate", "maxChargingSpeed", "efficiencyBE", "adhocBE", "rechargeAt"
-    ];
-
-    fieldIds.forEach(id => {
-        const el = document.getElementById(id);
-        if (el) {
-            const val = parseFloat(el.value);
-            if (!el.value || isNaN(val) || val <= 0) {
-                el.classList.add('empty-pulse');
-            } else {
-                el.classList.remove('empty-pulse');
-            }
-        }
-    });
-
-    const addJourneyBtn = document.querySelector('button[onclick="addAdditionalJourney()"]');
-    const extraJourneys = document.querySelectorAll(".extra-journey-miles");
-    
-    if (addJourneyBtn) {
-        if (extraJourneys.length > 0) {
-            addJourneyBtn.classList.remove("empty-pulse");
-        } else {
-            addJourneyBtn.classList.add("empty-pulse");
-        }
-    }
-
-    document.querySelectorAll(".extra-journey-miles").forEach(input => {
-        const val = parseFloat(input.value);
-        if (!input.value || isNaN(val) || val <= 0) {
-            input.classList.add('empty-pulse');
-        } else {
-            input.classList.remove('empty-pulse');
-        }
-    });
-
-    document.querySelectorAll(".provider-box input[type='number'], .provider-box input[type='text']").forEach(input => {
-        if (!input.value || input.value === "0") {
-            input.classList.add('empty-pulse');
-        } else {
-            input.classList.remove('empty-pulse');
-        }
-    });
-}
