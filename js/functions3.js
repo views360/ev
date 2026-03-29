@@ -1,63 +1,3 @@
-/**
- * PURE LOGIC: Simulates a journey and calculates costs/stops.
- * Returns an object with numerical results.
- */
-function runJourneySimulation(params) {
-    const { 
-        miles, batteryKwh, efficiency, rechargeAt, 
-        chargeToPercent, rate, initialSoc 
-    } = params;
-
-    const kwhFullCharge = ((chargeToPercent - rechargeAt) / 100) * batteryKwh;
-    let distanceDriven = 0;
-    let publicKwh = 0;
-    let currentSoc = initialSoc;
-    let stops = 0;
-    const itinerary = [];
-
-    while (distanceDriven < miles) {
-        const rangeAvailable = ((currentSoc - rechargeAt) / 100) * batteryKwh * efficiency;
-        
-        // Can we make it to the end?
-        if (distanceDriven + rangeAvailable >= miles) {
-            break; 
-        }
-
-        // We need to stop and charge
-        const mileMarkAtRecharge = distanceDriven + rangeAvailable;
-        stops++;
-        
-        // Logic for final stop vs mid-journey stop
-        const remainingDist = miles - mileMarkAtRecharge;
-        const kwhNeededToFinish = (remainingDist / efficiency);
-
-        let kwhAdded = 0;
-        if (kwhNeededToFinish <= kwhFullCharge) {
-            kwhAdded = kwhNeededToFinish;
-            currentSoc = rechargeAt + (kwhNeededToFinish / batteryKwh * 100); 
-        } else {
-            kwhAdded = kwhFullCharge;
-            currentSoc = chargeToPercent;
-        }
-
-        publicKwh += kwhAdded;
-        distanceDriven = mileMarkAtRecharge;
-
-        itinerary.push({
-            stop: stops,
-            mileMark: mileMarkAtRecharge,
-            kwhAdded: kwhAdded
-        });
-    }
-
-    return {
-        totalPublicKwh: publicKwh,
-        stopCount: stops,
-        itinerary: itinerary,
-        totalCost: publicKwh * (rate / 100)
-    };
-}
-
 function calculate() {
     // 1. Initialize variables (using your exact naming conventions)
     const providersContainer = document.getElementById("providers");
@@ -440,36 +380,44 @@ function calculate() {
         publicMilesHtml = `<p style="margin: 0px;"><span class="tooltip-container"><span class="info-icon" style="font-size:0.8rem" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is how many miles of your journey will need to be paid for with PAYG charging. It takes into account the range expected from pre-charging before the journey and your recharge threshold of ${inputs.rechargeAt}%.</span></span></span>PAYG charging miles needed: <strong>${journey1PublicMiles.toFixed(0)} miles</strong></p>`;
     }
 
-
-// --- 5. PUBLIC CHARGING CALCULATIONS (Refactored) ---
-    const j1Sim = runJourneySimulation({
-        miles: inputs.journeyMiles,
-        batteryKwh: inputs.batteryKwh,
-        efficiency: inputs.efficiency,
-        rechargeAt: inputs.rechargeAt,
-        chargeToPercent: 80,
-        rate: inputs.adhoc,
-        initialSoc: inputs.soc
-    });
-
-    let totalPublicKwh = j1Sim.totalPublicKwh;
+    // Update the rest of the dependent variables and UI
+    // --- kWh Breakout Logic ---
+    let breakoutKwh = 0;
+    let breakoutHtml = "";
     
-    inputs.additionalJourneys.forEach(j => {
-        totalPublicKwh += runJourneySimulation({
-            miles: j.miles,
-            batteryKwh: inputs.batteryKwh,
-            efficiency: inputs.efficiency,
-            rechargeAt: inputs.rechargeAt,
-            chargeToPercent: 80,
-            rate: inputs.adhoc,
-            initialSoc: j.soc
-        }).totalPublicKwh;
-    });
+    // Journey 1
+    const j1Kwh = journey1PublicMiles / inputs.efficiency;
+    breakoutKwh += j1Kwh;
 
-    const publicKwh = totalPublicKwh;
-    const totalAdhocCost = totalPreJourneyCost + (publicKwh * (inputs.adhoc / 100));
+    if (inputs.additionalJourneys.length > 0) {
+        breakoutHtml = `<p style="opacity: 0.5; font-size: 0.8rem; margin: 0px"><strong>PAYG mileage costs:</strong></p>`;
+        breakoutHtml += `<div style="font-size: 0.8rem; opacity: 0.5; margin-bottom: 2px; margin-left: 10px;">Journey 1 PAYG kWh: ${j1Kwh.toFixed(1)} kWh</div>`;
 
+        inputs.additionalJourneys.forEach((j, index) => {
+            const extraRange = Math.max(0, ((j.soc - inputs.rechargeAt) / 100) * inputs.batteryKwh * inputs.efficiency);
+            const extraKwh = Math.max(0, j.miles - extraRange) / inputs.efficiency;
+            breakoutKwh += extraKwh;
+            breakoutHtml += `<div style="font-size: 0.8rem; opacity: 0.5; margin-bottom: 2px; margin-left: 10px;">Journey ${index + 2} PAYG kWh: ${extraKwh.toFixed(1)} kWh</div>`;
+        });
 
+        const totalPaygKwhCost = breakoutKwh * (inputs.adhoc / 100);
+
+        breakoutHtml += `
+            <p style="border-bottom: 1px solid rgba(255,255,255,0.2); margin:0; padding-bottom: 10px;">
+                <span class="tooltip-container">
+                    <span class="info-icon" style="font-size:0.8rem" onclick="toggleTooltip(this)">💡
+                        <span class="tooltip-box">
+                            This is the total cost of energy needed from PAYG chargers across all journeys.
+                        </span>
+                    </span>
+                </span>
+                Total PAYG mileage cost (${breakoutKwh.toFixed(1)} kWh x ${inputs.adhoc}p): 
+                <strong>£${totalPaygKwhCost.toFixed(2)}</strong>
+            </p>
+        `;
+     } else {
+        breakoutHtml = `<p style="margin: 0px;"><span class="tooltip-container"><span class="info-icon" style="font-size:0.8rem" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is the cost of energy needed from PAYG charging to complete this journey.</span></span></span>PAYG battery charge (${j1Kwh.toFixed(1)} kWh x ${inputs.adhoc}p): <strong>£${(j1Kwh * (inputs.adhoc / 100)).toFixed(2)}</strong></p>`;
+    }
 
     // Re-assigning to your existing variables so the rest of the file works
     const publicKwh = breakoutKwh;
@@ -495,62 +443,72 @@ function calculate() {
         `<p style="margin: 0px; font-size: 1.2rem">
             ${paygIntro} <strong>£${totalAdhocCost.toFixed(2)}</strong>
         </p>`;
-       
-
- const providers = [];
+        const simulateTripWithProvider = (providerRate, batteryKwh, rechargethreshold, efficiency, journeyMiles, initialSoc) => {
+        const chargeToPercent = 80; 
+        const kwhPerCharge = ((chargeToPercent - rechargethreshold) / 100) * batteryKwh; 
+        let distanceDriven = 0;
+        let publicChargeCost = 0;
+        let chargeCount = 0;
+        let currentSoc = initialSoc;
+        
+        while (distanceDriven < journeyMiles) {
+            const rangeOnCurrentCharge = ((currentSoc - rechargethreshold) / 100) * batteryKwh * efficiency;
+            if (distanceDriven + rangeOnCurrentCharge >= journeyMiles) break;
+            
+            distanceDriven += rangeOnCurrentCharge;
+            chargeCount++;
+            const remainingDistance = journeyMiles - distanceDriven;
+            const kwhNeededForFinal = (remainingDistance / efficiency);
+            
+            if (kwhNeededForFinal <= kwhPerCharge) {
+                publicChargeCost += kwhNeededForFinal * (providerRate / 100);
+                break;
+            } else {
+                publicChargeCost += kwhPerCharge * (providerRate / 100);
+                currentSoc = chargeToPercent;
+            }
+        }
+        return publicChargeCost;
+    };
+    
+    const providers = [];
     providerBoxes.forEach(box => {
         const id = box.dataset.id;
         const name = document.getElementById(`name${id}`).value || "Unnamed";
         const subCost = parseFloat(document.getElementById(`subCost${id}`).value) || 0;
         const rate = parseFloat(document.getElementById(`rate${id}`).value) || 0;
        
-        let publicChargingCost = 0;
-
-        // Journey 1
-        publicChargingCost += runJourneySimulation({
-            miles: inputs.journeyMiles,
-            batteryKwh: inputs.batteryKwh,
-            efficiency: inputs.efficiency,
-            rechargeAt: inputs.rechargeAt,
-            chargeToPercent: 80,
-            rate: rate,
-            initialSoc: inputs.soc
-        }).totalCost;
-        
-        // Additional journeys
-        inputs.additionalJourneys.forEach(j => {
-            publicChargingCost += runJourneySimulation({
-                miles: j.miles,
-                batteryKwh: inputs.batteryKwh,
-                efficiency: inputs.efficiency,
-                rechargeAt: inputs.rechargeAt,
-                chargeToPercent: 80,
-                rate: rate,
-                initialSoc: j.soc
-            }).totalCost;
-        });
-        
-        const totalJourneyCost = subCost + totalPreJourneyCost + publicChargingCost;
-        const pData = PRESETS.find(p => p.name === document.getElementById(`preset${id}`).value);
-
-        // Break-even logic for this provider
         const savingPerKwh = (inputs.adhoc - rate) / 100;
         let breakEvenMiles = 0;
         if (savingPerKwh > 0) {
             const kwhNeeded = subCost / savingPerKwh;
             breakEvenMiles = kwhNeeded * inputs.efficiency;
         }
+        
+        let publicChargingCost = 0;
 
-        providers.push({ 
-            name, subCost, rate, totalJourneyCost, 
-            breakEvenMiles,
-            totalWithBattery: breakEvenMiles + mainInitialRange,
-            savings: totalAdhocCost - totalJourneyCost,
-            url: pData?.subscription?.url,
-            comments: pData?.subscription?.comments || ""
+        // Journey 1
+        publicChargingCost += simulateTripWithProvider(
+            rate,
+            inputs.batteryKwh,
+            inputs.rechargeAt,
+            inputs.efficiency,
+            inputs.journeyMiles,
+            inputs.soc
+        );
+        
+        // Additional journeys
+        inputs.additionalJourneys.forEach(j => {
+            publicChargingCost += simulateTripWithProvider(
+                rate,
+                inputs.batteryKwh,
+                inputs.rechargeAt,
+                inputs.efficiency,
+                j.miles,
+                j.soc
+            );
         });
-    });   
-            
+        
         const totalJourneyCost = subCost + totalPreJourneyCost + publicChargingCost;
         const pData = PRESETS.find(p => p.name === document.getElementById(`preset${id}`).value);
 
@@ -844,4 +802,3 @@ function calculate() {
     setCookie("ev_trip_values", dataToSave);
     saveProvidersToCookie();
 }
-
