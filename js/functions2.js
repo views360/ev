@@ -1,3 +1,42 @@
+function renderTripResults(inputs, context) {
+    const providerBoxes = document.querySelectorAll(".provider-box");
+
+    // 1. Check if all required fields and providers are present
+    if (!checkTripReadiness(inputs, context.uiPreText, context.uiResults, context.resultsHeader, context.uiShare, context.uiPdf, providerBoxes)) {
+        return;
+    }
+
+    // 2. Calculate PAYG specifics
+    const mainInitialRange = ((inputs.soc - inputs.rechargeAt) / 100) * inputs.batteryKwh * inputs.efficiency;
+    const { totalAdhocCost, totalPreJourneyCost, publicKwh } = updatePaygSummaryUI(inputs, mainInitialRange);
+    
+    // 3. Process the list of providers
+    const providers = processProviderData(providerBoxes, inputs, totalAdhocCost, totalPreJourneyCost, mainInitialRange);
+
+    // 4. Update the Provider Results Table
+    document.getElementById("providerResults").innerHTML = generateProviderResultsHtml(providers, inputs);
+
+    // 5. Re-bind scroll listeners for mobile tooltip handling
+    document.querySelectorAll(".results-scroll").forEach(el => {
+        if (!el._ftScrollBound) { 
+            el._ftScrollBound = true; 
+            el.addEventListener("scroll", () => { 
+                if (typeof _ftActive !== 'undefined' && _ftActive) _ftHide(); 
+            }, { passive: true }); 
+        }
+    });
+
+    // 6. Update the final Conclusion and Itinerary
+    if (providers.length > 0) {
+        updateConclusionsAndItineraryUI(inputs, providers, publicKwh, totalAdhocCost, context.conclusionsBox);
+    } else {
+        context.conclusionsBox.innerHTML = "";
+    }
+
+    // 7. Save data to cookies and draw the graph
+    updateOutputsAndStorage(inputs, providers);
+}
+
 function getModeContext() {
     const activePill = document.querySelector('.calc-tab.active');
     const isTripMode = activePill && activePill.textContent.trim() === "Cost Reduction";
@@ -706,10 +745,8 @@ const fakeInputsForBE = { adhoc: adhocRate };
 }
 
 function calculate() {
-    // Call the new helper to get UI elements and mode
     const context = getModeContext();
     
-    // Use context.isTripMode instead of recalculating it
     handleModeVisibility(context.isTripMode); 
     applyPulsing(); 
 
@@ -719,38 +756,13 @@ function calculate() {
         return; 
     }
 
-    // Set initial visibility for Trip Mode using context
+    // Trip Mode Logic
     if (context.uiPreText) context.uiPreText.style.display = "block";
     if (context.uiResults) context.uiResults.style.display = "block";
 
     const inputs = getInputs();
     updatePaygTitle(inputs.adhoc);
-
-    const providerBoxes = document.querySelectorAll(".provider-box");
-
-    // Pass the context elements into the readiness check
-    if (!checkTripReadiness(inputs, context.uiPreText, context.uiResults, context.resultsHeader, context.uiShare, context.uiPdf, providerBoxes)) return;
-
-    const mainInitialRange = ((inputs.soc - inputs.rechargeAt) / 100) * inputs.batteryKwh * inputs.efficiency;
-    const { totalAdhocCost, totalPreJourneyCost, publicKwh } = updatePaygSummaryUI(inputs, mainInitialRange);
     
-    const providers = processProviderData(providerBoxes, inputs, totalAdhocCost, totalPreJourneyCost, mainInitialRange);
-
-    const providerResultsHtml = generateProviderResultsHtml(providers, inputs);
-    document.getElementById("providerResults").innerHTML = providerResultsHtml;
-
-    document.querySelectorAll(".results-scroll").forEach(el => {
-        if (!el._ftScrollBound) { 
-            el._ftScrollBound = true; 
-            el.addEventListener("scroll", () => { if (typeof _ftActive !== 'undefined' && _ftActive) _ftHide(); }, { passive: true }); 
-        }
-    });
-
-    if (providers.length > 0) {
-        updateConclusionsAndItineraryUI(inputs, providers, publicKwh, totalAdhocCost, context.conclusionsBox);
-    } else {
-        context.conclusionsBox.innerHTML = "";
-    }
-
-    updateOutputsAndStorage(inputs, providers);
+    // Call the new helper to handle the heavy lifting
+    renderTripResults(inputs, context);
 }
