@@ -1,3 +1,18 @@
+function getModeContext() {
+    const activePill = document.querySelector('.calc-tab.active');
+    const isTripMode = activePill && activePill.textContent.trim() === "Cost Reduction";
+    
+    return {
+        isTripMode,
+        uiResults: document.getElementById("results"),
+        uiPreText: document.getElementById("preConclusionsText"),
+        conclusionsBox: document.getElementById("conclusionsBox"),
+        resultsHeader: document.getElementById("resultsHeader"),
+        uiShare: document.getElementById("shareBtn"),
+        uiPdf: document.getElementById("pdfBtn")
+    };
+}
+
 function checkTripReadiness(inputs, uiPreText, uiResults, resultsHeader, uiShare, uiPdf, providerBoxes) {
     if (checkIncompleteTrip(inputs, uiPreText, uiResults, resultsHeader, uiShare, uiPdf)) {
         return false;
@@ -691,51 +706,50 @@ const fakeInputsForBE = { adhoc: adhocRate };
 }
 
 function calculate() {
-    const activePill = document.querySelector('.calc-tab.active');
-    const isTripMode = activePill && activePill.textContent.trim() === "Cost Reduction";
+    // Call the new helper to get UI elements and mode
+    const context = getModeContext();
     
-    const uiResults = document.getElementById("results");
-    const uiPreText = document.getElementById("preConclusionsText");
-    const conclusionsBox = document.getElementById("conclusionsBox");
-    const resultsHeader = document.getElementById("resultsHeader");
-    
-    handleModeVisibility(isTripMode); 
+    // Use context.isTripMode instead of recalculating it
+    handleModeVisibility(context.isTripMode); 
     applyPulsing(); 
 
-    if (!isTripMode) {
-        conclusionsBox.style.display = "none";
-        handleBreakEvenMode(uiPreText, uiResults);
+    if (!context.isTripMode) {
+        if (context.conclusionsBox) context.conclusionsBox.style.display = "none";
+        handleBreakEvenMode(context.uiPreText, context.uiResults);
         return; 
     }
 
-    if (uiPreText) uiPreText.style.display = "block";
-    if (uiResults) uiResults.style.display = "block";
+    // Set initial visibility for Trip Mode using context
+    if (context.uiPreText) context.uiPreText.style.display = "block";
+    if (context.uiResults) context.uiResults.style.display = "block";
 
     const inputs = getInputs();
     updatePaygTitle(inputs.adhoc);
-    const uiShare = document.getElementById("shareBtn");
-    const uiPdf = document.getElementById("pdfBtn");
 
-const providerBoxes = document.querySelectorAll(".provider-box");
+    const providerBoxes = document.querySelectorAll(".provider-box");
 
-if (!checkTripReadiness(inputs, uiPreText, uiResults, resultsHeader, uiShare, uiPdf, providerBoxes)) return;
+    // Pass the context elements into the readiness check
+    if (!checkTripReadiness(inputs, context.uiPreText, context.uiResults, context.resultsHeader, context.uiShare, context.uiPdf, providerBoxes)) return;
 
-const mainInitialRange = ((inputs.soc - inputs.rechargeAt) / 100) * inputs.batteryKwh * inputs.efficiency;
-const { totalAdhocCost, totalPreJourneyCost, publicKwh } = updatePaygSummaryUI(inputs, mainInitialRange);
+    const mainInitialRange = ((inputs.soc - inputs.rechargeAt) / 100) * inputs.batteryKwh * inputs.efficiency;
+    const { totalAdhocCost, totalPreJourneyCost, publicKwh } = updatePaygSummaryUI(inputs, mainInitialRange);
     
-const providers = processProviderData(providerBoxes, inputs, totalAdhocCost, totalPreJourneyCost, mainInitialRange);
+    const providers = processProviderData(providerBoxes, inputs, totalAdhocCost, totalPreJourneyCost, mainInitialRange);
 
-const providerResultsHtml = generateProviderResultsHtml(providers, inputs);
+    const providerResultsHtml = generateProviderResultsHtml(providers, inputs);
     document.getElementById("providerResults").innerHTML = providerResultsHtml;
 
     document.querySelectorAll(".results-scroll").forEach(el => {
-        if (!el._ftScrollBound) { el._ftScrollBound = true; el.addEventListener("scroll", () => { if (typeof _ftActive !== 'undefined' && _ftActive) _ftHide(); }, { passive: true }); }
+        if (!el._ftScrollBound) { 
+            el._ftScrollBound = true; 
+            el.addEventListener("scroll", () => { if (typeof _ftActive !== 'undefined' && _ftActive) _ftHide(); }, { passive: true }); 
+        }
     });
 
-if (providers.length > 0) {
-        updateConclusionsAndItineraryUI(inputs, providers, publicKwh, totalAdhocCost, conclusionsBox);
+    if (providers.length > 0) {
+        updateConclusionsAndItineraryUI(inputs, providers, publicKwh, totalAdhocCost, context.conclusionsBox);
     } else {
-        conclusionsBox.innerHTML = "";
+        context.conclusionsBox.innerHTML = "";
     }
 
     updateOutputsAndStorage(inputs, providers);
