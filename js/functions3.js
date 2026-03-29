@@ -1,3 +1,85 @@
+function runBreakEvenAnalysis(efficiency, adhocRate, minSpeedSelection, uiResults, uiPreText) {
+    uiPreText.style.display = "none";
+    uiResults.style.display = "block";
+    
+    document.querySelector(".calc-lines").style.display = "none";
+    document.querySelector(".chart-wrapper").style.display = "none";
+
+    let beData = [];
+    PRESETS.forEach(p => {
+        const sub = p.subscription.monthlyCost;
+        const rates = p.rates;
+        const speedKeys = Object.keys(rates);
+        
+        speedKeys.forEach(speed => {
+            const numericSpeed = speed === 'default' ? 0 : parseFloat(speed);
+            if (speed !== 'default' && numericSpeed < minSpeedSelection) return; 
+
+            const rate = rates[speed];
+            const speedDisplay = speed === 'default' ? "Max. available" : `${speed}kW`;
+            let breakEvenMiles = null; 
+            let displayMiles = "";
+
+            if (rate < adhocRate) {
+                const savingPerKwh = (adhocRate - rate) / 100;
+                const kwhNeeded = sub / savingPerKwh;
+                breakEvenMiles = Math.round(kwhNeeded * efficiency);
+                displayMiles = breakEvenMiles + " miles";
+            } else if (sub > 0) {
+                displayMiles = "Never (Rate ≥ PAYG)";
+            } else {
+                breakEvenMiles = 0;
+                displayMiles = "0 (Free/No Sub)";
+            }
+
+            beData.push({
+                name: p.name, url: p.subscription?.url,
+                comments: p.subscription?.comments || "",
+                speedDisplay: speedDisplay, subCost: sub,
+                rate: rate, miles: breakEvenMiles, displayText: displayMiles
+            });
+        });
+    });
+
+    beData.sort((a, b) => {
+        if (a.miles !== null && b.miles !== null) return a.miles - b.miles;
+        if (a.miles !== null) return -1;
+        if (b.miles !== null) return 1;
+        return a.name.localeCompare(b.name);
+    });
+
+    let html = `<h2 class="results-heading" style="text-align: center">BREAK-EVEN ANALYSIS</h2>
+                <div class="mobile-only-text" style="font-size: 0.8em; text-align: center; color: var(--neon-green)">Slide table left to view hidden columns.</div>
+                <div class="results-scroll">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Provider (click hyperlink)</th>
+                            <th>Charging Speed</th>
+                            <th>Sub. Fee</th>
+                            <th>Disc. Rate</th>
+                            <th>Break-Even Miles</th>
+                        </tr>
+                    </thead>
+                    <tbody>`;
+
+    beData.forEach(row => {
+        const providerLink = row.url 
+            ? `<a href="${row.url}" target="_blank" style="color:inherit; text-decoration:underline;">${row.name}</a>` 
+            : row.name;
+
+        html += `<tr>
+            <td><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">${row.comments}</span></span></span> ${providerLink}</td>
+            <td>${row.speedDisplay}</td>
+            <td>£${row.subCost.toFixed(2)}</td>
+            <td>${row.rate.toFixed(1)}p</td>
+            <td><strong>${row.displayText}</strong></td>
+        </tr>`;
+    });
+
+    document.getElementById("providerResults").innerHTML = html + `</tbody></table></div>`;
+}
+
 function getInputs() {
     const journeyMiles = parseFloat(document.getElementById("journeyMiles")?.value) || 0;
     const batteryKwh = parseFloat(document.getElementById("batteryKwh")?.value) || 0;
@@ -109,8 +191,6 @@ function calculate() {
     });
 
 
-    
-
     document.querySelectorAll(".provider-box input[type='number'], .provider-box input[type='text']").forEach(input => {
         if (!input.value || input.value === "0") {
             input.classList.add('empty-pulse');
@@ -119,7 +199,7 @@ function calculate() {
         }
     });
 
-    if (!isTripMode) {
+if (!isTripMode) {
         conclusionsBox.style.display = "none";
         const efficiency = parseFloat(document.getElementById("efficiencyBE").value);
         const adhocRate = parseFloat(document.getElementById("adhocBE").value) || 0;
@@ -132,107 +212,12 @@ function calculate() {
             return;
         }
 
-        uiPreText.style.display = "none";
-        uiResults.style.display = "block";
-        
-        document.querySelector(".calc-lines").style.display = "none";
-        document.querySelector(".chart-wrapper").style.display = "none";
-
-        let beData = [];
-
-        PRESETS.forEach(p => {
-            const sub = p.subscription.monthlyCost;
-            const rates = p.rates;
-            const speedKeys = Object.keys(rates);
-            
-            speedKeys.forEach(speed => {
-                const numericSpeed = speed === 'default' ? 0 : parseFloat(speed);
-                if (speed !== 'default' && numericSpeed < minSpeedSelection) {
-                    return; 
-                }
-
-                const rate = rates[speed];
-                const speedDisplay = speed === 'default' ? "Max. available" : `${speed}kW`;
-                
-                let breakEvenMiles = null; 
-                let displayMiles = "";
-
-                if (rate < adhocRate) {
-                    const savingPerKwh = (adhocRate - rate) / 100;
-                    const kwhNeeded = sub / savingPerKwh;
-                    breakEvenMiles = Math.round(kwhNeeded * efficiency);
-                    displayMiles = breakEvenMiles + " miles";
-                } else if (sub > 0) {
-                    displayMiles = "Never (Rate ≥ PAYG)";
-                } else {
-                    breakEvenMiles = 0;
-                    displayMiles = "0 (Free/No Sub)";
-                }
-
-                beData.push({
-                    name: p.name,
-                    url: p.subscription?.url,
-                    comments: p.subscription?.comments || "",
-                    speedDisplay: speedDisplay,
-                    subCost: sub,
-                    rate: rate,
-                    miles: breakEvenMiles,
-                    displayText: displayMiles
-                });
-            });
-        });
-
-        beData.sort((a, b) => {
-            if (a.miles !== null && b.miles !== null) return a.miles - b.miles;
-            if (a.miles !== null) return -1;
-            if (b.miles !== null) return 1;
-            return a.name.localeCompare(b.name);
-        });
-
-        let html = `<h2 class="results-heading" style="text-align: center">BREAK-EVEN ANALYSIS</h2>
-                    <div class="mobile-only-text" style="font-size: 0.8em; text-align: center; color: var(--neon-green)">Slide table left to view hidden columns.</div>
-                    <div class="results-scroll">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Provider (click hyperlink to view subscription info)</th>
-                                <th><span class="tooltip-container">
-                                    <span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">If the provider's discounted charge rate is tied to a charging speed (selected in the form above), it will be specified in this column. If the provider offers more than one speed at the same discounted charge rate, you will see <strong>'Max. available'</strong>.</span></span>
-                                </span></span>Charging Speed</th>
-                                <th><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is the provider's subscription fee, which gives you access to their discounted charge rate for ONE MONTH.</span></span></span>Sub. Fee</th>
-                                <th><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is the provider's discounted charge rate (per kWh) that is available after subscribing for one month. Note that some providers have variable charge rates depending on location and time of day. The rate listed here may be an average. Click the provider's link to confirm pricing.</span></span></span>Disc. Rate</th>
-                                <th><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is the number of miles you must drive on the provider's discounted charge rate to pay off the subscription fee. <strong>Important! This is not the total miles of your journey</strong> — it is the number of miles you must drive from your first charge with this provider. Remember, a subscription lasts for an entire month. The number of journeys has no impact on this value.</span></span></span>Break-Even Miles</th>
-                            </tr>
-                        </thead>
-                        <tbody>`;
-
-        beData.forEach(row => {
-            const providerLink = row.url 
-                ? `<a href="${row.url}" target="_blank" style="color:inherit; text-decoration:underline;">${row.name}</a>` 
-                : row.name;
-
-            html += `<tr>
-                <td>
-                    <span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">${row.comments}</span>
-                    </span></span> ${providerLink}
-                </td>
-                <td>${row.speedDisplay}</td>
-                <td>£${row.subCost.toFixed(2)}</td>
-                <td>${row.rate.toFixed(1)}p</td>
-                <td><strong>${row.displayText}</strong></td>
-            </tr>`;
-        });
-
-        document.getElementById("providerResults").innerHTML = html + `</tbody></table></div>`;
-        document.querySelectorAll(".results-scroll").forEach(el => {
-            if (!el._ftScrollBound) { el._ftScrollBound = true; el.addEventListener("scroll", () => { if (typeof _ftActive !== 'undefined' && _ftActive) _ftHide(); }, { passive: true }); }
-        });
+        runBreakEvenAnalysis(efficiency, adhocRate, minSpeedSelection, uiResults, uiPreText);
 
         if (!beReminderShown) {
             setTimeout(() => {
                 const activePill = document.querySelector('.calc-tab.active');
-                const isTripMode = activePill && activePill.textContent.trim() === "Cost Reduction";
-                if (!isTripMode) {
+                if (activePill && activePill.textContent.trim() !== "Cost Reduction") {
                     showBeReminder();
                     beReminderShown = true; 
                 }
