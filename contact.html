@@ -306,6 +306,18 @@
             );
         }
 
+		/* Add this to the <style> section of contact.html */
+		@keyframes emptyPulse {
+		    0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); border-color: rgba(34, 197, 94, 0.5); }
+		    70% { box-shadow: 0 0 0 10px rgba(34, 197, 94, 0); border-color: var(--accent); }
+		    100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); border-color: rgba(34, 197, 94, 0.5); }
+		}
+		
+		.empty-pulse {
+		    animation: emptyPulse 2s infinite;
+		    border-color: var(--accent) !important;
+		}
+
         .light-mode .hero-title { color: #0f172a; text-shadow: none; }
         .light-mode .hero-sub   { color: rgba(15,23,42,0.75); }
 
@@ -663,6 +675,30 @@ function toggleTheme() {
     const isLight = document.documentElement.classList.toggle('light-mode');
     setCookie('themePref', isLight ? 'light' : 'dark');
 }
+
+function applyContactPulsing() {
+    // Select the inputs you want to pulse (Name, Email, and Message)
+    const fieldsToPulse = document.querySelectorAll('.field input, .field textarea');
+    
+    fieldsToPulse.forEach(field => {
+        const updatePulsing = () => {
+            if (field.value.trim() === "") {
+                field.classList.add("empty-pulse");
+            } else {
+                field.classList.remove("empty-pulse");
+            }
+        };
+
+        // Run on initial load
+        updatePulsing();
+
+        // Run whenever the user types
+        field.addEventListener('input', updatePulsing);
+    });
+}
+
+// Initialize when the DOM is ready
+document.addEventListener('DOMContentLoaded', applyContactPulsing);
 </script>
 </body>
 </html>
