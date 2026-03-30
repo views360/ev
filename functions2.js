@@ -731,7 +731,7 @@ function handleBreakEvenMode(uiPreText, uiResults) {
     });
 
 const fakeInputsForBE = { adhoc: adhocRate }; 
-    const providerResultsHtml = generateProviderResultsHtml(beData, fakeInputsForBE);
+    const providerResultsHtml = generateBreakEvenResultsHtml(beData);
     document.getElementById("providerResults").innerHTML = providerResultsHtml;
 
     document.querySelectorAll(".results-scroll").forEach(el => {
@@ -773,5 +773,47 @@ function calculate() {
     updatePaygTitle(inputs.adhoc);
     
     // Call the new helper to handle the heavy lifting
+    // Call the new helper to handle the heavy lifting
     renderTripResults(inputs, context);
+}
+
+function generateBreakEvenResultsHtml(beData) {
+    let html = `
+    <div class="mobile-only-text" style="font-size: 0.8em; text-align: center; color: var(--neon-green); margin-bottom: 8px;">
+        Slide table left to view hidden columns.
+    </div>
+    <div class="results-scroll">
+        <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr style="background: rgba(255,255,255,0.05);">
+                    <th style="padding: 10px; border: 1px solid var(--border); text-align: left;">Provider</th>
+                    <th style="padding: 10px; border: 1px solid var(--border); text-align: left;">Sub. Fee</th>
+                    <th style="padding: 10px; border: 1px solid var(--border); text-align: left;">Disc. Rate</th>
+                    <th style="padding: 10px; border: 1px solid var(--border); text-align: left;">Break-Even Miles</th>
+                </tr>
+            </thead>
+            <tbody>`;
+
+    beData.forEach(p => {
+        const providerLink = p.url 
+            ? `<a href="${p.url}" target="_blank" style="color:inherit; text-decoration:underline;">${p.name}</a>` 
+            : p.name;
+
+        html += `
+            <tr>
+                <td style="padding: 10px; border: 1px solid var(--border);">
+                    <span class="tooltip-container">
+                        <span class="info-icon" onclick="toggleTooltip(this)" style="font-size: 0.8rem;">💡
+                            <span class="tooltip-box">${p.comments}</span>
+                        </span>
+                    </span> ${providerLink}
+                </td>
+                <td style="padding: 10px; border: 1px solid var(--border);">£${p.subCost.toFixed(2)}</td>
+                <td style="padding: 10px; border: 1px solid var(--border);">${p.rate.toFixed(1)}p</td>
+                <td style="padding: 10px; border: 1px solid var(--border); color: var(--neon-green);"><strong>${p.displayText}</strong></td>
+            </tr>`;
+    });
+
+    html += `</tbody></table></div>`;
+    return html;
 }
