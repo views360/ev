@@ -86,7 +86,7 @@ function init() {
     fetch("providers.json").then(r => r.json()).then(data => {
         PRESETS = data.providers;
 
-        const tripIds = ["journeyMiles", "batteryKwh", "soc", "efficiency", "adhoc", "startChargeRate", "maxChargingSpeed", "rechargeAt", "minSpeed"];        
+        const tripIds = ["journeyMiles", "batteryKwh", "prechargesoc", "soc", "efficiency", "adhoc", "startChargeRate", "maxChargingSpeed", "rechargeAt", "minSpeed"];        
         tripIds.forEach(id => {
             const el = document.getElementById(id);
             if (!el) return;
