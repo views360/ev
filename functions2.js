@@ -662,6 +662,11 @@ function handleModeVisibility(isTripMode) {
 }
 
 function handleBreakEvenMode(uiPreText, uiResults) {
+    const contentsBox = document.getElementById("contentsBox");
+    if (contentsBox) {
+        contentsBox.style.display = "none";
+        contentsBox.innerHTML = "";
+    }
     const efficiency = parseFloat(document.getElementById("efficiencyBE").value);
     const adhocRate = parseFloat(document.getElementById("adhocBE").value) || 0;
     const minSpeedSelection = parseFloat(document.getElementById("minSpeedBE").value) || 0;
@@ -787,10 +792,10 @@ function generateBreakEvenResultsHtml(beData) {
         <table style="width: 100%; border-collapse: collapse;">
             <thead>
                 <tr style="background: rgba(255,255,255,0.05);">
-                    <th style="padding: 10px; border: 1px solid var(--border); text-align: left;">Provider</th>
-                    <th style="padding: 10px; border: 1px solid var(--border); text-align: left;">Sub. Fee</th>
-                    <th style="padding: 10px; border: 1px solid var(--border); text-align: left;">Disc. Rate</th>
-                    <th style="padding: 10px; border: 1px solid var(--border); text-align: left;">Break-Even Miles</th>
+                    <th style="padding: 10px; border: 1px solid var(--border); text-align: left;">Provider (click hyperlink to view subscription info)</th>
+                    <th style="padding: 10px; border: 1px solid var(--border); text-align: left;"><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)" style="font-size: 0.8rem;">💡<span class="tooltip-box">This is the provider's subscription fee, which gives you access to their discounted charge rate for ONE MONTH.</span></span></span>Sub. Fee</th>
+                    <th style="padding: 10px; border: 1px solid var(--border); text-align: left;"><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)" style="font-size: 0.8rem;">💡<span class="tooltip-box">This is the provider's discounted charge rate (per kWh) that is available after subscribing for an entire month. Note: Some providers have variable charge rates depending on location and time of day. The rate listed here may be an average. Click the provider's link to confirm pricing.</span></span></span>Disc. Rate</th>
+                    <th style="padding: 10px; border: 1px solid var(--border); text-align: left;"><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)" style="font-size: 0.8rem;">💡<span class="tooltip-box">This is the number of miles you must drive on the provider's discounted charge rate to pay off the subscription fee. <strong>Important! This is not the total miles of your journey</strong> — it is the number of miles you must drive from your first charge with this provider. Remember, a subscription lasts for an entire month.</span></span></span>Break-Even Miles</th>
                 </tr>
             </thead>
             <tbody>`;
