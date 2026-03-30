@@ -307,14 +307,14 @@
         }
 
 		/* Add this to the <style> section of contact.html */
-		@keyframes emptyPulse {
-		    0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); border-color: rgba(34, 197, 94, 0.5); }
-		    70% { box-shadow: 0 0 0 10px rgba(34, 197, 94, 0); border-color: var(--accent); }
-		    100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); border-color: rgba(34, 197, 94, 0.5); }
+		@keyframes pulse-green {
+		    0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
+		    70% { box-shadow: 0 0 0 10px rgba(34, 197, 94, 0); }
+		    100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
 		}
 		
 		.empty-pulse {
-		    animation: emptyPulse 2s infinite;
+		    animation: pulse-green 2s infinite;
 		    border-color: var(--accent) !important;
 		}
 
@@ -676,12 +676,13 @@ function toggleTheme() {
     setCookie('themePref', isLight ? 'light' : 'dark');
 }
 
+<script>
 function applyContactPulsing() {
-    // Select the inputs you want to pulse (Name, Email, and Message)
-    const fieldsToPulse = document.querySelectorAll('.field input, .field textarea');
+    // Target the Name, Email, and Message fields specifically
+    const contactFields = document.querySelectorAll('.field input, .field textarea');
     
-    fieldsToPulse.forEach(field => {
-        const updatePulsing = () => {
+    contactFields.forEach(field => {
+        const checkValue = () => {
             if (field.value.trim() === "") {
                 field.classList.add("empty-pulse");
             } else {
@@ -689,16 +690,17 @@ function applyContactPulsing() {
             }
         };
 
-        // Run on initial load
-        updatePulsing();
+        // Initial check on load
+        checkValue();
 
-        // Run whenever the user types
-        field.addEventListener('input', updatePulsing);
+        // Remove pulse as soon as the user starts typing
+        field.addEventListener('input', checkValue);
     });
 }
 
-// Initialize when the DOM is ready
+// Run when the page is ready
 document.addEventListener('DOMContentLoaded', applyContactPulsing);
+</script>
 </script>
 </body>
 </html>
