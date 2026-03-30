@@ -596,12 +596,17 @@ function loadProviderState() {
     const btn = document.getElementById("toggleProvidersBtn");
     const hiddenMsg = document.getElementById("providersHiddenMsg");
 
-    // Only apply if the cookie explicitly says the list was collapsed
-    if (isCollapsed === true && container && btn) {
+    // Check if the cookie is explicitly string "true" or boolean true
+    if ((isCollapsed === true || isCollapsed === 'true') && container && btn) {
         container.style.display = "none";
         if (controls) controls.style.display = "none";
         btn.textContent = "Expand Providers List";
-        if (hiddenMsg) hiddenMsg.style.display = "block";
+        
+        // This ensures the message appears on page reload
+        if (hiddenMsg) {
+            hiddenMsg.style.display = "block";
+        }
+        
         btn.classList.remove("empty-pulse");
     }
 }
