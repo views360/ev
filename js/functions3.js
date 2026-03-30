@@ -61,25 +61,6 @@ function setToggle(mode, btn) {
     btn.classList.add('active');
     setCookie('calcMode', mode);
     setCookie('comparisonMode', mode);
-
-    const tocHeader = document.querySelector("#toc-container h3");
-    const tocNav = document.querySelector("#toc-container nav.toc");
-    const breakEvenTable = document.getElementById("break-even-results");
-
-    if (mode === 'trip-savings') {
-        // Show Cost Reduction results info
-        if (tocHeader) tocHeader.style.display = "block";
-        if (tocNav) tocNav.style.display = "block";
-        // Hide Break-Even specific table
-        if (breakEvenTable) breakEvenTable.style.display = "none";
-    } else {
-        // Break-Even Mode: Hide all Cost Reduction elements
-        if (tocHeader) tocHeader.style.display = "none";
-        if (tocNav) tocNav.style.display = "none";
-        // The display of breakEvenTable is usually handled by calculate(), 
-        // but we ensure its parent container remains visible.
-    }
-
     calculate();
 }
 
@@ -180,7 +161,6 @@ function init() {
 
         updateProviderInfo();
         calculate();
-        loadProviderState();
     });
 }
 
@@ -573,39 +553,29 @@ function saveProvidersToCookie() {
 }
 
 function loadProvidersFromCookie() {
-    const saved = getCookie('ev_providers');
-    // Ensure PRESETS exists and is loaded from the fetch in init()
-    if (saved && Array.isArray(saved) && typeof PRESETS !== 'undefined') {
+    const saved = getCookie('ev_providers'); // Uses your existing getCookie function
+    if (saved && Array.isArray(saved)) {
+        // Clear any default or existing boxes first
         document.getElementById("providers").innerHTML = "";
         
         saved.forEach(p => {
+            // Use your existing function to create the box structure
             createProviderBox(); 
             const id = providerCount;
             
-            // 1. Manually populate the Preset dropdown options first
-            const presetSelect = document.getElementById(`preset${id}`);
-            if (presetSelect) {
-                presetSelect.innerHTML = '<option value="Custom">Custom / Other</option>';
-                PRESETS.forEach(preset => {
-                    const opt = document.createElement("option");
-                    opt.value = preset.name;
-                    opt.textContent = preset.name;
-                    presetSelect.appendChild(opt);
-                });
-            }
-
-            // 2. Now set the values
+            // Repopulate the fields
             document.getElementById(`name${id}`).value = p.name;
             document.getElementById(`subCost${id}`).value = p.subCost;
             document.getElementById(`rate${id}`).value = p.rate;
             document.getElementById(`preset${id}`).value = p.preset;
             
+            // Handle speed dropdown if it exists for this preset
             if (p.speed && document.getElementById(`speed${id}`)) {
-                updateProviderFields(id); 
+                updateProviderFields(id); // Rebuilds speed options
                 document.getElementById(`speed${id}`).value = p.speed;
             }
         });
-        calculate(); 
+        calculate(); // Refresh the results
     }
 }
 
@@ -616,16 +586,12 @@ function loadProviderState() {
     const btn = document.getElementById("toggleProvidersBtn");
     const hiddenMsg = document.getElementById("providersHiddenMsg");
 
-    if ((isCollapsed === true || isCollapsed === 'true') && container && btn) {
+    // Only apply if the cookie explicitly says the list was collapsed
+    if (isCollapsed === true && container && btn) {
         container.style.display = "none";
         if (controls) controls.style.display = "none";
         btn.textContent = "Expand Providers List";
-        
-        // Use standard display property
-        if (hiddenMsg) {
-            hiddenMsg.style.display = "block";
-        }
-        
+        if (hiddenMsg) hiddenMsg.style.display = "block";
         btn.classList.remove("empty-pulse");
     }
 }

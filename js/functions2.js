@@ -139,12 +139,8 @@ function updatePaygSummaryUI(inputs, mainInitialRange) {
     const mainTopUpKwh = Math.max(0, ((inputs.soc - inputs.rechargeAt) / 100) * inputs.batteryKwh);
     const mainTopUpCost = mainTopUpKwh * (inputs.startChargeRate / 100);
 
-    // Get the current mode
-    const activePill = document.querySelector('.calc-tab.active');
-    const isTripMode = activePill && activePill.textContent.trim() === "Cost Reduction";
-
-    // Pass isTripMode to the generator
-    const paygData = generatePaygSummaryHtml(inputs, mainInitialRange, mainTopUpKwh, mainTopUpCost, isTripMode);
+    const paygData = generatePaygSummaryHtml(inputs, mainInitialRange, mainTopUpKwh, mainTopUpCost);
+    
     document.getElementById("preChargeLine").innerHTML = `<div class="guide-section" id="payg-summary">${paygData.preChargeHtml}</div>`;
 
     const kwhData = generateKwhBreakoutHtml(inputs, paygData.journey1PublicMiles);
@@ -454,7 +450,7 @@ function generateKwhBreakoutHtml(inputs, journey1PublicMiles) {
     return { breakoutHtml, breakoutKwh };
 }
 
-function generatePaygSummaryHtml(inputs, mainInitialRange, mainTopUpKwh, mainTopUpCost, isTripMode) {
+function generatePaygSummaryHtml(inputs, mainInitialRange, mainTopUpKwh, mainTopUpCost) {
     let totalPreJourneyCost = mainTopUpCost;
     let preChargeHtml = "";
 
@@ -505,28 +501,6 @@ function generatePaygSummaryHtml(inputs, mainInitialRange, mainTopUpKwh, mainTop
     } else {
         publicMilesHtml = `<p style="margin: 0px;"><span class="tooltip-container"><span class="info-icon" style="font-size:0.8rem" onclick="toggleTooltip(this)">💡<span class="tooltip-box">This is how many miles of your journey will need to be paid for with PAYG charging. It takes into account the range expected from pre-charging before the journey and your recharge threshold of ${inputs.rechargeAt}%.</span></span></span>PAYG charging miles needed: <strong>${journey1PublicMiles.toFixed(0)} miles</strong></p>`;
     }
-
-    const extraHeaders = isTripMode ? '<th>Journey Cost</th><th>vs. PAYG</th>' : '';
-    let preChargeHtml = `
-        <table class="mini-table">
-            <thead>
-                <tr>
-                    <th>Item</th>
-                    <th>kWh</th>
-                    <th>Rate</th>
-                    ${extraHeaders}
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Pre-Charge (Home/Work)</td>
-                    <td>${totalPreChargeKwh.toFixed(1)}</td>
-                    <td>${inputs.startChargeRate}p</td>
-                    ${isTripMode ? `<td>£${totalPreJourneyCost.toFixed(2)}</td><td>-</td>` : ''}
-                </tr>
-                </tbody>
-        </table>
-    `;
 
     return { preChargeHtml, publicMilesHtml, totalPreJourneyCost, totalPublicMiles, journey1PublicMiles };
 }
