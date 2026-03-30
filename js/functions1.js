@@ -38,6 +38,7 @@ function getInputs() {
     return {
         journeyMiles: parseFloat(document.getElementById("journeyMiles").value) || 0,
         batteryKwh: parseFloat(document.getElementById("batteryKwh").value) || 0,
+        prechargesoc: parseFloat(document.getElementById("prechargesoc").value) || 0,
         soc: parseFloat(document.getElementById("soc").value) || 0,
         efficiency: parseFloat(document.getElementById("efficiency").value) || 0,
         adhoc: parseFloat(document.getElementById("adhoc").value) || 0,
