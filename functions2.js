@@ -420,6 +420,8 @@ function processProviderData(providerBoxes, inputs, totalAdhocCost, totalPreJour
             comments: pData?.subscription?.comments || ""
         });
     });
+
+    providers.sort((a, b) => a.totalJourneyCost - b.totalJourneyCost);
     return providers;
 }
 
