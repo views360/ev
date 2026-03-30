@@ -717,6 +717,9 @@ function handleBreakEvenMode(uiPreText, uiResults) {
                 speedDisplay: speedDisplay,
                 subCost: subCost,
                 rate: rate,
+                breakEvenMiles: breakEvenMiles || 0,
+                totalWithBattery: breakEvenMiles || 0,
+                savings: (rate < adhocRate) ? 1 : -1,
                 miles: breakEvenMiles,
                 displayText: displayMiles
             });
@@ -762,7 +765,6 @@ function calculate() {
     if (!context.isTripMode) {
         if (context.conclusionsBox) context.conclusionsBox.style.display = "none";
         handleBreakEvenMode(context.uiPreText, context.uiResults);
-        return; 
     }
 
     // Trip Mode Logic
