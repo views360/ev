@@ -454,7 +454,7 @@ function generateKwhBreakoutHtml(inputs, journey1PublicMiles) {
     return { breakoutHtml, breakoutKwh };
 }
 
-function generatePaygSummaryHtml(inputs, mainInitialRange, mainTopUpKwh, mainTopUpCost) {
+function generatePaygSummaryHtml(inputs, mainInitialRange, mainTopUpKwh, mainTopUpCost, isTripMode) {
     let totalPreJourneyCost = mainTopUpCost;
     let preChargeHtml = "";
 
@@ -507,7 +507,7 @@ function generatePaygSummaryHtml(inputs, mainInitialRange, mainTopUpKwh, mainTop
     }
 
     const extraHeaders = isTripMode ? '<th>Journey Cost</th><th>vs. PAYG</th>' : '';
-    let rows = `
+    let preChargeHtml = `
         <table class="mini-table">
             <thead>
                 <tr>
