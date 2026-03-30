@@ -656,8 +656,8 @@ function handleModeVisibility(isTripMode) {
 
     if (sortContainer) sortContainer.style.display = isTripMode ? "block" : "none";
     if (tripGrid) tripGrid.style.display = isTripMode ? "grid" : "none";
-    if (resultsHeader) resultsHeader.style.display = isTripMode ? "flex" : "none";
-    if (uiResults) uiResults.style.display = "block";
+    if (resultsHeader) resultsHeader.style.display = "flex"; 
+    if (uiResults) uiResults.style.display = "flex";
     if (btnRow) btnRow.style.display = isTripMode ? "flex" : "none";
 }
 
