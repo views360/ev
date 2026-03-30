@@ -663,9 +663,13 @@ function clearSavedProviders() {
     if (toggleBtn) toggleBtn.textContent = "Collapse Providers List";
     
     // 4. Update calculations
-    if (typeof calculate === 'function') {
-        calculate();
-    }
+	// Check for saved state on load
+    window.addEventListener('load', () => {
+        loadProviders();
+        if (typeof calculate === 'function') {
+            calculate();
+        }
+    });
 }
 
 // Ensure the menu loads on every page refresh
