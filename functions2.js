@@ -378,13 +378,13 @@ function processProviderData(providerBoxes, inputs, totalAdhocCost, totalPreJour
         const rate = parseFloat(document.getElementById(`rate${id}`).value) || 0;
        
         const savingPerKwh = (inputs.adhoc - rate) / 100;
-        // Use Infinity for non-savers so they sort mathematically to the bottom
-        let breakEvenMiles = Infinity; 
+        // Use a very high number instead of 0 so non-savers drop to the bottom
+        let breakEvenMiles = 999999; 
         if (savingPerKwh > 0) {
             const kwhNeeded = subCost / savingPerKwh;
             breakEvenMiles = kwhNeeded * inputs.efficiency;
         } else if (subCost === 0 && rate <= inputs.adhoc) {
-            breakEvenMiles = 0; // Free/No-sub providers break even immediately
+            breakEvenMiles = 0;
         }
         
         let publicChargingCost = 0;
@@ -426,20 +426,15 @@ function processProviderData(providerBoxes, inputs, totalAdhocCost, totalPreJour
 
 const sortType = document.getElementById("sortResults")?.value || "cheapest";
     providers.sort((a, b) => {
-        if (sortType === "cheapest") return a.totalJourneyCost - b.totalJourneyCost;
-        if (sortType === "be_low") {
-            // Ensure providers that never break even (Infinity) are pushed to the bottom
-            const valA = isFinite(a.breakEvenMiles) ? a.breakEvenMiles : Number.MAX_SAFE_INTEGER;
-            const valB = isFinite(b.breakEvenMiles) ? b.breakEvenMiles : Number.MAX_SAFE_INTEGER;
-            return valA - valB;
-        }
-        if (sortType === "az") return a.name.localeCompare(b.name);
-        if (sortType === "za") return b.name.localeCompare(a.name);
-        return 0;
-    });
-
-    return providers;
-}
+            if (sortType === "cheapest") return a.totalJourneyCost - b.totalJourneyCost;
+            if (sortType === "be_low") return a.breakEvenMiles - b.breakEvenMiles;
+            if (sortType === "az") return (a.name || "").localeCompare(b.name || "");
+            if (sortType === "za") return (b.name || "").localeCompare(a.name || "");
+            return 0;
+        });
+    
+        return providers;
+    }
 
 function generateKwhBreakoutHtml(inputs, journey1PublicMiles) {
     let breakoutKwh = 0;
