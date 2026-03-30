@@ -582,9 +582,6 @@ window.addEventListener('scroll', function() {
     }
 });
 </script>
-<script src="/js/functions1.js"></script>
-<script src="/js/functions2.js"></script>
-<script src="/js/functions3.js"></script>
 <script>
 async function loadMenu() {
     try {
@@ -663,17 +660,16 @@ function clearSavedProviders() {
     if (toggleBtn) toggleBtn.textContent = "Collapse Providers List";
     
     // 4. Update calculations
-	// Check for saved state on load
-    window.addEventListener('load', () => {
-        loadProviders();
-        if (typeof calculate === 'function') {
-            calculate();
-        }
-    });
+    if (typeof calculate === 'function') {
+        calculate();
+    }
 }
 
 // Ensure the menu loads on every page refresh
 loadMenu();
 </script>
+<script src="/js/functions1.js"></script>
+<script src="/js/functions2.js"></script>
+<script src="/js/functions3.js"></script>
 </body>
 </html>
