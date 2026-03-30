@@ -62,15 +62,22 @@ function setToggle(mode, btn) {
     setCookie('calcMode', mode);
     setCookie('comparisonMode', mode);
 
-    // Get the Results Contents container
-    const tocContainer = document.getElementById("toc-container");
-    if (tocContainer) {
-        // Only show if the mode is 'trip-savings' (Cost Reduction)
-        if (mode === 'trip-savings') {
-            tocContainer.style.display = "block";
-        } else {
-            tocContainer.style.display = "none";
-        }
+    const tocHeader = document.querySelector("#toc-container h3");
+    const tocNav = document.querySelector("#toc-container nav.toc");
+    const breakEvenTable = document.getElementById("break-even-results");
+
+    if (mode === 'trip-savings') {
+        // Show Cost Reduction results info
+        if (tocHeader) tocHeader.style.display = "block";
+        if (tocNav) tocNav.style.display = "block";
+        // Hide Break-Even specific table
+        if (breakEvenTable) breakEvenTable.style.display = "none";
+    } else {
+        // Break-Even Mode: Hide all Cost Reduction elements
+        if (tocHeader) tocHeader.style.display = "none";
+        if (tocNav) tocNav.style.display = "none";
+        // The display of breakEvenTable is usually handled by calculate(), 
+        // but we ensure its parent container remains visible.
     }
 
     calculate();
