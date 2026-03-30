@@ -99,7 +99,7 @@ function updateConclusionsAndItineraryUI(inputs, providers, publicKwh, totalAdho
     const contentsBox = document.getElementById("contentsBox");
     
     // In Cost Reduction (isTripMode), we hide the TOC
-    if (!inputs.isTripMode) {
+    if (inputs.isTripMode) {
         contentsBox.style.display = "none";
         contentsBox.innerHTML = "";
     } else {
@@ -656,14 +656,12 @@ function handleModeVisibility(isTripMode) {
 
     if (sortContainer) sortContainer.style.display = isTripMode ? "block" : "none";
     if (tripGrid) tripGrid.style.display = isTripMode ? "grid" : "none";
-    if (resultsHeader) resultsHeader.style.display = "flex"; 
-    if (uiResults) uiResults.style.display = "flex";
+    if (resultsHeader) resultsHeader.style.display = isTripMode ? "flex" : "none";
+    if (uiResults) uiResults.style.display = isTripMode ? "flex" : "none";
     if (btnRow) btnRow.style.display = isTripMode ? "flex" : "none";
 }
 
 function handleBreakEvenMode(uiPreText, uiResults) {
-    const contentsBox = document.getElementById("contentsBox");
-    if (contentsBox) contentsBox.style.display = "none";
     const efficiency = parseFloat(document.getElementById("efficiencyBE").value);
     const adhocRate = parseFloat(document.getElementById("adhocBE").value) || 0;
     const minSpeedSelection = parseFloat(document.getElementById("minSpeedBE").value) || 0;
