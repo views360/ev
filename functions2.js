@@ -421,10 +421,15 @@ function processProviderData(providerBoxes, inputs, totalAdhocCost, totalPreJour
         });
     });
 
-    const sortType = document.getElementById("sortResults")?.value || "cheapest";
+const sortType = document.getElementById("sortResults")?.value || "cheapest";
     providers.sort((a, b) => {
         if (sortType === "cheapest") return a.totalJourneyCost - b.totalJourneyCost;
-        if (sortType === "be_low") return a.breakEvenMiles - b.breakEvenMiles;
+        if (sortType === "be_low") {
+            // Ensure providers that never break even (Infinity) are pushed to the bottom
+            const valA = isFinite(a.breakEvenMiles) ? a.breakEvenMiles : Number.MAX_SAFE_INTEGER;
+            const valB = isFinite(b.breakEvenMiles) ? b.breakEvenMiles : Number.MAX_SAFE_INTEGER;
+            return valA - valB;
+        }
         if (sortType === "az") return a.name.localeCompare(b.name);
         if (sortType === "za") return b.name.localeCompare(a.name);
         return 0;
