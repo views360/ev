@@ -734,7 +734,7 @@ function handleBreakEvenMode(uiPreText, uiResults) {
         return a.name.localeCompare(b.name);
     });
 
-    const fakeInputsForBE = { adhoc: adhocRate }; 
+    const fakeInputsForBE = { adhoc: adhocRate, isTripMode: false };
     const providerResultsHtml = generateProviderResultsHtml(beData, fakeInputsForBE);
     document.getElementById("providerResults").innerHTML = providerResultsHtml;
 
