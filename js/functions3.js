@@ -596,13 +596,13 @@ function loadProviderState() {
     const btn = document.getElementById("toggleProvidersBtn");
     const hiddenMsg = document.getElementById("providersHiddenMsg");
 
-    // Check if the cookie is explicitly string "true" or boolean true
+    // Check for both boolean true and the string "true"
     if ((isCollapsed === true || isCollapsed === 'true') && container && btn) {
         container.style.display = "none";
         if (controls) controls.style.display = "none";
         btn.textContent = "Expand Providers List";
         
-        // This ensures the message appears on page reload
+        // Force the message to block
         if (hiddenMsg) {
             hiddenMsg.style.display = "block";
         }
