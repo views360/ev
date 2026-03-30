@@ -710,7 +710,7 @@ function handleBreakEvenMode(uiPreText, uiResults) {
                 displayMiles = "0 (Free/No Sub)";
             }
 
-            beData.push({
+        beData.push({
                 name: p.name,
                 url: p.subscription?.url,
                 comments: p.subscription?.comments || "",
@@ -719,6 +719,7 @@ function handleBreakEvenMode(uiPreText, uiResults) {
                 rate: rate,
                 breakEvenMiles: breakEvenMiles || 0,
                 totalWithBattery: breakEvenMiles || 0,
+                totalJourneyCost: subCost,
                 savings: (rate < adhocRate) ? 1 : -1,
                 miles: breakEvenMiles,
                 displayText: displayMiles
@@ -733,7 +734,7 @@ function handleBreakEvenMode(uiPreText, uiResults) {
         return a.name.localeCompare(b.name);
     });
 
-const fakeInputsForBE = { adhoc: adhocRate }; 
+    const fakeInputsForBE = { adhoc: adhocRate }; 
     const providerResultsHtml = generateProviderResultsHtml(beData, fakeInputsForBE);
     document.getElementById("providerResults").innerHTML = providerResultsHtml;
 
