@@ -684,28 +684,19 @@ function toggleTheme() {
 }
 
 function applyPulsing() {
-    // Target the Name, Email, and Message fields specifically
-    const contactFields = document.querySelectorAll('.field input, .field textarea');
-    
-    contactFields.forEach(field => {
-        const checkValue = () => {
-            if (field.value.trim() === "") {
-                field.classList.add("empty-pulse");
-            } else {
-                field.classList.remove("empty-pulse");
-            }
-        };
-
-        // Initial check on load
-        checkValue();
-
-        // Remove pulse as soon as the user starts typing
-        field.addEventListener('input', checkValue);
+    // Select all text inputs and textareas in your contact form
+    const fields = document.querySelectorAll('input[type="text"], input[type="email"], textarea');
+    fields.forEach(field => {
+        if (!field.value.trim()) {
+            field.classList.add('empty-pulse');
+        } else {
+            field.classList.remove('empty-pulse');
+        }
     });
 }
 
-// Run when the page is ready
-document.addEventListener('DOMContentLoaded', applyContactPulsing);
+// Run once on load to highlight initially empty fields
+document.addEventListener('DOMContentLoaded', applyPulsing);
 </script>
 </body>
 </html>
