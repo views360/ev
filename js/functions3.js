@@ -553,29 +553,39 @@ function saveProvidersToCookie() {
 }
 
 function loadProvidersFromCookie() {
-    const saved = getCookie('ev_providers'); // Uses your existing getCookie function
-    if (saved && Array.isArray(saved)) {
-        // Clear any default or existing boxes first
+    const saved = getCookie('ev_providers');
+    // Ensure PRESETS exists and is loaded from the fetch in init()
+    if (saved && Array.isArray(saved) && typeof PRESETS !== 'undefined') {
         document.getElementById("providers").innerHTML = "";
         
         saved.forEach(p => {
-            // Use your existing function to create the box structure
             createProviderBox(); 
             const id = providerCount;
             
-            // Repopulate the fields
+            // 1. Manually populate the Preset dropdown options first
+            const presetSelect = document.getElementById(`preset${id}`);
+            if (presetSelect) {
+                presetSelect.innerHTML = '<option value="Custom">Custom / Other</option>';
+                PRESETS.forEach(preset => {
+                    const opt = document.createElement("option");
+                    opt.value = preset.name;
+                    opt.textContent = preset.name;
+                    presetSelect.appendChild(opt);
+                });
+            }
+
+            // 2. Now set the values
             document.getElementById(`name${id}`).value = p.name;
             document.getElementById(`subCost${id}`).value = p.subCost;
             document.getElementById(`rate${id}`).value = p.rate;
             document.getElementById(`preset${id}`).value = p.preset;
             
-            // Handle speed dropdown if it exists for this preset
             if (p.speed && document.getElementById(`speed${id}`)) {
-                updateProviderFields(id); // Rebuilds speed options
+                updateProviderFields(id); 
                 document.getElementById(`speed${id}`).value = p.speed;
             }
         });
-        calculate(); // Refresh the results
+        calculate(); 
     }
 }
 
