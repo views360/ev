@@ -421,7 +421,15 @@ function processProviderData(providerBoxes, inputs, totalAdhocCost, totalPreJour
         });
     });
 
-    providers.sort((a, b) => a.totalJourneyCost - b.totalJourneyCost);
+    const sortType = document.getElementById("sortResults")?.value || "cheapest";
+    providers.sort((a, b) => {
+        if (sortType === "cheapest") return a.totalJourneyCost - b.totalJourneyCost;
+        if (sortType === "be_low") return a.breakEvenMiles - b.breakEvenMiles;
+        if (sortType === "az") return a.name.localeCompare(b.name);
+        if (sortType === "za") return b.name.localeCompare(a.name);
+        return 0;
+    });
+
     return providers;
 }
 
