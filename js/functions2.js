@@ -96,26 +96,26 @@ function updateConclusionsAndItineraryUI(inputs, providers, publicKwh, totalAdho
 
     const itineraryData = generateRealWorldItineraryHtml(inputs, publicKwh, formatChargingTime);
 
-    // Only show "Results Contents" if NOT in trip mode (Cost Reduction)
     const contentsBox = document.getElementById("contentsBox");
+    
+    // In Cost Reduction (isTripMode), we hide the TOC
     if (inputs.isTripMode) {
         contentsBox.style.display = "none";
         contentsBox.innerHTML = "";
     } else {
         contentsBox.style.display = "block";
-        const contentsHTML = `
+        // Define and assign innerHTML inside the block to avoid scope errors
+        contentsBox.innerHTML = `
             <div id="toc" class="conclusion-white-border">
                 <h3>RESULTS CONTENTS</h3>
                 <ul style="margin:0; padding-left:20px; font-size:0.95rem;">
                     <li><a href="#payg-summary" style="color: var(--accent); text-decoration:none;">1. PAYG Summary</a></li>
                     <li><a href="#providerResults" style="color: var(--accent); text-decoration:none;">2. Providers &amp; Subscriptions</a></li>
-                    ...
                 </ul>
             </div>`;
-        contentsBox.innerHTML = contentsHTML;
     }
     
-    document.getElementById("contentsBox").innerHTML = contentsHTML;
+    // REMOVED: document.getElementById("contentsBox").innerHTML = contentsHTML; (This was the line causing the break)
     
     let conclusionHTML = `<div class="conclusion-white-border guide-section" id="payg-vs-subscription">`; 
     const journeyCount = 1 + inputs.additionalJourneys.length;
