@@ -61,6 +61,18 @@ function setToggle(mode, btn) {
     btn.classList.add('active');
     setCookie('calcMode', mode);
     setCookie('comparisonMode', mode);
+
+    // Get the Results Contents container
+    const tocContainer = document.getElementById("toc-container");
+    if (tocContainer) {
+        // Only show if the mode is 'trip-savings' (Cost Reduction)
+        if (mode === 'trip-savings') {
+            tocContainer.style.display = "block";
+        } else {
+            tocContainer.style.display = "none";
+        }
+    }
+
     calculate();
 }
 
