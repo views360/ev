@@ -596,14 +596,18 @@ function loadProviderState() {
     const btn = document.getElementById("toggleProvidersBtn");
     const hiddenMsg = document.getElementById("providersHiddenMsg");
 
-    // Check for both boolean true and the string "true"
+    // Check for both boolean true and string "true"
     if ((isCollapsed === true || isCollapsed === 'true') && container && btn) {
+        console.log("Cookie found: Collapsing providers and showing message.");
+        
         container.style.display = "none";
         if (controls) controls.style.display = "none";
         btn.textContent = "Expand Providers List";
         
-        // Force the message to block
+        // Tagging the message display directly to the collapse logic
         if (hiddenMsg) {
+            hiddenMsg.style.setAttribute('style', 'display: block !important; font-size: 0.85rem; color: var(--accent); font-style: italic;');
+            // Or more simply:
             hiddenMsg.style.display = "block";
         }
         
