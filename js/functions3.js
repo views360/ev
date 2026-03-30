@@ -614,6 +614,7 @@ function addJourneyField() {
     const container = document.getElementById("additionalJourneysContainer");
     const defaultSoc = document.getElementById("soc").value || "";
     const defaultRate = document.getElementById("startChargeRate").value || "";
+    const defaultPreChargeSoc = document.getElementById("prechargesoc").value || "";
     
     const journeyDiv = document.createElement("div");
     journeyDiv.className = "additional-journey-box";
@@ -646,7 +647,7 @@ function addJourneyField() {
                 </div>
             <div class="input-group">
                 <label><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">The battery percentage your car will be at when you begin your journey. It is acceptable to slow charge up to 100% before departing on a long journey. It defaults to the departing SOC of your first journey, but you may adjust it if appropriate.</span></span></span>Departure Battery Level (%)</label>
-                <input type="number" class="extra-journey-soc" placeholder="e.g. 100" value="${defaultSoc}" oninput="calculate()">
+                <input type="number" class="extra-journey-soc" placeholder="e.g. 100" oninput="calculate()" value="${defaultPreChargeSoc}">
             </div>
         </div>
     `;
