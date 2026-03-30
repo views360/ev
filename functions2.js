@@ -378,10 +378,13 @@ function processProviderData(providerBoxes, inputs, totalAdhocCost, totalPreJour
         const rate = parseFloat(document.getElementById(`rate${id}`).value) || 0;
        
         const savingPerKwh = (inputs.adhoc - rate) / 100;
-        let breakEvenMiles = 0;
+        // Use Infinity for non-savers so they sort mathematically to the bottom
+        let breakEvenMiles = Infinity; 
         if (savingPerKwh > 0) {
             const kwhNeeded = subCost / savingPerKwh;
             breakEvenMiles = kwhNeeded * inputs.efficiency;
+        } else if (subCost === 0 && rate <= inputs.adhoc) {
+            breakEvenMiles = 0; // Free/No-sub providers break even immediately
         }
         
         let publicChargingCost = 0;
