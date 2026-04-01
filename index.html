@@ -2,8 +2,18 @@
 <html lang="en">
 <head>
     <script src="menu-utils.js"></script>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2944414800646015"
-     crossorigin="anonymous"></script>
+	<script>
+	    // Only load AdSense if we are on the live production domain
+	    if (window.location.hostname === 'yourlivedomain.com') {
+	        const script = document.createElement('script');
+	        script.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2944414800646015";
+	        script.async = true;
+	        script.crossOrigin = "anonymous";
+	        document.head.appendChild(script);
+	    } else {
+	        console.log("AdSense disabled on DEV environment.");
+	    }
+	</script>
     <meta charset="UTF-8">
 	<meta name="google-adsense-account" content="ca-pub-2944414800646015">
     <title>EV Subs (UK)</title>
@@ -433,46 +443,88 @@
 	    </div>
 	</div>
 
-	<div id="contentsBox"></div>
-
     <div id="preConclusionsText">Please complete all fields in the <strong>Journey & Vehicle</strong> section</div>
     <div id="results" class="results">
-		<div style="align: center; margin: auto">
-	        <div class="calc-lines">
-				<h3 id="paygSummaryTitle" style="margin-bottom: 0px; padding-bottom: 0px">1. PAYG Summary</h3>
-				<p id="paygSummarySubtitle" style="margin: 0 0 10px 0; opacity: 0.8;">Here is the key information for your journey if you choose PAYG.</p>
-				<div id="homeRangeLine"></div>
-	            <div id="preChargeLine"></div>
-	            <div id="publicMilesLine"></div>
-	            <div id="publicKwhLine"></div>
-	            <div id="adhocCostLine"></div>
-	        </div>
+		<div style="width:100%; text-align: center; margin: auto; margin-bottom: 10px;">Results are divided into expandable sections.</div>
+		<div class="collapsible-section">
+		    <div class="collapsible-header" onclick="toggleSection(this)">
+		        <h3>1. PAYG Summary</h3>
+		        <span class="toggle-icon">+</span>
+		    </div>
+		    <div class="collapsible-content">
+				<div>
+			        <div class="calc-lines">				
+						<p id="paygSummarySubtitle" style="margin: 0 0 10px 0; opacity: 0.8;">Here is the key information for your journey if you choose PAYG.</p>
+						<div id="homeRangeLine"></div>
+			            <div id="preChargeLine"></div>
+			            <div id="publicMilesLine"></div>
+			            <div id="publicKwhLine"></div>
+			            <div id="adhocCostLine"></div>
+			        </div>
+				</div>
+			</div>
 		</div>
 
-		<!--div id="sortContainer" class="input-group" style="max-width:400px; margin-top: 30px; margin-left: 10px;">
-            <h3>2. Providers &amp; Subscriptions</h3>
-			<label for="sortResults">Sort results</label>
-            <select id="sortResults" onchange="calculate()">
-                <option value="cheapest">Cheapest first</option>
-                <option value="breakeven">Break-even PAYG public charging miles (low to high)</option>
-                <option value="az">A → Z</option>
-                <option value="za">Z → A</option>
-            </select>
-		</div-->
-		<div style="margin: 30px 0 0 10px">
-			<h3>2. Providers &amp; Subscriptions</h3>
-			<p>Providers are displayed in order of lowest journey cost first</p>
+		<div class="collapsible-section">
+		    <div class="collapsible-header" onclick="toggleSection(this)">
+		        <h3>2. Providers &amp; Subscriptions</h3>
+		        <span class="toggle-icon">+</span>
+		    </div>
+		    <div class="collapsible-content">
+				<div id="sortContainer" class="input-group">
+					<label for="sortResults">Sort results</label>
+		            <select id="sortResults" onchange="calculate()">
+		                <option value="cheapest">Cheapest first</option>
+		                <option value="az">A → Z</option>
+		                <option value="za">Z → A</option>
+		            </select>
+		        </div>
+	        	<div class="guide-section" id="providerResults"></div>
+			</div>
 		</div>
-        <div class="guide-section" id="providerResults"></div>
-        <div id="conclusionsBox"></div>
-		<div id="realWorldAssessment"></div>
-        <div id="summaryBox" class="summary"></div>
 		
-        <div class="chart-wrapper guide-section" id="graph-section">
-			<h3>6. Subscriptions Break-Even Graph</h3>
-            Click a legend box/text to show/hide line
-            <canvas id="costChart" height="220"></canvas>
-        </div>
+		<div class="collapsible-section">
+		    <div class="collapsible-header" onclick="toggleSection(this)">
+		        <h3>3. PAYG vs Subscription Conclusion</h3>
+		        <span class="toggle-icon">+</span>
+		    </div>
+		    <div class="collapsible-content">
+        		<div id="conclusionsBox"></div>
+			</div>
+		</div>
+
+		<div class="collapsible-section">
+		    <div class="collapsible-header" onclick="toggleSection(this)">
+		        <h3>4. Charging Durations</h3>
+		        <span class="toggle-icon">+</span>
+		    </div>
+		    <div class="collapsible-content">
+        		<div id="chargingDurations" class="summary"></div>
+			</div>
+		</div>
+		
+		<div class="collapsible-section">
+		    <div class="collapsible-header" onclick="toggleSection(this)">
+		        <h3>5. Real-World Charging Itinerary</h3>
+		        <span class="toggle-icon">+</span>
+		    </div>
+		    <div class="collapsible-content">
+				<div id="realWorldAssessment"></div>
+			</div>
+		</div>
+		
+        <div class="collapsible-section" id="finalResultsSection">
+		    <div class="collapsible-header" onclick="toggleSection(this)">
+		        <h3>6. Subscriptions Break-Even Graph</h3>
+		        <span class="toggle-icon">+</span>
+		    </div>
+		    <div class="collapsible-content">
+				<div class="chart-wrapper guide-section" id="graph-section">
+		            Click a legend box/text to show/hide line
+		            <canvas id="costChart" height="220"></canvas>
+		        </div>
+			</div>
+		</div>
     </div>
 </div>
 </div><!-- end content-wrap -->

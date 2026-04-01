@@ -15,14 +15,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;700;800&display=swap" rel="stylesheet">
     <style>
         /* ── Page reset ── */
-        :root {
-		    --glow: 0 0 10px rgba(56, 189, 248, 0.4);
-		    --glow-strong: 0 0 20px rgba(56, 189, 248, 0.6);
-		    --neon-green: #39FF14;
-		    --neon-green-soft: rgba(57, 255, 20, 0.2);
-		}
-		
-		body {
+        body {
             padding: 0 !important;
             margin: 0;
             background: var(--bg);
@@ -313,18 +306,6 @@
             );
         }
 
-		/* Add this to the <style> section of contact.html */
-		.empty-pulse {
-		    border-color: var(--neon-green) !important;
-		    box-shadow: 0 0 5px var(--neon-green-soft);
-		    animation: neonPulse 1.5s infinite ease-in-out;
-		}
-		
-		@keyframes neonPulse {
-		    0%, 100% { box-shadow: 0 0 5px var(--neon-green-soft); }
-		    50% { box-shadow: 0 0 15px var(--neon-green); }
-		}
-
         .light-mode .hero-title { color: #0f172a; text-shadow: none; }
         .light-mode .hero-sub   { color: rgba(15,23,42,0.75); }
 
@@ -472,11 +453,11 @@
                     <div class="form-row">
                         <div class="field">
                             <label for="name">Your Name</label>
-                            <input type="text" id="name" name="name" placeholder="Jane Smith" required oninput="applyPulsing()">
+                            <input type="text" id="name" name="name" placeholder="Jane Smith" required>
                         </div>
                         <div class="field">
                             <label for="email">Email Address</label>
-                            <input type="email" id="email" name="email" placeholder="jane@example.com" required oninput="applyPulsing()">
+                            <input type="email" id="email" name="email" placeholder="jane@example.com" required>
                         </div>
                     </div>
 
@@ -493,7 +474,7 @@
 
                     <div class="field">
                         <label for="message">Message</label>
-                        <textarea id="message" name="message" placeholder="Tell us what's on your mind…" required oninput="applyPulsing()"></textarea>
+                        <textarea id="message" name="message" placeholder="Tell us what's on your mind…" required></textarea>
                     </div>
 
                     <button type="submit" class="submit-btn" id="submitBtn">Send Message</button>
@@ -682,21 +663,6 @@ function toggleTheme() {
     const isLight = document.documentElement.classList.toggle('light-mode');
     setCookie('themePref', isLight ? 'light' : 'dark');
 }
-
-function applyPulsing() {
-    // Select all text inputs and textareas in your contact form
-    const fields = document.querySelectorAll('input[type="text"], input[type="email"], textarea');
-    fields.forEach(field => {
-        if (!field.value.trim()) {
-            field.classList.add('empty-pulse');
-        } else {
-            field.classList.remove('empty-pulse');
-        }
-    });
-}
-
-// Run once on load to highlight initially empty fields
-document.addEventListener('DOMContentLoaded', applyPulsing);
 </script>
 </body>
 </html>

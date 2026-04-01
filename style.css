@@ -1,5 +1,59 @@
 @import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;700;800&display=swap');
 
+.collapsible-section {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin: 0 15px 15px 15px;
+    /*margin-bottom: 15px;*/
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.collapsible-header {
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    background: var(--panel-alt);
+    user-select: none;
+}
+
+.collapsible-header h2, .collapsible-header h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: var(--accent);
+}
+
+.toggle-icon {
+    font-size: 1.5rem;
+    color: var(--accent);
+    font-weight: bold;
+}
+
+.collapsible-content {
+    max-height: 0;
+    padding: 0 20px; /* CHANGE THIS TO: padding: 0; */
+    opacity: 0;
+    transition: all 0.3s ease-out;
+    visibility: hidden;
+    overflow: hidden; /* Add this to prevent content bleed */
+}
+
+/* When active, show content */
+.collapsible-section.active .collapsible-content {
+    max-height: 2000px; 
+    padding: 20px; /* This adds the padding back only when open */
+    opacity: 1;
+    visibility: visible;
+}
+
+.collapsible-section.active {
+    border-color: var(--accent);
+    box-shadow: var(--glow);
+}
+
 #floatingTooltip {
     visibility: hidden;
     position: fixed;
@@ -395,12 +449,13 @@ body.light-mode #providerResults th:nth-child(even) {
     background-color: rgba(0, 0, 0, 0.02);
 }
 
+/*
 .calc-lines {
     margin: 10px 0;
     padding: 10px;
     border: solid 1px #808080;
     border-radius: 8px;
-}
+}*/
 
 .conclusion-card {
     padding: 24px;
@@ -409,7 +464,7 @@ body.light-mode #providerResults th:nth-child(even) {
     border: 1px solid var(--border);
 }
 
-.conclusion-white-border {
+/*.conclusion-white-border {
     border: 1px solid #ffffff; 
     border-radius: 12px;
     padding: 20px;
@@ -421,6 +476,11 @@ body.light-mode #providerResults th:nth-child(even) {
 .conclusion-white-border p, 
 .conclusion-white-border strong {
     color: var(--text) !important;
+}*/
+
+#conclusionsBox p, 
+#conclusionsBox strong {
+    color: var(--text);
 }
 
 .conclusion-card.good {
@@ -435,8 +495,8 @@ body.light-mode #providerResults th:nth-child(even) {
 
 .main-result {
     font-size: 1.1rem;
-    margin-bottom: 10px;
-    color: var(--bg); 
+    margin: 0 0 10px 0 !important;
+    /*color: var(--bg);*/
 }
 
 .speed-comparison-container {
@@ -469,7 +529,6 @@ tr.good td { color: var(--good); }
 tr.bad td { color: var(--danger); }
 
 .chart-wrapper {
-    margin-top: 30px;
     background: var(--panel-alt);
     padding: 20px;
     border-radius: 12px;
@@ -1521,6 +1580,10 @@ body {
 
 /* MOBILE */
 @media (max-width: 700px) {
+
+    #finalResultsSection {
+        margin-bottom: 130px;
+    }
 
     .cookie-banner {
         width: 75%;
