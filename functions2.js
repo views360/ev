@@ -2,7 +2,7 @@ function renderTripResults(inputs, context) {
     const providerBoxes = document.querySelectorAll(".provider-box");
 
     // 1. Check if all required fields and providers are present
-    if (!checkTripReadiness(inputs, context.uiPreText, context.uiResults, context.resultsHeader, context.uiShare, context.uiPdf, providerBoxes)) {
+    if (!checkTripReadiness(inputs, context.uiPreText, context.uiResults, context.resultsHeader, context.uiShare, context.uiPdf, providerBoxes, context.sectionSummary, context.sectionSubs, context.sectionConclusion, context.sectionDurations, context.sectionRealWord, context.sectionGraph)) {
         return;
     }
 
@@ -56,12 +56,18 @@ function getModeContext() {
         conclusionsBox: document.getElementById("conclusionsBox"),
         resultsHeader: document.getElementById("resultsHeader"),
         uiShare: document.getElementById("shareBtn"),
-        uiPdf: document.getElementById("pdfBtn")
+        uiPdf: document.getElementById("pdfBtn"),
+        sectionSummary: document.getElementById("sectionSummary"),
+        sectionSubs: document.getElementById("sectionSubs"),    
+        sectionConclusion: document.getElementById("sectionConclusion"),
+        sectionDurations: document.getElementById("sectionDurations"),
+        sectionRealWorld: document.getElementById("sectionRealWorld"),
+        sectionGraph: document.getElementById("sectionGraph")
     };
 }
 
-function checkTripReadiness(inputs, uiPreText, uiResults, resultsHeader, uiShare, uiPdf, providerBoxes) {
-    if (checkIncompleteTrip(inputs, uiPreText, uiResults, resultsHeader, uiShare, uiPdf)) {
+function checkTripReadiness(inputs, uiPreText, uiResults, resultsHeader, uiShare, uiPdf, providerBoxes, sectionSummary, sectionSubs, sectionConclusion, sectionDurations, sectionRealWord, sectionGraph) {
+    if (checkIncompleteTrip(inputs, uiPreText, uiResults, resultsHeader, uiShare, uiPdf, sectionSummary, sectionSubs, sectionConclusion, sectionDurations, sectionRealWord, sectionGraph)) {
         return false;
     }
 
@@ -74,6 +80,12 @@ function checkTripReadiness(inputs, uiPreText, uiResults, resultsHeader, uiShare
         if (resultsHeader) resultsHeader.style.display = "none";
         if (uiShare) uiShare.style.display = "none";
         if (uiPdf) uiPdf.style.display = "none";
+        if (sectionSummary) sectionSummary.style.display = "none";
+        if (sectionSubs) sectionSubs.style.display = "none";
+        if (sectionConclusion) sectionConclusion.style.display = "none";
+        if (sectionDurations) sectionDurations.style.display = "none";
+        if (sectionRealWorld) sectionRealWorld.style.display = "none";
+        if (sectionGraph) sectionGraph.style.display = "none";
     return false;
         return false;
     }
@@ -86,8 +98,14 @@ function checkTripReadiness(inputs, uiPreText, uiResults, resultsHeader, uiShare
     if (toc) toc.style.display = "block";
     if (uiShare) uiShare.style.display = "";
     if (uiPdf) uiPdf.style.display = "";
-    document.querySelector(".calc-lines").style.display = "block";
-    document.querySelector(".chart-wrapper").style.display = "block";
+    if (sectionSummary) sectionSummary.style.display = "";
+    if (sectionSubs) sectionSubs.style.display = "";
+    if (sectionConclusion) sectionConclusion.style.display = "";
+    if (sectionDurations) sectionDurations.style.display = "";
+    if (sectionRealWorld) sectionRealWorld.style.display = "";
+    if (sectionGraph) sectionGraph.style.display = "";
+    document.querySelector(".calc-lines").style.display = "";
+    document.querySelector(".chart-wrapper").style.display = "";
     return true;
 }
 
@@ -315,7 +333,7 @@ function generateProviderResultsHtml(providers, inputs) {
         <th><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)" style="font-size: 0.8rem;">💡<span class="tooltip-box">This is the expected <strong>total charging cost</strong> of your journey using this provider and including your stated battery pre-charge. If the value is displayed in green, it is cheaper than the equivalent journey using PAYG charging at the rate you entered above (${inputs.adhoc}p/kWh).</span></span></span>Journey Cost</th>
         <th><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)" style="font-size: 0.8rem;">💡<span class="tooltip-box">This is the amount by which the discounted charge rate will either be cheaper or more expensive than your average PAYG rate for the same distance. Green means cheaper; red means more expensive. Bear in mind that you can continue to use a provider's subscription for an entire month.</span></span></span>vs. PAYG</th>
         <th><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)" style="font-size: 0.8rem;">💡<span class="tooltip-box">This is the number of miles you must drive on the provider's discounted charge rate to pay off the subscription fee. <strong>Important! This is not the total miles of your journey</strong> — it is the number of miles you must drive from your first charge with this provider. Remember, a subscription lasts for an entire month.</span></span></span>Break-Even Miles</th>
-        <th><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)" style="font-size: 0.8rem;">💡<span class="tooltip-box">This is the break-even miles PLUS the initial number of miles your vehicle can drive based on its pre-charged state. The number of journeys has no impact on this value.</span></span></span>Break Even + Battery</th>
+        <th><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)" style="font-size: 0.8rem;">💡<span class="tooltip-box">This is the break-even miles PLUS the initial number of miles your vehicle can drive based on its pre-charged state. The number of journeys has no impact on this value.</span></span></span>Battery + Break Even</th>
         </tr></thead><tbody>`;
     
     providers.forEach(p => {
@@ -563,7 +581,7 @@ function calculateRangeHtml(inputs, mainInitialRange) {
     return { rangeHtml, totalInitialRange };
 }
 
-function checkIncompleteTrip(inputs, uiPreText, uiResults, resultsHeader, uiShare, uiPdf) {
+function checkIncompleteTrip(inputs, uiPreText, uiResults, resultsHeader, uiShare, uiPdf, sectionSummary, sectionSubs, sectionConclusion, sectionDurations, sectionRealWord, sectionGraph) {
     const tripIncomplete = 
         inputs.journeyMiles <= 0 || 
         inputs.batteryKwh <= 0 || 
@@ -575,12 +593,18 @@ function checkIncompleteTrip(inputs, uiPreText, uiResults, resultsHeader, uiShar
         inputs.startChargeRate <= 0;
 
     if (tripIncomplete) {
-        uiPreText.innerHTML = "Please attend to all flashing green fields, or use the navigation tabs at the top to switch between BREAK EVEN and COST REDUCTION calcuation types.";
+        uiPreText.innerHTML = "Please attend to all pulsing green fields, or use the navigation tabs at the top to switch between BREAK EVEN and COST REDUCTION calcuation types.";
         uiPreText.style.display = "block";
         uiResults.style.display = "none";
         if (resultsHeader) resultsHeader.style.display = "none";
         if (uiShare) uiShare.style.display = "none";
         if (uiPdf) uiPdf.style.display = "none";
+        if (sectionSummary) sectionSummary.style.display = "none";
+        if (sectionSubs) sectionSubs.style.display = "none";
+        if (sectionConclusion) sectionConclusion.style.display = "none";
+        if (sectionDurations) sectionDurations.style.display = "none";
+        if (sectionRealWorld) sectionRealWorld.style.display = "none";
+        if (sectionGraph) sectionGraph.style.display = "none";
         const toc = document.getElementById("toc");
         if (toc) toc.style.display = "none";
         return true; 
@@ -683,6 +707,12 @@ function handleModeVisibility(isTripMode) {
 
 function handleBreakEvenMode(uiPreText, uiResults) {
     const contentsBox = document.getElementById("contentsBox");
+    const sectionSummary = document.getElementById("sectionSummary");
+    const sectionSubs = document.getElementById("sectionSubs");
+    const sectionConclusion = document.getElementById("sectionConclusion");
+    const sectionDurations = document.getElementById("sectionDurations");
+    const sectionRealWord = document.getElementById("sectionRealWord");
+    const sectionGraph = document.getElementById("sectionGraph");
     if (contentsBox) {
         contentsBox.style.display = "none";
         contentsBox.innerHTML = "";
@@ -692,17 +722,29 @@ function handleBreakEvenMode(uiPreText, uiResults) {
     const minSpeedSelection = parseFloat(document.getElementById("minSpeedBE").value) || 0;
 
     if (isNaN(efficiency) || efficiency <= 0 || isNaN(adhocRate) || adhocRate <= 0) {
-        uiPreText.innerHTML = "Please attend to all flashing green fields, or use the navigation tabs at the top to switch between BREAK EVEN and COST REDUCTION calcuation types.";
+        uiPreText.innerHTML = "Please attend to all pulsing green fields, or use the navigation tabs at the top to switch between BREAK EVEN and COST REDUCTION calcuation types.";
         uiPreText.style.display = "block";
         uiResults.style.display = "none";
+        sectionSummary.style.display = "none";
+        sectionSubs.style.display = "none";
+        sectionConclusion.style.display = "none";
+        sectionDurations.style.display = "none";
+        sectionRealWorld.style.display = "none";
+        sectionGraph.style.display = "none";
         return;
     }
 
     uiPreText.style.display = "none";
     uiResults.style.display = "block";
+    sectionSubs.style.display = "block";
+    sectionGraph.style.display = "block";
+    sectionSummary.style.display = "none";
+    sectionConclusion.style.display = "none";
+    sectionDurations.style.display = "none";
+    sectionRealWorld.style.display = "none";
     
     /*document.querySelector(".calc-lines").style.display = "none";*/
-    document.querySelector(".chart-wrapper").style.display = "none";
+    document.querySelector(".chart-wrapper").style.display = "block";
 
     let beData = [];
 
@@ -755,7 +797,7 @@ function handleBreakEvenMode(uiPreText, uiResults) {
         return a.name.localeCompare(b.name);
     });
 
-const fakeInputsForBE = { adhoc: adhocRate }; 
+    const fakeInputsForBE = { adhoc: adhocRate }; 
     const providerResultsHtml = generateBreakEvenResultsHtml(beData);
     document.getElementById("providerResults").innerHTML = providerResultsHtml;
 
@@ -776,6 +818,25 @@ const fakeInputsForBE = { adhoc: adhocRate };
             }
         }, 5000);
     }
+    
+    // NEW: Call drawGraph to render the chart in Break-Even mode
+    const graphInputs = {
+        journeyMiles: 300, // Default range for BE comparison
+        batteryKwh: parseFloat(document.getElementById("batteryKwh").value) || 60,
+        soc: 100,
+        efficiency: efficiency,
+        adhoc: adhocRate,
+        startChargeRate: 0 
+    };
+    
+    // Map beData to the format drawGraph expects for providers
+    const graphProviders = beData.map(p => ({
+        name: p.name,
+        subCost: p.subCost,
+        rate: p.rate
+    }));
+    
+    drawGraph(graphInputs, graphProviders);
 }
 
 function calculate() {
@@ -804,7 +865,7 @@ function calculate() {
 
 function generateBreakEvenResultsHtml(beData) {
     let html = `
-    <h3 style="margin: 20px 0 0 10px; padding-bottom: 0px">Providers & Subscriptions</h3>
+    <!--h3 style="margin: 20px 0 0 10px; padding-bottom: 0px">Providers & Subscriptions</h3-->
     <div class="mobile-only-text" style="font-size: 0.8em; text-align: center; color: var(--neon-green); margin-bottom: 0px;">
         Slide table left to view hidden columns.
     </div>
