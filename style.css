@@ -125,7 +125,9 @@ h3 {
     align-items: center;
     justify-content: center;
     width: 1.2em;
-    top: -2px;
+    top: -2px;     
+    font-size: 0.8rem;
+    margin: 0 5px;
 }
 
 .tooltip-container {
@@ -250,9 +252,10 @@ body {
     margin: 0;
     padding: 20px;
     padding-top: 54px !important;
-    padding-bottom: 98px !important; /* clears the fixed bottom ad bar */
+    /*padding-bottom: calc(120px + env(safe-area-inset-bottom)) !important;*/
     line-height: 1.6;
     transition: background-color 0.3s, color 0.3s;
+    min-height: 100dvh;
 }
 
 .app {
@@ -871,7 +874,7 @@ tr.bad td { color: var(--danger); }
     display: flex;
     align-items: center; 
     justify-content: space-between;
-    padding: 0 20px;
+    padding: 0 20px 0 10px;
     box-sizing: border-box;
     position: fixed; 
     top: 0;
@@ -880,12 +883,18 @@ tr.bad td { color: var(--danger); }
 }
 
 .android-title-clean {
-    color: #ffffff !important; 
-    font-size: 1.4rem !important; 
+    color: #ffffff !important;
+    font-size: clamp(12px, 3.7vw, 1.2rem) !important; 
     font-weight: 400 !important;
     margin: 0 !important;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.3px;
+    white-space: nowrap; 
+    overflow: visible; 
+    text-overflow: clip;
+    display: inline-block;
+    vertical-align: middle;
 }
+
 
 .android-dots-trigger {
     display: flex;
@@ -1382,14 +1391,30 @@ body {
     translate: -100% 0;
 }
 
+footer {
+    width: 100%;
+    padding: 20px;
+    background: #020617; 
+    border-top: 1px solid var(--border);
+    text-align: center;
+    box-sizing: border-box;
+}
+
+footer p {
+    color: var(--muted);
+    font-size: 0.9rem;
+    margin: 0;
+    opacity: 0.8;
+}
 
 /* DESKTOP */
 /* --- Desktop Layout (>= 700px) --- */
 @media (min-width: 700px) {
-    body {
-        padding-bottom: 20px !important;
+    footer {
+        /*width: calc(100% - 160px) !important;*/
+        width: 100%;
     }
-
+    
     /* 1. content-wrap gives margin:auto children a right boundary that
        excludes the 160px ad column, so they centre within the content area */
     .content-wrap {
@@ -1579,12 +1604,22 @@ body {
 
 
 /* MOBILE */
-@media (max-width: 700px) {
+@media (max-width: 700px) { 
 
-    #finalResultsSection {
-        margin-bottom: 130px;
+    footer {
+        margin-bottom: 100px !important;
     }
-
+    
+    .content-wrap {
+        /* Adds extra breathing room at the very bottom of the content wrapper */
+        padding-bottom: 60px; 
+    }
+    
+    .guide-card {
+        padding: 24px;
+        margin-bottom: 20px; 
+    }
+    
     .cookie-banner {
         width: 75%;
         left: calc(50%);
@@ -1594,7 +1629,7 @@ body {
         display: block;
     }
     
-body {
+    body {
         padding: 0;
     }
     .app {
@@ -1774,5 +1809,19 @@ body {
 
     .chart-wrapper {
         margin-bottom: 30px;
+    }
+}
+
+@media (max-width: 600px) {
+    .android-title-clean {
+        font-size: 3.4vw !important;
+        letter-spacing: 0px;
+    }
+}
+
+@media (max-width: 360px) {
+    .android-title-clean {
+        font-size: 3.4vw !important;
+        letter-spacing: 0px;
     }
 }

@@ -182,7 +182,7 @@ function updateProviderFields(id) {
     const speedRow = document.getElementById(`speedRow${id}`);
     
     if (presetName === 'Custom' || !p) {
-        speedRow.style.display = "none";
+        if (speedRow) speedRow.style.display = "none";
         calculate();
         return;
     }
@@ -190,16 +190,42 @@ function updateProviderFields(id) {
     document.getElementById(`name${id}`).value = p.name;
     document.getElementById(`subCost${id}`).value = p.subscription.subCost;
 
-    if (p.rates && !p.rates.default) {
+    if (p.rates) {
         const { minSpeed } = getInputs();
-        const speeds = Object.keys(p.rates).filter(s => parseFloat(s) >= minSpeed);
+        const availableSpeeds = Object.keys(p.rates).map(Number).sort((a, b) => a - b);
+        
+        // 1. Determine the "Best Fit" speed
+        // If minSpeed is higher than the fastest offered, use the fastest (max).
+        // Otherwise, find the first speed that is >= minSpeed.
+        const maxProviderSpeed = Math.max(...availableSpeeds);
+        let bestFitSpeed;
+
+        if (minSpeed >= maxProviderSpeed) {
+            bestFitSpeed = maxProviderSpeed;
+        } else {
+            bestFitSpeed = availableSpeeds.find(s => s >= minSpeed) || availableSpeeds[0];
+        }
+
+        // 2. Filter the dropdown to only show sensible options (Standard or >= bestFit)
+        const validSpeeds = Object.keys(p.rates).filter(s => {
+            const sNum = parseFloat(s);
+            return sNum === 0 || sNum >= bestFitSpeed;
+        });
+
         const speedSelect = document.getElementById(`speed${id}`);
-        speedSelect.innerHTML = speeds.map(s => `<option value="${s}">${s}kW</option>`).join("");
-        speedRow.style.display = "flex";
-        if (speeds.length > 0) document.getElementById(`rate${id}`).value = p.rates[speeds[0]];
-    } else {
-        document.getElementById(`rate${id}`).value = p.rates.default;
-        speedRow.style.display = "none";
+        if (speedSelect) {
+            speedSelect.innerHTML = validSpeeds.map(s => 
+                `<option value="${s}">${parseFloat(s) === 0 ? 'Standard' : s + 'kW'}</option>`
+            ).join("");
+
+            // Set the value to our calculated best fit
+            speedSelect.value = bestFitSpeed;
+            document.getElementById(`rate${id}`).value = p.rates[bestFitSpeed];
+        }
+
+        if (speedRow) {
+            speedRow.style.display = (validSpeeds.length === 1 && parseFloat(validSpeeds[0]) === 0) ? "none" : "flex";
+        }
     }
     calculate();
 }

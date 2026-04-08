@@ -6,7 +6,7 @@
      crossorigin="anonymous"></script>
     <meta charset="UTF-8">
     <meta name="google-adsense-account" content="ca-pub-2944414800646015">
-    <title>Privacy Policy - EV Subs Compare</title>
+    <title>Privacy Policy - EV Subs UK</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="stylesheet" href="style.css">
@@ -276,7 +276,7 @@
 
     <!-- Fixed top header -->
     <div class="android-header-full">
-        <h1 class="android-title-clean">EV Subs Compare (UK)</h1>
+        <h1 class="android-title-clean">EV Subs UK</h1>
         <div class="android-dots-trigger" onclick="toggleMenu()">
             <span></span><span></span><span></span>
         </div>
@@ -289,7 +289,7 @@
     <div class="hero-parallax" id="heroParallax">
         <div class="hero-bg" id="heroBg"></div>
         <div class="hero-text">
-            <p class="hero-eyebrow">&#x26A1; EV Subs Compare &mdash; UK</p>
+            <div class="hero-eyebrow">⚡Safeguarding Your Data</div>
             <h1 class="hero-title">Privacy <span>Policy</span></h1>
             <p class="hero-sub">This tool has a privacy-first philosophy. Here's exactly what we do <i>and don't</i> store about you.</p>
         </div>
@@ -502,67 +502,8 @@ if (window.matchMedia('(min-width: 700px)').matches) {
         }, 500);
     });
 }
-</script>
-<script>
-async function loadMenu() {
-    try {
-        const response = await fetch('menu.html');
-        if (!response.ok) throw new Error('Menu fetch failed');
-        
-        const menuHtml = await response.text();
-        const placeholder = document.getElementById('menu-placeholder');
-        
-        placeholder.innerHTML = menuHtml;
-        
-        setTimeout(() => {
-            expandActiveSections();
-        }, 50);
 
-    } catch (error) {
-        console.error('Menu load failed:', error);
-    }
-}
-
-function expandActiveSections() {
-    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-    const activeItem = document.querySelector(`a[href="${currentPage}"]`);
-    
-    if (activeItem) {
-        activeItem.classList.add('active-page');
-        
-        let parent = activeItem.closest('.menu-section-items');
-        if (parent) {
-            const toggle = parent.previousElementSibling;
-            if (toggle && toggle.classList.contains('menu-section-toggle')) {
-                toggle.classList.add('open');
-                parent.classList.add('open');
-            }
-        }
-    }
-}
-
-function toggleMenu() {
-    const menu = document.getElementById('sideMenu');
-    if (menu) {
-        menu.classList.toggle('active');
-        if (menu.classList.contains('active')) {
-            expandActiveSections();
-        }
-    }
-}
-
-function toggleMenuSection(toggleId, itemsId) {
-    const toggle = document.getElementById(toggleId);
-    const items = document.getElementById(itemsId);
-    if (toggle && items) {
-        toggle.classList.toggle('open');
-        items.classList.toggle('open');
-    }
-}
-
-loadMenu();
-
-
+loadMenu();	
 
 // ── Parallax hero effect ──
 const heroBg = document.getElementById('heroBg');

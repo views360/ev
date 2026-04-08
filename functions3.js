@@ -164,18 +164,9 @@ function init() {
     const urlParams = new URLSearchParams(window.location.search);
     
     const speedTrip = document.getElementById("minSpeed");
-    const speedBE = document.getElementById("minSpeedBE");
-
-    const syncAndCalc = (e) => {
-        const newValue = e.target.value;
-        speedTrip.value = newValue;
-        speedBE.value = newValue;
-        calculate(); 
-    };
-
-    if (speedTrip && speedBE) {
-        speedTrip.addEventListener('change', syncAndCalc);
-        speedBE.addEventListener('change', syncAndCalc);
+    
+    if (speedTrip) {
+        speedTrip.addEventListener('change', calculate);
     }
 
     fetch("providers.json").then(r => r.json()).then(data => {
@@ -191,7 +182,21 @@ function init() {
             } else if (savedValues && savedValues[id] !== undefined) {
                 el.value = savedValues[id];
             }
-            el.addEventListener('input', calculate);
+            el.addEventListener('input', () => {
+                // ADD THIS PART:
+                if (id === 'minSpeed') {
+                    // This forces every provider box to refresh its rates
+                    document.querySelectorAll(".provider-box").forEach(box => {
+                        const boxId = box.dataset.id;
+                        const presetSelect = document.getElementById(`preset${boxId}`);
+                        if (presetSelect && presetSelect.value !== 'Custom') {
+                            updateProviderFields(boxId); 
+                        }
+                    });
+                }
+                // Keep your original call here
+                calculate();
+            });
         });
 
         const effTrip = document.getElementById("efficiency");
@@ -256,16 +261,39 @@ function init() {
 
         updateProviderInfo();
         calculate();
+
+        // MOVE THE VISIBILITY CHECK HERE (Inside the .then block)
+        const isCollapsed = getCookie('providers_collapsed') === true;
+        const providersContainer = document.getElementById("providers");
+
+        if (isCollapsed && providersContainer && providersContainer.children.length > 0) {
+            const controls = document.getElementById("providerControls");
+            const collapsible = document.getElementById("collapsibleProviders");
+            const hiddenMsg = document.getElementById("providersHiddenMsg");
+            const toggleBtn = document.getElementById("toggleProvidersBtn");
+
+            if (controls) controls.style.display = "none";
+            if (collapsible) collapsible.style.display = "none";
+            if (hiddenMsg) hiddenMsg.style.display = "block";
+            if (toggleBtn) toggleBtn.textContent = "Expand Providers List";
+        }
     });
 }
 
 function exportPdf() {
+
     const pdfBtn = document.getElementById("pdfBtn");
-    const providerRows = document.querySelectorAll("#providerResults tbody tr");
+    if (!pdfBtn) return;
+
+    const providerTable = document.querySelector("#providerResults table");
     const paygSummary = document.querySelector(".calc-lines");
     const conclusion = document.getElementById("conclusionsBox");
 
-    if (!providerRows.length || !pdfBtn) return;
+    const chargingTable = document.querySelector("#chargingDurations .speed-comparison-container table");
+
+    const journeyPanels = document.querySelectorAll("#realWorldAssessment .itinerary-tab-panel");
+
+    if (!providerTable) return;
 
     const originalText = pdfBtn.textContent;
     pdfBtn.textContent = "Generating...";
@@ -274,148 +302,218 @@ function exportPdf() {
 
     const printContainer = document.createElement("div");
     printContainer.id = "pdf-render-area";
-    printContainer.style.cssText = "position:absolute; left:-9999px; width:800px; padding:40px; background:#fff; color:#000; font-family:Arial, sans-serif;";
+    printContainer.style.cssText = `
+        position:absolute;
+        left:-9999px;
+        width:800px;
+        padding:40px;
+        background:#fff;
+        color:#000;
+        font-family:Arial, sans-serif;
+    `;
 
     let contentHtml = `
-        <style>
-            #pdf-render-area * { color: #000 !important; }
-            .pdf-header { text-align: center; margin-bottom: 10px; }
-            .pdf-section-title { font-size: 22px; margin-top: 20px; }
-            .pdf-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 10px; margin-bottom: 30px; }
-            .pdf-table th, .pdf-table td { border: 1px solid #000; padding: 8px; text-align: left; }
-            .pdf-table th { background: #f2f2f2; }
-            .conclusion-white-border { border: none !important; }
-            .pdf-conclusion-wrapper { 
-                background: #f4f4f4 !important; 
-                padding: 0px; 
-                border: 1px solid #ccc; 
-                border-radius: 8px; 
-                margin-top: 20px;
-            }
-            .calc-lines div { margin-bottom: 5px; }
-        </style>
-        
-        <div class="pdf-header">
-            <strong style="font-size:24px; color:#000">EV SUBSCRIPTIONS COMPARISON REPORT</strong>
-            <p>Generated on ${new Date().toLocaleDateString('en-GB')}</p>
-        </div>
-        
-        <div class="calc-lines">
-            ${paygSummary ? paygSummary.innerHTML : ""}
-        </div>
-
-        <h2 class="pdf-section-title">Comparison Results</h2>
-        <table class="pdf-table">
-            <thead>
-                <tr>
-                    <th>Provider</th>
-                    <th>Sub. Fee</th>
-                    <th>Disc. Rate</th>
-                    <th>Journey Cost</th>
-                    <th>vs. PAYG</th>
-                    <th>Break Even<br />(Exc. Battery Pre-Charge)</th>
-                </tr>
-            </thead>
-            <tbody>`;
-
-    providerRows.forEach(row => {
-        const cols = row.querySelectorAll("td");
-        if (cols.length >= 6) {
-            contentHtml += `
-                <tr>
-                    <td><strong>${cols[0].innerText.split('\n')[0]}</strong></td>
-                    <td>${cols[1].innerText}</td>
-                    <td>${cols[2].innerText}</td>
-                    <td>${cols[3].innerText}</td>
-                    <td>${cols[4].innerText}</td>
-                    <td>${cols[5].innerText}</td>
-                </tr>`;
+    <style>
+        #pdf-render-area, #pdf-render-area * {
+            color: #000 !important;
+            background: #fff !important;
+            -webkit-text-fill-color: #000 !important;
+            filter: grayscale(100%);
+            -webkit-filter: grayscale(100%);
         }
-    });
 
-    contentHtml += `</tbody></table>
-        <h2 class="pdf-section-title">Estimated Total Public Charging Duration Required</h2>`;
-    
-    // Add charging times table
-    const chargingTimesTable = document.querySelector(".speed-comparison-container table");
-    if (chargingTimesTable) {
-        contentHtml += `<table class="pdf-table">`;
-        const chargingHeaders = chargingTimesTable.querySelectorAll("thead th");
-        contentHtml += `<thead><tr>`;
-        chargingHeaders.forEach(header => {
-            contentHtml += `<th>${header.innerText}</th>`;
-        });
-        contentHtml += `</tr></thead><tbody>`;
-        
-        const chargingRows = chargingTimesTable.querySelectorAll("tbody tr");
-        chargingRows.forEach(row => {
-            const cells = row.querySelectorAll("td");
-            contentHtml += `<tr>`;
-            cells.forEach(cell => {
-                contentHtml += `<td>${cell.innerText}</td>`;
-            });
-            contentHtml += `</tr>`;
-        });
-        contentHtml += `</tbody></table>`;
-    }
-    
-    contentHtml += `
-        <h2 class="pdf-section-title">Analysis Conclusion</h2>
-        <div class="pdf-conclusion-wrapper">
-            ${conclusion ? conclusion.innerHTML : ""}
-        </div>`;
+        .pdf-header { text-align: center; margin-bottom: 10px; }
+        .pdf-section-title { font-size: 22px; margin-top: 20px; }
+
+        .pdf-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+            margin-top: 10px;
+            margin-bottom: 30px;
+        }
+
+        .pdf-table th, .pdf-table td {
+            border: 1px solid #000;
+            padding: 8px;
+            text-align: left;
+        }
+
+        .pdf-table th {
+            background: #eaeaea !important;
+        }
+
+        .pdf-conclusion-wrapper {
+            background: #f4f4f4 !important;
+            padding: 10px;
+            border: 1px solid #000;
+            border-radius: 6px;
+            margin-top: 20px;
+        }
+    </style>
+
+    <div class="pdf-header">
+        <strong style="font-size:24px;">EV SUBSCRIPTIONS COMPARISON REPORT</strong>
+        <p>Generated on ${new Date().toLocaleDateString('en-GB')}</p>
+    </div>
+
+    <div class="calc-lines">
+        ${paygSummary ? paygSummary.innerHTML : ""}
+    </div>
+
+    <h2 class="pdf-section-title">Comparison Results</h2>
+    `;
 
     printContainer.innerHTML = contentHtml;
 
-    printContainer.querySelectorAll(".info-icon, .jump-btn-pulse, .mini-table, .mobile-only-text, p[style*='opacity:0.8']").forEach(el => el.remove());
+    // --- PROVIDER TABLE ---
+    const cleanProviderTable = providerTable.cloneNode(true);
+    cleanProviderTable.classList.add("pdf-table");
+    cleanProviderTable.querySelectorAll(".info-icon, .tooltip-container").forEach(el => el.remove());
+    printContainer.appendChild(cleanProviderTable);
+
+    // --- CHARGING DURATIONS TABLE ---
+    const cdSection = document.createElement("div");
+    cdSection.innerHTML = `<h2 class="pdf-section-title">Estimated Total Public Charging Duration Required</h2>`;
+
+    if (chargingTable) {
+        const cleanChargingTable = chargingTable.cloneNode(true);
+        cleanChargingTable.classList.add("pdf-table");
+
+        cleanChargingTable.querySelectorAll(".info-icon, .tooltip-container").forEach(el => el.remove());
+        cleanChargingTable.querySelectorAll("[style]").forEach(el => el.removeAttribute("style"));
+
+        cdSection.appendChild(cleanChargingTable);
+    } else {
+        cdSection.innerHTML += `<p>No charging duration data available.</p>`;
+    }
+
+    printContainer.appendChild(cdSection);
+
+    // --- REAL-WORLD ITINERARY (ALL JOURNEYS) ---
+    const rwSection = document.createElement("div");
+    rwSection.innerHTML = `<h2 class="pdf-section-title">Real-World Charging Itinerary</h2>`;
+
+    journeyPanels.forEach((panel, index) => {
+
+        const journeyHeader = document.createElement("h3");
+        journeyHeader.textContent = `Journey ${index + 1}`;
+        journeyHeader.style.marginTop = "20px";
+        journeyHeader.style.fontSize = "18px";
+        rwSection.appendChild(journeyHeader);
+
+        const cleanPanel = panel.cloneNode(true);
+
+        cleanPanel.removeAttribute("style");
+
+        cleanPanel.querySelectorAll("[style]").forEach(el => el.removeAttribute("style"));
+
+        cleanPanel.querySelectorAll(".info-icon, .tooltip-container").forEach(el => el.remove());
+
+        const table = cleanPanel.querySelector("table");
+        if (table) {
+            table.classList.add("pdf-table");
+            rwSection.appendChild(table);
+        } else {
+            rwSection.innerHTML += `<p>No table found for Journey ${index + 1}</p>`;
+        }
+    });
+
+    printContainer.appendChild(rwSection);
+
+    // --- CONCLUSION ---
+    const conclusionSection = document.createElement("div");
+    conclusionSection.innerHTML = `<h2 class="pdf-section-title">Analysis Conclusion</h2>`;
+    const conclusionWrapper = document.createElement("div");
+    conclusionWrapper.className = "pdf-conclusion-wrapper";
+    conclusionWrapper.innerHTML = conclusion ? conclusion.innerHTML : "";
+    conclusionSection.appendChild(conclusionWrapper);
+    printContainer.appendChild(conclusionSection);
+
+    const conclusionNote = printContainer.querySelector("#conclusionsBox p[style*='var(--neon-green)']");
+    if (conclusionNote) {
+        conclusionNote.style.removeProperty("color");
+        conclusionNote.style.setProperty("color", "#000", "important");
+        conclusionNote.style.setProperty("-webkit-text-fill-color", "#000", "important");
+    }
+
+    // --- SIGNATURE / FOOTER ---
+    const signature = document.createElement("div");
+    signature.style.marginTop = "40px";
+    signature.style.textAlign = "center";
+    signature.style.fontSize = "12px";
+    signature.style.opacity = "0.7";
+    signature.style.borderTop = "1px solid #000";
+    signature.style.paddingTop = "10px";
+
+    signature.innerHTML = `
+        <div>Report generated by <strong>EV Subs UK</strong></div>
+        <div>www.evsubs.uk</div>
+    `;
+
+    printContainer.appendChild(signature);
+
+    // CLEANUP
+    printContainer.querySelectorAll(".info-icon, .jump-btn-pulse, .mobile-only-text")
+        .forEach(el => el.remove());
 
     document.body.appendChild(printContainer);
 
-    html2canvas(printContainer, { 
-        scale: 2,
-        useCORS: true 
+    printContainer.querySelectorAll("*").forEach(el => {
+        el.style.color = "#000";
+        el.style.setProperty("-webkit-text-fill-color", "#000", "important");
+    });
+
+    html2canvas(printContainer, {
+        scale: 3,
+        useCORS: true,
+        backgroundColor: "#ffffff"
     }).then(canvas => {
+
         const { jsPDF } = window.jspdf;
         const pdf = new jsPDF("p", "mm", "a4");
+
         const pageWidth = pdf.internal.pageSize.getWidth();
         const pageHeight = pdf.internal.pageSize.getHeight();
-        const imgWidth = pageWidth - 20; // 10mm margins
+
+        const imgWidth = pageWidth - 20;
         const imgHeight = (canvas.height * imgWidth) / canvas.width;
-        
-        // Handle multiple pages if content is taller than one page
-        let yPosition = 15;
-        const pageHeightAvailable = pageHeight - 30; // 15mm top and bottom margins
-        
+
+        const pageHeightAvailable = pageHeight - 30;
+
         if (imgHeight <= pageHeightAvailable) {
-            // Content fits on one page
             pdf.addImage(canvas.toDataURL("image/png"), "PNG", 10, 15, imgWidth, imgHeight);
         } else {
-            // Content spans multiple pages
             let remainingHeight = canvas.height;
             let yCanvasOffset = 0;
-            
+
             while (remainingHeight > 0) {
-                // Calculate how much of the canvas we can fit on this page
-                const canvasHeightThatFits = Math.min(remainingHeight, (pageHeightAvailable * canvas.width) / imgWidth);
-                
-                // Create a temporary canvas for this section
-                const tempCanvas = document.createElement('canvas');
+                const canvasHeightThatFits = Math.min(
+                    remainingHeight,
+                    (pageHeightAvailable * canvas.width) / imgWidth
+                );
+
+                const tempCanvas = document.createElement("canvas");
                 tempCanvas.width = canvas.width;
                 tempCanvas.height = canvasHeightThatFits;
-                const tempCtx = tempCanvas.getContext('2d');
-                tempCtx.drawImage(canvas, 0, yCanvasOffset, canvas.width, canvasHeightThatFits, 0, 0, canvas.width, canvasHeightThatFits);
-                
-                // Add this section to the PDF
+
+                const tempCtx = tempCanvas.getContext("2d");
+                tempCtx.drawImage(
+                    canvas,
+                    0, yCanvasOffset,
+                    canvas.width, canvasHeightThatFits,
+                    0, 0,
+                    canvas.width, canvasHeightThatFits
+                );
+
                 const sectionImgHeight = (canvasHeightThatFits * imgWidth) / canvas.width;
+
                 pdf.addImage(tempCanvas.toDataURL("image/png"), "PNG", 10, 15, imgWidth, sectionImgHeight);
-                
-                // Move to next page and update positions
+
                 remainingHeight -= canvasHeightThatFits;
                 yCanvasOffset += canvasHeightThatFits;
-                
-                if (remainingHeight > 0) {
-                    pdf.addPage();
-                }
+
+                if (remainingHeight > 0) pdf.addPage();
             }
         }
 
@@ -456,7 +554,6 @@ function closeHelp() {
         }, 300);
     }
 }
-
 
 function toggleProviders() {
     const container = document.getElementById("collapsibleProviders");
@@ -550,43 +647,6 @@ function toggleMenu() {
         // When menu opens, expand sections containing the active page
         if (menu.classList.contains('active')) {
             expandActiveSections();
-        }
-    }
-}
-
-function toggleMenuSection(toggleId, itemsId) {
-    const toggle = document.getElementById(toggleId);
-    const items = document.getElementById(itemsId);
-    
-    if (toggle && items) {
-        toggle.classList.toggle('open');
-        items.classList.toggle('open');
-    }
-}
-
-function expandActiveSections() {
-    // Get the current page filename
-    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-    
-    // Check all menu items with data-page attribute or href matching current page
-    const activeItem = document.querySelector(`a[data-page][href="${currentPage}"]`) || 
-                       document.querySelector(`a[href="${currentPage}"]`);
-    
-    if (activeItem) {
-        // Add active class to the link
-        document.querySelectorAll('a.menu-item-clean').forEach(link => {
-            link.classList.remove('active-page');
-        });
-        activeItem.classList.add('active-page');
-        
-        // Find parent section and expand it
-        let parent = activeItem.closest('.menu-section-items');
-        if (parent) {
-            const toggle = parent.previousElementSibling;
-            if (toggle && toggle.classList.contains('menu-section-toggle')) {
-                toggle.classList.add('open');
-                parent.classList.add('open');
-            }
         }
     }
 }
@@ -726,22 +786,22 @@ function addJourneyField() {
         <p style="font-size: 0.8rem">Enter or adjust the following details for this additional journey, which may differ from the first.</p>
         <div class="input-row">
             <div class="input-group">
-                <label><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">The is the total distance for this additional journey, start to finish.</span></span></span>Journey Distance (Miles)</label>
+                <label><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">ℹ️<span class="tooltip-box">The is the total distance for this additional journey, start to finish.</span></span></span>Journey Distance (Miles)</label>
                 <input type="number" class="extra-journey-miles" placeholder="e.g. 150" oninput="calculate()">
             </div>
             <div class="input-group">
-                <label><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">While it is to be expected that you will depart from your usual place (e.g., home) and charge at your usual rate, you may have other plans — so this allows the results to take that into account.</span></span></span>Pre-Charge Rate (p/kWh)</label>
+                <label><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">ℹ️<span class="tooltip-box">While it is to be expected that you will depart from your usual place (e.g., home) and charge at your usual rate, you may have other plans — so this allows the results to take that into account.</span></span></span>Pre-Charge Rate (p/kWh)</label>
                 <input type="number" class="extra-journey-rate" placeholder="e.g. 7.5" value="${defaultRate}" oninput="calculate()">
             </div>
         </div>
         <div class="input-row">
         	<div class="input-group">
                     <label for="prechargesoc">
-                        <span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">The battery percentage you expect your car to be at before you top up to your departure battery level. Used for calculating the cost of pre‑charging before the journey.</span></span></span>Pre‑Charge Battery Level (%)</label>
+                        <span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">ℹ️<span class="tooltip-box">The battery percentage you expect your car to be at before you top up to your departure battery level. Used for calculating the cost of pre‑charging before the journey.</span></span></span>Pre‑Charge Battery Level (%)</label>
                     <input type="number"class="extra-journey-prechargesoc" oninput="calculate()" placeholder="e.g., 20" value="${defaultPreChargeSoc}">
                 </div>
             <div class="input-group">
-                <label><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">💡<span class="tooltip-box">The battery percentage your car will be at when you begin your journey. It is acceptable to slow charge up to 100% before departing on a long journey. It defaults to the departing SOC of your first journey, but you may adjust it if appropriate.</span></span></span>Departure Battery Level (%)</label>
+                <label><span class="tooltip-container"><span class="info-icon" onclick="toggleTooltip(this)">ℹ️<span class="tooltip-box">The battery percentage your car will be at when you begin your journey. It is acceptable to slow charge up to 100% before departing on a long journey. It defaults to the departing SOC of your first journey, but you may adjust it if appropriate.</span></span></span>Departure Battery Level (%)</label>
                 <input type="number" class="extra-journey-soc" placeholder="e.g. 100" oninput="calculate()" value="${defaultSoc}">
             </div>
         </div>

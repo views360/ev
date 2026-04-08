@@ -160,6 +160,33 @@ function toggleTooltip(iconEl) {
     });
 }
 
+function expandActiveSections() {
+    // Get the current page filename
+    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+    
+    // Check all menu items with data-page attribute or href matching current page
+    const activeItem = document.querySelector(`a[data-page][href="${currentPage}"]`) || 
+                       document.querySelector(`a[href="${currentPage}"]`);
+    
+    if (activeItem) {
+        // Add active class to the link
+        document.querySelectorAll('a.menu-item-clean').forEach(link => {
+            link.classList.remove('active-page');
+        });
+        activeItem.classList.add('active-page');
+        
+        // Find parent section and expand it
+        let parent = activeItem.closest('.menu-section-items');
+        if (parent) {
+            const toggle = parent.previousElementSibling;
+            if (toggle && toggle.classList.contains('menu-section-toggle')) {
+                toggle.classList.add('open');
+                parent.classList.add('open');
+            }
+        }
+    }
+}
+
 // Desktop: hide on click outside, show/hide on hover, reposition on scroll
 document.addEventListener('click', (e) => {
     if (_ftActive && !e.target.closest('.info-icon')) _ftHide();
@@ -195,3 +222,63 @@ document.addEventListener('click', (e) => {
         }
     }
 });
+
+async function loadMenu() {
+    // 1. ALWAYS create the footer first so it doesn't depend on the menu
+    if (!document.querySelector('footer')) {
+        const footer = document.createElement('footer');
+        footer.innerHTML = `<p>&copy; ${new Date().getFullYear()} EV Subs UK. All rights reserved.</p>`;
+        document.body.appendChild(footer);
+    }
+
+    // 2. Then try to load the menu
+    try {
+        const response = await fetch('menu.html');
+        if (!response.ok) throw new Error('Menu fetch failed');
+        
+        const menuHtml = await response.text();
+        const placeholder = document.getElementById('menu-placeholder');
+        
+        if (placeholder) {
+            placeholder.innerHTML = menuHtml;
+        }
+        
+        // Use a safety check before calling this
+        setTimeout(() => {
+            if (typeof expandActiveSections === 'function') {
+                expandActiveSections();
+            }
+        }, 50);
+
+    } catch (error) {
+        console.error('Menu load failed:', error);
+    }
+}
+
+function toggleMenu() {
+    const menu = document.getElementById('sideMenu');
+    if (menu) {
+        menu.classList.toggle('active');
+        if (menu.classList.contains('active')) {
+            expandActiveSections();
+        }
+    }
+}
+
+function toggleMenuSection(toggleId, itemsId) {
+    const toggle = document.getElementById(toggleId);
+    const items = document.getElementById(itemsId);
+
+    if (toggle && items) {
+        // If we are about to open this section...
+        if (!items.classList.contains('open')) {
+            // ...close all other open sections first
+            document.querySelectorAll('.menu-section-toggle').forEach(t => t.classList.remove('open'));
+            document.querySelectorAll('.menu-section-items').forEach(i => i.classList.remove('open'));
+        }
+
+        // Now toggle the clicked section
+        toggle.classList.toggle('open');
+        items.classList.toggle('open');
+    }
+}
