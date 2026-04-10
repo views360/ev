@@ -21,6 +21,56 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;700;800&display=swap" rel="stylesheet">
     <style>
+
+		ol.custom-list {
+  list-style-type: none;
+  counter-reset: my-counter;
+  padding-left: 0;
+}
+
+/* 2. Use Flexbox on the LI to align items */
+ol.custom-list > li {
+  counter-increment: my-counter;
+  display: flex;
+  align-items: flex-start; /* Aligns the number and the text container at the top */
+  margin-bottom: 1.5rem;
+}
+
+/* 3. Style the number to match your 1.3rem "heading" */
+ol.custom-list li::before {
+  content: counter(my-counter) ".";
+  font-size: 1.1rem; /* Matches your heading p size */
+  font-weight: bold;
+  margin-right: 0.5rem;
+  line-height: 1.2; /* Match the line-height of the paragraph */
+  flex-shrink: 0;   /* Prevents the number from squishing */
+}
+
+/* 4. Remove the margin from the first paragraph so it doesn't push down */
+ol.custom-list li p:first-child {
+  margin-top: 0;
+  font-weight: bold;
+  line-height: 1.2;
+}
+		
+/* target ULs inside your custom OL */
+ol.custom-list ul {
+  list-style-type: disc; /* Brings back the standard bullets */
+  padding-left: 2rem;    /* Ensures it indents properly */
+  margin-top: 0.5rem;
+}
+
+/* Hide the custom numbers from the nested UL items */
+ol.custom-list ul li::before {
+  content: none;
+}
+
+/* Ensure nested LIs don't try to flex like the parents */
+ol.custom-list ul li {
+  display: list-item; 
+  counter-increment: none;
+}
+
         /* ── Page reset ── */
         body {
             padding: 0 !important;
@@ -314,6 +364,64 @@
             if (theme === 'light') document.documentElement.classList.add('light-mode');
         })();
     </script>
+	<script type="application/ld+json">
+{
+"@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is the best daily charging routine for an EV battery?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "For daily use, it is recommended to keep your battery charge between 20% and 80%. This minimizes chemical stress and heat build-up within the cells."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Should I use rapid chargers for everyday charging?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. While ultra-rapid chargers (150kW–350kW) are useful for road trips, they generate significant heat that can cause micro-cracks in the battery structure over time. Slow AC home charging (7kW) is much gentler for weekly top-ups."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How should I prepare my EV battery for long-term storage or a holiday?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "If leaving your car for a long duration, aim for a 40% to 60% charge level. Avoid leaving the car at 100% or below 10%, as extreme states of charge can lead to degradation or a 'bricked' battery."
+      }
+    },
+    {
+      "@type": {
+        "Question",
+        "name": "What is Vampire Drain?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Vampire Drain is the background energy an EV consumes while parked to run cellular networks, security systems, and temperature monitors. Features like Tesla's Sentry Mode can increase this drain to roughly 1% per day."
+        }
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why is it beneficial to charge to 100% occasionally?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Charging to 100% once every few months allows the Battery Management System (BMS) to 'balance' individual cells. This ensures the accuracy of your range meter and helps the car find its 'true zero'."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why does my EV make noise after I park it?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "This is typically the Active Thermal Management System. It circulates coolant to protect cells from 'heat soak' or warms the battery in winter to maintain the ideal operating temperature between 15°C and 35°C."
+      }
+    }
+  ]
+}
+</script>
 </head>
 <body>
 
@@ -351,6 +459,7 @@
                     <li><a href="#sec-calibration">The BMS & State of Charge</a></li>
                     <li><a href="#sec-summary">At-a-Glance Maintenance Summary</a></li>
                     <li><a href="#sec-checklist">The Battery Health Checklist</a></li>
+					<li><a href="#faq">Frequently Asked Questions</a></li>
                 </ol>
             </nav>
 
@@ -512,6 +621,55 @@
                 </ul>
                 <p>Preserving your battery is the best way to ensure your EV remains a high-value asset for <a href="used.html" style="color: var(--accent); font-weight: 600; text-decoration: underline;">resale</a>. To see how your charging habits impact your wallet as well as your battery's longevity, explore our <a href="tco.html" style="color: var(--accent); font-weight: 600; text-decoration: underline;">total cost of ownership</a> analysis or head back to the <a href="index.html" style="color: var(--accent); font-weight: 600;">EV Subs Compare calculator</a>.</p>
             </div>
+
+			<section id="faq" class="about-wrap" style="margin-top: 0; padding-top: 0; font-size: 0.8rem; opacity: 0.8;">
+			    <div class="about-card">
+			        <h2 style="opacity: 0.99;">Frequently Asked Questions</h2>
+					<ol class="custom-list">
+			        <li><article class="about-section">
+			            <p style="font-weight: 700; font-size: 1.1rem">What is the "Golden Rule" for charging an EV to maintain battery health?</p>
+			            <p>Use ultra-rapid chargers (150kW–350kW) only for road trips or emergencies. For weekly top-ups, rely on "slow and steady" 7kW AC home charging to keep the battery’s chemical structure pristine.</p>
+			        </article></li>
+			
+			        <li><article class="about-section">
+			            <p style="font-weight: 700; font-size: 1.1rem">Why is it recommended to stay between 20% and 80% charge for daily use?</p>
+			            <p>This range is ideal because it minimizes chemical stress on the battery cells and prevents excessive heat build-up.</p>
+			        </article></li>
+			
+			        <li><article class="about-section">
+			            <p style="font-weight: 700; font-size: 1.1rem">Is it ever okay to charge my battery to 100%?</p>
+			            <p>Yes. It is recommended when you are departing immediately for a long trip so the battery doesn't sit at a high voltage for long. Additionally, charging to 100% once every few months while letting the car sit for an hour helps the Battery Management System (BMS) "balance" the cells and maintain range meter accuracy.</p>
+			        </article></li>
+			
+			        <li><article class="about-section">
+			            <p style="font-weight: 700; font-size: 1.1rem">What is "Vampire Drain" and how much charge might I lose?</p>
+			            <p>Vampire Drain is background energy consumption from cellular connectivity, security systems, and temperature monitoring. You can typically expect to lose 1% to 5% of charge over two weeks, though features like Tesla's Sentry Mode can increase this to 1% per day.</p>
+			        </article></li>
+
+			        <li><article class="about-section">
+			            <p style="font-weight: 700; font-size: 1.1rem">How should I leave my car if I am going away on holiday for a long duration?</p>
+			            <p>Try to leave the battery between 40% and 60% charge. You should avoid leaving it at 100% (which stresses cells) or below 10% (where drain could "brick" the battery).</p>
+			        </article></li>
+
+			        <li><article class="about-section">
+			            <p style="font-weight: 700; font-size: 1.1rem">Why does my car sometimes make whirring or clicking noises after I park it?</p>
+			            <p>This is usually the Active Thermal Management System. It circulates coolant to protect the cells from "heat soak" after a long run or to warm the battery in winter, ensuring the battery stays in its "Goldilocks zone" (15°C to 35°C).</p>
+			        </article></li>
+
+			        <li><article class="about-section">
+			            <p style="font-weight: 700; font-size: 1.1rem">What are the "Silent Killers" and stresses to avoid for battery longevity?</p>
+			            <p><ul><li>Extreme Heat: High ambient temperatures can cause permanent capacity loss; park in the shade during heatwaves.</li>
+					<li>100% Saturation: Don't let the car sit at 100% for more than a few hours.</li>
+					<li>Deep Discharge: Avoid letting the battery drop to near 0%, especially when leaving it for several days.</li></ul></p>
+			        </article></li>
+
+			        <li><article class="about-section">
+			            <p style="font-weight: 700; font-size: 1.1rem">What is the benefit of "Pre-conditioning" my EV in the winter?</p>
+			            <p>Pre-conditioning warms the battery using grid power rather than the battery's own energy, which improves driving efficiency and ensures full regenerative braking from the moment you start your journey.</p>
+			        </article></li></ol>
+
+			    </div>
+			</section>
 
         </div>
     </div>
