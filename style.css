@@ -1,5 +1,147 @@
 @import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;700;800&display=swap');
 
+.neon-rosette-animated {
+    height: 1.3em;         /* Keeps it small and inline with H1 text */
+    width: auto;
+    vertical-align: -0.25em; /* Aligns the circular part with the text middle */
+    margin: 0 0.05em;
+    display: inline-block;
+    color: var(--accent);
+    /* Applies the same pulse logic as your .calc-tab.active class */
+    animation: rosetteNeonSwitch 1.5s infinite ease-in-out;
+}
+
+@keyframes rosetteNeonSwitch {
+    0%, 100% { 
+        color: var(--accent);
+        filter: drop-shadow(0 0 5px rgba(56, 189, 248, 0.5));
+    }
+    50% { 
+        color: var(--neon-green);
+        filter: drop-shadow(0 0 8px rgba(57, 255, 20, 0.6));
+    }
+}
+
+#results-list {
+    background-color: var(--panel-alt) !important; /* Forces the dark background */
+    color: var(--text) !important;               /* Forces the light gray text */
+    list-style: none;
+    padding: 0;
+    margin: 10px 0 0 0;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+}
+
+#results-list li:last-child {
+    border-bottom: none;
+}
+
+#results-list li {
+    border-bottom: 1px solid var(--border);
+    background-color: transparent; 
+}
+
+#results-list li a {
+    display: block;
+    padding: 10px 12px;
+    color: var(--text) !important; /* Ensures links aren't default blue/black */
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+#results-list li a:hover {
+    background-color: #334155 !important; /* A distinct dark grey (Slate 700) */
+    color: var(--accent) !important;      /* Keep the title blue */
+    text-decoration: none;
+}
+
+#results-list li a:hover .search-snippet {
+    color: #cbd5e1 !important; /* Light grey (Slate 300) to keep it readable */
+}
+
+/* Scrollbar styling for the results list */
+#results-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+#results-list::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 3px;
+}
+
+.search-title {
+    font-weight: 700;
+    color: var(--accent); /* Your theme's blue */
+    font-size: 0.95rem;
+}
+
+.search-snippet {
+    font-size: 0.8rem;
+    color: var(--muted); /* Default muted grey */
+    line-height: 1.4;
+    margin-top: 4px;
+    display: block;
+}
+
+#results-list li a {
+    padding: 12px 15px; /* Add more padding between results */
+}
+
+#results-list li a:hover .search-snippet {
+    color: var(--text); /* Brightens text on hover */
+}
+
+.search-slide-container {
+    position: fixed;
+    right: -105px; /* Hidden by default */
+    top: 97px;    /* Positioned higher than the robot */
+    width: 300px;
+    display: flex;
+    align-items: flex-start;
+    transition: right 0.3s ease-in-out;
+    z-index: 1000;
+}
+
+.search-slide-container.active {
+    right: 160px;
+}
+
+.search-trigger {
+    width: 40px;
+    height: 40px;
+    background: var(--accent);
+    color: var(--bg);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px 0 0 8px;
+    cursor: pointer;
+    box-shadow: var(--glow);
+}
+
+.search-wrapper {
+    width: 260px;
+    background: var(--panel-alt);
+    padding: 15px;
+    border-left: 1px solid var(--accent);
+    border-radius: 0 0 0 8px;
+    box-shadow: -5px 0 15px rgba(0,0,0,0.2);
+}
+
+.search-footer {
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
+    font-size: 0.8rem;
+    color: var(--muted);
+}
+
+.search-footer a {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: bold;
+}
+
 .collapsible-section {
     background: var(--panel);
     border: 1px solid var(--border);
@@ -1372,7 +1514,7 @@ body {
 /* Rotated tab on the left edge of the desktop sidebar */
 .ad-tab-vertical {
     position: absolute;
-    top: 185px;
+    top: 250px;
     left: 48px;
     background: var(--panel-alt);
     color: var(--muted);
@@ -1605,7 +1747,15 @@ footer p {
 
 /* MOBILE */
 @media (max-width: 700px) { 
-
+    
+    .search-slide-container {
+        right: -265px; /* Hidden by default */
+    }
+    
+    .search-slide-container.active {
+        right: 0;
+    }
+    
     footer {
         margin-bottom: 100px !important;
     }

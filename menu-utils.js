@@ -28,6 +28,34 @@ function resetAll() {
     window.location.href = "index.html";
 }
 
+const setCookie = (name, value) => {
+    const date = new Date();
+    date.setTime(date.getTime() + (30 * 24 * 60 * 60 * 1000));
+    const cookieValue = encodeURIComponent(JSON.stringify(value));
+    document.cookie = `${name}=${cookieValue};expires=${date.toUTCString()};path=/;SameSite=Lax`;
+};
+
+const getCookie = (name) => {
+    const nameEQ = name + "=";
+    const ca = document.cookie.split(';');
+    for (let i = 0; i < ca.length; i++) {
+        let c = ca[i].trim();
+        if (c.indexOf(nameEQ) === 0) {
+            try {
+                return JSON.parse(decodeURIComponent(c.substring(nameEQ.length)));
+            } catch (e) {
+                return null;
+            }
+        }
+    }
+    return null;
+};
+
+function toggleTheme() {
+    const isLight = document.documentElement.classList.toggle("light-mode");
+    setCookie('themePref', isLight ? 'light' : 'dark');
+}
+
 // ---------------------------------------------------------------------------
 // Floating viewport-safe tooltip
 // ---------------------------------------------------------------------------
@@ -241,6 +269,7 @@ async function loadMenu() {
         
         if (placeholder) {
             placeholder.innerHTML = menuHtml;
+            initSearch();
         }
         
         // Use a safety check before calling this
@@ -253,6 +282,100 @@ async function loadMenu() {
     } catch (error) {
         console.error('Menu load failed:', error);
     }
+}
+
+function initSearch() {
+    const isGitHub = window.location.hostname.includes('github.io');
+    const jsonPath = isGitHub ? '/ev-dev/search.json' : '/search.json';
+
+    fetch(jsonPath)
+      .then(res => res.json())
+      .then(data => {
+        // threshold 0.1 is extremely strict to prevent ghost matches
+        const fuse = new Fuse(data, {
+            keys: ['title', 'content'],
+            threshold: 0.1, 
+            ignoreLocation: true
+        });
+
+        const input = document.getElementById('search-input');
+        const list = document.getElementById('results-list');
+
+        // Add highlight styling
+        if (!document.getElementById('search-highlight-style')) {
+            const style = document.createElement('style');
+            style.id = 'search-highlight-style';
+            style.innerHTML = `
+                .search-snippet mark { 
+                    background: #fff3bf; 
+                    color: #000; 
+                    font-weight: bold; 
+                    padding: 0 2px; 
+                    border-radius: 2px;
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
+        input.oninput = () => {
+            const rawQuery = input.value.trim();
+            const lowerQuery = rawQuery.toLowerCase();
+            
+            if (lowerQuery.length < 3) {
+                list.style.display = 'none';
+                list.innerHTML = '';
+                return;
+            }
+
+            // Perform search and manually filter to ensure 100% accuracy
+            const results = fuse.search(lowerQuery).filter(r => {
+                const title = r.item.title.toLowerCase();
+                const content = (r.item.content || "").toLowerCase();
+                return title.includes(lowerQuery) || content.includes(lowerQuery);
+            });
+
+            if (results.length > 0) {
+                list.style.display = 'block';
+                list.innerHTML = results.map(r => {
+                    const text = r.item.content || "";
+                    const textLower = text.toLowerCase();
+                    const index = textLower.indexOf(lowerQuery);
+                    
+                    let snippet = "";
+                    if (index !== -1) {
+                        const start = Math.max(0, index - 50);
+                        const end = Math.min(text.length, index + 100);
+                        let chunk = text.substring(start, end);
+
+                        // Highlight the term
+                        const regex = new RegExp(`(${lowerQuery.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')})`, 'gi');
+                        const highlighted = chunk.replace(regex, '<mark>$1</mark>');
+
+                        // Clean up spaces at the edges
+                        const firstSpace = highlighted.indexOf(' ');
+                        const lastSpace = highlighted.lastIndexOf(' ');
+                        let finalChunk = highlighted;
+                        
+                        if (firstSpace !== -1 && start !== 0) finalChunk = "..." + highlighted.substring(firstSpace).trim();
+                        if (lastSpace !== -1 && end !== text.length) finalChunk = finalChunk.substring(0, finalChunk.lastIndexOf(' ')) + "...";
+                        
+                        snippet = `<div class="search-snippet">${finalChunk}</div>`;
+                    } else {
+                        snippet = `<div class="search-snippet">${text.substring(0, 100).trim()}...</div>`;
+                    }
+
+                    return `<li>
+                        <a href="${r.item.url}">
+                            <div class="search-title">${r.item.title}</div>
+                            ${snippet}
+                        </a>
+                    </li>`;
+                }).join('');
+            } else {
+                list.style.display = 'none';
+            }
+        };
+      });
 }
 
 function toggleMenu() {
@@ -282,3 +405,21 @@ function toggleMenuSection(toggleId, itemsId) {
         items.classList.toggle('open');
     }
 }
+
+function toggleSearch() {
+    const container = document.getElementById('searchSlideContainer');
+    if (container) {
+        container.classList.toggle('active');
+        if (container.classList.contains('active')) {
+            document.getElementById('search-input').focus();
+        }
+    }
+}
+
+// Optional: Close when clicking outside
+document.addEventListener('click', (e) => {
+    const container = document.getElementById('searchSlideContainer');
+    if (container && !container.contains(e.target) && container.classList.contains('active')) {
+        container.classList.remove('active');
+    }
+});

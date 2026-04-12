@@ -1,0 +1,29 @@
+---
+layout: none
+---
+[
+  {%- assign items = site.pages | concat: site.posts -%}
+  {%- assign first_item = true -%}
+  {%- for item in items -%}
+    {%- if item.title -%}
+      {%- unless first_item -%},{%- endunless -%}
+      {
+        "title": {{ item.title | jsonify }},
+        "url": {{ item.url | relative_url | jsonify }},
+        {%- comment -%} 
+          We split by exactly what you are using in your HTML.
+        {%- endcomment -%}
+        {%- assign content_parts = item.content | split: "''" -%}
+        
+        {%- if content_parts.size > 1 -%}
+          {%- assign raw_content = content_parts.last -%}
+        {%- else -%}
+          {%- assign raw_content = item.content -%}
+        {%- endif -%}
+
+        "content": {{ raw_content | strip_html | strip_newlines | remove: "EV Subs UK | " | remove: item.title | jsonify }}
+      }
+      {%- assign first_item = false -%}
+    {%- endif -%}
+  {%- endfor -%}
+]

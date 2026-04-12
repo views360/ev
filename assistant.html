@@ -7,6 +7,7 @@
 <link rel="canonical" href="https://evsubs.uk/assistant.html">
     <meta property="og:url" content="https://evsubs.uk/assistant.html">
     <meta name="robots" content="index, follow">
+    <script src="https://cdn.jsdelivr.net/npm/fuse.js/dist/fuse.js"></script>
     <script src="menu-utils.js"></script>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2944414800646015"
      crossorigin="anonymous"></script>
@@ -14,6 +15,7 @@
     <meta name="google-adsense-account" content="ca-pub-2944414800646015">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EV Subs UK | Get Instant UK EV Advice from the AI Assistant</title>
+	<link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -623,6 +625,22 @@
             <button class="btn-understand" onclick="closeWarningModal()">I Understand</button>
         </div>
     </div>
+
+	<div class="search-slide-container" id="searchSlideContainer">
+	    <div class="search-trigger" onclick="toggleSearch()">
+	        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+	            <circle cx="11" cy="11" r="8"></circle>
+	            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+	        </svg>
+	    </div>
+	    <div class="search-wrapper">
+	        <input type="text" id="search-input" placeholder="Search pages..." autocomplete="off">
+	        <ul id="results-list"></ul>
+	        <!--div class="search-footer">
+	            Can't find what you're searching for? <a href='assistant.html'>Chat with AI</a>
+			</div-->
+	    </div>
+</div-->
 
     <script>
 		document.getElementById('date').innerText = new Date().toLocaleString('default', { month: 'long', year: 'numeric' });
