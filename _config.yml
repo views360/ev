@@ -1,10 +1,1 @@
 title: EV Subs UK
-exclude:
-  - package.json
-  - package-lock.json
-  - next.config.js
-  - node_modules/
-  - vendor/
-include:
-  - search.json
-  - .well-known
