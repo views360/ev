@@ -285,7 +285,8 @@ async function loadMenu() {
 }
 
 function initSearch() {
-    const jsonPath = 'search.json';
+    const isGitHub = window.location.hostname.includes('github.io');
+    const jsonPath = isGitHub ? '/ev-dev/search.json' : '/search.json';
 
     fetch(jsonPath)
       .then(res => res.json())
