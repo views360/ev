@@ -1,6 +1,5 @@
 ---
 layout: none
-permalink: /search.json
 ---
 [
   {%- assign items = site.pages | concat: site.posts -%}
