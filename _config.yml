@@ -1,1 +1,3 @@
 title: EV Subs UK
+include: [search.json]
+safe: false
