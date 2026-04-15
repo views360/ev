@@ -242,7 +242,7 @@ html, body {
     min-width: 100px; /* Added: Ensures it never drops below 100px */
     height: auto;    /* Changed from 100% to auto to maintain aspect ratio */
     object-fit: contain;
-}
+}	
 
 .home-wrap {
     width: 100%;
@@ -361,7 +361,12 @@ section.feature-section:first-of-type {
 
     .hero-home-text {
         width: calc(100% - 240px) !important;
-    }
+	    position: absolute;
+	    bottom: 50px;
+	    left: 40px; /* Aligns text to the left with a small inner padding */
+	    /*max-width: 900px;*/ 
+	    transform: none; /* Removed the 50% centering transform */
+	}
 	
    .feature-section {
         padding-right: 160px !important; /* Move content away from the ad sidebar */
@@ -394,7 +399,7 @@ section.feature-section:first-of-type {
 }
 
 @media (max-width: 699px) {
-.home-wrap {
+	.home-wrap {
         width: 100%;
         margin-left: 0;
         margin-right: 0;
@@ -410,13 +415,21 @@ section.feature-section:first-of-type {
         left: 0;
     }
 
-.parallax-copy {
+	.parallax-copy {
         width: 100% !important;   /* Override the calc(100% - 160px) */
         margin-right: 0 !important; /* Remove the ad-space offset */
         padding: 0 20px;          /* Optional: adds a safety buffer so text doesn't touch screen edges */
         box-sizing: border-box;
     }
 
+	.hero-home-text {
+        text-align: left !important;
+        left: 30px !important;
+        width: calc(100% - 60px) !important;
+        bottom: 40px; /* Explicitly anchor it to the bottom of the hero */
+        position: absolute; 
+        transform: none !important;
+    }
 }
 
 /* ---------- Hero ---------- */
@@ -452,15 +465,6 @@ section.feature-section:first-of-type {
         );
 }
 
-.hero-home-text {
-    position: absolute;
-    bottom: 50px;
-    left: 40px; /* Aligns text to the left with a small inner padding */
-    width: calc(100% - 80px); /* Ensures text doesn't hit the edges */
-    max-width: 900px; 
-    transform: none; /* Removed the 50% centering transform */
-}
-
 .hero-home h1 {
     font-size: clamp(2.4rem, 6vw, 4.8rem);
     margin: 0;
@@ -468,12 +472,12 @@ section.feature-section:first-of-type {
     color: var(--text);
 }
 
-.hero-home p {
+/*.hero-home p {
     font-size: 1.1rem;
     line-height: 1.6;
     max-width: 700px;
     color: rgba(241,245,249,0.82);
-}
+}*/
 
 /* ---------- Calculator First Section ---------- */
 
@@ -497,17 +501,17 @@ section.feature-section:first-of-type {
     z-index: 1;
 }
 
-    ul.bolt-list, ul.day2-list, ul.further-list {
-        list-style: none;
-        padding-left: 20px;
-    }
+ul.bolt-list, ul.day2-list, ul.further-list {
+	list-style: none;
+	padding-left: 20px;
+}
 
-    ul.bolt-list li::before, ul.day2-list li::before, ul.further-list li::before {
-        content: "⚡";
-        display: inline-block;
-        width: 1.5em;
-        margin-left: -1.5em;
-    }
+ul.bolt-list li::before, ul.day2-list li::before, ul.further-list li::before {
+	content: "⚡";
+	display: inline-block;
+	width: 1.5em;
+	margin-left: -1.5em;
+}
 
 .home-wrap {
     position: relative;
@@ -657,14 +661,14 @@ section.feature-section:first-of-type {
         transform: none !important;
     }
 
+	/*.hero-home p {
+        margin-left: 0 !important;
+        margin-right: auto;
+    }*/
+
     .slide-image {
         max-width: 340px; 
         margin: 0 auto;
-    }
-
-    .hero-home p {
-        margin-left: 0 !important;
-        margin-right: auto;
     }
 
     .feature-text, 
@@ -813,10 +817,9 @@ section.feature-section:first-of-type {
     <div class="hero-home-overlay"></div>
 	<div class="hero-home-text">
         <h1>EV <span style="color:var(--accent)">Subs UK</span></h1>
-		<p style="font-size: 0.9rem"><strong style="opacity: 1 !important">All EV drivers use public PAYG charging</strong> — even if it's only for occasional long trips. 
-			This is the definitive money-saving tool for comparing charging subscriptions with PAYG rates.</p>
-		<p style="font-size: 0.9rem"><strong style="opacity: 1 !important">Need EV guidance?</strong> We provide practical ownership tips and technical insights. 
-			Explore essential information every EV driver should know.</p>
+		<p style="font-size: 1.1rem"><strong style="opacity: 1 !important">Want cheaper public charging?</strong> Use this money-saving tool to compare short-term subscriptions with PAYG rates. 
+			Every EV driver uses PAYG charging — even if it's just for occasional long trips.</p>
+		<p style="font-size: 1.1rem"><strong style="opacity: 1 !important">Need EV guidance?</strong> Explore practical ownership tips and technical insights that every EV driver should know.</p>
     </div>
 </section>
 
