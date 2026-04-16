@@ -190,7 +190,7 @@ function updateProviderFields(id) {
                 const sNum = parseFloat(s);
                 let label;
                 if (sNum === 999) {
-                    label = 'All available speeds';
+                    label = 'All available';
                 } else {
                     label = s + 'kW';
                 }
